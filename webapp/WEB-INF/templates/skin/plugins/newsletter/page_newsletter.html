@@ -1,0 +1,53 @@
+    <h2 class="page-title">#i18n{newsletter.page_newsletter.pageTitle}</h2>
+    <#if newsletters_list?size = 0>
+    <div>
+        <i>#i18n{newsletter.page_newsletter.page_newsletter.labelNoLetter}</i>
+    </div>
+    <#else>
+    <form class="default-form" name="newsletter" action="jsp/site/Portal.jsp" method="post">
+    	<input type="hidden" name="plugin_name" value="${plugin.name}" />
+		<input type="hidden" name="page" value="newsletter" />
+        <input type="hidden" name="action" value="register" />
+        <fieldset>
+			<p>
+            	<label for="email">#i18n{newsletter.page_newsletter.labelEmail}</label>
+                <input type="text" name="email" id="email" size="40" maxlength="100" />
+            </p>
+            <p>
+                #i18n{newsletter.page_newsletter.labelChooseNewsletters}
+                <br/>
+                <#if newsletters_list?has_content>
+                	<ul>
+	                <#list newsletters_list as newsletter>
+		                <li>
+			                <input type="checkbox" class="checkbox-field" name="newsletter_id" id="newsletter_id_${newsletter.id}" value="${newsletter.id}" checked="checked" />
+			                <label  class="checkbox-label" for="newsletter_id_${newsletter.id}">${newsletter.name}</label>
+                                        <pre>${newsletter.description}</pre>                            
+		                </li>
+	                </#list>
+	                </ul>
+                </#if>
+            </p>
+            <#if properties.TOS ??>
+				<div>
+					<label for="comment">
+						<input type="checkbox" name="tos" id="tos" value="1" />
+						<a href="jsp/site/RunStandaloneApp.jsp?page=newsletter&view_requirement=view_requirement" onclick="javascript:openFrontRequirement(this.href); return false;" target="_blank"> #i18n{newsletter.page_newsletter.requirement}</a>
+					</label>
+				</div>  	
+			</#if>	
+            <p>
+            	<#if properties.captchaActive>
+					<#if is_active_captcha>
+						<div >${captcha}</div>
+					</#if>
+				</#if>
+			</p>
+            <p>
+	 			<input class="button" value="#i18n{newsletter.page_newsletter.buttonSubscribe}" type="submit" />
+			</p>
+        </fieldset>
+    </form>
+    </#if>
+
+

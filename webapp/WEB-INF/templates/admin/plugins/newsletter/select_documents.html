@@ -1,0 +1,60 @@
+<#include "/admin/insert/insert_utils_macros.html" />
+
+<div class="insert-service" >
+
+<h2>#i18n{newsletter.select_documents.title}</h2>
+<form method="post" action="jsp/admin/plugins/newsletter/DoSearchDocuments.jsp">
+    <input type="hidden" name="plugin_name" value="${plugin_name}" />
+    <input type="hidden" name="input" value="${input}" />
+    <table>
+        <tbody>
+            <tr>
+                <th>#i18n{newsletter.select_documents.labelSearchCriteria}</th>
+            </tr>
+            <tr>
+                <td>#i18n{newsletter.select_documents.labelDocumentListCollection}</td>
+                <td><@combo name="document_list_id" default_value=0 items=documents_lists_list /></td>
+            </tr>
+            <tr>
+                <td>#i18n{newsletter.select_documents.labelPublishedSince}
+                </td>
+                <td> <input
+                        name="published_date" value="${start_published_date}"
+                        checked="checked" type="texte" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p>
+        <input name="search" value="#i18n{newsletter.select_documents.buttonSearch}" type="submit" class="button" />
+    </p>
+</form>
+
+
+<form method="post" action="jsp/admin/plugins/newsletter/DoInsertDocuments.jsp" name="insertDocuments" >
+    <input type="hidden" name="plugin_name" value="${plugin_name}" />
+    <input type="hidden" name="input" value="${input}" />
+    <table>
+        <tr>
+            <th>#i18n{newsletter.select_documents.labelDocumentList}</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>#i18n{newsletter.select_documents.labelDocumentDate}</th>
+            <th>#i18n{newsletter.select_documents.labelDocumentAdd}</th>
+        </tr>
+        <#list document_list as document>
+        <tr>
+            <td>${document.title}</td>
+            <td>${document.dateModification}</td>
+            <td>
+            <input name="documents_list" value="${document.id}" class="checkbox" type="checkbox" /></td>
+        </tr>
+        </#list>
+    </table>
+    <p>
+        <@combo name="template_id" default_value=0 items=documents_templates_list />
+    </p>  
+    
+    <input type="submit" class="button" value="#i18n{newsletter.select_documents.buttonValidate}" />
+</form>

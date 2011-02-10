@@ -1,0 +1,21 @@
+<div class="content-box">
+    <h2>#i18n{newsletter.import_subscribers.boxTitle}</h2>
+    <form method="post" enctype="multipart/form-data" action="jsp/admin/plugins/newsletter/DoImportSubscribers.jsp">
+        <input type="hidden" name="newsletter_id" value="${newsletter_id}" />
+        
+        <h3>#i18n{newsletter.import_subscribers.label}</h3>
+        <p>
+            <i>#i18n{newsletter.import_subscribers.notice1}</i>
+        </p>
+        <p>
+            <i>#i18n{newsletter.import_subscribers.notice2}</i>
+        </p>
+        <p>
+            <label for="newsletter_import_path">#i18n{newsletter.import_subscribers.importLabel} *:</label>
+            <input size="30" type="file" id="newsletter_import_path" name="newsletter_import_path" value="" />
+        </p>
+        <p>
+            <input type="submit" value="#i18n{newsletter.import_subscribers.buttonImport}" class="button" />
+        </p>
+    </form>
+</div>

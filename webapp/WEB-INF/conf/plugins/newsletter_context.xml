@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+  <bean id="newsLetterDAO"  class="fr.paris.lutece.plugins.newsletter.business.NewsLetterDAO" />
+  <bean id="newsLetterTemplateDAO"  class="fr.paris.lutece.plugins.newsletter.business.NewsLetterTemplateDAO" />
+  <bean id="sendingNewsLetterDAO"  class="fr.paris.lutece.plugins.newsletter.business.SendingNewsLetterDAO" />
+  <bean id="subscriberDAO"  class="fr.paris.lutece.plugins.newsletter.business.SubscriberDAO" />
+  <bean id="newsLetterArchivePortletDAO"  class="fr.paris.lutece.plugins.newsletter.business.portlet.NewsLetterArchivePortletDAO" />
+  <bean id="newsLetterSubscriptionPortletDAO"  class="fr.paris.lutece.plugins.newsletter.business.portlet.NewsLetterSubscriptionPortletDAO" />
+  <bean id="awaitingActivationDAO" class="fr.paris.lutece.plugins.newsletter.business.AwaitingActivationDAO" />
+  <bean id="newsletterPropertiesDAO"  class="fr.paris.lutece.plugins.newsletter.business.NewsletterPropertiesDAO" />
+</beans>

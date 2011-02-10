@@ -1,0 +1,25 @@
+<table width="95%" align="center" cellpadding="5" cellspacing="0">
+    <tr>
+        <th class="admin-title" width="5%">&nbsp;</th>
+        <th class="admin-title" width="10%">#i18n{newsletter.newsletter_sending_list.labelDateSent}</th>
+        <th class="admin-title" width="85%" align="left">#i18n{newsletter.newsletter_sending_list.labelSubject}</th>
+    </tr>
+    
+    <#list sending_newsletter_list as sending>
+    <tr>
+        <td width="5%">
+            <input type="checkbox" name="cbx_snd_${sending.id}" class="checkbox"  ${selected_sendings_list?seq_contains(sending.id)?string("checked=\"checked\"", "")}
+                   />
+               </td>
+        <td width="10%">
+            ${sending.date}
+        </td>
+        <td width="85%">
+            
+            <b>${sending.emailSubject}</b>
+            
+        </td>
+    </tr>
+    </#list>
+    
+</table>

@@ -1,0 +1,100 @@
+<div class="content-box">
+    <h2>#i18n{newsletter.manage_newsletters.boxTitle}</h2>
+    <form method="post" rm action="jsp/admin/plugins/newsletter/ManageNewsLetter.jsp">
+        <@pagination paginator=paginator />
+        
+        <!-- Number of newsletters per page selector -->
+        #i18n{newsletter.manage_newsletters.labelItemsPerPage} :
+        <select name="items_per_page">
+            <#list [ "10" , "20" , "50" , "100" ] as nb>
+            <#if nb_items_per_page = nb >
+            <option selected="selected" value="${nb}">${nb}</option>
+            <#else>
+            <option value="${nb}">${nb}</option>
+            </#if>
+            </#list>
+        </select>
+        <input type="submit" class="button" value="#i18n{newsletter.manage_newsletters.buttonItemsPerPage}" />
+    </form>  
+    <table>
+        <tr>
+            <th>#i18n{newsletter.manage_newsletters.columnTitleLabel}</th>
+            <th>#i18n{newsletter.manage_newsletters.columnTitleDescription}</th>
+            <th>#i18n{newsletter.manage_newsletters.columnTitleLastSent}</th>
+            <th>#i18n{newsletter.manage_newsletters.columnTitleSubscribersCount}</th>
+            <th>#i18n{newsletter.manage_newsletters.columnTitleWorkGroup}</th>
+            <th>#i18n{newsletter.manage_newsletters.columnTitleActions}</th>
+        </tr>
+        <#list newsletters_list as newsletterDisplay >	                
+        <tr>
+            <td>
+                &nbsp;&nbsp;<img src="images/admin/skin/bullet.gif" border="0">
+				<#if newsletterDisplay.newsletter_allow_modification>
+                	<a href="jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}" class="admin-menu">
+                    	${newsletterDisplay.newsletter.name}
+	                </a>
+                <#else>
+                   	${newsletterDisplay.newsletter.name}                
+                </#if>
+            </td>
+            <td>${newsletterDisplay.newsletter.description} </td>
+            <td>${newsletterDisplay.newsletter.dateLastSending?string.short}</td>
+            <td>${newsletterDisplay.newsletter_count_subscribers}</td>
+            <td>${newsletterDisplay.newsletter_workgroup_description}</td>
+            <td>
+            <#if newsletterDisplay.newsletter_allow_manage_subscribers>
+            	<a href="jsp/admin/plugins/newsletter/ManageSubscribers.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"><img src="images/admin/skin/b_manage.png" title="#i18n{newsletter.manage_newsletters.columnTitleManageSubscribers}" alt="#i18n{newsletter.manage_newsletters.columnTitleManageSubscribers}"></a>
+            <#else>
+           	&nbsp;
+            </#if>
+            <!-- </td>
+            <td> -->
+            <#if newsletterDisplay.newsletter_allow_modification>
+              	<a href="jsp/admin/plugins/newsletter/DoComposeNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"><img src="images/admin/skin/b_compose.png" title="#i18n{newsletter.manage_newsletters.columnTitleCompose}" alt="#i18n{newsletter.manage_newsletters.columnTitleCompose}"></a>
+            <#else>
+           	&nbsp;
+            </#if>
+           <!-- </td>
+            <td> -->
+            <#if newsletterDisplay.newsletter_allow_sending>
+               <a href="jsp/admin/plugins/newsletter/DoPrepareNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"><img src="images/admin/skin/b_letter.png" title="#i18n{newsletter.manage_newsletters.columnTitlePrepareSending}" alt="#i18n{newsletter.manage_newsletters.columnTitlePrepareSending}"></a>
+            <#else>
+           	&nbsp;
+            </#if>
+          <!--  </td>
+            <td> -->
+            <#if newsletterDisplay.newsletter_allow_manage_archive>
+            	<a href="jsp/admin/plugins/newsletter/ManageArchive.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"><img src="images/admin/skin/plugins/newsletter/archive.png" title="#i18n{newsletter.manage_newsletters.columnTitleArchive}" alt="#i18n{newsletter.manage_newsletters.columnTitleArchive}"></a>
+            <#else>
+           	&nbsp;
+            </#if>
+          <!-- </td>
+           <td> -->
+            <#if newsletterDisplay.newsletter_allow_export_subscribers>
+            	<a href="jsp/admin/plugins/newsletter/DoExportCsv.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"><img src="images/admin/skin/b_export.png" title="#i18n{newsletter.manage_newsletters.columnTitleExportCsv}" alt="#i18n{newsletter.manage_newsletters.columnTitleExportCsv}"></a>
+            <#else>
+           	&nbsp;
+            </#if>
+          <!-- </td>
+           <td> -->
+           <#if newsletterDisplay.newsletter_allow_deletion>
+            <a href="jsp/admin/plugins/newsletter/RemoveNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"><img src="images/admin/skin/actions/delete.png" title="#i18n{newsletter.manage_newsletters.columnTitleDelete}" alt="#i18n{newsletter.manage_newsletters.columnTitleDelete}"></a>
+           <#else>
+            &nbsp;
+            </#if>
+            </td>
+        </tr>
+          <#if newsletterDisplay.newsletter_allow_creation>
+            <#assign creation_allowed = true >
+           </#if>
+        </#list>	
+    </table>
+    <br/>
+    <table>
+     <#if creation_allowed>
+        <form method="post" action="jsp/admin/plugins/newsletter/CreateNewsLetter.jsp">
+          <input type="submit" value="#i18n{newsletter.manage_newsletters.buttonAddNewsletter}" class="button" />
+        </form>
+     </#if>
+    </table>
+</div>

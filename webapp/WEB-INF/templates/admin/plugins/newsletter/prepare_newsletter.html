@@ -1,0 +1,20 @@
+<div class="content-box">
+    <h2>#i18n{newsletter.prepare_newsletter.boxTitle}</h2>
+    <form method="post" action="jsp/admin/plugins/newsletter/ConfirmSendNewsLetter.jsp">
+		<p>
+        	<label for="newsletter_object">#i18n{newsletter.prepare_newsletter.newsletterSubject} :</label>
+            <input type="text" value="${newsletter_object}" id="newsletter_object" name="newsletter_object" size="80" />
+            <input type="submit" value="#i18n{newsletter.prepare_newsletter.sendButton}" class="button" />
+            <input type="hidden" name="newsletter_id" value="${newsletter.id}" />
+        </p>
+	</form>
+	<p>
+    	<label for="newsletter_body">#i18n{newsletter.prepare_newsletter.newsletterBody} :</label>
+        <iframe name="preview" src="jsp/admin/plugins/newsletter/PreviewNewsLetter.jsp?newsletter_id=${newsletter.id}&plugin_name=newsletter" width="60%" height="300px" scrolling="auto"></iframe>
+	</p>
+   	<p style="margin-left:30%;">
+		<a href="jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}">
+        	<input type="submit" value="#i18n{newsletter.prepare_newsletter.composeNewsletter}" class="button" />
+		</a>
+	</p>
+</div>

@@ -1,0 +1,751 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>Guide utilisateur du plugin Newsletter</title>
+	</properties>
+	<body>
+		<section name="Gestion des newsletters">
+			<subsection name="Description">
+				<p>
+					Les utilisateurs ayant les droits nécessaires
+					peuvent accéder à la page de gestion des
+					newsletters. Cette page présente à l'aide d'un
+					tableau l'ensemble des newsletters avec pour chacune
+					d'elles la date de dernier envoi et le nombre
+					d'abonnés.
+
+					<img
+						src="../../../src/site/resources/images/newsletter_manual_001.gif"
+						alt="Image" />
+
+				</p>
+			</subsection>
+
+			<subsection name="Les actions possibles">
+				<p>
+					<ul>
+						<li>
+							Le bouton « 
+							<u>Ajouter une lettre</u>
+							 » redirige l'utilisateur vers la page de
+							création d'une nouvelle newsletter.
+						</li>
+						<li>
+							Le lien sur le « 
+							<u>nom de la newsletter</u>
+							 » permet d'accéder à la page de
+							modification de cette newsletter.
+						</li>
+						<li>
+							Le bouton « 
+							<u>Gérer les modèles</u>
+							 » redirige l'utilisateur vers la page de
+							gestion des modèles d'articles et de
+							newsletters.
+						</li>
+						<li>
+							Le bouton « 
+							<u>Gérer</u>
+							 » redirige l'utilisateur vers la page de
+							gestion des abonnés de la newsletter
+							concernée.
+						</li>
+						<li>
+							Le bouton « 
+							<u>Composer</u>
+							 » redirige l'utilisateur vers la page
+							permettant de composer la newsletter.
+						</li>
+						<li>
+							Le bouton
+							<img
+								src="../../../src/site/resources/images/newsletter_manual_002.gif"
+								alt="Image" />
+							« 
+							<u>Préparer l'envoi</u>
+							 » permet d'accéder à la page de
+							prévisualisation de la newsletter à
+							condition que l'utilisateur soit déjà passé
+							par la composition de celle-ci.
+						</li>
+						<li>
+							Le bouton
+							<img
+								src="../../../src/site/resources/images/newsletter_manual_003.gif"
+								alt="Image" />
+							« 
+							<u>Supprimer</u>
+							 » permet la suppression de la newsletter
+							concernée.
+						</li>
+					</ul>
+				</p>
+			</subsection>
+		</section>
+		<section name="Création d'une newsletter">
+			<subsection name="Description">
+				<p>
+					Cette page permet de créer une nouvelle newsletter à
+					partir des informations suivantes :
+					<ul>
+						<li>
+							<u>Champs obligatoires :</u>
+						</li>
+					</ul>
+					<ul>
+						<li>Libellé de la lettre</li>
+						<li>
+							<i>Date initiale</i>
+							 (initialisée à la date du jour)
+						</li>
+						<li>
+							<i>Thème(s)</i>
+							 (possibilité de saisir de 1 à n thèmes)
+						</li>
+					</ul>
+					<img
+						src="../../../src/site/resources/images/newsletter_manual_004.gif"
+						alt="Image" />
+
+				</p>
+			</subsection>
+			<subsection name="Les actions possibles">
+				<p>
+					<ul>
+						<li>
+							Le bouton « 
+							<u>Valider</u>
+							 » permet de sauvegarder la nouvelle
+							newsletter en base.
+						</li>
+					</ul>
+
+				</p>
+			</subsection>
+		</section>
+		<section name="Modification d'une newsletter">
+			<subsection name="Description">
+				<p>
+					Cette page permet la modification des
+					caractéristiques d'une newsletter. Elle est
+					identique à la page de création à l'exception du
+					fait que les champs sont pré-remplis avec les
+					informations stockées en base.
+				</p>
+				<img
+					src="../../../src/site/resources/images/newsletter_manual_005.gif"
+					alt="Image" />
+
+			</subsection>
+		</section>
+		<section name="Suppression d'une newsletter">
+			<subsection name="Description">
+				<p>
+					Lors d'une demande de suppression d'une newsletter,
+					une page de confirmation est affichée, permettant à
+					l'utilisateur d'annuler sa demande.
+					<img
+						src="../../../src/site/resources/images/newsletter_manual_006.gif"
+						alt="Image" />
+
+				</p>
+			</subsection>
+			<subsection name="Les actions possibles">
+				<p>
+					<ul>
+						<li>
+							Le bouton « 
+							<u>Confirmer</u>
+							 » supprime la newsletter de la base et
+							redirige l' utilisateur vers la page de
+							gestion des newsletters.
+						</li>
+						<li>
+							Le bouton « 
+							<u>Annuler</u>
+							 » ne modifie pas les données et redirige l'
+							utilisateur vers la page de gestion des
+							newsletters.
+						</li>
+					</ul>
+				</p>
+			</subsection>
+		</section>
+
+		<section name="Gestion des modèles">
+			<subsection name="Description">
+				<p>
+					Cette page présente l'ensemble des modèles
+					d'articles et de newsletters disponibles avec pour
+					chacun d'eux son type et les fichiers associés.
+					<img
+						src="../../../src/site/resources/images/newsletter_manual_007.gif"
+						alt="Image" />
+
+				</p>
+			</subsection>
+			<subsection name="Les actions possibles">
+				<p>
+					<ul>
+						<li>
+							Le bouton « 
+							<u>Ajouter un modèle</u>
+							 » redirige l'utilisateur vers la page de
+							création d'un modèle.
+						</li>
+						<li>
+							Le lien sur « 
+							<u>le libellé du modèle</u>
+							 » permet à l'utilisateur d'accéder à la
+							page de modification d'un modèle.
+						</li>
+						<li>
+							Le bouton « 
+							<u>Suppression</u>
+							 »
+							<img
+								src="../../../src/site/resources/images/newsletter_manual_003.gif"
+								alt="Image" />
+							permet la suppression du modèle concerné.
+						</li>
+					</ul>
+				</p>
+			</subsection>
+
+		</section>
+
+		<section name="Ajout d'un modèle">
+			<subsection name="Description">
+				<p>
+					Cette page permet de créer un nouveau modèle à
+					partir des informations suivantes :
+					<ul>
+						<li>
+							<u>Champs obligatoires</u>
+							 :
+						</li>
+					</ul>
+					<ul>
+						<li>Libellé</li>
+						<li>
+							<i>Type</i>
+							(Newsletter ou Article)
+						</li>
+						<li>Fichier template associé</li>
+						<li>Fichier image associé</li>
+					</ul>
+					<img
+						src="../../../src/site/resources/images/newsletter_manual_009.gif"
+						alt="Image" />
+					Les fichiers uploadés ne peuvent pas être utilisés
+					par plusieurs modèles.
+				</p>
+			</subsection>
+			<subsection name="Les actions possibles">
+				<p>
+					<ul>
+						<li>
+							Le bouton « 
+							<u>Ajouter</u>
+							 » permet de sauvegarder le nouveau modèle
+							en base.
+						</li>
+						<li>
+							Les boutons « 
+							<u>Browse</u>
+							 » permettent de naviguer dans le système de
+							fichiers pour choisir les fichiers à prendre
+							en compte.
+						</li>
+					</ul>
+				</p>
+			</subsection>
+
+		</section>
+
+		<section name="Modification d'un modèle">
+			<subsection name="Description">
+				<p>
+					Cette page, initialisée avec les informations
+					stockées en base (pour le libellé et le type),
+					permet la modification des caractéristiques d'un
+					modèle existant à partir des informations
+					suivantes :
+					<ul>
+						<li>
+							<u>Champs obligatoires</u>
+							 :
+						</li>
+					</ul>
+					<ul>
+						<li>Libellé</li>
+						<li>
+							<i>Type</i>
+							(Newsletter ou Article)
+						</li>
+					</ul>
+					<ul>
+						<li>
+							<u>Champs facultatifs</u>
+							 :
+						</li>
+					</ul>
+					<ul>
+						<li>Fichier template associé</li>
+						<li>Fichier image associé</li>
+					</ul>
+					<img
+						src="../../../src/site/resources/images/newsletter_manual_010.gif"
+						alt="Image" />
+					<ul>
+						<li>
+							Les fichiers uploadés ne peuvent pas être
+							utilisés par plusieurs modèles.
+						</li>
+						<li>
+							Les bookmarks qui peuvent être utilisés dans
+							le fichier template pour un modèle d'article
+							sont les suivants :
+						</li>
+					</ul>
+					<ul>
+						<li>@article_title@</li>
+						<li>@article_url@</li>
+						<li>@article_image@</li>
+						<li>@article_intro@</li>
+						<li>@article_publication_date@</li>
+						<li>@urls_lits@ (pour afficher toutes les urls d'accès à l'article)</li>
+					</ul>
+					<ul>
+						<li>
+							Le bookmark qui peut être utilisé dans le
+							fichier template pour un modèle de
+							newsletter est le suivant :
+						</li>
+					</ul>
+					<ul>
+						<li>@articles_list@</li>
+					</ul>
+
+				</p>
+			</subsection>
+			<subsection name="Les actions possibles">
+				<p>
+					<ul>
+						<li>
+							Le bouton « 
+							<u>Modifier</u>
+							 » permet de mettre à jour le modèle stocké
+							en base.
+						</li>
+						<li>
+							Les boutons « 
+							<u>Browse</u>
+							 » permettent de naviguer dans le système de
+							fichiers pour choisir les fichiers à prendre
+							en compte.
+						</li>
+						<li>
+							Le lien « 
+							<u>Modifier le code du template</u>
+							 » redirige l'utilisateur vers une page
+							permettant de modifier directement le code
+							du template.
+						</li>
+					</ul>
+
+				</p>
+			</subsection>
+
+		</section>
+		<section name="Suppression d'un modèle">
+			<subsection name="Description">
+				<p>
+					Lors d'une demande de suppression d'un modèle, une
+					page de confirmation est affichée, permettant à
+					l'utilisateur d'annuler sa demande.
+					<img
+						src="../../../src/site/resources/images/newsletter_manual_011.gif"
+						alt="Image" />
+				</p>
+			</subsection>
+			<subsection name="Les actions possibles">
+				<p>
+					<ul>
+						<li>
+							Le bouton « 
+							<u>Confirmer</u>
+							 » supprime le modèle de la base et redirige
+							l' utilisateur vers la page de gestion des
+							modèles.
+						</li>
+						<li>
+							Le bouton « 
+							<u>Annuler</u>
+							 » ne modifie pas les données et redirige l'
+							utilisateur vers la page de gestion des
+							modèles.
+						</li>
+					</ul>
+				</p>
+			</subsection>
+
+		</section>
+
+		<section name="Gestion des abonnés">
+			<subsection name="Description">
+				<p>
+					Cette page présente les emails et les dates
+					d'inscription de l'ensemble des abonnés d'une
+					newsletter.
+					<img
+						src="../../../src/site/resources/images/newsletter_manual_012.gif"
+						alt="Image" />
+					La liste des abonnés peut être paginée si elle
+					dépasse un certain nombre défini par le webmestre.
+					Dans ce cas les boutons « 
+					<u>Précédents</u>
+					 » et « 
+					<u>Suivants</u>
+					 » apparaissent pour naviguer entre les pages.
+				</p>
+			</subsection>
+			<subsection name="Les actions possibles">
+				<p>
+					<ul>
+						<li>
+							Le bouton « 
+							<u>Ajouter un abonné</u>
+							 » permet de sauvegarder l' email saisi en
+							base de données. Cet email doit être de la
+							forme : x&amp;xx
+							<b>@</b>
+							y...yy
+							<b>.</b>
+							zzz
+						</li>
+						<li>
+							Le bouton « 
+							<u>Rechercher</u>
+							 » permet de filtrer la liste des abonnés en
+							ne gardant que ceux dont l'adresse mail
+							contient la chaîne de caractères saisie.
+						</li>
+						<li>
+							Le bouton « Suppression » effectue la
+							désinscription de l'abonné à la newsletter
+							concernée.
+						</li>
+						<li>
+							Le bouton « 
+							<u>Importer</u>
+							 » redirige l'utilisateur vers la page
+							d'importation d'une liste d'abonnés.
+						</li>
+					</ul>
+				</p>
+			</subsection>
+
+		</section>
+
+		<section name="Import des abonnés">
+			<subsection name="Description">
+				<p>
+					Cette page permet d'uploader un fichier csv'
+					contenant une liste d'emails.
+					<img
+						src="../../../src/site/resources/images/newsletter_manual_013.gif"
+						alt="Image" />
+					<ul>
+						<li>
+							Le fichier doit avoir une extension .csv'.
+						</li>
+						<li>Les emails doivent être :</li>
+					</ul>
+					<ul>
+						<li>
+							De la forme : x&amp;xx
+							<b>@</b>
+							y...yy
+							<b>.</b>
+							zzz
+						</li>
+						<li>Dans la première colonne du fichier.</li>
+					</ul>
+				</p>
+			</subsection>
+			<subsection name="Les actions possibles">
+				<p>
+					<ul>
+						<li>
+							Le bouton « 
+							<u>Importer</u>
+							 » efface les abonnés présents et les
+							remplace par ceux du document.
+						</li>
+						<li>
+							Le bouton « 
+							<u>Browse</u>
+							 » permet de naviguer dans le système de
+							fichiers pour choisir le document à
+							uploader.
+						</li>
+					</ul>
+
+				</p>
+			</subsection>
+
+		</section>
+
+		<section name="Suppression d'un abonné">
+			<subsection name="Description">
+				<p>
+					Lors d'une demande de suppression d'un abonné, une
+					page de confirmation est affichée, permettant à
+					l'utilisateur d'annuler sa demande.
+					<img
+						src="../../../src/site/resources/images/newsletter_manual_014.gif"
+						alt="Image" />
+
+				</p>
+			</subsection>
+			<subsection name="Les actions possibles">
+				<p>
+					<ul>
+						<li>
+							Le bouton « 
+							<u>Confirmer</u>
+							 » effectue la désinscription de l'abonné à
+							la newsletter concernée et redirige l'
+							utilisateur vers la page de gestion des
+							abonnés.
+						</li>
+						<li>
+							Le bouton « 
+							<u>Annuler</u>
+							 » ne modifie pas les données et redirige l'
+							utilisateur vers la page de gestion des
+							abonnés.
+						</li>
+					</ul>
+				</p>
+			</subsection>
+
+		</section>
+
+		<section name="Composition d'une newsletter">
+			<subsection name="Description">
+				<p>
+					Cette page permet à l'utilisateur de composer la
+					newsletter. Il ne peut y accéder que s'il existe au
+					moins un modèle d'article et un modèle de
+					newsletter.
+
+					Elle est constituée d'informations générales non
+					modifiables (libellé de la lettre, date de dernier
+					envoi, thèmes associés), des listes de modèles
+					disponibles (modèles de newsletters, modèles
+					d'articles) et d'un éditeur HTML affichant le
+					contenu éventuel de la newsletter.
+				</p>
+			</subsection>
+			<subsection name="Les actions possibles">
+				<p>
+					<ul>
+						<li>
+							Le bouton « 
+							<u>Générer</u>
+							 » ajoute automatiquement dans l'éditeur
+							HTML tous les articles correspondant aux
+							thèmes de la newsletter et publiés depuis la
+							date de dernier envoi de celle-ci.
+						</li>
+						<li>
+							Le bouton « 
+							<u>Enregistrer</u>
+							 » sauvegarde en base les modèles utilisés
+							et le contenu de la newsletter.
+						</li>
+						<li>
+							Le bouton
+							<img
+								src="../../../src/site/resources/images/newsletter_manual_015.gif"
+								alt="Image" />
+							ouvre une popup dédiée aux linkservices dont
+							celui qui permet de sélectionner des
+							articles par thème et/ou date de
+							publication.
+
+						</li>
+					</ul>
+				</p>
+			</subsection>
+
+		</section>
+
+		<section name="Préparation de l'envoi d'une newsletter">
+			<subsection name="Description">
+				<p>
+					Cette page présente une visualisation de la
+					newsletter avant envoi et permet à l'utilisateur de
+					saisir l'objet de celle-ci.
+					<img
+						src="../../../src/site/resources/images/newsletter_manual_016.gif"
+						alt="Image" />
+				</p>
+			</subsection>
+			<subsection name="Les actions possibles">
+				<p>
+					<ul>
+						<li>
+							Le bouton « 
+							<u>Envoyer</u>
+							 » redirige l'utilisateur vers un message de
+							confirmation avant l'envoi de la newsletter
+							à tous les abonnés. Pour que l'envoi soit
+							possible, il faut au moins un abonné à la
+							newsletter. De plus, si la newsletter n'a
+							pas changé depuis le dernier envoi, un
+							message d'information apparaît au moment de
+							l'envoi.
+						</li>
+						<li>
+							Le bouton « 
+							<u>Re-composer la newsletter</u>
+							 » redirige l'utilisateur vers la page de
+							composition d'une newsletter
+						</li>
+					</ul>
+				</p>
+			</subsection>
+
+		</section>
+
+		<section
+			name="Linkservice « Sélection d'articles depuis la newsletter »">
+			<subsection name="Description">
+				<p>
+					L'accès à ce linkservice se fait par la popup dédiée
+					qui est lancée par le bouton
+					<img
+						src="../../../src/site/resources/images/newsletter_manual_015.gif"
+						alt="Image" />
+					de l'éditeur HTML présent dans la page de
+					composition d'une newsletter.
+
+					Un lien « Sélection d'articles depuis la
+					newsletter » permet alors d'accéder au linkservice
+					correspondant.
+
+					La page de sélection contient 3 parties :
+					<ul>
+						<li>
+							Les critères de recherche sont au nombre de
+							2 : la date de publication (qui doit être de
+							la forme jj/mm/aaaa pour être pris en
+							compte) et les thèmes associés.
+						</li>
+						<li>
+							La liste des articles correspondant aux
+							critères saisis et pouvant être ajoutés à la
+							newsletter en cochant la case dédiée à cet
+							usage.
+						</li>
+						<li>
+							Le choix du modèle d'article à utiliser pour
+							le ou les articles sélectionnés.
+						</li>
+					</ul>
+					<img
+						src="../../../src/site/resources/images/newsletter_manual_018.gif"
+						alt="Image" />
+				</p>
+			</subsection>
+			<subsection name="Les actions possibles">
+				<p>
+					<ul>
+						<li>
+							Le bouton « 
+							<u>Rechercher</u>
+							 » filtre les résultats avec les critères
+							saisis.
+						</li>
+						<li>
+							Le bouton « 
+							<u>Insérer</u>
+							 » ajoute les articles cochés selon le
+							modèle choisi à l'endroit du curseur placé
+							dans l'éditeur HTML. Si le curseur n'est pas
+							dans l'éditeur, l'insertion ne peut se
+							faire.
+						</li>
+					</ul>
+				</p>
+			</subsection>
+
+		</section>
+
+		<section name="Portlet Archive de newsletters">
+			<subsection name="Description">
+				<p>
+					L'ajout d'une rubrique « Archive de newsletters »
+					dirige l'utilisateur vers une page de création de
+					rubrique contenant les informations générales d'une
+					rubrique :
+					<ul>
+						<li>
+							Titre de la rubrique (obligatoire), le type
+							d'affichage (avec ou sans titre), l'ordre,
+							la colonne, le style, l'acceptation ou non
+							des alias.
+						</li>
+					</ul>
+
+					La modification d'une rubrique archive de
+					newsletters ajoute à ces informations :
+					<ul>
+						<li>
+							Une liste des newsletters disponibles (titre
+							et date d'envoi) pour l'insertion dans le
+							portlet d'archive.
+						</li>
+					</ul>
+					<img
+						src="../../../src/site/resources/images/newsletter_manual_019.gif"
+						alt="Image" />
+				</p>
+			</subsection>
+			<subsection name="Les actions possibles">
+				<p>
+					<ul>
+						<li>
+							Le bouton « 
+							<u>Valider</u>
+							 » permet d'enregistrer les changements
+							effectués et de prendre en compte les
+							newsletters cochées par l'utilisateur.
+						</li>
+						<li>
+							Le bouton « 
+							<u>Retour</u>
+							 » redirige l'utilisateur vers la page
+							contenant le portlet.
+						</li>
+					</ul>
+				</p>
+			</subsection>
+
+		</section>
+		<!--  modele
+			<section name="Gestion des modèles">
+			<subsection name="Description">
+			<p></p>
+			</subsection>
+			<subsection name="Les actions possibles">
+			<p></p>
+			</subsection>
+			
+			</section>
+		-->
+	</body>
+</document>

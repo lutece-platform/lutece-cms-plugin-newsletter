@@ -1,0 +1,42 @@
+<div class="content-box">
+    <h2>#i18n{newsletter.manage_archive.boxTitle}</h2>    
+   
+    
+    <form method="post" action="jsp/admin/plugins/newsletter/ManageArchive.jsp">
+        <@pagination paginator=paginator />
+        <input type="hidden" name="newsletter_id" value="${newsletter_id}" />      
+        <!-- Number of users per page selector -->
+        #i18n{newsletter.manage_archive.labelItemsPerPage} :
+        <select name="items_per_page">
+            <#list [ "10" , "20" , "50" , "100" ] as nb>
+            <#if nb_items_per_page = nb >
+            <option selected="selected" value="${nb}">${nb}</option>
+            <#else>
+            <option value="${nb}">${nb}</option>
+            </#if>
+            </#list>
+        </select>                            
+        <input type="submit" class="button" value="#i18n{portal.users.manage_users.buttonItemsPerPage}" />
+    </form>          	
+	    <table>
+	        <tr>
+	         	<th>#i18n{newsletter.manage_archive.columnTitleList}</th>	
+	         	<th>#i18n{newsletter.manage_archive.columnTitleDate}</th>           
+	            <th>#i18n{newsletter.manage_archive.columnTitleDelete}</th>
+	        </tr>
+	        <#list newsletters_list as newsletter>
+	        <tr>	        	
+	            <td>${newsletter.emailSubject}</td>
+	            <td>${newsletter.date}</td>
+	            
+	            <td>
+	                <a href="jsp/admin/plugins/newsletter/RemoveSendingNewsLetter.jsp?newsletter_id=${newsletter_id}&sending_newsletter_id=${newsletter.id}">
+	                    <img src="images/admin/skin/actions/delete.png" border="0">
+	                </a>
+	            </td>
+	        </tr>
+	        </#list>
+	    </table>
+    </form>       
+    
+</div>

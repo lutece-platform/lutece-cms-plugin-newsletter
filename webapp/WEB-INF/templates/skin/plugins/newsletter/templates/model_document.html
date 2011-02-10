@@ -1,0 +1,36 @@
+<!-- model_document template -->
+<table width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+    	<#if document?exists>
+        <td>
+	        <#if virtual_hosts?exists>
+    	        <#list virtual_hosts as host >
+	    	        <#list portlets_collec as portlet>
+	        		    <a href=${host.name}/jsp/site/Portal.jsp?document_id=${document.id}&portlet_id=${portlet.id}>
+		                	${host.code}&nbsp;
+	     	 			</a>
+					</#list>
+				</#list>
+			<#else>
+    	        <#list portlets_collec as portlet>
+					<a href=${base_url}/jsp/site/Portal.jsp?document_id=${document.id}&portlet_id=${portlet.id}>
+	    				${portlet.name}
+	               	</a>
+				</#list>
+	        </#if>
+        </td>
+        <table>
+            <td>
+                <h3>${document.title}</h3>
+            </td>
+            <td>
+                ${document.summary}
+            </td>
+        </table>
+        <#else>
+        	No documents available
+        </#if>
+    </tr>
+</table>
+
+<!-- end model_document template-->

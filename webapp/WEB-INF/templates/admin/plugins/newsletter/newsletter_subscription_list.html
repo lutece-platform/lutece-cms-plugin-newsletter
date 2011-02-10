@@ -1,0 +1,25 @@
+<table width="95%" align="center" cellpadding="5" cellspacing="0">
+    <tr>
+        <th class="admin-title" width="5%">&nbsp;</th>
+        <th class="admin-title" width="10%">#i18n{newsletter.newsletter_subscription_list.labelDateSent}</th>
+        <th class="admin-title" width="85%" align="left">#i18n{newsletter.newsletter_subscription_list.labelSubject}</th>
+    </tr>
+    
+    <#list subscribed_newsletter_list as subscribed>
+    <tr>
+        <td width="5%">
+            <input type="checkbox" name="cbx_snd_${subscribed.id}" class="checkbox"  ${selected_newsletter_list?seq_contains(subscribed.id)?string("checked=\"checked\"", "")}
+/>
+</td>
+        <td width="10%">
+            ${subscribed.dateLastSending}
+        </td>
+        <td width="85%">
+            
+            <b>${subscribed.name}</b>
+            
+        </td>
+    </tr>
+    </#list>
+    
+</table>

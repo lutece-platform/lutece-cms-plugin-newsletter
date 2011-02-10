@@ -1,0 +1,87 @@
+<div class="content-box">
+    <h2>#i18n{newsletter.modify_newsletter.boxTitle}</h2>
+    
+    <form method="post" name="modify_newsletter" action="jsp/admin/plugins/newsletter/DoModifyNewsLetter.jsp">
+        <input type="hidden" name="newsletter_id" value="${newsletter.id}" />
+        <p>             
+            <label for="newsletter_name">#i18n{newsletter.modify_newsletter.label} * :</label>
+            <input type="text" id="newsletter_name" name="newsletter_name" size="60" maxlength="50" value="${newsletter.name}" />
+        </p>
+         <p>
+            <label for="newsletter_description">#i18n{newsletter.create_newsletter.description} * :</label>
+            <textarea id="newsletter_description" name="newsletter_description" cols="60" rows="10" >${newsletter_description}</textarea>
+        </p> 
+        <p>
+            <label for="date_last_send">#i18n{newsletter.modify_newsletter.dateLastSend} * :</label>
+            <input type="text" id="date_last_send" name="date_last_send" value="${date_last_sending}" size="10" maxlength="10" onBlur="VerifyDate(date_last_send)" />
+        </p>
+        <p><#--
+            <label for="document_list_id">#i18n{newsletter.modify_newsletter.documentLists} * :</label>
+            <select multiple="multiple" id="document_list_id" name="document_list_id" >
+                <#list document_lists_list as list>
+                <#if list.checked>
+                <option selected="selected" value="${list.code}">${list.name}</option>
+                <#else>
+                <option value="${list.code}">${list.name}</option>
+                </#if>
+                </#list>
+            </select>
+        </p>-->
+        <p>
+            <label for="category_list_id">#i18n{newsletter.modify_newsletter.categoryList} * :</label>
+            <#if category_list?has_content>
+            <select multiple="multiple" id="category_list_id" name="category_list_id" >
+                <#list category_list as list>
+                <#if list.checked>
+                <option selected="selected" value="${list.code}">${list.name}</option>
+                <#else>
+                <option value="${list.code}">${list.name}</option>
+                </#if>
+                </#list>
+            </select>
+            <#else>
+            #i18n{newsletter.modify_newsletter.labelNoCategory}
+                <input type="hidden" id="newsletter_no_category" name="newsletter_no_category" value="no_category" />
+       
+            </#if>
+        </p>
+        <p>
+            <label for="newsletter_workgroup" >#i18n{newsletter.modify_newsletter.labelWorkgroup} * :</label>  
+            <@combo name="newsletter_workgroup" default_value="${newsletter.workgroup}" items=workgroup_list />
+        </p>
+        
+        
+        <p>
+            <label for="newsletter_unsubscribe" >#i18n{newsletter.modify_newsletter.labelUnsubscribe} * :</label>  
+            <@combo name="newsletter_unsubscribe" default_value="${newsletter.unsubscribe}" items=unsubscribe_list />
+        </p>
+        <p>
+            <label for="newsletter_sender_name" >#i18n{newsletter.create_newsletter.labelSenderName} * :</label>  
+            <input type="text" id="newsletter_sender_name" name="newsletter_sender_name" size="60" maxlength="255" value="${newsletter.newsletterSenderName}"  />
+        </p>
+        <p>
+            <label for="newsletter_sender_mail" >#i18n{newsletter.modify_newsletter.labelSenderMail} * :</label>  
+            <input type="text" id="newsletter_sender_mail" name="newsletter_sender_mail" size="60" maxlength="255" value="${newsletter.newsletterSenderMail}" />
+        </p>
+        <p>
+            <label for="newsletter_test_subject" >#i18n{newsletter.modify_newsletter.labelSubject} :</label> 
+            <#if newsletter.testSubject ?? >
+            	<input type="text" id="newsletter_test_subject" name="newsletter_test_subject" size="60" maxlength="255" value="${newsletter.testSubject}" />
+           	<#else>
+           	 	<input type="text" id="newsletter_test_subject" name="newsletter_test_subject" size="60" maxlength="255" value="" />
+             </#if>            
+           </p>
+        <p>
+            <label for="newsletter_test_recipients" >#i18n{newsletter.modify_newsletter.labelTestRecipients} * :</label>  
+            <input type="text" id="newsletter_test_recipients" name="newsletter_test_recipients" size="60" maxlength="255" value="${newsletter.testRecipients}" />
+            <br/>
+            <em>#i18n{newsletter.modify_newsletter.noticeDelimiter}</em>
+        </p>
+        <p>    
+            <input type="submit" value="#i18n{newsletter.modify_newsletter.buttonValidate}" class="button" />
+        </p>
+        
+    </form>
+</div>
+
+<@getDatePicker idField="date_last_send" language=locale.language />

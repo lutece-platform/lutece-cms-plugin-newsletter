@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>Guide utilisateur du plugin Newsletter</title>
+	</properties>
+	<body>
+		<section name="Portlet Archive de newsletters">
+			<subsection name="Description">
+				<p>
+					Ce portlet affiche une liste de newsletters
+					archivées sous le format suivant :
+					<p>
+						Date d'envoi : Libellé de la newsletter : Objet
+						de la newsletter
+					</p>
+
+
+					<img src="../../../src/site/resources/images/newsletter_manual_021.gif"
+						alt="Image" />
+
+				</p>
+			</subsection>
+
+			<subsection name="Les actions possibles">
+				<p>
+					<ul>
+						<li>
+							Le lien constitué par le libellé et l'objet
+							de la newsletter redirige l'utilisateur vers
+							une page détaillant cette newsletter.
+						</li>
+					</ul>
+				</p>
+			</subsection>
+
+		</section>
+		<section name="Détail d'une newsletter">
+			<subsection name="Description">
+				<p>Cette page affiche le détail d'une newsletter :
+				<ul>
+					<li>Le libellé et l'objet de la newsletter</li>
+					<li>La date d'envoi de la newsletter</li>
+					<li>Le contenu de la newsletter</li>
+				</ul>
+				</p>
+			</subsection>
+		</section>
+	</body>
+</document>

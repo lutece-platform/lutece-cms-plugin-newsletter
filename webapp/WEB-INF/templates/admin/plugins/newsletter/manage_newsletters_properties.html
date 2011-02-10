@@ -1,0 +1,47 @@
+<#include "/admin/util/editor/editor.html" />
+<div class="content-box">
+    <h2>#i18n{newsletter.manage_newsletters_properties.boxTitle}</h2>
+    
+    <form method="post" name="manage_newsletter_properties" action="jsp/admin/plugins/newsletter/DoManageNewsLetterProperties.jsp">        
+        <p>
+			<label for="active_validation">#i18n{newsletter.manage_newsletters_properties.labelActiveValidation} :</label>
+			<#if properties.validationActive >
+				<input type="checkbox" name="active_validation" value="1" checked="checked" />
+			<#else>
+				<input type="checkbox" name="active_validation" value="1" />
+			</#if>
+			<br />
+			<label>&nbsp;</label>
+			#i18n{newsletter.manage_newsletters_properties.labelActiveValidationComment}
+		</p>
+        <#if is_active_captcha>
+			<p>
+				<label for="active_captcha">#i18n{newsletter.manage_newsletters_properties.labelActiveCaptcha} :</label>
+				<#if properties.captchaActive >
+					<input type="checkbox" name="active_captcha" value="1" checked="checked" />
+				<#else>
+					<input type="checkbox" name="active_captcha" value="1" />
+				</#if>
+				<br />
+				<label>&nbsp;</label>
+				#i18n{newsletter.manage_newsletters_properties.labelActiveCaptchaComment}
+			</p>
+		</#if>
+        <label for="tos" >#i18n{newsletter.manage_newsletters_properties.termOfService}  :</label>
+        <br /> <br /> 
+	        <div class="editor">        	  
+				<textarea id="tos" name="tos" class="richtext" rows="20" cols="90">
+					<#if properties.TOS??>${properties.TOS}</#if>
+				</textarea>			
+			</div>
+        <p>    
+            <input type="submit" value="#i18n{newsletter.manage_newsletters_properties.buttonValidate}" class="button" />
+        </p>        
+    </form>
+    <#if is_clean_subscriber_right>
+	    <form method="post" action="jsp/admin/plugins/newsletter/DoCleanSubscribers.jsp">
+	      <input type="submit" value="#i18n{newsletter.manage_newsletters_properties.buttonAddNewsletter}" class="button" />
+	    </form>
+    </#if>
+</div>
+<@initEditor />

@@ -1,0 +1,66 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    
+    <parent>
+        <artifactId>lutece-plugins-pom</artifactId>
+        <groupId>fr.paris.lutece.plugins</groupId>
+        <version>2.25</version>
+    </parent>
+    
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>fr.paris.lutece.plugins</groupId>
+    <artifactId>plugin-newsletter</artifactId>
+    <packaging>lutece-plugin</packaging>
+    <version>2.2.3-SNAPSHOT</version>
+    <name>Lutece newsletter plugin</name>
+    
+    <repositories>
+		<repository>
+			<id>lutece</id>
+			<name>luteceRepository</name>
+			<url>http://dev.lutece.paris.fr/maven_repository</url>
+			<layout>default</layout>
+		</repository>
+		<repository>
+          <id>luteceSnapshot</id>
+          <name>luteceSnapshot</name>
+          <url>http://dev.lutece.paris.fr/snapshot_repository</url>
+          <snapshots>
+              <enabled>true</enabled>
+          </snapshots>
+		  <releases>
+			  <enabled>false</enabled>
+		  </releases>
+        </repository>
+	</repositories>
+    
+    <dependencies>
+        <dependency>
+            <groupId>fr.paris.lutece</groupId>
+            <artifactId>lutece-core</artifactId>
+            <version>[2.3.0,3.0.0-SNAPSHOT)</version>
+            <type>lutece-core</type>
+        </dependency>
+        <dependency>
+            <groupId>fr.paris.lutece.plugins</groupId>
+            <artifactId>plugin-document</artifactId>
+            <version>[2.0.14,3.0.0-SNAPSHOT)</version>
+            <type>lutece-plugin</type>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>1.8</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta-regexp</groupId>
+            <artifactId>jakarta-regexp</artifactId>
+            <version>1.4</version>
+        </dependency>
+    </dependencies>
+    
+    <properties>
+        <componentName>newsletter</componentName>
+		<jiraProjectName>NEWSLETTER</jiraProjectName>
+        <jiraComponentId>10160</jiraComponentId>
+    </properties>
+</project>

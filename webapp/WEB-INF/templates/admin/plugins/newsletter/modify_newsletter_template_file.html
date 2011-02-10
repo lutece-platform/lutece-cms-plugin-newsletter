@@ -1,0 +1,61 @@
+<div class="content-box">
+    <h2>#i18n{newsletter.modify_newsletter_template_file.boxTitle}</h2>
+    <#if template?exists>
+    <form method="post" enctype="multipart/form-data" action="jsp/admin/plugins/newsletter/DoModifyNewsLetterTemplateFile.jsp">
+        <input type="hidden" name="newsletter_template_id" value="${template.id}" />
+        <p>
+            <label for="newsletter_template_name">#i18n{newsletter.add_newsletter_template.name} *:</label>
+            <input type="text" id="newsletter_template_name" name="newsletter_template_name" size="60" maxlength="50" value="${template.description}" />
+        </p>
+        
+        <p>
+            <label for="newsletter_template_type">#i18n{newsletter.add_newsletter_template.templateType} *:</label>
+            <#list template_type  as item>
+            <#if item.isChecked() > 			
+            <input class="radio" checked="checked" type="radio" name="newsletter_template_type" value="${item.code}" />
+            <#else>
+            <input class="radio" type="radio" name="newsletter_template_type" value="${item.code}" />
+            </#if>
+            #i18n{${plugin.name}.${item.name}}
+            </#list>
+        </p>
+        
+        <p>
+            <label for="newsletter_template_new_picture">#i18n{newsletter.add_newsletter_template.imageFileName} :</label>
+            <input type="file" id="newsletter_template_new_picture" name="newsletter_template_new_picture" size="32" value="" />
+        </p>
+        
+        <p>
+            <label for="newsletter_template_source">#i18n{newsletter.modify_newsletter_template.fileContent} : </label>
+            <input type="text" readonly="readonly" name="newsletter_template_new_file" value="${template.fileName}" />
+            
+        </p>
+        <p>
+            <div align="right">
+                <a class="info" href="javascript:void;">
+                    <img src="images/admin/skin/b_help.png" border="0" />
+                    <span>
+                        <br>
+                        <b style="margin-left: 100px;">#i18n{newsletter.modify_newsletter_template.titleHelp}</b>
+                        <br>
+                        
+                        <pre> 
+                       #i18n{newsletter.modify_newsletter_template.contentHelp}    
+                        </pre>
+                    </span>
+                </a>
+            </div>
+            
+        </p>
+        <p>
+            <center>
+                <textarea cols="100" rows="50" id="newsletter_template_source" name="newsletter_template_source">${template_source}</textarea>
+            </center>
+        </p>
+        
+        <center>
+            <input type="submit" value="#i18n{newsletter.modify_newsletter_template.buttonModify}" class="button" />
+        </center>
+    </form>
+    </#if>
+</div>

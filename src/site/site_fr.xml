@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Lutece">
+    
+    <body>
+        
+        <menu name="Plugin Newsletter">
+            <item name="Introduction" href="index.html"/>
+        </menu>
+        
+        <menu name="Manuel newsletter">
+            <item name="Interface d'administration" href="newsletter-admin.html"/>
+            <item name="Interface d'utilisation" href="newsletter-userguide.html"/>
+        </menu>
+ 
+        <menu name="Téléchargements" inherit="bottom" >
+			     <item name="Versions stables" href="../../../stable_builds/plugins/plugin-newsletter/"/>
+			     <item name="Nightly builds" href="../../../nightly_builds/plugins/plugin-newsletter/" />
+		</menu>
+
+		<menu ref="reports" />
+		
+    </body>
+</project>
