@@ -19,6 +19,12 @@
     </core-version-dependency>
     <db-pool-required>1</db-pool-required>
     
+    <!-- Specific plugin CSS stylesheet -->
+    <css-stylesheets>
+        <css-stylesheets-scope>portal</css-stylesheets-scope>
+        <css-stylesheet>newsletter/newsletter.css</css-stylesheet>
+    </css-stylesheets>
+    
     <!-- Xpage configuration -->
     <applications>
         <application>
