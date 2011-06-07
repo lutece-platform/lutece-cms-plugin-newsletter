@@ -43,7 +43,6 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppPathService;
-import fr.paris.lutece.portal.web.constants.Bookmarks;
 import fr.paris.lutece.util.html.HtmlTemplate;
 
 import java.util.HashMap;
@@ -118,7 +117,7 @@ public final class NewsLetterArchiveService
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_VIEW_NEWSLETTER_ARCHIVE,
                 request.getLocale(  ), model );
-        template.substitute( Bookmarks.WEBAPP_PATH_FOR_LINKSERVICE, strBaseUrl );
+        template.substitute( NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE, strBaseUrl );
 
         return template.getHtml(  );
     }

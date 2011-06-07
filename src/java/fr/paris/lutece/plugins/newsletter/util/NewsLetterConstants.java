@@ -75,6 +75,8 @@ public class NewsLetterConstants
     public static final String MARK_DOCUMENT_INTRO = "document_intro";
     public static final String MARK_DOCUMENT_PUBLICATION_DATE = "document_publication_date";
     public static final String MARK_SENDING = "sending";
+    public static final String WEBAPP_PATH_FOR_LINKSERVICE = "@webapp_path_for_linkservice@";
+
 
     ///////////////////////////////////////////////////////////////////////
     // bookmark to use for newsletter templates

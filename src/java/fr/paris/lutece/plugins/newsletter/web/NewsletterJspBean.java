@@ -75,7 +75,6 @@ import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.portal.service.workgroup.AdminWorkgroupService;
 import fr.paris.lutece.portal.web.admin.PluginAdminPageJspBean;
-import fr.paris.lutece.portal.web.constants.Bookmarks;
 import fr.paris.lutece.portal.web.constants.Messages;
 import fr.paris.lutece.portal.web.constants.Parameters;
 import fr.paris.lutece.portal.web.upload.MultipartHttpServletRequest;
@@ -702,7 +701,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         }
 
         strHtmlContent = strHtmlContent.replaceAll( NewsLetterConstants.MARK_BASE_URL, strBaseUrl );
-        strHtmlContent = strHtmlContent.replaceAll( Bookmarks.WEBAPP_PATH_FOR_LINKSERVICE, strBaseUrl );
+        strHtmlContent = strHtmlContent.replaceAll( NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE, strBaseUrl );
 
         model.put( MARK_HTML_CONTENT, strHtmlContent );
 
@@ -2747,7 +2746,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         }
 
         String strNewContent = strContent;
-        strNewContent = StringUtil.substitute( strNewContent, Bookmarks.WEBAPP_PATH_FOR_LINKSERVICE, strBaseUrl );
+        strNewContent = StringUtil.substitute( strNewContent, NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE, strBaseUrl );
 
         return strNewContent;
     }
@@ -2957,7 +2956,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         HtmlTemplate templateNewsLetter = AppTemplateService.getTemplate( TEMPLATE_SEND_NEWSLETTER, getLocale(  ),
                 sendingModel );
 
-        templateNewsLetter.substitute( Bookmarks.WEBAPP_PATH_FOR_LINKSERVICE, strBaseUrl );
+        templateNewsLetter.substitute( NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE, strBaseUrl );
 
         return templateNewsLetter;
     }
@@ -2980,7 +2979,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
             boolean useAbsoluteUrl = isAbsoluteUrl(  );
             String strTemplate = templateNewsletter.getHtml(  );
-            strTemplate = StringUtil.substitute( strTemplate, strBaseUrl, Bookmarks.WEBAPP_PATH_FOR_LINKSERVICE );
+            strTemplate = StringUtil.substitute( strTemplate, strBaseUrl, NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE );
             urlAttachments = MailService.getUrlAttachmentList( strTemplate, strBaseUrl, useAbsoluteUrl );
 
             // all images, css urls are relative

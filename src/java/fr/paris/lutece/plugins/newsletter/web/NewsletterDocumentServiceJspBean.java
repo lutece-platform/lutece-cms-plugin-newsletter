@@ -47,7 +47,6 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppPathService;
-import fr.paris.lutece.portal.web.constants.Bookmarks;
 import fr.paris.lutece.portal.web.insert.InsertServiceJspBean;
 import fr.paris.lutece.portal.web.insert.InsertServiceSelectionBean;
 import fr.paris.lutece.util.ReferenceList;
@@ -152,7 +151,7 @@ public class NewsletterDocumentServiceJspBean extends InsertServiceJspBean imple
 
         //Replace portal path for editor and document display
         String strWebappUrl = AppPathService.getBaseUrl( request );
-        model.put( Bookmarks.WEBAPP_PATH_FOR_LINKSERVICE, strWebappUrl );
+        model.put( NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE, strWebappUrl );
         model.put( PARAMETER_PLUGIN, _plugin.getName(  ) );
         model.put( MARK_INPUT, request.getParameter( PARAMETER_INPUT ) );
 
@@ -221,7 +220,7 @@ public class NewsletterDocumentServiceJspBean extends InsertServiceJspBean imple
         model.put( NewsLetterConstants.MARK_DOCUMENTS_LIST, documentsList );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_INSERT_DOCEMENTS, locale, model );
-        template.substitute( Bookmarks.WEBAPP_PATH_FOR_LINKSERVICE, strBaseUrl );
+        template.substitute( NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE, strBaseUrl );
 
         return insertUrl( request, strInput, StringEscapeUtils.escapeJavaScript( template.getHtml(  ) ) );
     }
