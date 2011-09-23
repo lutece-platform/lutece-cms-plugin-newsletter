@@ -33,8 +33,19 @@
  */
 package fr.paris.lutece.plugins.newsletter.service;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+
+import fr.paris.lutece.plugins.document.business.Document;
+import fr.paris.lutece.plugins.document.business.attributes.DocumentAttribute;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetter;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterTemplate;
+import fr.paris.lutece.portal.service.util.AppLogService;
 
 
 /**
@@ -44,6 +55,8 @@ import fr.paris.lutece.plugins.newsletter.business.NewsLetterTemplate;
 public class NewsletterService
 {
     private static NewsletterService _singleton = new NewsletterService(  );
+    
+    private static final String FULLSTOP=".";
 
     /**
     * Initialize the Newsletter service
@@ -64,4 +77,52 @@ public class NewsletterService
     {
         return _singleton;
     }
+    
+	/**
+	 * copy specified document's type file into a given folder
+	 * @param document the document
+	 * @param strFileType the file type
+	 * @param strDestFolderPath the destination folder
+	 * @return name of the copy file or null if there is no copied file
+	 */
+	public String copyFileFromDocument( Document document, String strFileType, String strDestFolderPath )
+	{
+		List<DocumentAttribute> listDocumentAttribute = document.getAttributes();
+		String strFileName = null;
+		for ( DocumentAttribute documentAttribute : listDocumentAttribute )
+		{
+			// if binary or is a strFileType
+			if ( documentAttribute.isBinary() && documentAttribute.getValueContentType().contains( strFileType ) )
+			{
+				byte[] tabByte = documentAttribute.getBinaryValue();
+				// fileName is composed from documentID+ documentAttributeId + documentAttributeOrder + "." + fileExtension
+				strFileName = String.valueOf( document.getId() ) + String.valueOf( documentAttribute.getId() ) + String.valueOf( documentAttribute.getAttributeOrder() ) + FULLSTOP
+						+ StringUtils.substringAfterLast( documentAttribute.getTextValue(), FULLSTOP );
+
+				FileOutputStream fos = null;
+				try
+				{	
+					new File( strDestFolderPath ).mkdir(  );
+					
+					File file = new File (strDestFolderPath + strFileName);
+					fos = new FileOutputStream( file );
+					IOUtils.write( tabByte, fos );
+				}
+				catch ( IOException e )
+				{
+					AppLogService.error( e );
+				}
+				catch ( Exception e )
+				{
+					AppLogService.error( e );
+				}
+				finally
+				{
+					IOUtils.closeQuietly( fos );
+				}
+			}
+
+		}
+		return strFileName;
+	}
 }

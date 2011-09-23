@@ -20,8 +20,16 @@
 	        </#if>
         </td>
         <table>
+        	<#if img_path?exists>
+            	<td>
+			    	<img width="80" height="80" src="${img_path}"></img>  
+	    		</td>
+	    	 </#if>	
             <td>
                 <h3>${document.title}</h3>
+            </td>
+            <td>
+            
             </td>
             <td>
                 ${document.summary}

@@ -151,7 +151,13 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String PROPERTY_NO_CATEGORY = "no_category";
     private static final String PROPERTY_PROD_BASE_URL = "lutece.prod.url";
     private static final String PROPERTY_LIMIT_CONFIRM_DAYS = "newsletter.confirm.limit";
-
+    
+    //copy document's img
+    private static final String PROPERTY_WEBAPP_PATH="newsletter.webapp.path";
+    private static final String PROPERTY_WEBAPP_URL="newsletter.webapp.url";
+    private static final String PROPERTY_NO_SECURED_IMG_FOLDER="newsletter.nosecured.img.folder.name";
+    private static final String PROPERTY_NO_SECURED_IMG_OPTION="newsletter.nosecured.img.option";
+    
     //Css inclusion
     private static final String PROPERTY_CSS_FILES = "newsletter.css.files";
     private static final String SEPARATOR_PROPERTY_CSS_FILES = ";";
@@ -341,6 +347,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private String _strCurrentPageIndex;
     private String[] _multiSelectionValues;
     private static int DEFAULT_LIMIT = 7;
+    private static final String FILE_TYPE="image";
+    private static final String SLASH="/";
+    
 
     /**
      * Creates a new NewsletterJspBean object.
@@ -2658,7 +2667,20 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             {
                 Map<String, Object> model = new HashMap<String, Object>(  );
                 model.put( NewsLetterConstants.MARK_DOCUMENT, document );
+                
+				// if noSecuredImg is true, it will copy all document's picture in a no secured folder
+				String strNoSecuredImg = AppPropertiesService.getProperty( PROPERTY_NO_SECURED_IMG_OPTION );
 
+				if ( ( strNoSecuredImg != null ) && strNoSecuredImg.equalsIgnoreCase( Boolean.TRUE.toString() ) )
+				{	
+					String strImgFolder = AppPropertiesService.getProperty( PROPERTY_NO_SECURED_IMG_FOLDER ) + SLASH;
+					String pictureName = NewsletterService.getInstance().copyFileFromDocument( document, FILE_TYPE, AppPropertiesService.getProperty( PROPERTY_WEBAPP_PATH, AppPathService.getWebAppPath() + SLASH ) + strImgFolder );
+					if ( pictureName != null )
+					{
+						model.put( MARK_IMG_PATH, AppPropertiesService.getProperty( PROPERTY_WEBAPP_URL ) + strImgFolder + pictureName );
+					}
+				}
+                
                 ReferenceList hostKeysList = new ReferenceList(  );
 
                 try
@@ -2989,7 +3011,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             }
             else
             {
-                String strContent = NewsletterUtils.rewriteUrls( templateNewsletter.getHtml(  ), strBaseUrl );
+            	String strContent = NewsletterUtils.rewriteUrls( templateNewsletter.getHtml(  ), strBaseUrl );
                 templateNewsletter = new HtmlTemplate( strContent );
             }
         }
@@ -3130,4 +3152,6 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         return byteSubscribersList;
     }
+    
+
 }

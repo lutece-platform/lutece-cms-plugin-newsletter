@@ -181,12 +181,15 @@ public class HtmlDocumentNewsletter
 
             // Retrieve the url, then test if it matches the base url
             Node nodeAttribute = attributes.getNamedItem( elementType.getAttributeName(  ) );
-            String strSrc = nodeAttribute.getNodeValue(  );
+			if ( nodeAttribute != null )
+			{
+				String strSrc = nodeAttribute.getNodeValue();
 
-            if ( !strSrc.matches( CONSTANT_STATIC_URL ) && !strSrc.contains( CONSTANT_PROTOCOL_DELIMITER ) )
-            {
-                nodeAttribute.setNodeValue( _strBaseUrl + strSrc );
-            }
+				if ( !strSrc.matches( CONSTANT_STATIC_URL ) && !strSrc.contains( CONSTANT_PROTOCOL_DELIMITER ) )
+				{
+					nodeAttribute.setNodeValue( _strBaseUrl + strSrc );
+				}
+			}
         }
     }
 
