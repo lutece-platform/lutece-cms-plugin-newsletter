@@ -710,6 +710,10 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         }
 
         strHtmlContent = strHtmlContent.replaceAll( NewsLetterConstants.MARK_BASE_URL, strBaseUrl );
+        if ( strBaseUrl.endsWith( NewsLetterConstants.CONSTANT_SLASH ) )
+        {
+            strBaseUrl = strBaseUrl.substring( 0, strBaseUrl.length(  ) - 1 );
+        }
         strHtmlContent = strHtmlContent.replaceAll( NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE, strBaseUrl );
 
         model.put( MARK_HTML_CONTENT, strHtmlContent );
