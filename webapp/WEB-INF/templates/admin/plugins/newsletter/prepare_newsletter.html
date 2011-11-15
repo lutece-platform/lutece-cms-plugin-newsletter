@@ -13,8 +13,8 @@
         <iframe name="preview" src="jsp/admin/plugins/newsletter/PreviewNewsLetter.jsp?newsletter_id=${newsletter.id}&plugin_name=newsletter" width="60%" height="300px" scrolling="auto"></iframe>
 	</p>
    	<p style="margin-left:30%;">
-		<a href="jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}">
+		<form method="post" action="jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}">
         	<input type="submit" value="#i18n{newsletter.prepare_newsletter.composeNewsletter}" class="button" />
-		</a>
+		</form>
 	</p>
 </div>
