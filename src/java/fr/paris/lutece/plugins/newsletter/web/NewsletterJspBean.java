@@ -347,8 +347,6 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private String _strCurrentPageIndex;
     private String[] _multiSelectionValues;
     private static int DEFAULT_LIMIT = 7;
-    private static final String FILE_TYPE="image";
-    private static final String SLASH="/";
     
 
     /**
@@ -2422,7 +2420,23 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             newsletter.setDocumentTemplateId( Integer.parseInt( request.getParameter( PARAMETER_DOCUMENT_TEMPLATE_ID ) ) );
 
             String strBaseUrl = AppPathService.getBaseUrl( request );
-            newsletter.setHtml( doClean( request.getParameter( PARAMETER_HTML_CONTENT ), strBaseUrl ) );
+            
+         // if noSecuredImg is true, it will copy all document's picture in a no secured folder
+			String strNoSecuredImg = AppPropertiesService.getProperty( PROPERTY_NO_SECURED_IMG_OPTION );
+
+			if ( ( strNoSecuredImg != null ) && strNoSecuredImg.equalsIgnoreCase( Boolean.TRUE.toString() ) )
+			{
+				String strUnsecuredFolder = AppPropertiesService.getProperty( PROPERTY_NO_SECURED_IMG_FOLDER ) + NewsLetterConstants.CONSTANT_SLASH;
+				String strUnsecuredFolderPath = AppPropertiesService.getProperty( PROPERTY_WEBAPP_PATH, AppPathService.getWebAppPath() + NewsLetterConstants.CONSTANT_SLASH );
+				String strContent = NewsletterUtils.rewriteImgUrls( request.getParameter( PARAMETER_HTML_CONTENT ), strBaseUrl, AppPropertiesService.getProperty( PROPERTY_WEBAPP_URL, strBaseUrl ),
+						strUnsecuredFolderPath, strUnsecuredFolder );
+				newsletter.setHtml( doClean( strContent, strBaseUrl ) );
+			}
+			else
+			{
+				newsletter.setHtml( doClean( request.getParameter( PARAMETER_HTML_CONTENT ), strBaseUrl ) );
+			}           
+            
             NewsLetterHome.update( newsletter, getPlugin(  ) );
 
             if ( strAction.equals( I18nService.getLocalizedString( getPlugin(  ).getName(  ) +
@@ -2656,7 +2670,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         Collection<Document> listDocuments = PublishingService.getInstance(  )
                                                               .getPublishedDocumentsSinceDate( newsletter.getDateLastSending(  ),
                 documentFilter, getLocale(  ) );
-
+        
         StringBuffer sbDocumentLists = new StringBuffer(  );
 
         // get html from templates
@@ -2677,11 +2691,11 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
 				if ( ( strNoSecuredImg != null ) && strNoSecuredImg.equalsIgnoreCase( Boolean.TRUE.toString() ) )
 				{	
-					String strImgFolder = AppPropertiesService.getProperty( PROPERTY_NO_SECURED_IMG_FOLDER ) + SLASH;
-					String pictureName = NewsletterService.getInstance().copyFileFromDocument( document, FILE_TYPE, AppPropertiesService.getProperty( PROPERTY_WEBAPP_PATH, AppPathService.getWebAppPath() + SLASH ) + strImgFolder );
+					String strImgFolder = AppPropertiesService.getProperty( PROPERTY_NO_SECURED_IMG_FOLDER ) + NewsLetterConstants.CONSTANT_SLASH;
+					String pictureName = NewsletterService.getInstance().copyFileFromDocument( document, NewsLetterConstants.CONSTANT_IMG_FILE_TYPE, AppPropertiesService.getProperty( PROPERTY_WEBAPP_PATH, AppPathService.getWebAppPath() + NewsLetterConstants.CONSTANT_SLASH ) + strImgFolder );
 					if ( pictureName != null )
 					{
-						model.put( MARK_IMG_PATH, AppPropertiesService.getProperty( PROPERTY_WEBAPP_URL ) + strImgFolder + pictureName );
+						model.put( MARK_IMG_PATH, AppPropertiesService.getProperty( PROPERTY_WEBAPP_URL, strBaseUrl ) + strImgFolder + pictureName );
 					}
 				}
                 
