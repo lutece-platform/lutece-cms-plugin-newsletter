@@ -650,6 +650,10 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                 getUser(  ) );
 
         String strBaseUrl = getProdUrl( request );
+        if ( strBaseUrl.endsWith( NewsLetterConstants.CONSTANT_SLASH ) )
+        {
+            strBaseUrl = strBaseUrl.substring( 0, strBaseUrl.length(  ) - 1 );
+        }
         String strPathImageTemplate = AppPathService.getBaseUrl( request ) +
             AppPropertiesService.getProperty( getPlugin(  ).getName(  ) + PROPERTY_PATH_IMAGE_NEWSLETTER_TEMPLATE );
 
@@ -706,12 +710,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                 strHtmlContent = NewsLetterConstants.CONSTANT_EMPTY_STRING; //if no template available (newsletter and/or document), return an empty html content
             }
         }
-
+        
         strHtmlContent = strHtmlContent.replaceAll( NewsLetterConstants.MARK_BASE_URL, strBaseUrl );
-        if ( strBaseUrl.endsWith( NewsLetterConstants.CONSTANT_SLASH ) )
-        {
-            strBaseUrl = strBaseUrl.substring( 0, strBaseUrl.length(  ) - 1 );
-        }
+       
         strHtmlContent = strHtmlContent.replaceAll( NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE, strBaseUrl );
 
         model.put( MARK_HTML_CONTENT, strHtmlContent );
