@@ -2422,6 +2422,11 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
             String strBaseUrl = AppPathService.getBaseUrl( request );
             
+            if ( strBaseUrl.endsWith( NewsLetterConstants.CONSTANT_SLASH ) )
+            {
+                strBaseUrl = strBaseUrl.substring( 0, strBaseUrl.length(  ) - 1 );
+            }
+            
          // if noSecuredImg is true, it will copy all document's picture in a no secured folder
 			String strNoSecuredImg = AppPropertiesService.getProperty( PROPERTY_NO_SECURED_IMG_OPTION );
 
