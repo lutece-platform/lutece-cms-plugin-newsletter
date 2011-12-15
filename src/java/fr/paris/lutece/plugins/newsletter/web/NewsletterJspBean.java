@@ -650,10 +650,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                 getUser(  ) );
 
         String strBaseUrl = getProdUrl( request );
-        if ( strBaseUrl.endsWith( NewsLetterConstants.CONSTANT_SLASH ) )
-        {
-            strBaseUrl = strBaseUrl.substring( 0, strBaseUrl.length(  ) - 1 );
-        }
+        
         String strPathImageTemplate = AppPathService.getBaseUrl( request ) +
             AppPropertiesService.getProperty( getPlugin(  ).getName(  ) + PROPERTY_PATH_IMAGE_NEWSLETTER_TEMPLATE );
 
@@ -2422,11 +2419,6 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
             String strBaseUrl = AppPathService.getBaseUrl( request );
             
-            if ( strBaseUrl.endsWith( NewsLetterConstants.CONSTANT_SLASH ) )
-            {
-                strBaseUrl = strBaseUrl.substring( 0, strBaseUrl.length(  ) - 1 );
-            }
-            
          // if noSecuredImg is true, it will copy all document's picture in a no secured folder
 			String strNoSecuredImg = AppPropertiesService.getProperty( PROPERTY_NO_SECURED_IMG_OPTION );
 
@@ -2786,11 +2778,6 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
      */
     private String doClean( String strContent, String strBaseUrl )
     {
-        if ( strBaseUrl.endsWith( NewsLetterConstants.CONSTANT_SLASH ) )
-        {
-            strBaseUrl = strBaseUrl.substring( 0, strBaseUrl.length(  ) - 1 );
-        }
-
         String strNewContent = strContent;
         strNewContent = StringUtil.substitute( strNewContent, NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE, strBaseUrl );
 
