@@ -225,13 +225,12 @@ public class HtmlDocumentNewsletter
 				}
 			}
 
-			// Retrieve the url, then test if it matches the base url
 			Node nodeAttribute = attributes.getNamedItem( elementType.getAttributeName() );
 			if ( nodeAttribute != null )
 			{
 				String strSrc = nodeAttribute.getNodeValue();
 
-				if ( strSrc.contains( _strBaseUrl + NewsLetterConstants.CONSTANT_DOCUMENT ) && !strSrc.contains( strUnsecuredBaseUrl + strUnsecuredFolder ) )
+				if ( strSrc.contains( CONSTANT_SUBSTRING_BEGIN ) && !strSrc.contains( strUnsecuredBaseUrl + strUnsecuredFolder ) )
 				{
 					String strDocumentId = StringUtils.substringBetween( strSrc, CONSTANT_SUBSTRING_BEGIN, CONSTANT_SUBSTRING_END );
 					fr.paris.lutece.plugins.document.business.Document document = DocumentHome.findByPrimaryKey( Integer.valueOf( strDocumentId ) );
