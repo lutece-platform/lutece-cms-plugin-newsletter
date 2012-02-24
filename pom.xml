@@ -10,7 +10,7 @@
     <groupId>fr.paris.lutece.plugins</groupId>
     <artifactId>plugin-newsletter</artifactId>
     <packaging>lutece-plugin</packaging>
-    <version>2.2.8-SNAPSHOT</version>
+    <version>2.2.8</version>
     <name>Lutece newsletter plugin</name>
     
     <repositories>
@@ -64,8 +64,8 @@
         <jiraComponentId>10160</jiraComponentId>
     </properties>
     <scm>
-        <connection>scm:svn:http://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/cms/plugin-newsletter</connection>
-        <developerConnection>scm:svn:https://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/cms/plugin-newsletter</developerConnection>
-        <url>http://dev.lutece.paris.fr/viewvc/lutece/portal/trunk/plugins/cms/plugin-newsletter</url>
+        <connection>scm:svn:http://dev.lutece.paris.fr/svn/lutece/portal/tags/plugin-newsletter-2.2.8</connection>
+        <developerConnection>scm:svn:https://dev.lutece.paris.fr/svn/lutece/portal/tags/plugin-newsletter-2.2.8</developerConnection>
+        <url>http://dev.lutece.paris.fr/viewvc/lutece/portal/tags/plugin-newsletter-2.2.8</url>
     </scm>
 </project>
