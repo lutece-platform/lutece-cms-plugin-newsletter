@@ -33,9 +33,36 @@
  */
 package fr.paris.lutece.plugins.newsletter.web;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.lang.StringUtils;
+
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
-
 import fr.paris.lutece.plugins.document.business.Document;
 import fr.paris.lutece.plugins.document.business.DocumentFilter;
 import fr.paris.lutece.plugins.document.service.category.CategoryService;
@@ -78,43 +105,17 @@ import fr.paris.lutece.portal.web.admin.PluginAdminPageJspBean;
 import fr.paris.lutece.portal.web.constants.Messages;
 import fr.paris.lutece.portal.web.constants.Parameters;
 import fr.paris.lutece.portal.web.upload.MultipartHttpServletRequest;
+import fr.paris.lutece.portal.web.util.LocalizedPaginator;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.date.DateUtil;
 import fr.paris.lutece.util.filesystem.UploadUtil;
 import fr.paris.lutece.util.html.HtmlTemplate;
+import fr.paris.lutece.util.html.IPaginator;
 import fr.paris.lutece.util.html.Paginator;
 import fr.paris.lutece.util.mail.UrlAttachment;
 import fr.paris.lutece.util.sort.AttributeComparator;
 import fr.paris.lutece.util.string.StringUtil;
 import fr.paris.lutece.util.url.UrlItem;
-
-import org.apache.commons.fileupload.FileItem;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-
-import java.sql.Timestamp;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -370,7 +371,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         _nItemsPerPage = Paginator.getItemsPerPage( request, Paginator.PARAMETER_ITEMS_PER_PAGE, _nItemsPerPage,
                 _nDefaultItemsPerPage );
 
-        HashMap model = new HashMap(  );
+        Map<String, Object> model = new HashMap<String, Object>(  );
         Collection<NewsLetter> listNewsletter = NewsLetterHome.findAll( getPlugin(  ) );
         listNewsletter = AdminWorkgroupService.getAuthorizedCollection( listNewsletter, getUser(  ) );
 
@@ -1150,14 +1151,17 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
 
-        for ( String strId : _multiSelectionValues )
+        if ( _multiSelectionValues != null && _multiSelectionValues.length > 0 )
         {
-            Subscriber subscriber = SubscriberHome.findByPrimaryKey( Integer.parseInt( strId ), getPlugin(  ) );
-
-            if ( subscriber != null )
-            {
-                removeSubscriberFromNewsletter( subscriber, nNewsletterId, getPlugin(  ) );
-            }
+        	for ( String strId : _multiSelectionValues )
+        	{
+        		Subscriber subscriber = SubscriberHome.findByPrimaryKey( Integer.parseInt( strId ), getPlugin(  ) );
+        		
+        		if ( subscriber != null )
+        		{
+        			removeSubscriberFromNewsletter( subscriber, nNewsletterId, getPlugin(  ) );
+        		}
+        	}
         }
 
         UrlItem urlItem = new UrlItem( JSP_URL_MANAGE_SUBSCRIBERS );
@@ -1633,16 +1637,11 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         setPageTitleProperty( PROPERTY_PAGE_TITLE_MANAGE_SUBSCRIBERS );
 
-        HashMap model = new HashMap(  );
-       
-
-        model.put( MARK_NEWSLETTER, newsletter );
-
         String strSearchString = request.getParameter( NewsLetterConstants.PARAMETER_SUBSCRIBER_SEARCH );
 
-        if ( strSearchString == null )
+        if ( StringUtils.isBlank( strSearchString ) )
         {
-            strSearchString = NewsLetterConstants.CONSTANT_EMPTY_STRING;
+            strSearchString = StringUtils.EMPTY;
         }
 
         _strCurrentPageIndex = Paginator.getPageIndex( request, Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
@@ -1661,18 +1660,22 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         String strSortedAttributeName = request.getParameter( Parameters.SORTED_ATTRIBUTE_NAME );
         String strAscSort = null;
 
-        if ( strSortedAttributeName != null )
+        if ( StringUtils.isNotBlank( strSortedAttributeName ) )
         {
-            strAscSort = request.getParameter( Parameters.SORTED_ASC );
-
+        	strAscSort = request.getParameter( Parameters.SORTED_ASC );
+        	url.addParameter( Parameters.SORTED_ATTRIBUTE_NAME, strSortedAttributeName );
+            url.addParameter( Parameters.SORTED_ASC, strAscSort );
             boolean bIsAscSort = Boolean.parseBoolean( strAscSort );
 
             Collections.sort( refListSubscribers, new AttributeComparator( strSortedAttributeName, bIsAscSort ) );
         }
 
-        Paginator paginator = new Paginator( refListSubscribers, _nItemsPerPage, url.getUrl(  ),
-                Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
-        model.put( MARK_NB_ITEMS_PER_PAGE, "" + _nItemsPerPage );
+        IPaginator<Subscriber> paginator = new LocalizedPaginator<Subscriber>( refListSubscribers, _nItemsPerPage, url.getUrl(  ),
+                Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex, getLocale(  ) );
+        
+        Map<String, Object> model = new HashMap<String, Object>(  );
+        model.put( MARK_NEWSLETTER, newsletter );
+        model.put( MARK_NB_ITEMS_PER_PAGE, Integer.toString( _nItemsPerPage ) );
         model.put( MARK_SEARCH_STRING, strSearchString );
         model.put( MARK_PAGINATOR, paginator );
         model.put( MARK_SUBSCRIBERS_LIST, paginator.getPageItems(  ) );
