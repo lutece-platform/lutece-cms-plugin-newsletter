@@ -212,21 +212,25 @@ public final class NewsletterUtils
 
         return doc.getContent(  );
     }
-    
-	/**
-	 * Rewrite secured omg urls to absolutes urls
-	 * 
-	 * @param strContent The content to analyze
-	 * @param strBaseUrl The base url
-	 * @return The converted content
-	 */
-	public static String rewriteImgUrls( String strContent, String strBaseUrl, String strUnsecuredBaseUrl, String strUnsecuredFolderPath, String strUnsecuredFolder )
-	{
-		HtmlDocumentNewsletter doc = new HtmlDocumentNewsletter( strContent, strBaseUrl );
-		doc.convertUrlsToUnsecuredUrls( HtmlDocumentNewsletter.ELEMENT_IMG, strUnsecuredBaseUrl, strUnsecuredFolderPath, strUnsecuredFolder );
-		doc.convertUrlsToUnsecuredUrls( HtmlDocumentNewsletter.ELEMENT_A, strUnsecuredBaseUrl, strUnsecuredFolderPath, strUnsecuredFolder );
-		return doc.getContent();
-	}
+
+    /**
+     * Rewrite secured omg urls to absolutes urls
+     *
+     * @param strContent The content to analyze
+     * @param strBaseUrl The base url
+     * @return The converted content
+     */
+    public static String rewriteImgUrls( String strContent, String strBaseUrl, String strUnsecuredBaseUrl,
+        String strUnsecuredFolderPath, String strUnsecuredFolder )
+    {
+        HtmlDocumentNewsletter doc = new HtmlDocumentNewsletter( strContent, strBaseUrl );
+        doc.convertUrlsToUnsecuredUrls( HtmlDocumentNewsletter.ELEMENT_IMG, strUnsecuredBaseUrl,
+            strUnsecuredFolderPath, strUnsecuredFolder );
+        doc.convertUrlsToUnsecuredUrls( HtmlDocumentNewsletter.ELEMENT_A, strUnsecuredBaseUrl, strUnsecuredFolderPath,
+            strUnsecuredFolder );
+
+        return doc.getContent(  );
+    }
 
     /**
      * Encode a string for passage in parameter in URL

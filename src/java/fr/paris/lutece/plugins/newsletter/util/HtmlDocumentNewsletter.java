@@ -39,6 +39,7 @@ import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
 import org.apache.commons.lang.StringUtils;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -66,10 +67,10 @@ public class HtmlDocumentNewsletter
     public static final String CONSTANT_STATIC_URL = "https?://[^/]+/";
     public static final String CONSTANT_PROTOCOL_DELIMITER = ":";
     private static final String PROPERTY_LUTECE_ENCODING = "lutece.encoding";
-	private static final String CONSTANT_IMG = "img";
-	private static final String CONSTANT_A = "a";
-	private static final String CONSTANT_SUBSTRING_BEGIN = "document?id=";
-	private static final String CONSTANT_SUBSTRING_END = "&";
+    private static final String CONSTANT_IMG = "img";
+    private static final String CONSTANT_A = "a";
+    private static final String CONSTANT_SUBSTRING_BEGIN = "document?id=";
+    private static final String CONSTANT_SUBSTRING_END = "&";
 
     // Definition of some basic html elements
     /**
@@ -188,70 +189,84 @@ public class HtmlDocumentNewsletter
 
             // Retrieve the url, then test if it matches the base url
             Node nodeAttribute = attributes.getNamedItem( elementType.getAttributeName(  ) );
-			if ( nodeAttribute != null )
-			{
-				String strSrc = nodeAttribute.getNodeValue();
 
-				if ( !strSrc.matches( CONSTANT_STATIC_URL ) && !strSrc.contains( CONSTANT_PROTOCOL_DELIMITER ) )
-				{
-					nodeAttribute.setNodeValue( _strBaseUrl + strSrc );
-				}
-			}
+            if ( nodeAttribute != null )
+            {
+                String strSrc = nodeAttribute.getNodeValue(  );
+
+                if ( !strSrc.matches( CONSTANT_STATIC_URL ) && !strSrc.contains( CONSTANT_PROTOCOL_DELIMITER ) )
+                {
+                    nodeAttribute.setNodeValue( _strBaseUrl + strSrc );
+                }
+            }
         }
     }
-    
+
     /**
      * Get the urls of all html elements specified by elementType and convert its to unsecured urls
      * and copy this elements into an unsecured folder
      * @param elementType the type of element to get
      */
-	public void convertUrlsToUnsecuredUrls( ElementUrl elementType, String strUnsecuredBaseUrl, String strUnsecuredFolderPath, String strUnsecuredFolder )
-	{
-		NodeList nodes = _content.getElementsByTagName( elementType.getTagName() );
+    public void convertUrlsToUnsecuredUrls( ElementUrl elementType, String strUnsecuredBaseUrl,
+        String strUnsecuredFolderPath, String strUnsecuredFolder )
+    {
+        NodeList nodes = _content.getElementsByTagName( elementType.getTagName(  ) );
 
-		for ( int i = 0; i < nodes.getLength(); i++ )
-		{
-			Node node = nodes.item( i );
-			NamedNodeMap attributes = node.getAttributes();
+        for ( int i = 0; i < nodes.getLength(  ); i++ )
+        {
+            Node node = nodes.item( i );
+            NamedNodeMap attributes = node.getAttributes(  );
 
-			// Test if the element matches the required attribute
-			if ( elementType.getTestedAttributeName() != null )
-			{
-				String strRel = attributes.getNamedItem( elementType.getTestedAttributeName() ).getNodeValue();
+            // Test if the element matches the required attribute
+            if ( elementType.getTestedAttributeName(  ) != null )
+            {
+                String strRel = attributes.getNamedItem( elementType.getTestedAttributeName(  ) ).getNodeValue(  );
 
-				if ( !elementType.getTestedAttributeValue().equals( strRel ) )
-				{
-					continue;
-				}
-			}
+                if ( !elementType.getTestedAttributeValue(  ).equals( strRel ) )
+                {
+                    continue;
+                }
+            }
 
-			Node nodeAttribute = attributes.getNamedItem( elementType.getAttributeName() );
-			if ( nodeAttribute != null )
-			{
-				String strSrc = nodeAttribute.getNodeValue();
+            Node nodeAttribute = attributes.getNamedItem( elementType.getAttributeName(  ) );
 
-				if ( strSrc.contains( CONSTANT_SUBSTRING_BEGIN ) && !strSrc.contains( strUnsecuredBaseUrl + strUnsecuredFolder ) )
-				{
-					String strDocumentId = StringUtils.substringBetween( strSrc, CONSTANT_SUBSTRING_BEGIN, CONSTANT_SUBSTRING_END );
-					fr.paris.lutece.plugins.document.business.Document document = DocumentHome.findByPrimaryKey( Integer.valueOf( strDocumentId ) );
+            if ( nodeAttribute != null )
+            {
+                String strSrc = nodeAttribute.getNodeValue(  );
 
-					String strFileName = StringUtils.EMPTY;
-					if ( elementType.getTagName().equals( CONSTANT_IMG ) )
-					{
-						strFileName = NewsletterService.getInstance().copyFileFromDocument( document, NewsLetterConstants.CONSTANT_IMG_FILE_TYPE, strUnsecuredFolderPath + strUnsecuredFolder );
-					}
-					else
-					{
-						if ( elementType.getTagName().equals( CONSTANT_A ) )
-						{
-							strFileName = NewsletterService.getInstance().copyFileFromDocument( document, NewsLetterConstants.CONSTANT_PDF_FILE_TYPE, strUnsecuredFolderPath + strUnsecuredFolder );
-						}
-					}
-					nodeAttribute.setNodeValue( strUnsecuredBaseUrl + strUnsecuredFolder + strFileName );
-				}
-			}
-		}
-	}
+                if ( strSrc.contains( CONSTANT_SUBSTRING_BEGIN ) &&
+                        !strSrc.contains( strUnsecuredBaseUrl + strUnsecuredFolder ) )
+                {
+                    String strDocumentId = StringUtils.substringBetween( strSrc, CONSTANT_SUBSTRING_BEGIN,
+                            CONSTANT_SUBSTRING_END );
+                    fr.paris.lutece.plugins.document.business.Document document = DocumentHome.findByPrimaryKey( Integer.valueOf( 
+                                strDocumentId ) );
+
+                    String strFileName = StringUtils.EMPTY;
+
+                    if ( elementType.getTagName(  ).equals( CONSTANT_IMG ) )
+                    {
+                        strFileName = NewsletterService.getInstance(  )
+                                                       .copyFileFromDocument( document,
+                                NewsLetterConstants.CONSTANT_IMG_FILE_TYPE, strUnsecuredFolderPath +
+                                strUnsecuredFolder );
+                    }
+                    else
+                    {
+                        if ( elementType.getTagName(  ).equals( CONSTANT_A ) )
+                        {
+                            strFileName = NewsletterService.getInstance(  )
+                                                           .copyFileFromDocument( document,
+                                    NewsLetterConstants.CONSTANT_PDF_FILE_TYPE,
+                                    strUnsecuredFolderPath + strUnsecuredFolder );
+                        }
+                    }
+
+                    nodeAttribute.setNodeValue( strUnsecuredBaseUrl + strUnsecuredFolder + strFileName );
+                }
+            }
+        }
+    }
 
     /**
      * Get the document content

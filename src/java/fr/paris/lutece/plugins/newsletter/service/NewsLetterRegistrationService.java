@@ -76,15 +76,14 @@ public class NewsLetterRegistrationService
 {
     private static final String PARAMETER_TOS = "tos";
     private static final String TEMPLATE_CONFIRM_MAIL = "admin/plugins/newsletter/confirm_mail.html";
-    
+
     //properties
     private static final String PROPERTY_MESSAGE_CONFIRM_MAIL_TITLE = "newsletter.confirm_mail.title";
     private static final String PROPERTY_LIMIT_CONFIRM_DAYS = "newsletter.confirm.limit";
-    
     private static final String REGEX_ID = "^[\\d]+$";
     private static final String JCAPTCHA_PLUGIN = "jcaptcha";
     private static final int DEFAULT_HTTP_PORT = 80;
-   
+
     //default values
     private static int DEFAULT_LIMIT = 7;
 
@@ -325,14 +324,14 @@ public class NewsLetterRegistrationService
 
             for ( String strIdNewsLetter : arrayNewsletters )
             {
-            	try
-            	{
-            		NewsLetterHome.validateSubscriber( Integer.parseInt( strIdNewsLetter ), subscriber.getId(  ), plugin );
-            	}
-            	catch ( NumberFormatException nfe )
-            	{
-            		AppLogService.error( "NewsLetterRegistrationService.doConfirmSubscribe() " + nfe );
-            	}
+                try
+                {
+                    NewsLetterHome.validateSubscriber( Integer.parseInt( strIdNewsLetter ), subscriber.getId(  ), plugin );
+                }
+                catch ( NumberFormatException nfe )
+                {
+                    AppLogService.error( "NewsLetterRegistrationService.doConfirmSubscribe() " + nfe );
+                }
             }
 
             // remove validation key entry
@@ -412,25 +411,28 @@ public class NewsLetterRegistrationService
             request.getParameter( NewsLetterConstants.MARK_SUBSCRIBER_EMAIL ) );
         urlItem.addParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_ID,
             request.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_ID ) );
-        urlItem.addParameter( NewsLetterConstants.PARAMETER_PLUGIN_NAME, request.getParameter( NewsLetterConstants.PARAMETER_PLUGIN_NAME ) );
+        urlItem.addParameter( NewsLetterConstants.PARAMETER_PLUGIN_NAME,
+            request.getParameter( NewsLetterConstants.PARAMETER_PLUGIN_NAME ) );
         SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_CONFIRM_UNSUBSCRIPTION_ALERT_MESSAGE,
             null, NewsLetterConstants.PROPERTY_CONFIRM_UNSUBSCRIPTION_TITLE_MESSAGE, urlItem.getUrl(  ), null,
             SiteMessage.TYPE_INFO );
     }
 
     /**
-     * Performs confirm unsubscription process      
+     * Performs confirm unsubscription process
      * @return logs the logs
      */
-	public String doRemoveOldUnconfirmed(  ) 
-	{
-		StringBuffer sbLogs = new StringBuffer(  );
-		sbLogs.append( "\r\n[Start] Starting cleaning newsletter subscribers daemon...\r\n" );
-		long lDuration = System.currentTimeMillis(  );
-		Plugin plugin = PluginService.getPlugin( NewsLetterConstants.PLUGIN_NAME );
-		int nConfirmLimit = AppPropertiesService.getPropertyInt( PROPERTY_LIMIT_CONFIRM_DAYS, DEFAULT_LIMIT );
-		NewsLetterHome.removeOldUnconfirmed( nConfirmLimit, plugin );
-		sbLogs.append( "\r\n[End] Duration : " + ( System.currentTimeMillis(  ) - lDuration ) + " milliseconds\r\n" );
-		return sbLogs.toString(  );
-	}
+    public String doRemoveOldUnconfirmed(  )
+    {
+        StringBuffer sbLogs = new StringBuffer(  );
+        sbLogs.append( "\r\n[Start] Starting cleaning newsletter subscribers daemon...\r\n" );
+
+        long lDuration = System.currentTimeMillis(  );
+        Plugin plugin = PluginService.getPlugin( NewsLetterConstants.PLUGIN_NAME );
+        int nConfirmLimit = AppPropertiesService.getPropertyInt( PROPERTY_LIMIT_CONFIRM_DAYS, DEFAULT_LIMIT );
+        NewsLetterHome.removeOldUnconfirmed( nConfirmLimit, plugin );
+        sbLogs.append( "\r\n[End] Duration : " + ( System.currentTimeMillis(  ) - lDuration ) + " milliseconds\r\n" );
+
+        return sbLogs.toString(  );
+    }
 }

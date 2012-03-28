@@ -42,14 +42,11 @@ import fr.paris.lutece.portal.service.util.AppPropertiesService;
  */
 public class SubscriberCleaningDaemon extends Daemon
 {
-   
-
     /**
      * Init cleaning
      */
     public void run(  )
     {
-       
         setLastRunLogs( NewsLetterRegistrationService.getInstance(  ).doRemoveOldUnconfirmed(  ) );
     }
 }

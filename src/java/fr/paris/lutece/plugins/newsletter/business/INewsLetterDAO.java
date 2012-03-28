@@ -133,15 +133,14 @@ public interface INewsLetterDAO
      * @param plugin the Plugin
      */
     void insertSubscriber( int nNewsLetterId, int nSubscriberId, Timestamp tToday, Plugin plugin );
-    
+
     /**
      * Performs confirm unsubscription process
      *
-     * @param confirmLimitDate all unconfirmed subscriber which subscription date is below confirmLimitDate will be deleted    
+     * @param confirmLimitDate all unconfirmed subscriber which subscription date is below confirmLimitDate will be deleted
      * @param plugin the plugin
      */
-    void deleteOldUnconfirmed(Timestamp confirmLimitDate, Plugin plugin);
-    
+    void deleteOldUnconfirmed( Timestamp confirmLimitDate, Plugin plugin );
 
     /**
      * Insert a new subscriber for a newsletter

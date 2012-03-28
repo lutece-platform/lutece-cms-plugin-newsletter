@@ -57,7 +57,7 @@ public class NewsletterResourceIdService extends ResourceIdService
 
     /** Permission for creating a newsletter */
     public static final String PERMISSION_CREATE = "CREATE";
-    
+
     /** Permission for cleaning subscribers */
     public static final String PERMISSION_CLEAN_SUBSCRIBERS = "CLEAN";
 
@@ -94,7 +94,7 @@ public class NewsletterResourceIdService extends ResourceIdService
     private static final String PROPERTY_LABEL_ADD_SUBSCRIBER = "newsletter.permission.newsletter.label.addSubscriber";
     private static final String PROPERTY_LABEL_MANAGE_ARCHIVE = "newsletter.permission.newsletter.label.archive";
     private static final String PROPERTY_LABEL_CLEAN_SUBSCRIBERS = "newsletter.permission.newsletter.label.clean";
-    
+
     /** Creates a new instance of NewsletterResourceIdService */
     public NewsletterResourceIdService(  )
     {
@@ -156,7 +156,7 @@ public class NewsletterResourceIdService extends ResourceIdService
         p.setPermissionKey( PERMISSION_ARCHIVE );
         p.setPermissionTitleKey( PROPERTY_LABEL_MANAGE_ARCHIVE );
         rt.registerPermission( p );
-        
+
         p = new Permission(  );
         p.setPermissionKey( PERMISSION_CLEAN_SUBSCRIBERS );
         p.setPermissionTitleKey( PROPERTY_LABEL_CLEAN_SUBSCRIBERS );

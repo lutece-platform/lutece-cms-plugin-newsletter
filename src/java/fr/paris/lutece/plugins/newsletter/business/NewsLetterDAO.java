@@ -77,9 +77,9 @@ public final class NewsLetterDAO implements INewsLetterDAO
     private static final String SQL_QUERY_SELECT_DOCUMENT_BY_DATE_AND_CATEGORY = "SELECT a.id_document , a.code_document_type, a.date_creation , a.date_modification," +
         "a.title,a.document_summary FROM document  a INNER JOIN  document_published b ON a.id_document=b.id_document  INNER JOIN document_category_link c " +
         "ON b.id_document=c.id_document WHERE a.date_modification >=? AND c.id_category= ? ORDER BY a.date_modification DESC";
-    private static final String SQL_QUERY_DELETE_UNUSED_EMAIL = "DELETE FROM newsletter_subscriber_details "
-    + " WHERE id_subscriber "
-    + " NOT IN (SELECT id_subscriber FROM newsletter_subscriber)";
+    private static final String SQL_QUERY_DELETE_UNUSED_EMAIL = "DELETE FROM newsletter_subscriber_details " +
+        " WHERE id_subscriber " + " NOT IN (SELECT id_subscriber FROM newsletter_subscriber)";
+
     ///////////////////////////////////////////////////////////////////////////////////////
     //Access methods to data
 
@@ -384,26 +384,26 @@ public final class NewsLetterDAO implements INewsLetterDAO
         daoUtil.executeUpdate(  );
         daoUtil.free(  );
     }
-    
+
     /**
      * Performs confirm unsubscription process
      *
-     * @param confirmLimitDate all unconfirmed subscriber which subscription date is below confirmLimitDate will be deleted    
+     * @param confirmLimitDate all unconfirmed subscriber which subscription date is below confirmLimitDate will be deleted
      * @param plugin the plugin
      */
-	public void deleteOldUnconfirmed(Timestamp confirmLimitDate, Plugin plugin)
-	{
-		 DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_OLD_FROM_SUBSCRIBER, plugin );
-		 daoUtil.setTimestamp(1, confirmLimitDate);
-		 daoUtil.setBoolean(2, false);
-		 
-		 daoUtil.executeUpdate(  );
-	     daoUtil.free(  );
-	     
-		 daoUtil = new DAOUtil( SQL_QUERY_DELETE_UNUSED_EMAIL, plugin );
-		 daoUtil.executeUpdate(  );
-	     daoUtil.free(  );
-	}
+    public void deleteOldUnconfirmed( Timestamp confirmLimitDate, Plugin plugin )
+    {
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_OLD_FROM_SUBSCRIBER, plugin );
+        daoUtil.setTimestamp( 1, confirmLimitDate );
+        daoUtil.setBoolean( 2, false );
+
+        daoUtil.executeUpdate(  );
+        daoUtil.free(  );
+
+        daoUtil = new DAOUtil( SQL_QUERY_DELETE_UNUSED_EMAIL, plugin );
+        daoUtil.executeUpdate(  );
+        daoUtil.free(  );
+    }
 
     /**
      * check if the subscriber is not yet registered to a newsletter

@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 
+
 /**
  * This class provides instances management methods (create, find, ...) for NewsLetter objects
  */
@@ -197,21 +198,21 @@ public final class NewsLetterHome
         _dao.deleteSubscriber( nNewsLetterId, nSubscriberId, plugin );
     }
 
-    
     /**
      * Performs confirm unsubscription process
      *
-     * @param nConfirmLimit How many days before deleting a subscriber    
+     * @param nConfirmLimit How many days before deleting a subscriber
      * @param plugin the plugin
      */
-    public static void removeOldUnconfirmed(int nConfirmLimit, Plugin plugin) 
-	{
-    	Calendar cal = Calendar.getInstance(  );
-    	cal.add( Calendar.DATE, -nConfirmLimit );
-    	Timestamp limitDate = new java.sql.Timestamp( cal.getTimeInMillis(  )  );
-		 _dao.deleteOldUnconfirmed( limitDate, plugin );
-	}
-    
+    public static void removeOldUnconfirmed( int nConfirmLimit, Plugin plugin )
+    {
+        Calendar cal = Calendar.getInstance(  );
+        cal.add( Calendar.DATE, -nConfirmLimit );
+
+        Timestamp limitDate = new java.sql.Timestamp( cal.getTimeInMillis(  ) );
+        _dao.deleteOldUnconfirmed( limitDate, plugin );
+    }
+
     /**
      * loads the list of categories of the newsletter
      *
