@@ -11,9 +11,9 @@
         <hr />
         <#if unsubscribe?exists>
             <#if unsubscribe = "TRUE">
-        <p>
+        
            #i18n{newsletter.send_newsletter.labelToUnsubscribe}<a href="${base_url}jsp/site/Portal.jsp?page=newsletter&action=confirm_unsubscribe&subscriber_email=${subscriber_email}&newsletter_id=${newsletter_id}&plugin_name=newsletter" class="newsletter">#i18n{newsletter.send_newsletter.labelClickHere}</a>
-        </p>
+        
         </#if>
         </#if>
         

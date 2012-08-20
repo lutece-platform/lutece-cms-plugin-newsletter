@@ -8,8 +8,11 @@
     <#list sending_newsletter_list as sending>
     <tr>
         <td width="5%">
-            <input type="checkbox" name="cbx_snd_${sending.id}" class="checkbox"  ${selected_sendings_list?seq_contains(sending.id)?string("checked=\"checked\"", "")}
+            <div class="controls">
+	<input type="checkbox" name="cbx_snd_${sending.id}" class="checkbox"  ${selected_sendings_list?seq_contains(sending.id)?string("checked=\"checked\"", "")}
                    />
+		</div>
+	</div>
                </td>
         <td width="10%">
             ${sending.date}

@@ -1,22 +1,17 @@
-<div class="content-box">
-    <h2>#i18n{newsletter.manage_newsletters.boxTitle}</h2>
-    <form method="post" rm action="jsp/admin/plugins/newsletter/ManageNewsLetter.jsp">
-        <@pagination paginator=paginator />
-        
-        <!-- Number of newsletters per page selector -->
-        #i18n{newsletter.manage_newsletters.labelItemsPerPage} :
-        <select name="items_per_page">
-            <#list [ "10" , "20" , "50" , "100" ] as nb>
-            <#if nb_items_per_page = nb >
-            <option selected="selected" value="${nb}">${nb}</option>
-            <#else>
-            <option value="${nb}">${nb}</option>
-            </#if>
-            </#list>
-        </select>
-        <input type="submit" class="button" value="#i18n{newsletter.manage_newsletters.buttonItemsPerPage}" />
-    </form>  
-    <table>
+
+<#if creation_allowed>
+<form class="form-search" method="post" action="jsp/admin/plugins/newsletter/CreateNewsLetter.jsp">
+<button class="btn btn-primary pull-right" type="submit" ><i class="icon-plus icon-white"></i>&nbsp;#i18n{newsletter.manage_newsletters.buttonAddNewsletter}</button>
+</form>
+</#if>
+<div class="row">
+<div class="container">
+<fieldset>
+<legend>#i18n{newsletter.manage_newsletters.boxTitle}</legend>
+<@paginationAdmin paginator=paginator combo=1 />
+</fieldset>
+<table class="table table-striped table-condensed">
+<thead>
         <tr>
             <th>#i18n{newsletter.manage_newsletters.columnTitleLabel}</th>
             <th>#i18n{newsletter.manage_newsletters.columnTitleDescription}</th>
@@ -25,61 +20,61 @@
             <th>#i18n{newsletter.manage_newsletters.columnTitleWorkGroup}</th>
             <th>#i18n{newsletter.manage_newsletters.columnTitleActions}</th>
         </tr>
-        <#list newsletters_list as newsletterDisplay >	                
-        <tr>
-            <td>
-                &nbsp;&nbsp;<img src="images/admin/skin/bullet.gif" border="0">
-				<#if newsletterDisplay.newsletter_allow_modification>
-                	<a href="jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}" class="admin-menu">
-                    	${newsletterDisplay.newsletter.name}
-	                </a>
-                <#else>
-                   	${newsletterDisplay.newsletter.name}                
-                </#if>
-            </td>
-            <td>${newsletterDisplay.newsletter.description} </td>
+</thead>
+<tbody>
+	<#list newsletters_list as newsletterDisplay >	                
+    <tr>
+		<td>${newsletterDisplay.newsletter.name}</td>
+        <td>${newsletterDisplay.newsletter.description} </td>
             <td>${newsletterDisplay.newsletter.dateLastSending?string.short}</td>
             <td>${newsletterDisplay.newsletter_count_subscribers}</td>
             <td>${newsletterDisplay.newsletter_workgroup_description}</td>
             <td>
-            <#if newsletterDisplay.newsletter_allow_manage_subscribers>
-            	<a href="jsp/admin/plugins/newsletter/ManageSubscribers.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"><img src="images/admin/skin/b_manage.png" title="#i18n{newsletter.manage_newsletters.columnTitleManageSubscribers}" alt="#i18n{newsletter.manage_newsletters.columnTitleManageSubscribers}"></a>
-            <#else>
-           	&nbsp;
+			<#if newsletterDisplay.newsletter_allow_modification>
+            <a class="btn btn-mini" href="jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleModify}" >
+			<i class="fam-book-error"></i>
+		</a>
+		</#if>
+        <#if newsletterDisplay.newsletter_allow_manage_subscribers>
+          	<a class="btn btn-mini" href="jsp/admin/plugins/newsletter/ManageSubscribers.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleManageSubscribers}" >
+				<i class="fam-book-delete"></i>
+		</a>
+		<#else>
+        	&nbsp;
             </#if>
-            <!-- </td>
-            <td> -->
             <#if newsletterDisplay.newsletter_allow_modification>
-              	<a href="jsp/admin/plugins/newsletter/DoComposeNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"><img src="images/admin/skin/b_compose.png" title="#i18n{newsletter.manage_newsletters.columnTitleCompose}" alt="#i18n{newsletter.manage_newsletters.columnTitleCompose}"></a>
+              	<a class="btn  btn-mini" href="jsp/admin/plugins/newsletter/DoComposeNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleCompose}" >
+			<i class="fam-book-previous"></i>
+			</a>
+
             <#else>
            	&nbsp;
             </#if>
-           <!-- </td>
-            <td> -->
             <#if newsletterDisplay.newsletter_allow_sending>
-               <a href="jsp/admin/plugins/newsletter/DoPrepareNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"><img src="images/admin/skin/b_letter.png" title="#i18n{newsletter.manage_newsletters.columnTitlePrepareSending}" alt="#i18n{newsletter.manage_newsletters.columnTitlePrepareSending}"></a>
-            <#else>
+               <a class="btn btn-mini" href="jsp/admin/plugins/newsletter/DoPrepareNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitlePrepareSending}" >
+			<i class="fam-book-key"></i>
+			</a>
+			<#else>
            	&nbsp;
             </#if>
-          <!--  </td>
-            <td> -->
-            <#if newsletterDisplay.newsletter_allow_manage_archive>
-            	<a href="jsp/admin/plugins/newsletter/ManageArchive.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"><img src="images/admin/skin/plugins/newsletter/archive.png" title="#i18n{newsletter.manage_newsletters.columnTitleArchive}" alt="#i18n{newsletter.manage_newsletters.columnTitleArchive}"></a>
-            <#else>
+             <#if newsletterDisplay.newsletter_allow_manage_archive>
+            <a class="btn btn-mini" href="jsp/admin/plugins/newsletter/ManageArchive.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleArchive}" >
+			<i class="fam-page-word"></i>
+			</a>
+			<#else>
            	&nbsp;
             </#if>
-          <!-- </td>
-           <td> -->
             <#if newsletterDisplay.newsletter_allow_export_subscribers>
-            	<a href="jsp/admin/plugins/newsletter/DoExportCsv.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"><img src="images/admin/skin/b_export.png" title="#i18n{newsletter.manage_newsletters.columnTitleExportCsv}" alt="#i18n{newsletter.manage_newsletters.columnTitleExportCsv}"></a>
+            	<a class="btn btn-mini" href="jsp/admin/plugins/newsletter/DoExportCsv.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleExportCsv}" ><i class="fam-page-find"></i></a>
+
             <#else>
            	&nbsp;
             </#if>
-          <!-- </td>
-           <td> -->
            <#if newsletterDisplay.newsletter_allow_deletion>
-            <a href="jsp/admin/plugins/newsletter/RemoveNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"><img src="images/admin/skin/actions/delete.png" title="#i18n{newsletter.manage_newsletters.columnTitleDelete}" alt="#i18n{newsletter.manage_newsletters.columnTitleDelete}"></a>
-           <#else>
+            <a class="btn btn-danger btn-mini" href="jsp/admin/plugins/newsletter/RemoveNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleDelete}" >
+			<i class="icon-trash icon-white"></i>
+			</a>
+			<#else>
             &nbsp;
             </#if>
             </td>
@@ -87,14 +82,8 @@
           <#if newsletterDisplay.newsletter_allow_creation>
             <#assign creation_allowed = true >
            </#if>
-        </#list>	
+        </#list>
+	</tbody>		
     </table>
-    <br/>
-    <table>
-     <#if creation_allowed>
-        <form method="post" action="jsp/admin/plugins/newsletter/CreateNewsLetter.jsp">
-          <input type="submit" value="#i18n{newsletter.manage_newsletters.buttonAddNewsletter}" class="button" />
-        </form>
-     </#if>
-    </table>
+</div>
 </div>

@@ -1,11 +1,12 @@
 	<#include "/admin/util/editor/editor.html" />
-	<div class="content-box">
-	<h2>#i18n{newsletter.compose_newsletter.boxTitle}</h2>
-	<form method="post" action="jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp" method="post">
-	<div class="highlight-box">	
+	<div class="row">
+	<legend>#i18n{newsletter.compose_newsletter.boxTitle}</legend>
+	<form class="form-horizontal" method="post" action="jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp" method="post">
+	<fieldset>
+	<div class="well">	
 	<h3>#i18n{newsletter.compose_newsletter.generalInformations}</h3>
-	<p style="margin: 10px;">#i18n{newsletter.compose_newsletter.label} : <strong>${newsletter.name}</strong></p>
-	<p style="margin: 10px;">#i18n{newsletter.modify_newsletter.dateLastSend} :<strong>${newsletter.dateLastSending}</strong></p>
+	<p style="margin: 10px;">#i18n{newsletter.compose_newsletter.label} : <strong>${newsletter.name}</strong>
+	<p style="margin: 10px;">#i18n{newsletter.modify_newsletter.dateLastSend} :<strong>${newsletter.dateLastSending}</strong>
 
 	<p  style="margin: 10px;">#i18n{newsletter.compose_newsletter.associatedCategories} :
 	<#if category_list?has_content>
@@ -17,20 +18,27 @@
 		<#else>
 		#i18n{newsletter.compose_newsletter.labelNoCategory}
 		</#if>
-	</p>
+	
 	</div>
 	<input type="hidden" name="newsletter_id" value="${newsletter.id}" />
 	<input type="hidden" name="generate" value="" />
-<div class="highlight-box">	
+<div class="well">	
 	<h3>#i18n{newsletter.compose_newsletter.automaticGeneration}</h3>
 	<p style="margin: 10px;">
-	<label for="">#i18n{newsletter.compose_newsletter.newsletterTemplate} :</label>
+	<div class="control-group">
+		<label class="control-label" for="">#i18n{newsletter.compose_newsletter.newsletterTemplate} :</label>
 	<#if newsletter_templates?has_content>
 		<#list newsletter_templates as template >
 			<#if template.id=newsletter_template_id>
-				<input class="radio" type="radio" name="newsletter_template_id" value="${template.id}" checked="checked" />
+				<div class="controls">
+	<input class="radio" type="radio" name="newsletter_template_id" value="${template.id}" checked="checked" />
+		</div>
+	</div>
 			<#else>
-				<input class="radio" type="radio" name="newsletter_template_id" value="${template.id}" />
+				<div class="controls">
+	<input class="radio" type="radio" name="newsletter_template_id" value="${template.id}" />
+		</div>
+	</div>
 			</#if>
 			<img src="${img_path}/${template.picture}" border="0"  height="24" width="24" />
 			${template.description}
@@ -38,15 +46,22 @@
 	<#else>
 		<span style="font-style:italic;">#i18n{newsletter.compose_newsletter.noNewsletterTemplate}</span>
 	</#if>
-	</p>
-	<p>
-		<label for="">#i18n{newsletter.compose_newsletter.documentTemplate} :</label>
+	
+	
+		<div class="control-group">
+		<label class="control-label" for="">#i18n{newsletter.compose_newsletter.documentTemplate} :</label>
 		<#if document_templates?has_content>
 		<#list document_templates as template >
 		<#if template.id=document_template_id>
-			<input class="radio" type="radio" name="document_template_id" value="${template.id}" checked="checked" />
+			<div class="controls">
+	<input class="radio" type="radio" name="document_template_id" value="${template.id}" checked="checked" />
+		</div>
+	</div>
 		<#else>
-			<input class="radio" type="radio" name="document_template_id" value="${template.id}"/>
+			<div class="controls">
+	<input class="radio" type="radio" name="document_template_id" value="${template.id}"/>
+		</div>
+	</div>
 		</#if>
 		<img src="${img_path}/${template.picture}" border="0" />
 		${template.description}
@@ -54,29 +69,37 @@
 	<#else>
 		<i>#i18n{newsletter.compose_newsletter.noDocumentTemplate}</i>
 	</#if>
-	</p>
+	
 	<p style="margin-left:20%;">
-	<input type="submit" value="#i18n{newsletter.compose_newsletter.generate}" class="button" />
-	</p>
+	<button class="btn btn-primary" type="submit" >#i18n{newsletter.compose_newsletter.generate}</button>
+	
+	
 	</div>
-	</form>
-	<form method="post" action="jsp/admin/plugins/newsletter/DoRegisterNewsLetter.jsp" method="post">
+	</fieldset>
+</form>
+	<form class="form-horizontal" method="post" action="jsp/admin/plugins/newsletter/DoRegisterNewsLetter.jsp" method="post">
+	<fieldset>
 	<input type="hidden" name="newsletter_id" value="${newsletter.id}" />
 	<input type="hidden" name="newsletter_template_id" value="${newsletter_template_id}" />
 	<input type="hidden" name="document_template_id" value="${document_template_id}" />
-	<p>
+	
 	<div class="editor">
 		<textarea id="html_content" name="html_content" class="richtext" rows="20" cols="90" >
 		${html_content}
 		</textarea>
 	</div>
-	</p>
+	
 	<p style="margin-left:20%;">
-		<input type="submit" name="action" value="#i18n{newsletter.compose_newsletter.buttonRegister}" class="button" />
-		<input type="submit" name="action" value="#i18n{newsletter.compose_newsletter.buttonTestSending}" class="button" />&nbsp;
-		<input type="submit" name="action" value="#i18n{newsletter.compose_newsletter.buttonPrepareSending}" class="button" />&nbsp;
-		<input type="submit" name="action" value="#i18n{newsletter.compose_newsletter.buttonCancel}" class="button" />
-	</p>
+		<button class="btn btn-primary" type="submit" >#i18n{newsletter.compose_newsletter.buttonRegister}</button>
+	
+		<button class="btn btn-primary" type="submit" >#i18n{newsletter.compose_newsletter.buttonTestSending}</button>
+	&nbsp;
+		<button class="btn btn-primary" type="submit" >#i18n{newsletter.compose_newsletter.buttonPrepareSending}</button>
+	&nbsp;
+		<button class="btn btn-primary" type="submit" >#i18n{newsletter.compose_newsletter.buttonCancel}</button>
+	
+	
+</fieldset>
 </form>
 </div>
 <@initEditor />

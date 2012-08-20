@@ -1,35 +1,47 @@
-<div class="content-box">
-    
-    <h2>#i18n{newsletter.add_newsletter_template.boxTitle}</h2>
-    <form method="post" enctype="multipart/form-data" action="jsp/admin/plugins/newsletter/DoAddNewsLetterTemplate.jsp">
-        <p>
-            <label for="newsletter_template_name">#i18n{newsletter.add_newsletter_template.name} *:</label>
-            <input type="text" id="newsletter_template_name" name="newsletter_template_name" size="60" maxlength="50" />
-        </p>
-        <p>
-            <label for="newsletter_template_type">#i18n{newsletter.add_newsletter_template.templateType} *:</label>
-            <#list template_type  as item>
-            <#if item.isChecked() > 			
-            <input checked="checked" type="radio" name="newsletter_template_type" value="${item.code}" />
-            <#else>
-            <input class="radio" type="radio" name="newsletter_template_type" value="${item.code}" />
-            </#if>
-            #i18n{${plugin.name}.${item.name}}
-            </#list>
-            
-        </p>
-        <p>
-            <label for="newsletter_template_file">#i18n{newsletter.add_newsletter_template.fileName} *:</label>
-            <input type="file" id="newsletter_template_file" name="newsletter_template_file" size="32" value="" />
-        </p>
-        <p>
-            <label for="newsletter_template_picture">#i18n{newsletter.add_newsletter_template.imageFileName} *:</label>
-            <input type="file" id="newsletter_template_picture" name="newsletter_template_picture" size="32" value="" />
-        </p>
-        <p>
-            <label for="newsletter_template_workgroup" >#i18n{newsletter.add_newsletter_template.labelWorkgroup} * :</label>
-            <@combo name="newsletter_template_workgroup" default_value="" items=workgroup_list />
-        </p>
-        <input type="submit" value="#i18n{newsletter.add_newsletter_template.buttonAdd}" class="button" />
-    </form>
+<div class="row">
+<div class="container">
+<fieldset>
+<legend>#i18n{newsletter.add_newsletter_template.boxTitle}</legend>
+<form class="form-horizontal" method="post" enctype="multipart/form-data" action="jsp/admin/plugins/newsletter/DoAddNewsLetterTemplate.jsp">
+<div class="control-group">
+	<label class="control-label" for="newsletter_template_name">#i18n{newsletter.add_newsletter_template.name} *:</label>
+    <div class="controls">
+	<input type="text" id="newsletter_template_name" name="newsletter_template_name" maxlength="50" value="" />
+	</div>
+	</div>
+    <div class="control-group">
+	<label class="control-label" for="newsletter_template_type">#i18n{newsletter.add_newsletter_template.templateType} *:</label>
+	<div class="controls">
+    <#list template_type  as item>
+	<label class="radio">
+	<input class="radio" <#if item.isChecked()>checked="checked"</#if> type="radio" name="newsletter_template_type" value="${item.code}" /> #i18n{${plugin.name}.${item.name}}
+   </label>
+    </#list>
+	</div>
+	</div>
+    <div class="control-group">
+	<label class="control-label" for="newsletter_template_file">#i18n{newsletter.add_newsletter_template.fileName} :</label>
+    <div class="controls">
+	<input type="file" id="newsletter_template_file" name="newsletter_template_file" value="" />
+	</div>
+	</div>
+	<div class="control-group">
+	<label class="control-label" for="newsletter_template_new_picture">#i18n{newsletter.add_newsletter_template.imageFileName} :</label>
+    <div class="controls">
+		<input type="file" id="newsletter_template_new_picture" name="newsletter_template_new_picture" value="" />
+	</div>
+	</div>
+    <div class="control-group">
+	<label class="control-label" for="newsletter_template_workgroup" >#i18n{newsletter.add_newsletter_template.labelWorkgroup} :</label>
+    <div class="controls">
+	<@combo name="newsletter_template_workgroup" default_value="" items=workgroup_list />
+	</div>
+	</div>
+    <div class="form-actions">
+            <button class="btn btn-primary" type="submit" >#i18n{newsletter.add_newsletter_template.buttonAdd}</button>
+	  </div>      
+</form>
+ </fieldset>
 </div>
+</div>
+

@@ -1,20 +1,31 @@
-<div class="content-box">
-    <h2>#i18n{newsletter.prepare_newsletter.boxTitle}</h2>
-    <form method="post" action="jsp/admin/plugins/newsletter/ConfirmSendNewsLetter.jsp">
-		<p>
-        	<label for="newsletter_object">#i18n{newsletter.prepare_newsletter.newsletterSubject} :</label>
-            <input type="text" value="${newsletter_object}" id="newsletter_object" name="newsletter_object" size="80" />
-            <input type="submit" value="#i18n{newsletter.prepare_newsletter.sendButton}" class="button" />
+<div class="row">
+    <legend>#i18n{newsletter.prepare_newsletter.boxTitle}</legend>
+    <form class="form-horizontal" method="post" action="jsp/admin/plugins/newsletter/ConfirmSendNewsLetter.jsp">
+	<fieldset>
+		
+        	<div class="control-group">
+		<label class="control-label" for="newsletter_object">#i18n{newsletter.prepare_newsletter.newsletterSubject} :</label>
+            <div class="controls">
+	<input type="text" value="${newsletter_object}" id="newsletter_object" name="newsletter_object" size="80" />
+		</div>
+	</div>
+            <button class="btn btn-primary" type="submit" >#i18n{newsletter.prepare_newsletter.sendButton}</button>
+	
             <input type="hidden" name="newsletter_id" value="${newsletter.id}" />
-        </p>
-	</form>
-	<p>
-    	<label for="newsletter_body">#i18n{newsletter.prepare_newsletter.newsletterBody} :</label>
+        
+	</fieldset>
+</form>
+	
+    	<div class="control-group">
+		<label class="control-label" for="newsletter_body">#i18n{newsletter.prepare_newsletter.newsletterBody} :</label>
         <iframe name="preview" src="jsp/admin/plugins/newsletter/PreviewNewsLetter.jsp?newsletter_id=${newsletter.id}&plugin_name=newsletter" width="60%" height="300px" scrolling="auto"></iframe>
-	</p>
+	
    	<p style="margin-left:30%;">
-		<form method="post" action="jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}">
-        	<input type="submit" value="#i18n{newsletter.prepare_newsletter.composeNewsletter}" class="button" />
-		</form>
-	</p>
+		<form class="form-horizontal" method="post" action="jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}">
+	<fieldset>
+        	<button class="btn btn-primary" type="submit" >#i18n{newsletter.prepare_newsletter.composeNewsletter}</button>
+	
+		</fieldset>
+</form>
+	
 </div>
