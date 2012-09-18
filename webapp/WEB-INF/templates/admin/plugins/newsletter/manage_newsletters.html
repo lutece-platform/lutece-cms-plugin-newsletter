@@ -1,89 +1,88 @@
-
-<#if creation_allowed>
-<form class="form-search" method="post" action="jsp/admin/plugins/newsletter/CreateNewsLetter.jsp">
-<button class="btn btn-primary pull-right" type="submit" ><i class="icon-plus icon-white"></i>&nbsp;#i18n{newsletter.manage_newsletters.buttonAddNewsletter}</button>
-</form>
-</#if>
 <div class="row">
-<div class="container">
-<fieldset>
-<legend>#i18n{newsletter.manage_newsletters.boxTitle}</legend>
-<@paginationAdmin paginator=paginator combo=1 />
-</fieldset>
-<table class="table table-striped table-condensed">
-<thead>
-        <tr>
-            <th>#i18n{newsletter.manage_newsletters.columnTitleLabel}</th>
-            <th>#i18n{newsletter.manage_newsletters.columnTitleDescription}</th>
-            <th>#i18n{newsletter.manage_newsletters.columnTitleLastSent}</th>
-            <th>#i18n{newsletter.manage_newsletters.columnTitleSubscribersCount}</th>
-            <th>#i18n{newsletter.manage_newsletters.columnTitleWorkGroup}</th>
-            <th>#i18n{newsletter.manage_newsletters.columnTitleActions}</th>
-        </tr>
-</thead>
-<tbody>
-	<#list newsletters_list as newsletterDisplay >	                
-    <tr>
-		<td>${newsletterDisplay.newsletter.name}</td>
-        <td>${newsletterDisplay.newsletter.description} </td>
-            <td>${newsletterDisplay.newsletter.dateLastSending?string.short}</td>
-            <td>${newsletterDisplay.newsletter_count_subscribers}</td>
-            <td>${newsletterDisplay.newsletter_workgroup_description}</td>
-            <td>
-			<#if newsletterDisplay.newsletter_allow_modification>
-            <a class="btn btn-mini" href="jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleModify}" >
-			<i class="fam-book-error"></i>
-		</a>
+	<div class="span12">
+	<fieldset>
+	<legend>
+		#i18n{newsletter.manage_newsletters.boxTitle}
+		<#if creation_allowed>
+		<form class="form-inline pull-right" method="post" action="jsp/admin/plugins/newsletter/CreateNewsLetter.jsp">
+			<button class="btn btn-primary pull-right" type="submit" ><i class="icon-plus icon-white"></i>&nbsp;#i18n{newsletter.manage_newsletters.buttonAddNewsletter}</button>
+		</form>
 		</#if>
-        <#if newsletterDisplay.newsletter_allow_manage_subscribers>
-          	<a class="btn btn-mini" href="jsp/admin/plugins/newsletter/ManageSubscribers.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleManageSubscribers}" >
-				<i class="fam-book-delete"></i>
-		</a>
-		<#else>
-        	&nbsp;
-            </#if>
-            <#if newsletterDisplay.newsletter_allow_modification>
-              	<a class="btn  btn-mini" href="jsp/admin/plugins/newsletter/DoComposeNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleCompose}" >
-			<i class="fam-book-previous"></i>
-			</a>
-
-            <#else>
-           	&nbsp;
-            </#if>
-            <#if newsletterDisplay.newsletter_allow_sending>
-               <a class="btn btn-mini" href="jsp/admin/plugins/newsletter/DoPrepareNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitlePrepareSending}" >
-			<i class="fam-book-key"></i>
-			</a>
+	</legend>
+	<@paginationAdmin paginator=paginator combo=1 />
+	<table class="table table-striped table-condensed">
+		<thead>
+			<tr>
+				<th>#i18n{newsletter.manage_newsletters.columnTitleLabel}</th>
+				<th>#i18n{newsletter.manage_newsletters.columnTitleDescription}</th>
+				<th>#i18n{newsletter.manage_newsletters.columnTitleLastSent}</th>
+				<th>#i18n{newsletter.manage_newsletters.columnTitleSubscribersCount}</th>
+				<th>#i18n{newsletter.manage_newsletters.columnTitleWorkGroup}</th>
+				<th>#i18n{newsletter.manage_newsletters.columnTitleActions}</th>
+			</tr>
+		</thead>
+		<tbody>
+		<#list newsletters_list as newsletterDisplay >	                
+		<tr>
+			<td>${newsletterDisplay.newsletter.name}</td>
+			<td>${newsletterDisplay.newsletter.description} </td>
+				<td>${newsletterDisplay.newsletter.dateLastSending?string.short}</td>
+				<td>${newsletterDisplay.newsletter_count_subscribers}</td>
+				<td>${newsletterDisplay.newsletter_workgroup_description}</td>
+				<td>
+				<#if newsletterDisplay.newsletter_allow_modification>
+				<a class="btn btn-mini btn-primary" href="jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleModify}" >
+					<i class="icon-edit icon-white"></i>
+				</a>
+			</#if>
+			<#if newsletterDisplay.newsletter_allow_manage_subscribers>
+				<a class="btn btn-mini btn-primary" href="jsp/admin/plugins/newsletter/ManageSubscribers.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleManageSubscribers}" >
+					<i class="icon-user icon-white"></i>
+				</a>
 			<#else>
-           	&nbsp;
-            </#if>
-             <#if newsletterDisplay.newsletter_allow_manage_archive>
-            <a class="btn btn-mini" href="jsp/admin/plugins/newsletter/ManageArchive.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleArchive}" >
-			<i class="fam-page-word"></i>
-			</a>
-			<#else>
-           	&nbsp;
-            </#if>
-            <#if newsletterDisplay.newsletter_allow_export_subscribers>
-            	<a class="btn btn-mini" href="jsp/admin/plugins/newsletter/DoExportCsv.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleExportCsv}" ><i class="fam-page-find"></i></a>
-
-            <#else>
-           	&nbsp;
-            </#if>
-           <#if newsletterDisplay.newsletter_allow_deletion>
-            <a class="btn btn-danger btn-mini" href="jsp/admin/plugins/newsletter/RemoveNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleDelete}" >
-			<i class="icon-trash icon-white"></i>
-			</a>
-			<#else>
-            &nbsp;
-            </#if>
-            </td>
-        </tr>
-          <#if newsletterDisplay.newsletter_allow_creation>
-            <#assign creation_allowed = true >
-           </#if>
-        </#list>
-	</tbody>		
-    </table>
-</div>
+				</#if>
+				<#if newsletterDisplay.newsletter_allow_modification>
+				<a class="btn  btn-mini btn-primary" href="jsp/admin/plugins/newsletter/DoComposeNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleCompose}" >
+					<i class="icon-cog icon-white"></i>
+				</a>
+				<#else>
+				&nbsp;
+				</#if>
+				<#if newsletterDisplay.newsletter_allow_sending>
+				   <a class="btn btn-mini btn-primary" href="jsp/admin/plugins/newsletter/DoPrepareNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitlePrepareSending}" >
+				<i class="icon-envelope icon-white"></i>
+				</a>
+				<#else>
+				&nbsp;
+				</#if>
+				 <#if newsletterDisplay.newsletter_allow_manage_archive>
+				<a class="btn btn-mini btn-primary" href="jsp/admin/plugins/newsletter/ManageArchive.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleArchive}" >
+					<i class="icon-file icon-white"></i>
+				</a>
+				<#else>
+				&nbsp;
+				</#if>
+				<#if newsletterDisplay.newsletter_allow_export_subscribers>
+					<a class="btn btn-mini btn-primary" href="jsp/admin/plugins/newsletter/DoExportCsv.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleExportCsv}" >
+						<i class="icon-download icon-white"></i></a>
+				<#else>
+				&nbsp;
+				</#if>
+			   <#if newsletterDisplay.newsletter_allow_deletion>
+				<a class="btn btn-danger btn-mini" href="jsp/admin/plugins/newsletter/RemoveNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleDelete}" >
+					<i class="icon-trash icon-white"></i>
+				</a>
+				<#else>
+				&nbsp;
+				</#if>
+				</td>
+			</tr>
+			  <#if newsletterDisplay.newsletter_allow_creation>
+				<#assign creation_allowed = true >
+			   </#if>
+			</#list>
+		</tbody>		
+		</table>
+		</fieldset>
+	</div>
 </div>

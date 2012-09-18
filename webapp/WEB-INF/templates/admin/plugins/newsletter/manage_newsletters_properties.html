@@ -1,45 +1,46 @@
 <div class="row">
-<div class="container">
-<fieldset>        
-    <legend>#i18n{newsletter.manage_newsletters_properties.boxTitle}</legend>
-    <form class="form-horizontal" method="post" name="manage_newsletter_properties" action="jsp/admin/plugins/newsletter/DoManageNewsLetterProperties.jsp">
-	<div class="control-group">
-	<label class="control-label" for="active_validation">#i18n{newsletter.manage_newsletters_properties.labelActiveValidation} :</label>
-	<div class="controls">
-	<label class="checkbox">#i18n{newsletter.manage_newsletters_properties.labelActiveValidationComment}
-	<input type="checkbox" name="active_validation" value="1" <#if properties.validationActive >checked="checked"</#if> />
-	</label>
-	</div>
-	</div>
-<#if is_active_captcha>
-	<div class="control-group">
-	<label class="control-label" for="active_captcha">#i18n{newsletter.manage_newsletters_properties.labelActiveCaptcha} :</label>
-	<div class="controls">
-	<label class="checkbox">#i18n{newsletter.manage_newsletters_properties.labelActiveCaptchaComment}
-	<input type="checkbox" name="active_captcha" value="1" 	<#if properties.captchaActive >checked="checked"</#if> />
-	</label>
-	</div>
-	</div>
-</#if>
-    <div class="control-group">
-	<label class="control-label" for="tos" >#i18n{newsletter.manage_newsletters_properties.termOfService}  :</label>
-    <div class="control">        	  
-	<textarea id="tos" name="tos" class="input-xlarge richtext" rows="20">
-	<#if properties.TOS??>${properties.TOS}</#if>
-	</textarea>			
-	</div>
-	</div>
-	<div class="form-actions">
-    <button class="btn btn-primary" type="submit" ><i class="icon-ok icon-white"></i>&nbsp;#i18n{newsletter.manage_newsletters_properties.buttonValidate}</button>
-	</div>
+	<div class="span12">
+	<fieldset>        
+    <legend>
+		#i18n{newsletter.manage_newsletters_properties.boxTitle}
+		<#if is_clean_subscriber_right>
+		<form class="form-inline pull-right" method="post" action="jsp/admin/plugins/newsletter/DoCleanSubscribers.jsp">
+			<button class="btn btn-danger" type="submit" ><i class="icon-trash icon-white"></i>&nbsp;#i18n{newsletter.manage_newsletters_properties.buttonAddNewsletter}</button>
+		</form>
+	</#if>
+	</legend>
+		<form class="form-horizontal" method="post" name="manage_newsletter_properties" action="jsp/admin/plugins/newsletter/DoManageNewsLetterProperties.jsp">
+		<div class="control-group">
+		<label class="control-label" for="active_validation">#i18n{newsletter.manage_newsletters_properties.labelActiveValidation} :</label>
+			<div class="controls">
+				<label class="checkbox">#i18n{newsletter.manage_newsletters_properties.labelActiveValidationComment}
+					<input type="checkbox" name="active_validation" value="1" <#if properties.validationActive >checked="checked"</#if> />
+				</label>
+			</div>
+		</div>
+		<#if is_active_captcha>
+		<div class="control-group">
+		<label class="control-label" for="active_captcha">#i18n{newsletter.manage_newsletters_properties.labelActiveCaptcha} :</label>
+			<div class="controls">
+				<label class="checkbox">#i18n{newsletter.manage_newsletters_properties.labelActiveCaptchaComment}
+					<input type="checkbox" name="active_captcha" value="1" 	<#if properties.captchaActive >checked="checked"</#if> />
+				</label>
+			</div>
+		</div>
+		</#if>
+		<div class="control-group">
+		<label class="control-label" for="tos" >#i18n{newsletter.manage_newsletters_properties.termOfService}  :</label>
+			<div class="control">        	  
+				<textarea id="tos" name="tos" class="span10" rows="20"><#if properties.TOS??>${properties.TOS}</#if></textarea>			
+			</div>
+		</div>
+		<div class="form-actions">
+			<button class="btn btn-primary" type="submit" ><i class="icon-ok icon-white"></i>&nbsp;#i18n{newsletter.manage_newsletters_properties.buttonValidate}</button>
+		</div>
+	</form>
+	
 	</fieldset>
-</form>
-<#if is_clean_subscriber_right>
-<form class="form-search" method="post" action="jsp/admin/plugins/newsletter/DoCleanSubscribers.jsp">
-<button class="btn btn-danger" type="submit" ><i class="icon-trash icon-white"></i>&nbsp;#i18n{newsletter.manage_newsletters_properties.buttonAddNewsletter}</button>
-</form>
-</#if>
-</div>
+	</div>
 </div>
 <!--
 <script src="js/editors/wysihtml5/wysihtml5-0.3.0.js"></script>
@@ -47,8 +48,8 @@
 <script type="text/javascript">
 $('.richtext').wysihtml5();
 </script>
--->
+
 <script src="js/editors/cleditor/jquery.cleditor.min.js"></script>
 <script type="text/javascript">
-$('.richtext').cleditor();
+$('.richtext').cleditor();-->
 </script>

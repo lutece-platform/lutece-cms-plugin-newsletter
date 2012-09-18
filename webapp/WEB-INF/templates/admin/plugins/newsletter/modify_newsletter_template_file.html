@@ -1,51 +1,50 @@
 <div class="row">
-<div class="container">
-<fieldset>
-<legend>#i18n{newsletter.modify_newsletter_template_file.boxTitle}</legend>
-<#if template?exists>
-<form class="form-horizontal" method="post" enctype="multipart/form-data" action="jsp/admin/plugins/newsletter/DoModifyNewsLetterTemplateFile.jsp" method="post">
-<input type="hidden" name="newsletter_template_id" value="${template.id}" />
-<div class="control-group">
-	<label class="control-label" for="newsletter_template_name">#i18n{newsletter.add_newsletter_template.name} *:</label>
-    <div class="controls">
-	<input type="text" id="newsletter_template_name" name="newsletter_template_name" maxlength="50" value="${template.description}" />
-	</div>
-	</div>
-    <div class="control-group">
-	<label class="control-label" for="newsletter_template_type">#i18n{newsletter.add_newsletter_template.templateType} *:</label>
-	<div class="controls">
-    <#list template_type  as item>
-	<label class="radio">
-	<input class="radio" <#if item.isChecked() >checked="checked"</#if> type="radio" name="newsletter_template_type" value="${item.code}" /> #i18n{${plugin.name}.${item.name}}
-   </label>
-    </#list>
-	</div>
-	</div>
-	
-	<div class="control-group">
-	<label class="control-label" for="newsletter_template_new_picture">#i18n{newsletter.add_newsletter_template.imageFileName} :</label>
-    <div class="controls">
-		<input type="file" id="newsletter_template_new_picture" name="newsletter_template_new_picture" size="32" value="" />
-	</div>
-	</div>
-    <div class="control-group">
-		<label class="control-label" for="newsletter_template_new_file">#i18n{newsletter.modify_newsletter_template.fileContent} : </label>
-            <div class="controls">
-	<input type="text" readonly="readonly" name="newsletter_template_new_file" value="${template.fileName}" />
-		</div>
-	</div>
-	<div class="control-group">
-	<label class="control-label" for="newsletter_template_source">#i18n{newsletter.modify_newsletter_template.fileContent} : </label>
-    <div class="controls">
-	<textarea class="span8 field" rows="20" id="newsletter_template_source" name="newsletter_template_source">${template_source}</textarea>
-	<p class="help-block">#i18n{newsletter.modify_newsletter_template.contentHelp}</p>
-	 </div>
-	</div>
-    <div class="form-actions">
-            <button class="btn btn-primary" type="submit" >#i18n{newsletter.modify_newsletter_template.buttonModify}</button>
-	  </div>      
+	<div class="span12">
+	<fieldset>
+	<legend>#i18n{newsletter.modify_newsletter_template_file.boxTitle}</legend>
+		<#if template?exists>
+		<form class="form-horizontal" method="post" enctype="multipart/form-data" action="jsp/admin/plugins/newsletter/DoModifyNewsLetterTemplateFile.jsp" method="post">
+			<input type="hidden" name="newsletter_template_id" value="${template.id}" />
+			<div class="control-group">
+			<label class="control-label" for="newsletter_template_name">#i18n{newsletter.add_newsletter_template.name} *:</label>
+				<div class="controls">
+					<input type="text" id="newsletter_template_name" name="newsletter_template_name" maxlength="50" value="${template.description}" />
+				</div>
+			</div>
+			<div class="control-group">
+			<label class="control-label" for="newsletter_template_type">#i18n{newsletter.add_newsletter_template.templateType} *:</label>
+				<div class="controls">
+				<#list template_type  as item>
+					<label class="radio">
+						<input class="radio" <#if item.isChecked() >checked="checked"</#if> type="radio" name="newsletter_template_type" value="${item.code}" /> #i18n{${plugin.name}.${item.name}}
+					</label>
+				</#list>
+				</div>
+			</div>
+			<div class="control-group">
+			<label class="control-label" for="newsletter_template_new_picture">#i18n{newsletter.add_newsletter_template.imageFileName} :</label>
+				<div class="controls">
+					<input type="file" id="newsletter_template_new_picture" name="newsletter_template_new_picture" class="input-small"value="" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="newsletter_template_new_file">#i18n{newsletter.modify_newsletter_template.fileContent} : </label>
+					<div class="controls">
+					<input type="text" readonly="readonly" name="newsletter_template_new_file" value="${template.fileName}" />
+				</div>
+			</div>
+			<div class="control-group">
+			<label class="control-label" for="newsletter_template_source">#i18n{newsletter.modify_newsletter_template.fileContent} : </label>
+				<div class="controls">
+					<textarea class="span8 field" rows="20" id="newsletter_template_source" name="newsletter_template_source">${template_source}</textarea>
+					<p class="help-block">#i18n{newsletter.modify_newsletter_template.contentHelp}</p>
+				</div>
+			</div>
+			<div class="form-actions">
+					<button class="btn btn-primary" type="submit" ><i class="icon-ok icon-white"></i>&nbsp;#i18n{newsletter.modify_newsletter_template.buttonModify}</button>
+			</div>      
+			</form>
+		</#if>
     </fieldset>
-</form>
-</#if>
-</div>
+	</div>
 </div>

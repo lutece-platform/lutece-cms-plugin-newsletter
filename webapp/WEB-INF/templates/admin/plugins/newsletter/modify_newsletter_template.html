@@ -1,53 +1,53 @@
 <div class="row">
-<div class="container">
-<fieldset>
-<legend>#i18n{newsletter.modify_newsletter_template.boxTitle}</legend>
-<form class="form-horizontal" method="post" enctype="multipart/form-data" action="jsp/admin/plugins/newsletter/DoModifyNewsLetterTemplate.jsp" method="post">
-<input type="hidden" name="newsletter_template_id" value="${template.id}" />
-<div class="control-group">
-	<label class="control-label" for="newsletter_template_name">#i18n{newsletter.add_newsletter_template.name} *:</label>
-    <div class="controls">
-	<input type="text" id="newsletter_template_name" name="newsletter_template_name" size="60" maxlength="50" value="${template.description}" />
-	</div>
-	</div>
-    <div class="control-group">
-	<label class="control-label" for="newsletter_template_type">#i18n{newsletter.add_newsletter_template.templateType} *:</label>
-	<div class="controls">
-    <#list template_type  as item>
-	<label class="radio">
-	<input class="radio" <#if item.isChecked() >checked="checked"</#if> type="radio" name="newsletter_template_type" value="${item.code}" /> #i18n{${plugin.name}.${item.name}}
-   </label>
-    </#list>
-	</div>
-	</div>
-    <div class="control-group">
-	<label class="control-label" for="newsletter_template_new_file">#i18n{newsletter.add_newsletter_template.fileName} :</label>
-    <div class="controls">
-	<input type="file" id="newsletter_template_new_file" name="newsletter_template_new_file" size="32" value="" />
-	</div>
-	</div>
-	<div class="control-group">
-	<div class="controls">
-    <a class="btn btn-large" href="jsp/admin/plugins/newsletter/ModifyNewsLetterTemplateFile.jsp?newsletter_template_id=${template.id}">
-	<i class="icon-edit"></i>&nbsp;#i18n{newsletter.modify_newsletter_template.modifyTemplateCode}</a>
-	</div>
-	</div>
-	<div class="control-group">
-	<label class="control-label" for="newsletter_template_new_picture">#i18n{newsletter.add_newsletter_template.imageFileName} :</label>
-    <div class="controls">
-		<input type="file" id="newsletter_template_new_picture" name="newsletter_template_new_picture" size="32" value="" />
-	</div>
-	</div>
-    <div class="control-group">
-	<label class="control-label" for="newsletter_template_workgroup" >#i18n{newsletter.add_newsletter_template.labelWorkgroup} :</label>
-    <div class="controls">
-	<@combo name="newsletter_template_workgroup" default_value="${template.workgroup}" items=workgroup_list />
-	</div>
-	</div>
-    <div class="form-actions">
-            <button class="btn btn-primary" type="submit" >#i18n{newsletter.modify_newsletter_template.buttonModify}</button>
-	  </div>      
+	<div class="span12">
+	<fieldset>
+	<legend>#i18n{newsletter.modify_newsletter_template.boxTitle}</legend>
+		<form class="form-horizontal" method="post" enctype="multipart/form-data" action="jsp/admin/plugins/newsletter/DoModifyNewsLetterTemplate.jsp" method="post">
+			<input type="hidden" name="newsletter_template_id" value="${template.id}" />
+			<div class="control-group">
+				<label class="control-label" for="newsletter_template_name">#i18n{newsletter.add_newsletter_template.name} *:</label>
+				<div class="controls">
+					<input type="text" id="newsletter_template_name" name="newsletter_template_name" class="input-large" maxlength="50" value="${template.description}" />
+				</div>
+			</div>
+			<div class="control-group">
+			<label class="control-label" for="newsletter_template_type">#i18n{newsletter.add_newsletter_template.templateType} *:</label>
+				<div class="controls">
+					<#list template_type  as item>
+					<label class="radio">
+						<input class="radio" <#if item.isChecked() >checked="checked"</#if> type="radio" name="newsletter_template_type" value="${item.code}" /> #i18n{${plugin.name}.${item.name}}
+					</label>
+				</#list>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="newsletter_template_new_file">#i18n{newsletter.add_newsletter_template.fileName} :</label>
+				<div class="controls">
+				<input type="file" id="newsletter_template_new_file" name="newsletter_template_new_file" class="input-small" value="" />
+				</div>
+			</div>
+			<div class="control-group">
+			<div class="controls">
+				<a class="btn btn-large" href="jsp/admin/plugins/newsletter/ModifyNewsLetterTemplateFile.jsp?newsletter_template_id=${template.id}">
+				<i class="icon-edit"></i>&nbsp;#i18n{newsletter.modify_newsletter_template.modifyTemplateCode}</a>
+				</div>
+			</div>
+			<div class="control-group">
+			<label class="control-label" for="newsletter_template_new_picture">#i18n{newsletter.add_newsletter_template.imageFileName} :</label>
+				<div class="controls">
+					<input type="file" id="newsletter_template_new_picture" name="newsletter_template_new_picture" class="input-small" value="" />
+				</div>
+			</div>
+			<div class="control-group">
+			<label class="control-label" for="newsletter_template_workgroup" >#i18n{newsletter.add_newsletter_template.labelWorkgroup} :</label>
+				<div class="controls">
+				<@combo name="newsletter_template_workgroup" default_value="${template.workgroup}" items=workgroup_list />
+				</div>
+			</div>
+			<div class="form-actions">
+				<button class="btn btn-primary" type="submit" ><i class="icon-ok icon-white"></i>&nbsp;#i18n{newsletter.modify_newsletter_template.buttonModify}</button>
+			</div>      
+		</form>
     </fieldset>
-</form>
-</div>
+	</div>
 </div>
