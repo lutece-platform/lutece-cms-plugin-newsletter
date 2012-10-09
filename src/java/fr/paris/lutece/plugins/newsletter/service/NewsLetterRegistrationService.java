@@ -52,6 +52,7 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppLogService;
+import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.string.StringUtil;
@@ -76,13 +77,13 @@ public class NewsLetterRegistrationService
 {
     private static final String PARAMETER_TOS = "tos";
     private static final String TEMPLATE_CONFIRM_MAIL = "admin/plugins/newsletter/confirm_mail.html";
+    private static final String JSP_PORTAL = "/jsp/site/Portal.jsp";
 
     //properties
     private static final String PROPERTY_MESSAGE_CONFIRM_MAIL_TITLE = "newsletter.confirm_mail.title";
     private static final String PROPERTY_LIMIT_CONFIRM_DAYS = "newsletter.confirm.limit";
     private static final String REGEX_ID = "^[\\d]+$";
     private static final String JCAPTCHA_PLUGIN = "jcaptcha";
-    private static final int DEFAULT_HTTP_PORT = 80;
 
     //default values
     private static int DEFAULT_LIMIT = 7;
@@ -198,17 +199,10 @@ public class NewsLetterRegistrationService
                 // add pair in db
                 AwaitingActivationHome.create( subscriber.getId(  ), nAlea, plugin );
 
-                String strUrl = request.getScheme(  ) + "://" + request.getServerName(  );
-                int nServerPort = request.getServerPort(  );
+                StringBuilder sbUrl = new StringBuilder( AppPathService.getBaseUrl(request) );
+                sbUrl.append( JSP_PORTAL );
 
-                if ( nServerPort != DEFAULT_HTTP_PORT )
-                {
-                    strUrl += ( ":" + nServerPort );
-                }
-
-                strUrl += request.getRequestURI(  );
-
-                UrlItem urlItem = new UrlItem( strUrl );
+                UrlItem urlItem = new UrlItem( sbUrl.toString(  ) );
                 urlItem.addParameter( NewsLetterConstants.PARAMETER_PAGE, NewsLetterConstants.PROPERTY_PLUGIN_NAME );
                 urlItem.addParameter( NewsLetterConstants.PARAMETER_ACTION, NewsLetterConstants.ACTION_CONFIRM_SUBSCRIBE );
                 urlItem.addParameter( NewsLetterConstants.PARAMETER_KEY, nAlea );
