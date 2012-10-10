@@ -15,7 +15,7 @@
 		<input name="published_date" value="${start_published_date}" checked="checked" type="texte" />
 	</div>
 	</div>
-    <button class="btn btn-primary" type="submit" >#i18n{newsletter.select_documents.buttonSearch}</button>
+    <button class="btn btn-primary btn-small" type="submit" >#i18n{newsletter.select_documents.buttonSearch}</button>
 	
 </form>
 </fieldset>
@@ -42,5 +42,5 @@
         </#list>
     </table>
     <@combo name="template_id" default_value=0 items=documents_templates_list />
-	<button class="btn btn-primary" type="submit" >#i18n{newsletter.select_documents.buttonValidate}</button>
+	<button class="btn btn-primary btn-small" type="submit" >#i18n{newsletter.select_documents.buttonValidate}</button>
 </form>
