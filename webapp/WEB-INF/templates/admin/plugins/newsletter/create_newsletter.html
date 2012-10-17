@@ -4,25 +4,28 @@
     <legend>#i18n{newsletter.create_newsletter.boxTitle}</legend>
 		<form class="form-horizontal" method="post" id="create_newsletter" name="create_newsletter" action="jsp/admin/plugins/newsletter/DoCreateNewsLetter.jsp">
 			<div class="control-group">
-			<label class="control-label" for="newsletter_name">#i18n{newsletter.create_newsletter.label} * :</label>
+			<label class="control-label" for="newsletter_name">#i18n{newsletter.create_newsletter.label} *</label>
 				<div class="controls">
 					<input type="text" id="newsletter_name" name="newsletter_name"  class="input-large"  maxlength="50" />
 				</div>
 			</div>
 			<div class="control-group">
-			<label class="control-label" for="newsletter_description">#i18n{newsletter.create_newsletter.description} * :</label>
+			<label class="control-label" for="newsletter_description">#i18n{newsletter.create_newsletter.description} *</label>
 				<div class="controls">
 					<textarea id="newsletter_description" name="newsletter_description" class="span5" rows="4" ></textarea>
 				</div>
 			</div>
 			<div class="control-group">
-			<label class="control-label" for="date_first_send">#i18n{newsletter.create_newsletter.initialDate} * :</label>
+			<label class="control-label" for="date_first_send">#i18n{newsletter.create_newsletter.initialDate} *</label>
 				<div class="controls">
-					<input type="text" name="date_first_send" id="date_first_send"  size="10" maxlength="10" value="${newsletter_last_sent}" />
+					<div class="input-prepend">
+						<span class="add-on"><i class="icon-calendar"></i></span>
+						<input type="text" name="date_first_send" id="date_first_send"  class="input-small" maxlength="10" value="${newsletter_last_sent}" />
+					</div>
 				</div>
 			</div>
 			<div class="control-group">
-			<label class="control-label" for="category_list_id">#i18n{newsletter.create_newsletter.categoryList} * :</label>
+			<label class="control-label" for="category_list_id">#i18n{newsletter.create_newsletter.categoryList} *</label>
 			<div class="controls">
 				<#if category_list?has_content>
 				<select id="category_list_id" name="category_list_id" multiple="multiple" class="span3" >
@@ -32,43 +35,43 @@
 					<option value="-1" >#i18n{newsletter.create_newsletter.uncategorizedDocuments.label}</option>
 				</select>
 				<#else>
-					<p class="label label-warning">#i18n{newsletter.create_newsletter.labelNoCategory}</p>
+					<p class="alert alert-error">#i18n{newsletter.create_newsletter.labelNoCategory}</p>
 					<input type="hidden" id="newsletter_no_category" name="newsletter_no_category" value="no_category" />
 				</#if>
 				</div>
 			</div>
 			<div class="control-group">
-			<label class="control-label" for="newsletter_workgroup" >#i18n{newsletter.create_newsletter.labelWorkgroup} * :</label>
+			<label class="control-label" for="newsletter_workgroup" >#i18n{newsletter.create_newsletter.labelWorkgroup} *</label>
 				<div class="controls">
 					<@combo name="newsletter_workgroup" default_value="" items=workgroup_list />
 				</div>
 			</div>
 			<div class="control-group">
-			<label class="control-label" for="newsletter_unsubscribe" >#i18n{newsletter.create_newsletter.labelUnsubscribe}  :</label>
+			<label class="control-label" for="newsletter_unsubscribe" >#i18n{newsletter.create_newsletter.labelUnsubscribe}  </label>
 				<div class="controls">
 					<@combo name="newsletter_unsubscribe" default_value="" items=unsubscribe_list />
 				</div>
 			</div>
 			<div class="control-group">
-			<label class="control-label" for="newsletter_sender_name" >#i18n{newsletter.create_newsletter.labelSenderName} * :</label>  
+			<label class="control-label" for="newsletter_sender_name" >#i18n{newsletter.create_newsletter.labelSenderName} *</label>  
 				<div class="controls">
 					<input type="text" id="newsletter_sender_name" name="newsletter_sender_name"  class="input-large"  maxlength="255"  />
 				</div>
 			</div>
 			<div class="control-group">
-			<label class="control-label" for="newsletter_sender_mail" >#i18n{newsletter.create_newsletter.labelSenderMail} * :</label>  
+			<label class="control-label" for="newsletter_sender_mail" >#i18n{newsletter.create_newsletter.labelSenderMail} *</label>  
 				<div class="controls">
 					<input type="text" id="newsletter_sender_mail" name="newsletter_sender_mail"  class="input-large"  maxlength="255"  />
 				</div>
 			</div>
 			<div class="control-group">
-			<label class="control-label" for="newsletter_test_subject" >#i18n{newsletter.modify_newsletter.labelSubject} :</label>  
+			<label class="control-label" for="newsletter_test_subject" >#i18n{newsletter.modify_newsletter.labelSubject} </label>  
 				<div class="controls">
 					<input type="text" id="newsletter_test_subject" name="newsletter_test_subject"  class="input-large"  maxlength="255" value="" />
 				</div>
 			</div>
 			<div class="control-group">
-			<label class="control-label" for="newsletter_test_recipients" >#i18n{newsletter.create_newsletter.labelTestRecipients} * :</label>  
+			<label class="control-label" for="newsletter_test_recipients" >#i18n{newsletter.create_newsletter.labelTestRecipients} *</label>  
 				<div class="controls">
 					<input type="text" id="newsletter_test_recipients" name="newsletter_test_recipients"  class="input-large"  maxlength="255"  />
 					<p class="help-block">#i18n{newsletter.modify_newsletter.noticeDelimiter}</p>
@@ -76,11 +79,12 @@
 			</div>
 			<div class="form-actions">
 				<button class="btn btn-primary btn-small" type="submit" ><i class="icon-ok icon-white"></i>&nbsp;#i18n{newsletter.create_newsletter.buttonValidate}</button>
-				<button class="btn btn-primary btn-small" onclick="javascript:window.history.back();" ><i class="icon-remove-circle icon-white"></i>&nbsp;#i18n{newsletter.create_newsletter.buttonCancel}</button>
+				<button class="btn btn-primary btn-small" onclick="javascriptwindow.history.back();" ><i class="icon-remove-circle icon-white"></i>&nbsp;#i18n{newsletter.create_newsletter.buttonCancel}</button>
 			</div>
         </form>
 		</fieldset>
 	</div>
 </div>
-
+<script src="js/jquery/plugins/ui/jquery-ui-1.8.16.custom.min.js"></script>
+<script src="js/jquery/plugins/ui/ui.datepicker-fr.js"></script>
 <@getDatePicker idField="date_first_send" language=locale.language />

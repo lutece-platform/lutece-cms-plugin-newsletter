@@ -17,7 +17,6 @@
 				<th>#i18n{newsletter.manage_newsletters.columnTitleDescription}</th>
 				<th>#i18n{newsletter.manage_newsletters.columnTitleLastSent}</th>
 				<th>#i18n{newsletter.manage_newsletters.columnTitleSubscribersCount}</th>
-				<th>#i18n{newsletter.manage_newsletters.columnTitleWorkGroup}</th>
 				<th>#i18n{newsletter.manage_newsletters.columnTitleActions}</th>
 			</tr>
 		</thead>
@@ -28,7 +27,6 @@
 			<td>${newsletterDisplay.newsletter.description} </td>
 				<td>${newsletterDisplay.newsletter.dateLastSending?string.short}</td>
 				<td>${newsletterDisplay.newsletter_count_subscribers}</td>
-				<td>${newsletterDisplay.newsletter_workgroup_description}</td>
 				<td>
 				<#if newsletterDisplay.newsletter_allow_modification>
 				<a class="btn btn-small btn-primary" href="jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleModify}" >
