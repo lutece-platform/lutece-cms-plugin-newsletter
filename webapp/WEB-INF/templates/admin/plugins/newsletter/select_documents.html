@@ -4,11 +4,10 @@
 	<form class="form-search" method="post" action="jsp/admin/plugins/newsletter/DoSearchDocuments.jsp">
 	<input type="hidden" name="plugin_name" value="${plugin_name}" />
     <input type="hidden" name="input" value="${input}" />
-   
-                <label>#i18n{newsletter.select_documents.labelSearchCriteria}</label>
-                <td>#i18n{newsletter.select_documents.labelDocumentListCollection}</td>
-                <@combo name="document_list_id" default_value=0 items=documents_lists_list />
-				</div>
+	<label>#i18n{newsletter.select_documents.labelSearchCriteria}</label>
+		<td>#i18n{newsletter.select_documents.labelDocumentListCollection}</td>
+        <@combo name="document_list_id" default_value=0 items=documents_lists_list />
+		</div>
 	</div>
 	<label>#i18n{newsletter.select_documents.labelPublishedSince}</label>
     <div class="controls">

@@ -1,28 +1,30 @@
 <div class="row-fluid">
-	<div class="span12">
-	<fieldset>
-    <legend>#i18n{newsletter.prepare_newsletter.boxTitle}</legend>
-		<form class="form-horizontal" method="post" action="jsp/admin/plugins/newsletter/ConfirmSendNewsLetter.jsp">
-			<input type="hidden" name="newsletter_id" value="${newsletter.id}" />
-			<div class="control-group">
-			<label class="control-label" for="newsletter_object">#i18n{newsletter.prepare_newsletter.newsletterSubject} :</label>
-				<div class="controls">
-					<input type="text" value="${newsletter_object}" id="newsletter_object" name="newsletter_object" class="input-xxlarge" />
-					<button class="btn btn-primary btn-small" type="submit" ><i class="icon-envelope icon-white"></i>&nbsp;#i18n{newsletter.prepare_newsletter.sendButton}</button>
-				</div>
-			</div>
-			<div class="control-group">
-			<label class="control-label" for="newsletter_body">#i18n{newsletter.prepare_newsletter.newsletterBody} :</label>
-				<div class="controls">
-					<iframe name="preview" style="margin-left:0;" src="jsp/admin/plugins/newsletter/PreviewNewsLetter.jsp?newsletter_id=${newsletter.id}&plugin_name=newsletter" class="span10" height="400px" scrolling="auto"></iframe>
-				</div>
-			</div>
-        </form>
-		<div class="form-actions">
-			<form class="form-horizontal" method="post" action="jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}">
-				<button class="btn btn-primary btn-small" type="submit" ><i class="icon-edit icon-white"></i>&nbsp;#i18n{newsletter.prepare_newsletter.composeNewsletter}</button>
-			</form>
-		</div>
-	</fieldset>
-	</div>
+    <div class="span12">
+        <fieldset>
+            <legend>#i18n{newsletter.prepare_newsletter.boxTitle}</legend>
+            <form class="form-horizontal" method="post" action="jsp/admin/plugins/newsletter/ConfirmSendNewsLetter.jsp">
+                <input type="hidden" name="newsletter_id" value="${newsletter.id}" />
+                <div class="control-group">
+                    <label class="control-label" for="newsletter_object">#i18n{newsletter.prepare_newsletter.newsletterSubject} :</label>
+                    <div class="controls">
+                        <input type="text" value="${newsletter_object}" id="newsletter_object" name="newsletter_object" class="input-xxlarge" />
+                        <button class="btn btn-primary btn-small" type="submit">
+                            <i class="icon-envelope icon-white"></i>&nbsp;#i18n{newsletter.prepare_newsletter.sendButton}
+                        </button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="newsletter_body">#i18n{newsletter.prepare_newsletter.newsletterBody} :</label>
+                    <div class="controls">
+                        <iframe name="preview" style="margin-left:0;" src="jsp/admin/plugins/newsletter/PreviewNewsLetter.jsp?newsletter_id=${newsletter.id}&plugin_name=newsletter" class="span10" height="400px" scrolling="auto"></iframe>
+                    </div>
+                </div>
+            </form>
+            <div class="form-actions">
+                <form class="form-horizontal" method="post" action="jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}">
+                    <button class="btn btn-primary btn-small" type="submit" ><i class="icon-edit icon-white"></i>&nbsp;#i18n{newsletter.prepare_newsletter.composeNewsletter}</button>
+                </form>
+            </div>
+        </fieldset>
+    </div>
 </div>

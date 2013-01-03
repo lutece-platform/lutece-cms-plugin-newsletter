@@ -174,6 +174,8 @@ public class NewsLetterApp implements XPageApplication
             NewsLetterProperties properties = NewsletterPropertiesHome.find( plugin );
             model.put( MARK_PROPERTIES, properties );
             model.put( MARK_NEWSLETTERS_LIST, list );
+            model.put( MARK_TOS, properties.getTOS(  ) );
+
             model.put( MARK_PLUGIN, plugin );
 
             boolean bIsCaptchaEnabled = PluginService.isPluginEnable( JCAPTCHA_PLUGIN );
@@ -184,7 +186,6 @@ public class NewsLetterApp implements XPageApplication
                 _captchaService = new CaptchaSecurityService(  );
                 model.put( MARK_CAPTCHA, _captchaService.getHtmlCode(  ) );
             }
-
             HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_XPAGE_NEWSLETTER, request.getLocale(  ),
                     model );
             page.setContent( template.getHtml(  ) );
@@ -241,7 +242,7 @@ public class NewsLetterApp implements XPageApplication
      * @param plugin The Plugin
      * @return the form recap
      * @throws SiteMessageException SiteMessageException
-     */
+    /**/
     private String getRequirement( HttpServletRequest request, Plugin plugin )
     {
         Map<String, Object> model = new HashMap<String, Object>(  );
@@ -253,5 +254,6 @@ public class NewsLetterApp implements XPageApplication
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_XPAGE_TOS, locale, model );
 
         return template.getHtml(  );
-    }
+    } 
+    
 }

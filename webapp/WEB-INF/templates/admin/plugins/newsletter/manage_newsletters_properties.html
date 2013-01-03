@@ -9,7 +9,7 @@
 		</form>
 	</#if>
 	</legend>
-		<form class="form-horizontal" method="post" name="manage_newsletter_properties" action="jsp/admin/plugins/newsletter/DoManageNewsLetterProperties.jsp">
+		<form class="form" method="post" name="manage_newsletter_properties" action="jsp/admin/plugins/newsletter/DoManageNewsLetterProperties.jsp">
 		<div class="control-group">
 		<label class="control-label" for="active_validation">#i18n{newsletter.manage_newsletters_properties.labelActiveValidation} :</label>
 			<div class="controls">
@@ -31,7 +31,7 @@
 		<div class="control-group">
 		<label class="control-label" for="tos" >#i18n{newsletter.manage_newsletters_properties.termOfService}  :</label>
 			<div class="control">        	  
-				<textarea id="tos" name="tos" class="span10" rows="20"><#if properties.TOS??>${properties.TOS}</#if></textarea>			
+				<textarea id="tos" name="tos" class="richtext" rows="20"><#if properties.TOS??>${properties.TOS}</#if></textarea>			
 			</div>
 		</div>
 		<div class="form-actions">
@@ -42,14 +42,5 @@
 	</fieldset>
 	</div>
 </div>
-<!--
-<script src="js/editors/wysihtml5/wysihtml5-0.3.0.js"></script>
-<script src="js/editors/wysihtml5/bootstrap-wysihtml5.js"></script>
-<script type="text/javascript">
-$('.richtext').wysihtml5();
-</script>
-
-<script src="js/editors/cleditor/jquery.cleditor.min.js"></script>
-<script type="text/javascript">
-$('.richtext').cleditor();-->
-</script>
+<#include "/admin/util/editor/editor.html" />
+<@initEditor />

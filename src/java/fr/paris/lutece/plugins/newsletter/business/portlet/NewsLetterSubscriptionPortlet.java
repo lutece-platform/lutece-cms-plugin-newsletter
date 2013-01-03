@@ -75,6 +75,7 @@ public class NewsLetterSubscriptionPortlet extends Portlet
     private static final String TAG_NEWSLETTER_NO_CHOICE_ERROR = "subscription-nochoice-error";
     private static final String TAG_NEWSLETTER_CAPTCHA = "newsletter-subscription-captcha";
     private static final String TAG_NEWSLETTER_TOS = "newsletter-subscription-tos";
+    private static final String TAG_NEWSLETTER_TOS_CONTENT = "newsletter-subscription-tos-content";
     private static final String PROPERTY_LABEL_MAIL = "newsletter.portlet.mail.label";
     private static final String PROPERTY_LABEL_BUTTON = "newsletter.portlet.button.label";
     private static final String PROPERTY_ERROR_INVALID_MAIL = "newsletter.message.error.newsletter.invalid.mail";
@@ -177,7 +178,7 @@ public class NewsLetterSubscriptionPortlet extends Portlet
 
             sendings.add( sending );
         }
-
+        
         // Then order the sendings by date
         Collections.sort( sendings, COMPARATOR_DATE_DESC );
 
@@ -194,7 +195,7 @@ public class NewsLetterSubscriptionPortlet extends Portlet
             XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_DESC, sending.getName(  ) );
             XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_DATE,
                 DateUtil.getDateString( sending.getDateLastSending(  ) ) );
-            XmlUtil.endElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION );
+           XmlUtil.endElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION );
         }
 
         XmlUtil.endElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_LIST );
@@ -212,6 +213,7 @@ public class NewsLetterSubscriptionPortlet extends Portlet
         if ( ( properties.getTOS(  ) != null ) && ( properties.getTOS(  ) != NewsLetterConstants.CONSTANT_EMPTY_STRING ) )
         {
             XmlUtil.addElement( strXml, TAG_NEWSLETTER_TOS, "true" );
+            XmlUtil.addElementHtml( strXml, TAG_NEWSLETTER_TOS_CONTENT, properties.getTOS() );
         }
 
         if ( !strMailError.equals( "" ) )
