@@ -14,7 +14,7 @@
 			<label class="control-label" for="newsletter_template_type">#i18n{newsletter.add_newsletter_template.templateType} *:</label>
 				<div class="controls">
 					<#list template_type  as item>
-					<label class="radio">
+					<label class="radio inline">
 						<input class="radio" <#if item.isChecked() >checked="checked"</#if> type="radio" name="newsletter_template_type" value="${item.code}" /> #i18n{${plugin.name}.${item.name}}
 					</label>
 				</#list>
@@ -45,7 +45,11 @@
 				</div>
 			</div>
 			<div class="form-actions">
-				<button class="btn btn-primary btn-small" type="submit" ><i class="icon-ok icon-white"></i>&nbsp;#i18n{newsletter.modify_newsletter_template.buttonModify}</button>
+				<button class="btn btn-primary btn-small" type="submit" >
+					<i class="icon-ok icon-white"></i>&nbsp;#i18n{newsletter.modify_newsletter_template.buttonModify}</button>
+				<a class="btn btn-small" href="jsp/admin/plugins/newsletter/ManageTemplates.jsp" >
+                        <i class="icon-remove-circle"></i>&nbsp;#i18n{newsletter.create_newsletter.buttonCancel}
+                    </a>
 			</div>      
 		</form>
     </fieldset>
