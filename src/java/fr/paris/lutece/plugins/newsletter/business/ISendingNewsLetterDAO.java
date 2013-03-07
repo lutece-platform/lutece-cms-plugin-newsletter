@@ -91,7 +91,7 @@ public interface ISendingNewsLetterDAO
      * @param plugin the plugin
      * @return a list of SendingNewsLetter objects.
      */
-    List findAllSendings( Plugin plugin );
+    List<SendingNewsLetter> findAllSendings( Plugin plugin );
 
     /**
      * Returns the sendings corresponding to a list of ids.

@@ -43,8 +43,7 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 public final class NewsletterPropertiesHome
 {
     // Static variable pointed at the DAO instance
-    private static INewsletterPropertiesDAO _dao = (INewsletterPropertiesDAO) SpringContextService.getPluginBean( "newsletter",
-            "newsletterPropertiesDAO" );
+    private static INewsletterPropertiesDAO _dao = SpringContextService.getBean( "newsletter.newsletterPropertiesDAO" );
 
     /**
      * Private constructor - this class need not be instantiated

@@ -58,16 +58,15 @@ import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.string.StringUtil;
 import fr.paris.lutece.util.url.UrlItem;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.sql.Timestamp;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -242,9 +241,9 @@ public class NewsLetterRegistrationService
     }
 
     /**
-     *
-     * @param request
-     * @throws SiteMessageException
+     * Get the confirmation page to suscribe a user
+     * @param request The request
+     * @throws SiteMessageException Site message exception
      */
     public void doConfirmSubscribe( HttpServletRequest request )
         throws SiteMessageException
@@ -392,7 +391,6 @@ public class NewsLetterRegistrationService
     /**
      * Performs confirm unsubscription process
      * @param request The http request
-     * @return The url of portal
      * @throws SiteMessageException The error message handled by the front office
      */
     public void doConfirmUnSubscribe( HttpServletRequest request )

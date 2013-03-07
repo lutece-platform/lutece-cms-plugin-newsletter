@@ -34,7 +34,6 @@
 package fr.paris.lutece.plugins.newsletter.service;
 
 import fr.paris.lutece.portal.service.daemon.Daemon;
-import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
 
 /**

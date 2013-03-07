@@ -46,6 +46,7 @@ import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.util.html.HtmlTemplate;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -89,6 +90,7 @@ public final class NewsLetterArchiveService
      * parameters and the current mode.
      * @return The page content.
      * @param request The HTTP request.
+     * @throws SiteMessageException If parameters are not correct
      */
     public String getShowArchivePage( HttpServletRequest request )
         throws SiteMessageException
@@ -112,7 +114,7 @@ public final class NewsLetterArchiveService
                 SiteMessage.TYPE_ERROR );
         }
 
-        HashMap model = new HashMap(  );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( NewsLetterConstants.MARK_SENDING, sending );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_VIEW_NEWSLETTER_ARCHIVE,

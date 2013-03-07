@@ -17,6 +17,7 @@ CREATE TABLE newsletter_description (
   sender_mail VARCHAR(255) DEFAULT NULL,
   sender_name VARCHAR(255) DEFAULT NULL,
   test_subject VARCHAR(255) DEFAULT NULL,
+  nb_categories INT DEFAULT '1',
   PRIMARY KEY (id_newsletter)
 );
 
@@ -115,5 +116,26 @@ CREATE TABLE newsletter_properties (
   validation_activated INT DEFAULT '1' NOT NULL,
   captcha_activated INT DEFAULT '1' NOT NULL,
   tos long VARCHAR 
- );
+);
 
+--
+-- Table structure for table newsletter_section
+--
+
+DROP TABLE IF EXISTS newsletter_section;
+CREATE TABLE newsletter_section (
+  id_section INT,
+  id_newsletter INT NOT NULL,
+  section_type_name VARCHAR(100) NOT NULL,
+  title VARCHAR(255) DEFAULT '',
+  section_order INT NOT NULL,
+  category INT NOT NULL,
+  PRIMARY KEY (id_section)
+);
+
+DROP TABLE IF EXISTS newsletter_section_free_html;
+CREATE TABLE newsletter_section_free_html (
+  id_section INT,
+  html_content LONG VARCHAR,
+  PRIMARY KEY (id_section)
+);

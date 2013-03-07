@@ -49,8 +49,7 @@ public final class NewsLetterTemplateHome
     /**
      * The data access object initialised by Spring mechanism
      */
-    private static INewsLetterTemplateDAO _dao = (INewsLetterTemplateDAO) SpringContextService.getPluginBean( "newsletter",
-            "newsLetterTemplateDAO" );
+    private static INewsLetterTemplateDAO _dao = SpringContextService.getBean( "newsletter.newsLetterTemplateDAO" );
 
     /**
      * Private constructor - this class need not be instantiated

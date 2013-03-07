@@ -33,13 +33,12 @@
  */
 package fr.paris.lutece.plugins.newsletter.business;
 
-
 /**
- *
- *
+ * 
+ * 
  * Pair class
- * @param <A>
- * @param <B>
+ * @param <A> First type of the pair
+ * @param <B> Second type of the pair
  */
 public class Pair<A, B>
 {

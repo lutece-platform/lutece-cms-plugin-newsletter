@@ -33,13 +33,11 @@
  */
 package fr.paris.lutece.plugins.newsletter.business;
 
-import fr.paris.lutece.plugins.document.business.Document;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.sql.DAOUtil;
 
 import java.sql.Timestamp;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -51,32 +49,24 @@ import java.util.List;
 public final class NewsLetterDAO implements INewsLetterDAO
 {
     // Constants
-    private static final String SQL_QUERY_SELECT = "SELECT name, description, date_last_send, html, id_newsletter_template, id_document_template, workgroup_key, unsubscribe, sender_mail, sender_name, test_recipients, test_subject  FROM newsletter_description WHERE id_newsletter = ? ";
-    private static final String SQL_QUERY_SELECT_ALL = "SELECT id_newsletter , name, description, date_last_send, html, id_newsletter_template, id_document_template, workgroup_key, test_recipients , sender_mail, test_subject FROM newsletter_description ";
+    private static final String SQL_QUERY_SELECT = "SELECT name, description, date_last_send, html, id_newsletter_template, id_document_template, workgroup_key, unsubscribe, sender_mail, sender_name, test_recipients, test_subject, nb_categories  FROM newsletter_description WHERE id_newsletter = ? ";
+    private static final String SQL_QUERY_SELECT_ALL = "SELECT id_newsletter , name, description, date_last_send, html, id_newsletter_template, id_document_template, workgroup_key, test_recipients , sender_mail, test_subject, nb_categories FROM newsletter_description ";
     private static final String SQL_QUERY_SELECT_ALL_ID = "SELECT id_newsletter, name FROM newsletter_description ";
     private static final String SQL_QUERY_SELECT_NBR_SUBSCRIBERS = "SELECT count(*) FROM newsletter_subscriber a, newsletter_subscriber_details b WHERE a.id_subscriber = b.id_subscriber AND b.email LIKE ? AND id_newsletter = ? ";
     private static final String SQL_QUERY_SELECT_NBR_ACTIVE_SUBSCRIBERS = "SELECT count(*) FROM newsletter_subscriber a, newsletter_subscriber_details b WHERE a.id_subscriber = b.id_subscriber AND b.email LIKE ? AND id_newsletter = ? AND a.confirmed = 1";
-    private static final String SQL_QUERY_UPDATE = "UPDATE newsletter_description SET name = ?, description = ?, date_last_send = ?, html = ?, id_newsletter_template = ?, id_document_template = ?, workgroup_key = ? , unsubscribe = ? ,sender_mail = ? ,sender_name = ? , test_recipients = ?, test_subject = ? WHERE id_newsletter = ? ";
-    private static final String SQL_QUERY_INSERT = "INSERT INTO newsletter_description ( id_newsletter , name, description, date_last_send, html, id_newsletter_template, id_document_template, workgroup_key, unsubscribe, sender_mail, sender_name, test_recipients , test_subject ) VALUES ( ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?, ?, ? )";
+    private static final String SQL_QUERY_UPDATE = "UPDATE newsletter_description SET name = ?, description = ?, date_last_send = ?, html = ?, id_newsletter_template = ?, id_document_template = ?, workgroup_key = ? , unsubscribe = ? ,sender_mail = ? ,sender_name = ? , test_recipients = ?, test_subject = ?, nb_categories = ? WHERE id_newsletter = ? ";
+    private static final String SQL_QUERY_INSERT = "INSERT INTO newsletter_description ( id_newsletter , name, description, date_last_send, html, id_newsletter_template, id_document_template, workgroup_key, unsubscribe, sender_mail, sender_name, test_recipients , test_subject, nb_categories ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?, ?, ? )";
     private static final String SQL_QUERY_INSERT_SUBSCRIBER = "INSERT INTO newsletter_subscriber ( id_newsletter , id_subscriber, date_subscription, confirmed ) VALUES ( ?, ?, ?, ? )";
     private static final String SQL_QUERY_VALIDATE_SUBSCRIBER = "UPDATE newsletter_subscriber SET confirmed = 1 WHERE id_newsletter = ? AND id_subscriber = ?";
     private static final String SQL_QUERY_DELETE = "DELETE FROM newsletter_description WHERE id_newsletter = ? ";
     private static final String SQL_QUERY_DELETE_FROM_SUBSCRIBER = "DELETE FROM newsletter_subscriber WHERE id_newsletter = ? and id_subscriber = ? ";
     private static final String SQL_QUERY_DELETE_OLD_FROM_SUBSCRIBER = "DELETE FROM newsletter_subscriber WHERE date_subscription < ? and confirmed = ? ";
-    private static final String SQL_QUERY_DELETE_NEWSLETTER_CATEGORY_LIST = "DELETE FROM newsletter_category_list WHERE id_newsletter = ?";
     private static final String SQL_QUERY_CHECK_PRIMARY_KEY = "SELECT id_newsletter FROM newsletter_description WHERE id_newsletter = ?";
     private static final String SQL_QUERY_CHECK_LINKED_PORTLET = "SELECT id_newsletter FROM  newsletter_portlet_subscribe WHERE id_newsletter = ?";
     private static final String SQL_QUERY_NEW_PRIMARY_KEY = "SELECT max(id_newsletter) FROM newsletter_description ";
     private static final String SQL_QUERY_CHECK_IS_REGISTERED = "SELECT id_newsletter FROM newsletter_subscriber WHERE id_newsletter = ? AND id_subscriber = ? ";
     private static final String SQL_QUERY_CHECK_IS_TEMPLATE_USED = "SELECT id_newsletter FROM newsletter_description WHERE id_newsletter_template = ? OR id_document_template = ? ";
-    private static final String SQL_QUERY_SELECT_CATEGORY_LIST = "SELECT DISTINCT name FROM core_portlet WHERE id_portlet_type='DOCUMENT_PORTLET' and id_portlet = ?  ";
     private static final String SQL_QUERY_SELECT_NEWSLETTER_CATEGORY_IDS = "SELECT DISTINCT id_category_list FROM newsletter_category_list WHERE id_newsletter = ?";
-    private static final String SQL_QUERY_ASSOCIATE_NEWSLETTER_CATEGORY_LIST = "INSERT INTO newsletter_category_list ( id_newsletter , id_category_list ) VALUES ( ?, ? ) ";
-    private static final String SQL_QUERY_DOCUMENT_TYPE_PORTLET = " SELECT DISTINCT id_portlet , name FROM core_portlet WHERE id_portlet_type='DOCUMENT_PORTLET'  ";
-    private static final String SQL_QUERY_SELECTALL_ID_DOCUMENT = " SELECT a.id_document FROM document_category_link a WHERE a.id_category = ? ";
-    private static final String SQL_QUERY_SELECT_DOCUMENT_BY_DATE_AND_CATEGORY = "SELECT a.id_document , a.code_document_type, a.date_creation , a.date_modification," +
-        "a.title,a.document_summary FROM document  a INNER JOIN  document_published b ON a.id_document=b.id_document  INNER JOIN document_category_link c " +
-        "ON b.id_document=c.id_document WHERE a.date_modification >=? AND c.id_category= ? ORDER BY a.date_modification DESC";
     private static final String SQL_QUERY_DELETE_UNUSED_EMAIL = "DELETE FROM newsletter_subscriber_details " +
         " WHERE id_subscriber " + " NOT IN (SELECT id_subscriber FROM newsletter_subscriber)";
 
@@ -109,6 +99,7 @@ public final class NewsLetterDAO implements INewsLetterDAO
         daoUtil.setString( 11, newsLetter.getNewsletterSenderName(  ) );
         daoUtil.setString( 12, newsLetter.getTestRecipients(  ) );
         daoUtil.setString( 13, newsLetter.getTestSubject(  ) );
+        daoUtil.setInt( 14, newsLetter.getNbCategories( ) );
 
         daoUtil.executeUpdate(  );
         daoUtil.free(  );
@@ -159,6 +150,7 @@ public final class NewsLetterDAO implements INewsLetterDAO
             newsLetter.setNewsletterSenderName( daoUtil.getString( 10 ) );
             newsLetter.setTestRecipients( daoUtil.getString( 11 ) );
             newsLetter.setTestSubject( daoUtil.getString( 12 ) );
+            newsLetter.setNbCategories( daoUtil.getInt( 13 ) );
         }
 
         daoUtil.free(  );
@@ -188,7 +180,8 @@ public final class NewsLetterDAO implements INewsLetterDAO
         daoUtil.setString( 10, newsLetter.getNewsletterSenderName(  ) );
         daoUtil.setString( 11, newsLetter.getTestRecipients(  ) );
         daoUtil.setString( 12, newsLetter.getTestSubject(  ) );
-        daoUtil.setInt( 13, newsLetter.getId(  ) );
+        daoUtil.setInt( 13, newsLetter.getNbCategories( ) );
+        daoUtil.setInt( 14, newsLetter.getId( ) );
 
         daoUtil.executeUpdate(  );
         daoUtil.free(  );
@@ -295,6 +288,7 @@ public final class NewsLetterDAO implements INewsLetterDAO
             newsLetter.setTestRecipients( daoUtil.getString( 9 ) );
             newsLetter.setNewsletterSenderMail( daoUtil.getString( 10 ) );
             newsLetter.setTestSubject( daoUtil.getString( 11 ) );
+            newsLetter.setNbCategories( daoUtil.getInt( 12 ) );
             list.add( newsLetter );
         }
 
@@ -461,29 +455,6 @@ public final class NewsLetterDAO implements INewsLetterDAO
     }
 
     /**
-     * loads the list of document
-     *
-     * @param nPortletId the portlet id
-     * @return the name of the topic
-     */
-    public String selectDocumentList( int nPortletId )
-    {
-        String strDocumentList = "";
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_CATEGORY_LIST );
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.executeQuery(  );
-
-        if ( daoUtil.next(  ) )
-        {
-            strDocumentList = daoUtil.getString( 1 );
-        }
-
-        daoUtil.free(  );
-
-        return strDocumentList;
-    }
-
-    /**
      * loads the list of categories attached to the newsletter
      *
      * @param nNewsletterId the newsletter identifier
@@ -510,110 +481,13 @@ public final class NewsLetterDAO implements INewsLetterDAO
 
         for ( int i = 0; i < list.size(  ); i++ )
         {
-            Integer nId = (Integer) list.get( i );
+            Integer nId = list.get( i );
             nIdsArray[i] = nId.intValue(  );
         }
 
         daoUtil.free(  );
 
         return nIdsArray;
-    }
-
-    /**
-     * Associate a new topic to a newsletter
-     *
-     * @param nNewsLetterId the newsletter identifier
-     * @param nDocumentListId the topic identifier
-     * @param plugin the Plugin
-     */
-    public void associateNewsLetterDocumentList( int nNewsLetterId, int nDocumentListId, Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_ASSOCIATE_NEWSLETTER_CATEGORY_LIST, plugin );
-        daoUtil.setInt( 1, nNewsLetterId );
-        daoUtil.setInt( 2, nDocumentListId );
-
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
-    }
-
-    /**
-     * Remove the relationship between a newsletter and the list of documents
-     *
-     * @param nNewsLetterId the newsletter identifier
-     * @param plugin the Plugin
-     */
-    public void deleteNewsLetterDocumentList( int nNewsLetterId, Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_NEWSLETTER_CATEGORY_LIST, plugin );
-
-        daoUtil.setInt( 1, nNewsLetterId );
-
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
-    }
-
-    /**
-     * Select a list of Id Documents for a specified category
-     * @param nIdCategory The category name
-     * @return The array of Id Document
-     */
-    public int[] selectAllIdDocument( int nIdCategory )
-    {
-        Collection<Integer> listIdDocument = new ArrayList<Integer>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_ID_DOCUMENT );
-        daoUtil.setInt( 1, nIdCategory );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
-        {
-            listIdDocument.add( daoUtil.getInt( 1 ) );
-        }
-
-        daoUtil.free(  );
-
-        // Convert ArrayList to Int[]
-        int[] arrayIdDocument = new int[listIdDocument.size(  )];
-        int i = 0;
-
-        for ( Integer nIdDocument : listIdDocument )
-        {
-            arrayIdDocument[i++] = nIdDocument.intValue(  );
-        }
-
-        return arrayIdDocument;
-    }
-
-    /**
-     * Select the list of documents published since the last sending of the newsletter
-     * @return a list of documents
-     * @param nCategoryId The id of the category
-     * @param dateLastSending the date of the last newsletter sending
-     */
-    public Collection<Document> selectDocumentsByDateAndList( int nCategoryId, Timestamp dateLastSending )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_DOCUMENT_BY_DATE_AND_CATEGORY );
-        daoUtil.setTimestamp( 1, dateLastSending );
-        daoUtil.setInt( 2, nCategoryId );
-
-        daoUtil.executeQuery(  );
-
-        List<Document> list = new ArrayList<Document>(  );
-
-        while ( daoUtil.next(  ) )
-        {
-            Document document = new Document(  );
-            document.setId( daoUtil.getInt( 1 ) );
-            document.setCodeDocumentType( daoUtil.getString( 2 ) );
-            document.setDateCreation( daoUtil.getTimestamp( 3 ) );
-            document.setDateModification( daoUtil.getTimestamp( 4 ) );
-            document.setTitle( daoUtil.getString( 5 ) );
-            document.setSummary( daoUtil.getString( 6 ) );
-            list.add( document );
-        }
-
-        daoUtil.free(  );
-
-        return list;
     }
 
     /**
@@ -680,26 +554,6 @@ public final class NewsLetterDAO implements INewsLetterDAO
         return nCount;
     }
 
-    /**
-     * Returns the list of the portlets which are document portlets
-     * @return the list in form of a Collection object
-     */
-    public ReferenceList selectDocumentTypePortlets(  )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DOCUMENT_TYPE_PORTLET );
-        daoUtil.executeQuery(  );
-
-        ReferenceList list = new ReferenceList(  );
-
-        while ( daoUtil.next(  ) )
-        {
-            list.addItem( daoUtil.getInt( 1 ), daoUtil.getString( 2 ) );
-        }
-
-        daoUtil.free(  );
-
-        return list;
-    }
 
     /**
      *{@inheritDoc}

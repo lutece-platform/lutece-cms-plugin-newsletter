@@ -46,8 +46,7 @@ import java.util.Collection;
 public final class SubscriberHome
 {
     // Static variable pointed at the DAO instance
-    private static ISubscriberDAO _dao = (ISubscriberDAO) SpringContextService.getPluginBean( "newsletter",
-            "subscriberDAO" );
+    private static ISubscriberDAO _dao = SpringContextService.getBean( "newsletter.subscriberDAO" );
 
     /**
      * Private constructor - this class need not be instantiated
@@ -100,7 +99,7 @@ public final class SubscriberHome
      * @param plugin the plugin
      * @return a collection of objects Subscriber
      */
-    public static Collection findAll( Plugin plugin )
+    public static Collection<Subscriber> findAll( Plugin plugin )
     {
         return _dao.selectAll( plugin );
     }
@@ -131,6 +130,14 @@ public final class SubscriberHome
         return _dao.selectSubscribers( nNewsLetterId, NewsLetterConstants.CONSTANT_EMPTY_STRING, nBegin, nEnd, plugin );
     }
 
+    /**
+     * Find the collection of subscribers to send a newsletter
+     * @param nNewsLetterId The id of the newsletter
+     * @param nBegin The begin index of subscribers to get
+     * @param nEnd The end index of subscribers to get
+     * @param plugin The plugin
+     * @return The collection of subscribers found
+     */
     public static Collection<Subscriber> findSubscribersForSending( int nNewsLetterId, int nBegin, int nEnd,
         Plugin plugin )
     {
@@ -184,7 +191,7 @@ public final class SubscriberHome
      * @param plugin the plugin
      * @return a collection of subscribers
      */
-    public static Collection getSubscribersList( Plugin plugin )
+    public static Collection<Subscriber> getSubscribersList( Plugin plugin )
     {
         return _dao.selectSubscribersList( plugin );
     }

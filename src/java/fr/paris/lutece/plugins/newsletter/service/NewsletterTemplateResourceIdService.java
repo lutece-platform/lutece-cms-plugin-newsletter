@@ -33,8 +33,6 @@
  */
 package fr.paris.lutece.plugins.newsletter.service;
 
-import fr.paris.lutece.plugins.newsletter.business.NewsLetter;
-import fr.paris.lutece.plugins.newsletter.business.NewsLetterHome;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterTemplate;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterTemplateHome;
 import fr.paris.lutece.portal.service.plugin.PluginService;

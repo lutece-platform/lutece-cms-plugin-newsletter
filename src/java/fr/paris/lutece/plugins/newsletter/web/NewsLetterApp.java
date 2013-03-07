@@ -42,13 +42,10 @@ import fr.paris.lutece.plugins.newsletter.service.NewsLetterRegistrationService;
 import fr.paris.lutece.plugins.newsletter.util.NewsLetterConstants;
 import fr.paris.lutece.portal.service.captcha.CaptchaSecurityService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
-import fr.paris.lutece.portal.service.message.SiteMessage;
 import fr.paris.lutece.portal.service.message.SiteMessageException;
-import fr.paris.lutece.portal.service.message.SiteMessageService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
-import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.web.xpages.XPage;
 import fr.paris.lutece.portal.web.xpages.XPageApplication;
 import fr.paris.lutece.util.html.HtmlTemplate;
@@ -139,10 +136,7 @@ public class NewsLetterApp implements XPageApplication
             NewsLetterRegistrationService.getInstance(  ).doConfirmSubscribe( request );
         }
 
-        if ( resultPage == null )
-        {
-            resultPage = getPage( request, plugin );
-        }
+        resultPage = getPage( request, plugin );
 
         return resultPage;
     }
@@ -199,6 +193,7 @@ public class NewsLetterApp implements XPageApplication
      * parameters and the current mode.
      * @return The page content.
      * @param request The HTTP request.
+     * @throws SiteMessageException A site message exception
      */
     public String getShowArchivePage( HttpServletRequest request )
         throws SiteMessageException
@@ -220,7 +215,6 @@ public class NewsLetterApp implements XPageApplication
     /**
      * Performs unsubscription process
      * @param request The http request
-     * @return the url of portal
      * @throws fr.paris.lutece.portal.service.message.SiteMessageException The error message handled by the front office
      */
     public void doUnSubscribe( HttpServletRequest request )
@@ -229,6 +223,11 @@ public class NewsLetterApp implements XPageApplication
         NewsLetterRegistrationService.getInstance(  ).doUnSubscribe( request );
     }
 
+    /**
+     * Confirma a suscribtion
+     * @param request The request
+     * @throws SiteMessageException A site message exception
+     */
     public void doConfirmSubscribe( HttpServletRequest request )
         throws SiteMessageException
     {

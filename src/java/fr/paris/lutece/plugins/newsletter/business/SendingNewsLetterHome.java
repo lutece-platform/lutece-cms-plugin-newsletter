@@ -46,8 +46,7 @@ import java.util.List;
 public final class SendingNewsLetterHome
 {
     // Static variable pointed at the DAO instance
-    private static ISendingNewsLetterDAO _dao = (ISendingNewsLetterDAO) SpringContextService.getPluginBean( "newsletter",
-            "sendingNewsLetterDAO" );
+    private static ISendingNewsLetterDAO _dao = SpringContextService.getBean( "newsletter.sendingNewsLetterDAO" );
 
     /**
     * Private constructor - this class need not be instantiated
@@ -72,10 +71,9 @@ public final class SendingNewsLetterHome
 
     /**
      * remove an entry of a newsletter sending
-     *
-     * @param nKey the primary key of the sending newsletter
+     * 
+     * @param nId the primary key of the sending newsletter
      * @param plugin the plugin
-     * @return the instance created
      */
     public static void remove( int nId, Plugin plugin )
     {
@@ -139,7 +137,7 @@ public final class SendingNewsLetterHome
      * @param plugin the plugin
      * @return a list of SendingNewsLetter objects.
      */
-    public static List findAllSendings( Plugin plugin )
+    public static List<SendingNewsLetter> findAllSendings( Plugin plugin )
     {
         return _dao.findAllSendings( plugin );
     }

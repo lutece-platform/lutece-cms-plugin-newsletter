@@ -33,20 +33,12 @@
  */
 package fr.paris.lutece.plugins.newsletter.service;
 
-import fr.paris.lutece.plugins.document.business.Document;
-import fr.paris.lutece.plugins.document.business.attributes.DocumentAttribute;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetter;
-import fr.paris.lutece.plugins.newsletter.business.NewsLetterTemplate;
-import fr.paris.lutece.portal.service.util.AppLogService;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import java.util.List;
+import fr.paris.lutece.plugins.newsletter.business.NewsLetterHome;
+import fr.paris.lutece.plugins.newsletter.business.Subscriber;
+import fr.paris.lutece.plugins.newsletter.business.SubscriberHome;
+import fr.paris.lutece.portal.service.plugin.Plugin;
+import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 
 /**
@@ -55,77 +47,49 @@ import java.util.List;
  */
 public class NewsletterService
 {
-    private static NewsletterService _singleton = new NewsletterService(  );
-    private static final String FULLSTOP = ".";
-
-    /**
-    * Initialize the Newsletter service
-    *
-    */
-    public void init(  )
-    {
-        NewsLetter.init(  );
-        NewsLetterTemplate.init(  );
-    }
+    public static final String BEAN_NAME = "newsletter.newsletterService";
 
     /**
      * Returns the instance of the singleton
-     *
+     * 
      * @return The instance of the singleton
      */
-    public static NewsletterService getInstance(  )
+    public static NewsletterService getService( )
     {
-        return _singleton;
+        return SpringContextService.getBean( BEAN_NAME );
     }
 
     /**
-     * copy specified document's type file into a given folder
-     * @param document the document
-     * @param strFileType the file type
-     * @param strDestFolderPath the destination folder
-     * @return name of the copy file or null if there is no copied file
+     * Remove a known suscriber from a newsletter
+     * @param subscriber the subscriber to remove
+     * @param nNewsletterId the newsletter id from which to remove the
+     *            subscriber
+     * @param plugin The plugin object
      */
-    public String copyFileFromDocument( Document document, String strFileType, String strDestFolderPath )
+    public void removeSubscriberFromNewsletter( Subscriber subscriber, int nNewsletterId, Plugin plugin )
     {
-        List<DocumentAttribute> listDocumentAttribute = document.getAttributes(  );
-        String strFileName = null;
+        /* checks newsletter exist in database */
+        NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, plugin );
 
-        for ( DocumentAttribute documentAttribute : listDocumentAttribute )
+        if ( ( subscriber != null ) && ( newsletter != null ) )
         {
-            // if binary or is a strFileType
-            if ( documentAttribute.isBinary(  ) && documentAttribute.getValueContentType(  ).contains( strFileType ) )
+            int nSubscriberId = subscriber.getId( );
+
+            /* checks if the subscriber identified is registered */
+            if ( NewsLetterHome.findRegistration( nNewsletterId, nSubscriberId, plugin ) )
             {
-                byte[] tabByte = documentAttribute.getBinaryValue(  );
-                // fileName is composed from documentID+ documentAttributeId + documentAttributeOrder + "." + fileExtension
-                strFileName = String.valueOf( document.getId(  ) ) + String.valueOf( documentAttribute.getId(  ) ) +
-                    String.valueOf( documentAttribute.getAttributeOrder(  ) ) + FULLSTOP +
-                    StringUtils.substringAfterLast( documentAttribute.getTextValue(  ), FULLSTOP );
+                /* unregistration */
+                NewsLetterHome.removeSubscriber( nNewsletterId, nSubscriberId, plugin );
+            }
 
-                FileOutputStream fos = null;
-
-                try
-                {
-                    new File( strDestFolderPath ).mkdir(  );
-
-                    File file = new File( strDestFolderPath + strFileName );
-                    fos = new FileOutputStream( file );
-                    IOUtils.write( tabByte, fos );
-                }
-                catch ( IOException e )
-                {
-                    AppLogService.error( e );
-                }
-                catch ( Exception e )
-                {
-                    AppLogService.error( e );
-                }
-                finally
-                {
-                    IOUtils.closeQuietly( fos );
-                }
+            /*
+             * if the subscriber is not registered to an other newsletter, his
+             * account is deleted
+             */
+            if ( SubscriberHome.findNewsLetters( nSubscriberId, plugin ) == 0 )
+            {
+                SubscriberHome.remove( nSubscriberId, plugin );
             }
         }
-
-        return strFileName;
     }
 }

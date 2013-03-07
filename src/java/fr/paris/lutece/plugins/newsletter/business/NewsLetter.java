@@ -45,6 +45,9 @@ import java.sql.Timestamp;
  */
 public class NewsLetter implements AdminWorkgroupResource, RBACResource
 {
+    /**
+     * Name of the resource type
+     */
     public static final String RESOURCE_TYPE = "NEWSLETTER";
     private static final String EMPTY_STRING = "";
     private static NewsletterWorkgroupRemovalListener _listenerWorkgroup;
@@ -67,6 +70,7 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     private String _strNewsletterSenderName;
     private String _strTermOfService;
     private String _strSubject;
+    private int _nNbCategories;
 
     /**
      * Initialize the Newsletter
@@ -112,9 +116,9 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     }
 
     /**
-     * Sets the subject of the newsletter
-     *
-     * @param strSubject the newsletter subject
+     * Sets the test subject of the newsletter
+     * 
+     * @param strTestSubject the newsletter test subject
      */
     public void setTestSubject( String strTestSubject )
     {
@@ -190,10 +194,10 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     }
 
     /**
-    * Sets the name of the newsletter
-    *
-    * @param strName the newsletter name
-    */
+     * Sets the description of the newsletter
+     * 
+     * @param strDescription the description
+     */
     public void setDescription( String strDescription )
     {
         _strDescription = ( strDescription == null ) ? EMPTY_STRING : strDescription;
@@ -407,5 +411,23 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     public String getResourceTypeCode(  )
     {
         return RESOURCE_TYPE;
+    }
+
+    /**
+     * Get the number of categories of this newsletter
+     * @return The number of categories of this newsletter
+     */
+    public int getNbCategories( )
+    {
+        return _nNbCategories;
+    }
+
+    /**
+     * Set the number of categories of this newsletter
+     * @param nNbCategories The number of categories of this newsletter
+     */
+    public void setNbCategories( int nNbCategories )
+    {
+        this._nNbCategories = nNbCategories;
     }
 }

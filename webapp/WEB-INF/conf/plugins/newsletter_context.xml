@@ -2,12 +2,22 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
-  <bean id="newsLetterDAO"  class="fr.paris.lutece.plugins.newsletter.business.NewsLetterDAO" />
-  <bean id="newsLetterTemplateDAO"  class="fr.paris.lutece.plugins.newsletter.business.NewsLetterTemplateDAO" />
-  <bean id="sendingNewsLetterDAO"  class="fr.paris.lutece.plugins.newsletter.business.SendingNewsLetterDAO" />
-  <bean id="subscriberDAO"  class="fr.paris.lutece.plugins.newsletter.business.SubscriberDAO" />
-  <bean id="newsLetterArchivePortletDAO"  class="fr.paris.lutece.plugins.newsletter.business.portlet.NewsLetterArchivePortletDAO" />
-  <bean id="newsLetterSubscriptionPortletDAO"  class="fr.paris.lutece.plugins.newsletter.business.portlet.NewsLetterSubscriptionPortletDAO" />
-  <bean id="awaitingActivationDAO" class="fr.paris.lutece.plugins.newsletter.business.AwaitingActivationDAO" />
-  <bean id="newsletterPropertiesDAO"  class="fr.paris.lutece.plugins.newsletter.business.NewsletterPropertiesDAO" />
+	<bean id="newsletter.newsLetterDAO"  class="fr.paris.lutece.plugins.newsletter.business.NewsLetterDAO" />
+  	<bean id="newsletter.newsLetterTemplateDAO"  class="fr.paris.lutece.plugins.newsletter.business.NewsLetterTemplateDAO" />
+	<bean id="newsletter.sendingNewsLetterDAO"  class="fr.paris.lutece.plugins.newsletter.business.SendingNewsLetterDAO" />
+	<bean id="newsletter.subscriberDAO"  class="fr.paris.lutece.plugins.newsletter.business.SubscriberDAO" />
+	<bean id="newsletter.newsLetterArchivePortletDAO"  class="fr.paris.lutece.plugins.newsletter.business.portlet.NewsLetterArchivePortletDAO" />
+	<bean id="newsletter.newsLetterSubscriptionPortletDAO"  class="fr.paris.lutece.plugins.newsletter.business.portlet.NewsLetterSubscriptionPortletDAO" />
+	<bean id="newsletter.awaitingActivationDAO" class="fr.paris.lutece.plugins.newsletter.business.AwaitingActivationDAO" />
+	<bean id="newsletter.newsletterPropertiesDAO"  class="fr.paris.lutece.plugins.newsletter.business.NewsletterPropertiesDAO" />
+	<bean id="newsletter.freeHtmlSectionDAO"  class="fr.paris.lutece.plugins.newsletter.business.section.FreeHtmlSectionDao" />
+	<bean id="newsletter.newsletterSectionDAO"  class="fr.paris.lutece.plugins.newsletter.business.section.NewsletterSectionDao" />
+
+	<bean id="newsletter.newsletterService" class="fr.paris.lutece.plugins.newsletter.service.NewsletterService" />
+	<bean id="newsletter.newsletterSectionTypeService" class="fr.paris.lutece.plugins.newsletter.service.section.NewsletterSectionTypeService" />
+	
+	<!-- Free Html Section -->
+	<bean id="newsletter.freeHtmlSectionService" class="fr.paris.lutece.plugins.newsletter.service.section.FreeHtmlSectionService" />
+
+
 </beans>

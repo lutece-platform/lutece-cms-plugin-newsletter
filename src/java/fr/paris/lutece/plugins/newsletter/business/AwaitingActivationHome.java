@@ -44,8 +44,7 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 public class AwaitingActivationHome
 {
     // Static variable pointed at the DAO instance
-    private static IAwaitingActivationDAO _dao = (IAwaitingActivationDAO) SpringContextService.getPluginBean( "newsletter",
-            "awaitingActivationDAO" );
+    private static IAwaitingActivationDAO _dao = SpringContextService.getBean( "newsletter.awaitingActivationDAO" );
 
     /**
      * Private constructor - this class need not be instantiated

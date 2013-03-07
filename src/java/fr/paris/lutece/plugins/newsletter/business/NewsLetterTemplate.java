@@ -56,6 +56,9 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
     private String _strPicture;
     private String _strWorkgroup;
 
+    /**
+     * Initialisation method
+     */
     public static void init(  )
     {
         if ( _listenerWorkgroup == null )

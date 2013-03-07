@@ -33,12 +33,10 @@
  */
 package fr.paris.lutece.plugins.newsletter.business;
 
-import fr.paris.lutece.plugins.document.business.Document;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.ReferenceList;
 
 import java.sql.Timestamp;
-
 import java.util.Collection;
 
 
@@ -191,14 +189,6 @@ public interface INewsLetterDAO
     boolean isTemplateUsed( int nTemplateId, Plugin plugin );
 
     /**
-     * loads the list of document from a specific portlet
-     *
-     * @param nPortletId the portlet identifier identifier
-     * @return the name of the topic
-     */
-    String selectDocumentList( int nPortletId );
-
-    /**
     * loads the list of categories linked to the newsletter
     *
     * @param nNewsletterId the newsletter identifier
@@ -206,31 +196,6 @@ public interface INewsLetterDAO
     * @return the array of categories id
     */
     int[] selectNewsletterCategoryIds( int nNewsletterId, Plugin plugin );
-
-    /**
-     * Associate a new topic to a newsletter
-     *
-     * @param nNewsLetterId the newsletter identifier
-     * @param nDocumentListId the topic identifier
-     * @param plugin the Plugin
-     */
-    void associateNewsLetterDocumentList( int nNewsLetterId, int nDocumentListId, Plugin plugin );
-
-    /**
-     * Remove the relationship between a newsletter and the list of documents
-     *
-     * @param nNewsLetterId the newsletter identifier
-     * @param plugin the Plugin
-     */
-    void deleteNewsLetterDocumentList( int nNewsLetterId, Plugin plugin );
-
-    /**
-     * Select the list of documents published since the last sending of the newsletter
-     * @return a list of documents
-     * @param nCategoryId The id of the category
-     * @param dateLastSending the date of the last newsletter sending
-     */
-    Collection<Document> selectDocumentsByDateAndList( int nCategoryId, Timestamp dateLastSending );
 
     /**
       * Counts the subscribers for a newsletter
@@ -252,9 +217,4 @@ public interface INewsLetterDAO
      */
     int selectNbrActiveSubscribers( int nNewsLetterId, String strSearchString, Plugin plugin );
 
-    /**
-     * Returns the list of the portlets which are document portlets
-     * @return the list in form of a Collection object
-     */
-    ReferenceList selectDocumentTypePortlets(  );
 }

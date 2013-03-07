@@ -33,19 +33,12 @@
  */
 package fr.paris.lutece.plugins.newsletter.business;
 
-import fr.paris.lutece.plugins.document.business.Document;
-import fr.paris.lutece.plugins.document.business.DocumentHome;
-import fr.paris.lutece.plugins.document.service.category.CategoryService;
-import fr.paris.lutece.plugins.document.service.category.CategoryService.CategoryDisplay;
 import fr.paris.lutece.plugins.newsletter.util.NewsLetterConstants;
-import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.util.ReferenceList;
 
 import java.sql.Timestamp;
-
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 
@@ -56,8 +49,7 @@ import java.util.Collection;
 public final class NewsLetterHome
 {
     // Static variable pointed at the DAO instance
-    private static INewsLetterDAO _dao = (INewsLetterDAO) SpringContextService.getPluginBean( "newsletter",
-            "newsLetterDAO" );
+    private static INewsLetterDAO _dao = SpringContextService.getBean( "newsletter.newsLetterDAO" );
 
     /**
      * Private constructor - this class need not be instantiated
@@ -226,28 +218,6 @@ public final class NewsLetterHome
     }
 
     /**
-     * Loads the list of topics from a given list of ids
-     *
-     * @param nKeyArray the array of document list identifiers
-     * @return the list of topics
-     *
-     * public static ReferenceList findDocumentListsFromIds( int[] nKeyArray )
-     * {
-     * return _dao.selectDocumentListsFromIds( nKeyArray );
-     * }*/
-
-    /**
-     * loads the list of topics from a given id
-     *
-     * @param nPortletId the document list identifier
-     * @return the name of the topic
-     */
-    public static String findDocumentListDescription( int nPortletId )
-    {
-        return _dao.selectDocumentList( nPortletId );
-    }
-
-    /**
      * Returns the number of subscriber for a newsletter
      *
      * @param nNewsLetterId the identifier of the newsletter
@@ -286,52 +256,6 @@ public final class NewsLetterHome
      **/
 
     /**
-     * Associate a topic to a newsletter
-     *
-     * @param nNewsLetterId the newsletter identifier
-     * @param nDocumentListId the topic identifier
-     * @param plugin the Plugin
-     */
-    public static void associateNewsLetterDocumentList( int nNewsLetterId, int nDocumentListId, Plugin plugin )
-    {
-        _dao.associateNewsLetterDocumentList( nNewsLetterId, nDocumentListId, plugin );
-    }
-
-    /**
-     * Removes the relationship between a list of topics and a newsletter
-     *
-     * @param nNewsLetterId the newsletter identifier
-     * @param plugin the Plugin
-     */
-    public static void removeNewsLetterDocumentList( int nNewsLetterId, Plugin plugin )
-    {
-        _dao.deleteNewsLetterDocumentList( nNewsLetterId, plugin );
-    }
-
-    /**
-     * Returns the list of documents published by date and by topic
-     *
-     * @param nDocumentListId the list identifier
-     * @param dtDernierEnvoi the date of the last sending
-     * @return a collection of document
-     */
-    public static Collection<Document> findDocumentsByDateAndList( int nDocumentListId, Timestamp dtDernierEnvoi )
-    {
-        return _dao.selectDocumentsByDateAndList( nDocumentListId, dtDernierEnvoi );
-    }
-
-    /**
-     * Returns the  documents for a given document id
-     *
-     * @param nDocumentId the document id
-     * @return an DocumentPortlet object
-     */
-    public static Document findDocumentById( int nDocumentId )
-    {
-        return DocumentHome.findByPrimaryKey( nDocumentId );
-    }
-
-    /**
      * controls that a subscriber is not yet registered for a newsletter
      *
      * @param nNewsLetterId the newsletter identifier
@@ -366,31 +290,4 @@ public final class NewsLetterHome
         return _dao.checkLinkedPortlet( nIdNewsletter );
     }
 
-    /**
-     * Returns a collection any portlet containing at least a published document
-     * @return the portlets in form of Collection
-     */
-    public static ReferenceList getDocumentLists(  )
-    {
-        return _dao.selectDocumentTypePortlets(  );
-    }
-
-    /**
-     * Fetches all the categories defined
-     * @user the current user
-     * @return A list of all categories
-     */
-    public static ReferenceList getAllCategories( AdminUser user )
-    {
-        ReferenceList list = new ReferenceList(  );
-        Collection<CategoryDisplay> listCategoriesDisplay = new ArrayList<CategoryDisplay>(  );
-        listCategoriesDisplay = CategoryService.getAllCategoriesDisplay( user );
-
-        for ( CategoryDisplay category : listCategoriesDisplay )
-        {
-            list.addItem( category.getCategory(  ).getId(  ), category.getCategory(  ).getDescription(  ) );
-        }
-
-        return list;
-    }
 }
