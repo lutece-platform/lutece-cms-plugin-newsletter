@@ -74,8 +74,8 @@ public final class NewsletterUtils
             return null;
         }
 
-        String strTemplatePathName = AppPropertiesService.getProperty( plugin.getName(  ) +
-                NewsLetterConstants.PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE );
+        String strTemplatePathName = AppPropertiesService
+                .getProperty( NewsLetterConstants.PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE );
         strTemplatePathName += "/";
         strTemplatePathName += newsletterTemplate.getFileName(  );
 

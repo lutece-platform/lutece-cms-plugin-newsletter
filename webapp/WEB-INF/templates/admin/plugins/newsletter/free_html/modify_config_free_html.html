@@ -1,0 +1,27 @@
+<div class="span12">
+	<form class="form-horizontal" action="jsp/admin/plugins/newsletter/DoSaveConfig.jsp">
+		<fieldset>
+			<legend>#i18n{newsletter.free_html_config.modifyFreeHtmlConfig}</legend>
+			<div class="control-group"^>
+				<label class="form-actions" for="title">#i18n{newsletter.free_html_config.sectionTitle}</label>
+				<div class="controls">
+					<input type="text" name="title" id="title" value="section.title!">
+				</div>
+			</div>
+			<div class="control-group"^>
+				<label class="form-actions" for="html_content">#i18n{newsletter.free_html_config.sectionContent}</label>
+				<div class="controls">
+					<textarea id="html_content" name="html_content" rows="20" class="richtext">${htmlSection.html_content!}</textarea>
+				</div>
+			</div>
+			<div class="form-actions">
+				<input type="hidden" name="id_newsletter" value="section.idNewsletter">
+				<input type="hidden" name="id_section" value="section.id">
+				<button class="btn btn-small btn-primary" title="#i18n{portal.utils.labelSave}"><i class="icon-ok icon-white">&nbsp;</i>&nbsp;#i18n{portal.utils.labelSave}</button>
+				<button class="btn btn-small btn-danger" title="#i18n{portal.utils.labelCancel}"><i class="icon-remove-circle icon-white">&nbsp;</i>&nbsp;#i18n{portal.utils.labelCancel}</button>
+			</div>
+		</fieldset>
+	</form>
+</div>
+<#include "/admin/util/editor/editor.html" />
+<@initEditor />

@@ -81,7 +81,7 @@ public class NewsletterSectionHome
     public static void updateNewsletterSectionOrder( NewsletterSection newsletterSection, int nNewOrder, Plugin plugin )
     {
         List<NewsletterSection> listSections = _dao.findByNewsletterIdAndOrder( newsletterSection.getIdNewsletter( ),
-                nNewOrder, plugin );
+                nNewOrder, newsletterSection.getCategory( ), plugin );
         if ( listSections != null && listSections.size( ) > 0 )
         {
             _dao.updateNewsletterSectionOrder( listSections.get( 0 ).getId( ), newsletterSection.getOrder( ), plugin );
@@ -109,5 +109,30 @@ public class NewsletterSectionHome
     public static int getNewOrder( int nIdNewsletter, int nCategory, Plugin plugin )
     {
         return _dao.getNewOrder( nIdNewsletter, nCategory, plugin );
+    }
+
+    /**
+     * Get the highest order for a given newsletter and a given category
+     * @param nIdNewsletter The id of the newsletter
+     * @param nCategory The id of the category
+     * @param plugin The plugin
+     * @return The highest order actually used for the given newsletter and the
+     *         given category
+     */
+    public static int getLastOrder( int nIdNewsletter, int nCategory, Plugin plugin )
+    {
+        return _dao.getLastOrder( nIdNewsletter, nCategory, plugin );
+    }
+
+    /**
+     * Fill a blank in the order of sections of a newsletter.
+     * @param nIdNewsletter The newsletter to update the sections of
+     * @param nOrder The order with no section
+     * @param nCategory The category of sections to update
+     * @param plugin the plugin
+     */
+    public static void fillBlankInOrder( int nIdNewsletter, int nOrder, int nCategory, Plugin plugin )
+    {
+        _dao.fillBlankInOrder( nIdNewsletter, nOrder, nCategory, plugin );
     }
 }

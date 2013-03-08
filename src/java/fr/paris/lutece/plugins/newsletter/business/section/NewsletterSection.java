@@ -1,12 +1,11 @@
 package fr.paris.lutece.plugins.newsletter.business.section;
 
 /**
- * Class to describe a section of a newsletter.
+ * Class to describe a section of a newsletter. this class implements the
+ * {@link java.lang.Comparable Comparable} interface.
  */
-public class NewsletterSection
+public class NewsletterSection implements Comparable<NewsletterSection>
 {
-    private static final String CONSTANT_CATEGORY_ORDER_SEPARATOR = " - ";
-
     private int _nId;
     private int _nIdNewsletter;
     private String _strSectionTypeCode;
@@ -124,11 +123,31 @@ public class NewsletterSection
     }
 
     /**
-     * Get a string with both category and order
-     * @return A string with both category and order
+     * {@inheritDoc}
      */
-    public String getCategoryAndOrder( )
+    @Override
+    public int compareTo( NewsletterSection o )
     {
-        return Integer.toString( getCategory( ) ) + CONSTANT_CATEGORY_ORDER_SEPARATOR + Integer.toString( getOrder( ) );
+        if ( this.equals( o ) )
+            return 0;
+        if ( getCategory( ) > o.getCategory( ) )
+        {
+            return 1;
+        }
+        if ( getCategory( ) < o.getCategory( ) )
+        {
+            return -1;
+        }
+        if ( getOrder( ) > o.getOrder( ) )
+        {
+            return 1;
+        }
+        if ( getOrder( ) < o.getOrder( ) )
+        {
+            return -1;
+        }
+
+        // If they have the same category and order, then it has to be the same object, so they should be equal
+        return 0;
     }
 }

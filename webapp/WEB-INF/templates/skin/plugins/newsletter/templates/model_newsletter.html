@@ -1,16 +1,15 @@
 <!-- model_newsletter-->
 <!-- The e-mail is placed in a table to make sure the background color is not removed if the body is removed due to specific mail clients -->
-<table width="100%" cellpadding="0" cellspacing="0">
+<table style="vertical-align: top;" width="100%" cellpadding="0" cellspacing="0">
 	<tr>
-		<td width="100%">
+		<td width="100%" colspan="2"">
 			<img src="${base_url}/images/local/skin/banner_newsletter.png" width="100%" border="0" alt="" />
 		</td>
 	</tr>
-	<#if document_list??>
-		<tr>
-			<td>${document_list}</td>
-		</tr>
-	</#if>
+	<tr>
+		<td>${content_1!}</td>
+		<td>${content_2!}</td>
+	</tr>
 </table>
         
 <!-- end model_newsletter-->

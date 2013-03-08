@@ -59,16 +59,17 @@ public interface INewsletterSectionDAO
 
     /**
      * Get the list of newsletter sections associated to a given newsletter and
-     * with the given order
+     * with the given order in a category
      * @param nIdNewsletter The id of the newsletter the section must be
      *            associated with.
      * @param nOrder The order the sections must have
+     * @param nCategory The category of the section
      * @param plugin The plugin
      * @return The list of newsletter sections. The list should contain only one
      *         or zero element. If it has more, then it indicates that several
      *         sections have the same order and should be reordered.
      */
-    List<NewsletterSection> findByNewsletterIdAndOrder( int nIdNewsletter, int nOrder, Plugin plugin );
+    List<NewsletterSection> findByNewsletterIdAndOrder( int nIdNewsletter, int nOrder, int nCategory, Plugin plugin );
 
     /**
      * Get the next available order value for sections of a newsletter
@@ -78,4 +79,23 @@ public interface INewsletterSectionDAO
      * @return The next available order value
      */
     int getNewOrder( int nIdNewsletter, int nCategory, Plugin plugin );
+
+    /**
+     * Get the highest order for a given newsletter and a given category
+     * @param nIdNewsletter The id of the newsletter
+     * @param nCategory The id of the category
+     * @param plugin The plugin
+     * @return The highest order actually used for the given newsletter and the
+     *         given category
+     */
+    int getLastOrder( int nIdNewsletter, int nCategory, Plugin plugin );
+
+    /**
+     * Fill a blank in the order of sections of a newsletter.
+     * @param nIdNewsletter The newsletter to update the sections of
+     * @param nOrder The order with no section
+     * @param nCategory The category of sections to update
+     * @param plugin the plugin
+     */
+    void fillBlankInOrder( int nIdNewsletter, int nOrder, int nCategory, Plugin plugin );
 }

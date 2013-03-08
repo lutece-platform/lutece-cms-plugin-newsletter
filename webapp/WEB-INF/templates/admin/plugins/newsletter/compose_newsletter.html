@@ -9,22 +9,6 @@
                     <p class="lead">#i18n{newsletter.compose_newsletter.generalInformations}</p>
                     <p>#i18n{newsletter.compose_newsletter.label} : <strong>${newsletter.name}</strong></p>
                     <p>#i18n{newsletter.modify_newsletter.dateLastSend} :<strong>${newsletter.dateLastSending?date}</strong></p>
-                    <p>#i18n{newsletter.compose_newsletter.associatedCategories} :</p>
-                    <#if category_list?has_content>
-                    <ul>
-                        <#list category_list as list>
-                        <li>
-                            <#if list.checked>
-                            <strong>${list.name}</strong>
-                            <#else>
-                            ${list.name}
-                            </#if>
-                        </li>
-                        </#list>
-                    </ul>
-                    <#else>
-                    <p class="label label-warning">#i18n{newsletter.compose_newsletter.labelNoCategory}</p>
-                    </#if>
                     <p class="lead">#i18n{newsletter.compose_newsletter.automaticGeneration}</p>
                     <#if newsletter_templates?has_content>
                     <label class="radio inline" for="">#i18n{newsletter.compose_newsletter.newsletterTemplate} :</label>
@@ -34,15 +18,6 @@
                     </#list>
                     <#else>
                     <p class="label label-warning">#i18n{newsletter.compose_newsletter.noNewsletterTemplate}</p>
-                    </#if>
-                    <#if document_templates?has_content>
-                    <label class="radio" for="">#i18n{newsletter.compose_newsletter.documentTemplate} :</label>
-                    <#list document_templates as template >
-                    <input class="radio"  type="radio" name="document_template_id" value="${template.id}" <#if template.id=document_template_id>checked="checked"</#if> />
-                           <img src="${img_path}/${template.picture}" border="0"  height="24" width="24" alt="${template.description}" title="${template.description}" />
-                    </#list>
-                    <#else>
-                    <p class="label label-warning">#i18n{newsletter.compose_newsletter.noDocumentTemplate}</p>
                     </#if>
                     <div class="form-actions">
                         <button class="btn btn-primary btn-small" type="submit" ><i class="icon-cog icon-white"></i>&nbsp;#i18n{newsletter.compose_newsletter.generate}</button>

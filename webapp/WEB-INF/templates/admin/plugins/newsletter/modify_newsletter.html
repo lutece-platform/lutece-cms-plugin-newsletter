@@ -34,8 +34,14 @@
 				</div>
 				<div class="control-group">
 					<label class="control-label" for="newsletter_workgroup" >#i18n{newsletter.modify_newsletter.labelWorkgroup} *</label>  
-						<div class="controls">
+					<div class="controls">
 							<@combo name="newsletter_workgroup" default_value="${newsletter.workgroup}" items=workgroup_list />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="category_number" >#i18n{newsletter.modify_newsletter.labelCategoryNumber}</label>  
+					<div class="controls">
+						<input class="input-mini" name="category_number" id="category_number" type="text" value="${newsletter.nbCategories}">
 					</div>
 				</div>
 				<div class="control-group">
@@ -80,6 +86,7 @@
 	</div>
 </div>
 <#include "/admin/util/editor/editor.html" />
+<@initEditor />
 <script src="js/jquery/plugins/ui/jquery-ui-1.8.16.custom.min.js"></script>
 <script src="js/jquery/plugins/ui/ui.datepicker-fr.js"></script>
 <@getDatePicker idField="date_last_send" language=locale.language />

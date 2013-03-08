@@ -14,7 +14,7 @@
 	<bean id="newsletter.newsletterSectionDAO"  class="fr.paris.lutece.plugins.newsletter.business.section.NewsletterSectionDao" />
 
 	<bean id="newsletter.newsletterService" class="fr.paris.lutece.plugins.newsletter.service.NewsletterService" />
-	<bean id="newsletter.newsletterSectionTypeService" class="fr.paris.lutece.plugins.newsletter.service.section.NewsletterSectionTypeService" />
+	<bean id="newsletter.newsletterSectionService" class="fr.paris.lutece.plugins.newsletter.service.section.NewsletterSectionService" />
 	
 	<!-- Free Html Section -->
 	<bean id="newsletter.freeHtmlSectionService" class="fr.paris.lutece.plugins.newsletter.service.section.FreeHtmlSectionService" />

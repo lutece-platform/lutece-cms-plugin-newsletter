@@ -94,7 +94,7 @@ public class NewsLetterConstants
 
     ///////////////////////////////////////////////////////////////////////
     // properties
-    public static final String PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE = ".path.file.newsletter.template";
+    public static final String PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE = "newsletter.path.file.newsletter.template";
     public static final String PROPERTY_BASE_URL = "lutece.prod.url";
     public static final String PROPERTY_PATH_DOCUMENTS_IMAGES = "document.path.images";
     public static final String PROPERTY_PORTAL_JSP_PATH = "lutece.portal.path";
@@ -170,4 +170,6 @@ public class NewsLetterConstants
     //Jsp
     public static final String JSP_URL_PORTAL = "../../Portal.jsp";
     public static final String JSP_URL_DO_UNSUBSCRIBE = "/jsp/site/plugins/newsletter/DoUnsubscribeNewsLetter.jsp";
+    public static final String MARK_CONTENT = "content";
+    public static final String MARK_CONTENT_CATEGORY = "content_";
 }

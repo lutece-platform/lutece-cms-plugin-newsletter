@@ -20,13 +20,14 @@ import org.apache.commons.lang.StringUtils;
  */
 public class FreeHtmlSectionService implements INewsletterSectionService
 {
-    private static Plugin _plugin;
 
     /**
      * Code of the section type
      */
-    private static final String NEWSLETTER_FREE_HTML_SECTION_TYPE_CODE = "FREE_HTML";
+    public static final String NEWSLETTER_FREE_HTML_SECTION_TYPE_CODE = "FREE_HTML";
     private static final String NEWSLETTER_FREE_HTML_SECTION_TYPE_NAME = "newsletter.section.freeHtmlSectionType";
+
+    private Plugin _plugin;
     
     /**
      * {@inheritDoc}
@@ -108,7 +109,11 @@ public class FreeHtmlSectionService implements INewsletterSectionService
         return freeHtmlSection.getHtmlContent( );
     }
 
-    private synchronized Plugin getPlugin( )
+    /**
+     * Get the instance of the newsletter plugin
+     * @return the newsletter plugin
+     */
+    private Plugin getPlugin( )
     {
         if ( _plugin == null )
         {

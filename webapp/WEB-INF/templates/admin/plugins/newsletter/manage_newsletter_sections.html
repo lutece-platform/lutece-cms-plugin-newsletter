@@ -31,23 +31,29 @@
 			<div class="span7">
 				<@dataTable dataTableManager=table_manager actionMacro="getActionColumn" />
 			</div>
-			<div class="span5">
+			<div class="span4">
+				<h5>#i18n{newsletter.manage_sections.labelPreview} : </h5>
+ 				${html_content}
 			</div>
 		</fieldset>
 	</div>
 </div>
 
 <#macro getActionColumn item>
-	<a class="btn btn-primary btn-small" title="#i18n{portal.util.labelModify}" href="jsp/admin/plugins/newsletter/GetModifySectionConfig.jsp?newsletter_id=${item.idNewsletter}&id_section=${item.id}"><i class="icon-edit icon-white"></i></a>
+	<a class="btn btn-primary btn-small" title="#i18n{portal.util.labelModify}" href="jsp/admin/plugins/newsletter/GetModifySectionConfig.jsp?newsletter_id=${item.idNewsletter}&section_id=${item.id}"><i class="icon-edit icon-white"></i></a>
 	<#if 1< item.order >
-		<a class="btn btn-primary btn-small" title="#i18n{newsletter.manage_sections.labelUp}" href="jsp/admin/plugins/newsletter/DoMoveNewsletterSection.jsp?newsletter_id=${item.idNewsletter}&id_section=${item.id}&direction=up"><i class="icon-chevron-up icon-white"></i></a>
+		<a class="btn btn-primary btn-small" title="#i18n{newsletter.manage_sections.labelUp}" href="jsp/admin/plugins/newsletter/DoMoveNewsletterSection.jsp?newsletter_id=${item.idNewsletter}&section_id=${item.id}&move_up=true"><i class="icon-chevron-up icon-white"></i></a>
 	</#if>
-	<a class="btn btn-primary btn-small" title="#i18n{newsletter.manage_sections.labelDown}" href="jsp/admin/plugins/newsletter/DoMoveNewsletterSection.jsp?newsletter_id=${item.idNewsletter}&id_section=${item.id}&direction=down"><i class="icon-chevron-down icon-white"></i></a>
-	<a class="btn btn-danger btn-small" title="#i18n{portal.util.labelDelete}" href="jsp/admin/plugins/newsletter/ConfirmRemoveNewsletterSection.jsp?newsletter_id=${item.idNewsletter}&section_id=${item.id}&section_type=${item.sectionTypeCode}"><i class="icon-trash icon-white"></i></a>
+	<#if item.order < category_size[item.category - 1]>
+		<a class="btn btn-primary btn-small" title="#i18n{newsletter.manage_sections.labelDown}" href="jsp/admin/plugins/newsletter/DoMoveNewsletterSection.jsp?newsletter_id=${item.idNewsletter}&section_id=${item.id}&move_up=false"><i class="icon-chevron-down icon-white"></i></a>
+	</#if>
+	<a class="btn btn-danger btn-small" title="#i18n{portal.util.labelDelete}" href="jsp/admin/plugins/newsletter/ConfirmRemoveNewsletterSection.jsp?newsletter_id=${item.idNewsletter}&section_id=${item.id}"><i class="icon-trash icon-white"></i></a>
 </#macro>
 <#macro getCategoryColumn item>
 		<#if 1 < newsletter.nbCategories>
-		<form class="form-inline" action="jsp/admin/plugins/newsletter/doChangeNewsletterSectionCategory">
+		<form class="form-inline" action="jsp/admin/plugins/newsletter/DoChangeNewsletterSectionCategory.jsp">
+			<input type="hidden" name="newsletter_id" id="newsletter_id" value="${newsletter.id}">
+			<input type="hidden" name="section_id" id="section_id" value="${item.id}">
 			<select class="input-mini" name="section_category_number">
 				<#list 1..newsletter.nbCategories as i>
 					<option value="${i}" <#if i==item.category >selected="selected"</#if>>${i}</option>
