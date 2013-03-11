@@ -42,7 +42,7 @@ import java.util.List;
 
 /**
  * @author gduge
- *
+ * 
  */
 public interface INewsLetterTemplateDAO
 {
@@ -55,23 +55,25 @@ public interface INewsLetterTemplateDAO
 
     /**
      * Returns the list of all templates
-     * @param nType the type of the templates to list
+     * @param strSectionType the section type of templates
      * @param plugin The plugin
-     * @return the reference list of the templates corresponding to the given type
+     * @return the reference list of the templates corresponding to the given
+     *         type
      */
-    ReferenceList selectTemplatesListByType( int nType, Plugin plugin );
+    ReferenceList selectTemplatesListByType( String strSectionType, Plugin plugin );
 
     /**
      * Returns a list of templates depending on the given type
-     * @param nType the type of the templates to list
+     * @param strSectionType the section type of templates to get
      * @param plugin The plugin
-     * @return the collection of the templates corresponding to the given type
+     * @return the collection of the templates corresponding to the given
+     *         section type
      */
-    List<NewsLetterTemplate> selectTemplatesCollectionByType( int nType, Plugin plugin );
+    List<NewsLetterTemplate> selectTemplatesCollectionByType( String strSectionType, Plugin plugin );
 
     /**
      * Insert a new record in the table.
-     *
+     * 
      * @param newsletter The Instance of the object NewsLetterTemplate
      * @param plugin the plugin
      */
@@ -79,7 +81,7 @@ public interface INewsLetterTemplateDAO
 
     /**
      * loads the data of the newsletter's template from the table
-     *
+     * 
      * @param nTemplateId the template identifier
      * @param plugin the plugin
      * @return the object inserted
@@ -88,7 +90,7 @@ public interface INewsLetterTemplateDAO
 
     /**
      * Update a given record in the table.
-     *
+     * 
      * @param newsLetterTemplate The Instance of the object NewsLetterTemplate
      * @param plugin the plugin
      */
@@ -96,7 +98,7 @@ public interface INewsLetterTemplateDAO
 
     /**
      * Remove a record from the table
-     *
+     * 
      * @param nNewsLetterTemplateId the template identifier
      * @param plugin the Plugin
      */
@@ -108,4 +110,12 @@ public interface INewsLetterTemplateDAO
      * @return the reference list of the templates
      */
     ReferenceList selectTemplatesByRef( Plugin plugin );
+    
+    /**
+     * Get the list of temmplates associated with a given workgroup
+     * @param strWorkgroupKey The key of the workgroup
+     * @param plugin The plugin
+     * @return The list of temmplates associated with a given workgroup
+     */
+    Collection<NewsLetterTemplate> selectTemplatesListByWorkgoup( String strWorkgroupKey, Plugin plugin );
 }

@@ -14,11 +14,11 @@ public class NewsletterSectionDao implements INewsletterSectionDAO
 {
     private static final String SQL_QUERY_NEW_PRIMARY_KEY = " SELECT MAX(id_section) FROM newsletter_section ";
 
-    private static final String SQL_QUERY_SELECT = " SELECT id_section, id_newsletter, section_type_name, title, section_order, category FROM newsletter_section WHERE id_section = ? ";
-    private static final String SQL_QUERY_SELECT_ALL_BY_ID_NEWSLETTER = " SELECT id_section, id_newsletter, section_type_name, title, section_order, category FROM newsletter_section WHERE id_newsletter = ? ORDER BY category, section_order asc ";
-    private static final String SQL_QUERY_SELECT_ALL_BY_ID_NEWSLETTER_AND_ORDER = " SELECT id_section, id_newsletter, section_type_name, title, section_order, category FROM newsletter_section WHERE id_newsletter = ? AND section_order = ? AND category = ? ";
-    private static final String SQL_QUERY_INSERT = " INSERT INTO newsletter_section (id_section, id_newsletter, section_type_name, title, section_order, category) VALUES (?,?,?,?,?,?) ";
-    private static final String SQL_QUERY_UPDATE = " UPDATE newsletter_section SET id_newsletter = ?, section_type_name = ?, title = ?, section_order = ?, category = ? WHERE id_section = ? ";
+    private static final String SQL_QUERY_SELECT = " SELECT id_section, id_newsletter, section_type, title, section_order, category FROM newsletter_section WHERE id_section = ? ";
+    private static final String SQL_QUERY_SELECT_ALL_BY_ID_NEWSLETTER = " SELECT id_section, id_newsletter, section_type, title, section_order, category FROM newsletter_section WHERE id_newsletter = ? ORDER BY category, section_order asc ";
+    private static final String SQL_QUERY_SELECT_ALL_BY_ID_NEWSLETTER_AND_ORDER = " SELECT id_section, id_newsletter, section_type, title, section_order, category FROM newsletter_section WHERE id_newsletter = ? AND section_order = ? AND category = ? ";
+    private static final String SQL_QUERY_INSERT = " INSERT INTO newsletter_section (id_section, id_newsletter, section_type, title, section_order, category) VALUES (?,?,?,?,?,?) ";
+    private static final String SQL_QUERY_UPDATE = " UPDATE newsletter_section SET id_newsletter = ?, section_type = ?, title = ?, section_order = ?, category = ? WHERE id_section = ? ";
     private static final String SQL_QUERY_DELETE = " DELETE FROM newsletter_section WHERE id_section = ? ";
     private static final String SQL_QUERY_UPDATE_ORDER = " UPDATE newsletter_section SET section_order = ? WHERE id_section = ? ";
     private static final String SQL_QUERY_FIND_LAST_ORDER = " SELECT MAX(section_order) FROM newsletter_section WHERE id_newsletter = ? AND category = ? ";

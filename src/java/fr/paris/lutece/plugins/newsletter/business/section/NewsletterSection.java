@@ -1,5 +1,8 @@
 package fr.paris.lutece.plugins.newsletter.business.section;
 
+import org.apache.commons.lang.StringUtils;
+
+
 /**
  * Class to describe a section of a newsletter. this class implements the
  * {@link java.lang.Comparable Comparable} interface.
@@ -97,11 +100,11 @@ public class NewsletterSection implements Comparable<NewsletterSection>
 
     /**
      * Set the order of the newsletter section
-     * @param _nOrder The order of the newsletter section
+     * @param nOrder The order of the newsletter section
      */
-    public void setOrder( int _nOrder )
+    public void setOrder( int nOrder )
     {
-        this._nOrder = _nOrder;
+        this._nOrder = nOrder;
     }
 
     /**
@@ -128,8 +131,14 @@ public class NewsletterSection implements Comparable<NewsletterSection>
     @Override
     public int compareTo( NewsletterSection o )
     {
-        if ( this.equals( o ) )
-            return 0;
+        if ( getIdNewsletter( ) > o.getIdNewsletter( ) )
+        {
+            return 1;
+        }
+        if ( getIdNewsletter( ) < o.getIdNewsletter( ) )
+        {
+            return -1;
+        }
         if ( getCategory( ) > o.getCategory( ) )
         {
             return 1;
@@ -149,5 +158,21 @@ public class NewsletterSection implements Comparable<NewsletterSection>
 
         // If they have the same category and order, then it has to be the same object, so they should be equal
         return 0;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals( Object o )
+    {
+        if ( !( o instanceof NewsletterSection ) )
+        {
+            return false;
+        }
+        NewsletterSection otherSection = (NewsletterSection) o;
+        return getId( ) == otherSection.getId( ) && getIdNewsletter( ) == otherSection.getIdNewsletter( )
+                && getCategory( ) == otherSection.getCategory( ) && getOrder( ) == otherSection.getOrder( )
+                && StringUtils.equals( getSectionTypeCode( ), otherSection.getSectionTypeCode( ) );
     }
 }

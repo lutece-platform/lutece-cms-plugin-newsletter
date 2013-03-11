@@ -14,6 +14,13 @@ public class NewsletterSectionHome
     private static INewsletterSectionDAO _dao = SpringContextService.getBean( "newsletter.newsletterSectionDAO" );
 
     /**
+     * Private constructor
+     */
+    private NewsletterSectionHome( )
+    {
+    }
+
+    /**
      * Get a {@link NewsletterSection} by its primary key from the database
      * @param nId The id of the {@link NewsletterSection} to get
      * @param plugin The plugin

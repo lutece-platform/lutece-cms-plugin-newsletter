@@ -1,8 +1,8 @@
 <%@ page errorPage="../../ErrorPage.jsp" %>
 
 
-<jsp:useBean id="newsletter" scope="session" class="fr.paris.lutece.plugins.newsletter.web.NewsletterJspBean" />
+<jsp:useBean id="newsletterTemplate" scope="session" class="fr.paris.lutece.plugins.newsletter.web.NewsletterTemplateJspBean" />
 
-<% newsletter.init( request, newsletter.RIGHT_NEWSLETTER_TEMPLATE_MANAGEMENT ); %>
-<% response.sendRedirect(newsletter.getRemoveNewsLetterTemplate ( request ) ); %>
+<% newsletterTemplate.init( request, newsletterTemplate.RIGHT_NEWSLETTER_TEMPLATE_MANAGEMENT ); %>
+<% response.sendRedirect(newsletterTemplate.getRemoveNewsLetterTemplate ( request ) ); %>
 

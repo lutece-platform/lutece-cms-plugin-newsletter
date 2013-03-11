@@ -23,12 +23,12 @@
                     <#list template_list as templateDisplay >
                     <tr>
                         <td>${templateDisplay.template.description}</td>
-                        <td>&nbsp;#i18n{${plugin.name}.${templateDisplay.template.name}}</td>
+                        <td>${templateDisplay.template.sectionType}</td>
                         <td>
                             <img src="images/admin/skin/plugins/newsletter/newsletter_templates/${templateDisplay.template.picture}" alt="#i18n{newsletter.manage_templates.columnTitleImage} ${templateDisplay.template.description}" title="#i18n{newsletter.manage_templates.columnTitleImage} ${templateDisplay.template.description}" class="img-polaroid" />
-                            &nbsp;${templateDisplay.template.fileName}
+                            ${templateDisplay.template.fileName}
                         </td>
-                        <td>&nbsp;${templateDisplay.newsletter_template_workgroup_description}</td>
+                        <td>${templateDisplay.newsletter_template_workgroup_description}</td>
                         <td>
                             <#if templateDisplay.newsletter_template_allow_modification>
                             <a class="btn btn-primary btn-small" href="jsp/admin/plugins/newsletter/ModifyNewsLetterTemplate.jsp?newsletter_template_id=${templateDisplay.template.id}"  title="" ><i class="icon-edit icon-white"></i></a>
@@ -38,9 +38,6 @@
                             </#if>
                         </td>
                     </tr>
-                    <#if templateDisplay.newsletter_template_allow_creation>
-                    <#assign creation_allowed = true >
-                    </#if>
                     </#list>
                 </tbody>
             </table>

@@ -1,0 +1,20 @@
+<div class="span12">
+	<form class="form-horizontal" action="jsp/admin/plugins/newsletter/DoModifyNewsletterSectionConfig.jsp">
+		<fieldset>
+			<legend>#i18n{newsletter.modify_section_config.modifyConfigTitle}</legend>
+			<div class="control-group">
+				<label class="control-label" for="title">#i18n{newsletter.modify_section_config.sectionTitle} :</label>
+				<div class="controls">
+					<input type="text" name="title" id="title" value="${section.title!}">
+				</div>
+			</div>
+			${content!}
+			<div class="form-actions">
+				<input type="hidden" name="newsletter_id" value="${section.idNewsletter}">
+				<input type="hidden" name="section_id" value="${section.id}">
+				<button class="btn btn-small btn-primary" title="#i18n{portal.util.labelValidate}"><i class="icon-ok icon-white">&nbsp;</i>&nbsp;#i18n{portal.util.labelValidate}</button>
+				<button class="btn btn-small btn-danger" name="cancel" title="#i18n{portal.util.labelCancel}"><i class="icon-remove-circle icon-white">&nbsp;</i>&nbsp;#i18n{portal.util.labelCancel}</button>
+			</div>
+		</fieldset>
+	</form>
+</div>

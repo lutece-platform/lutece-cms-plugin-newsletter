@@ -14,6 +14,13 @@ public class FreeHtmlSectionHome
     private static IFreeHtmlSectionDAO _dao = SpringContextService.getBean( "newsletter.freeHtmlSectionDAO" );
 
     /**
+     * Private constructor
+     */
+    private FreeHtmlSectionHome( )
+    {
+    }
+
+    /**
      * Get a {@link FreeHtmlSection} by its primary key from the database
      * @param nId The id of the {@link FreeHtmlSection} to get
      * @param plugin The plugin

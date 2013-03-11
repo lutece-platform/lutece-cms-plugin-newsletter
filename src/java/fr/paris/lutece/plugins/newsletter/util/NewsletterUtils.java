@@ -176,15 +176,14 @@ public final class NewsletterUtils
     /**
      * Get the first String of a String array. If the array is null, or if it
      * has no element, then return null.
-     * @param object The string array to get the first element of.
+     * @param strArrayValues The string array to get the first element of.
      * @return The first element of the array, or null if the array has no
      *         element or is null.
      */
-    public static String getStringFromStringArray( Object object )
+    public static String getStringFromStringArray( String[] strArrayValues )
     {
-        if ( object instanceof String[] )
+        if ( strArrayValues != null )
         {
-            String[] strArrayValues = (String[]) object;
             return strArrayValues.length == 0 ? null : strArrayValues[0];
         }
         return null;

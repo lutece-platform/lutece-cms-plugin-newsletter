@@ -43,14 +43,14 @@ import fr.paris.lutece.portal.service.workgroup.WorkgroupRemovalListenerService;
  */
 public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
 {
+    /**
+     * The resource type key
+     */
     public static final String RESOURCE_TYPE = "NEWSLETTER_TEMPLATE";
-    public static final int CONSTANT_ID_NEWSLETTER = 0;
-    public static final int CONSTANT_ID_DOCUMENT = 1;
-    public static final String[] TEMPLATE_NAMES = { "template.type.newsletter.label", "template.type.document.label" };
     private static final String EMPTY_STRING = "";
     private static NewsletterTemplateWorkgroupRemovalListener _listenerWorkgroup;
     private int _nId;
-    private int _nType;
+    private String _strSectionType;
     private String _strDescription;
     private String _strFileName;
     private String _strPicture;
@@ -59,28 +59,26 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
     /**
      * Initialisation method
      */
-    public static void init(  )
+    public static void init( )
     {
         if ( _listenerWorkgroup == null )
         {
-            _listenerWorkgroup = new NewsletterTemplateWorkgroupRemovalListener(  );
-            WorkgroupRemovalListenerService.getService(  ).registerListener( _listenerWorkgroup );
+            _listenerWorkgroup = new NewsletterTemplateWorkgroupRemovalListener( );
+            WorkgroupRemovalListenerService.getService( ).registerListener( _listenerWorkgroup );
         }
     }
 
     /**
      * Returns the identifier of the template
-     *
      * @return the template identifier
      */
-    public int getId(  )
+    public int getId( )
     {
         return _nId;
     }
 
     /**
      * Sets the identifier of the template
-     *
      * @param nId the template identifier
      */
     public void setId( int nId )
@@ -89,38 +87,34 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
     }
 
     /**
-     * Returns the type of the template
-     *
-     * @return the template type
+     * Returns the section type of the template
+     * @return the section type of the template
      */
-    public int getType(  )
+    public String getSectionType( )
     {
-        return _nType;
+        return _strSectionType;
     }
 
     /**
-     * Sets the type of the template
-     *
-     * @param nType the template type
+     * Sets the section type of the template
+     * @param strSectionType the section type of the template
      */
-    public void setType( int nType )
+    public void setSectionType( String strSectionType )
     {
-        _nType = nType;
+        _strSectionType = strSectionType;
     }
 
     /**
      * Returns the description of the template
-     *
      * @return the template description
      */
-    public String getDescription(  )
+    public String getDescription( )
     {
         return _strDescription;
     }
 
     /**
      * Sets the description of the template
-     *
      * @param strDescription the template description
      */
     public void setDescription( String strDescription )
@@ -130,17 +124,15 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
 
     /**
      * Returns the file name of the template
-     *
      * @return the template file name
      */
-    public String getFileName(  )
+    public String getFileName( )
     {
         return _strFileName;
     }
 
     /**
      * Sets the file name of the template
-     *
      * @param strFileName the template file name
      */
     public void setFileName( String strFileName )
@@ -150,17 +142,15 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
 
     /**
      * Returns the picture of the template
-     *
      * @return the template picture
      */
-    public String getPicture(  )
+    public String getPicture( )
     {
         return _strPicture;
     }
 
     /**
      * Sets the picture of the template
-     *
      * @param strPicture the template picture
      */
     public void setPicture( String strPicture )
@@ -169,20 +159,10 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
     }
 
     /**
-     * get the name of the type of template
-     *
-     * @return a property name associate with this label
-     */
-    public String getName(  )
-    {
-        return TEMPLATE_NAMES[getType(  )];
-    }
-
-    /**
      * Return the workgroup
      * @return The workgroup
      */
-    public String getWorkgroup(  )
+    public String getWorkgroup( )
     {
         return _strWorkgroup;
     }
@@ -200,16 +180,16 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
      * Returns the Resource Type Code that identify the resource type
      * @return The Resource Type Code
      */
-    public String getResourceId(  )
+    public String getResourceId( )
     {
-        return "" + getId(  );
+        return EMPTY_STRING + getId( );
     }
 
     /**
      * Returns the resource Id of the current object
      * @return The resource Id of the current object
      */
-    public String getResourceTypeCode(  )
+    public String getResourceTypeCode( )
     {
         return RESOURCE_TYPE;
     }

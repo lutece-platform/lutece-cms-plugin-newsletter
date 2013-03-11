@@ -30,11 +30,11 @@ CREATE TABLE newsletter_description (
 DROP TABLE IF EXISTS newsletter_template;
 CREATE TABLE newsletter_template (
   id_template INT DEFAULT '0' NOT NULL,
-  template_type SMALLINT DEFAULT '0',
   description VARCHAR(50) DEFAULT NULL,
   file_name VARCHAR(100) DEFAULT NULL,
   picture VARCHAR(100) DEFAULT NULL,
   workgroup_key VARCHAR(50) DEFAULT NULL,
+  section_type VARCHAR(100) NOT NULL,
   PRIMARY KEY (id_template)
 );
 
@@ -126,7 +126,7 @@ DROP TABLE IF EXISTS newsletter_section;
 CREATE TABLE newsletter_section (
   id_section INT,
   id_newsletter INT NOT NULL,
-  section_type_name VARCHAR(100) NOT NULL,
+  section_type VARCHAR(100) NOT NULL,
   title VARCHAR(255) DEFAULT '',
   section_order INT NOT NULL,
   category INT NOT NULL,

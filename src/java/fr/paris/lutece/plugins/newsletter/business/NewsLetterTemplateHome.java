@@ -42,7 +42,8 @@ import java.util.List;
 
 
 /**
- * This class provides instances management methods (create, find, ...) for NewsLetterTemplate objects
+ * This class provides instances management methods (create, find, ...) for
+ * NewsLetterTemplate objects
  */
 public final class NewsLetterTemplateHome
 {
@@ -54,12 +55,12 @@ public final class NewsLetterTemplateHome
     /**
      * Private constructor - this class need not be instantiated
      */
-    private NewsLetterTemplateHome(  )
+    private NewsLetterTemplateHome( )
     {
     }
 
     /**
-     * Returns an list of all templates
+     * Returns the list of every templates
      * @param plugin The Plugin
      * @return a collection object
      */
@@ -70,32 +71,34 @@ public final class NewsLetterTemplateHome
 
     /**
      * Returns a list of templates depending on the given type
-     * @param nType the type of templates to retrieve
+     * @param strSectionType the section type of templates to retrieve
      * @param plugin The Plugin
      * @return a Referencelist object
      */
-    public static ReferenceList getTemplatesListByType( int nType, Plugin plugin )
+    public static ReferenceList getTemplatesListByType( String strSectionType, Plugin plugin )
     {
-        return _dao.selectTemplatesListByType( nType, plugin );
+        return _dao.selectTemplatesListByType( strSectionType, plugin );
     }
 
     /**
-     * Returns an list of templates depending on the given type
-     * @param nType the type of templates to retrieve
+     * Returns a list of templates depending on the given section type
+     * @param strSectionType the section type of templates to retrieve
      * @param plugin The Plugin
      * @return a Collection object
      */
-    public static List<NewsLetterTemplate> getTemplatesCollectionByType( int nType, Plugin plugin )
+    public static List<NewsLetterTemplate> getTemplatesCollectionByType( String strSectionType, Plugin plugin )
     {
-        return _dao.selectTemplatesCollectionByType( nType, plugin );
+        return _dao.selectTemplatesCollectionByType( strSectionType, plugin );
     }
 
     /**
      * Creation of an instance of a newsletter template
-     *
-     * @param newsletterTemplate template An instance of a newsletter template which contains the informations to store
+     * 
+     * @param newsletterTemplate template An instance of a newsletter template
+     *            which contains the informations to store
      * @param plugin The Plugin
-     * @return The instance of a newsletter template which has been created with its primary key.
+     * @return The instance of a newsletter template which has been created with
+     *         its primary key.
      */
     public static NewsLetterTemplate create( NewsLetterTemplate newsletterTemplate, Plugin plugin )
     {
@@ -106,7 +109,7 @@ public final class NewsLetterTemplateHome
 
     /**
      * Returns an object NewsLetter's template from its identifier
-     *
+     * 
      * @param nKey the primary key of the newsletter's template
      * @param plugin The Plugin
      * @return an instance of the class
@@ -118,10 +121,12 @@ public final class NewsLetterTemplateHome
 
     /**
      * Update of an instance of a newsletter template
-     *
-     * @param newsletterTemplate template An instance of a newsletter template which contains the informations to store
+     * 
+     * @param newsletterTemplate template An instance of a newsletter template
+     *            which contains the informations to store
      * @param plugin The Plugin
-     * @return The instance of a newsletter template which has been updated with its primary key.
+     * @return The instance of a newsletter template which has been updated with
+     *         its primary key.
      */
     public static NewsLetterTemplate update( NewsLetterTemplate newsletterTemplate, Plugin plugin )
     {
@@ -132,7 +137,7 @@ public final class NewsLetterTemplateHome
 
     /**
      * Remove the record from the template identifier
-     *
+     * 
      * @param nNewsLetterTemplateId the template identifier
      * @param plugin the Plugin
      */
@@ -149,5 +154,16 @@ public final class NewsLetterTemplateHome
     public static ReferenceList getTemplateListByRef( Plugin plugin )
     {
         return _dao.selectTemplatesByRef( plugin );
+    }
+
+    /**
+     * Returns the list of templates associated with a given workgroup
+     * @param strWorkgroupKey The workgoup key
+     * @param plugin The Plugin
+     * @return a collection object
+     */
+    public static Collection<NewsLetterTemplate> getTemplatesListByWorkgoup( String strWorkgroupKey, Plugin plugin )
+    {
+        return _dao.selectTemplatesListByWorkgoup( strWorkgroupKey, plugin );
     }
 }

@@ -43,18 +43,31 @@ import fr.paris.lutece.plugins.newsletter.service.section.NewsletterSectionServi
 import fr.paris.lutece.plugins.newsletter.util.NewsLetterConstants;
 import fr.paris.lutece.plugins.newsletter.util.NewsletterUtils;
 import fr.paris.lutece.portal.business.user.AdminUser;
+import fr.paris.lutece.portal.service.mail.MailService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.portal.service.util.AppLogService;
+import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.html.HtmlTemplate;
+import fr.paris.lutece.util.mail.UrlAttachment;
+import fr.paris.lutece.util.string.StringUtil;
 
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import au.com.bytecode.opencsv.CSVWriter;
 
 
 /**
@@ -63,10 +76,16 @@ import java.util.Map;
  */
 public class NewsletterService
 {
+    /**
+     * Name of the bean of this service
+     */
     public static final String BEAN_NAME = "newsletter.newsletterService";
 
-    private NewsletterSectionService _newsletterSectionService = null;
-    private Plugin _plugin = null;
+    // PROPERTIES
+    private static final String PROPERTY_ABSOLUTE_URL_MAIL = "newsletter.absolute.mail.url";
+
+    private NewsletterSectionService _newsletterSectionService;
+    private Plugin _plugin;
 
     /**
      * Returns the instance of the singleton
@@ -76,6 +95,128 @@ public class NewsletterService
     public static NewsletterService getService( )
     {
         return SpringContextService.getBean( BEAN_NAME );
+    }
+
+    /**
+     * Send the newsletter to a list of subscribers
+     * @param newsletter The newsletter to send
+     * @param strObject The email object
+     * @param strBaseUrl The baseUrl (can be prod url)
+     * @param templateNewsletter The generated template
+     * @param listSubscribers The list of subscribers (date and id can be null,
+     *            only email is used)
+     */
+    public void sendMail( NewsLetter newsletter, String strObject, String strBaseUrl, HtmlTemplate templateNewsletter,
+            Collection<Subscriber> listSubscribers )
+    {
+        List<UrlAttachment> urlAttachments = null;
+
+        if ( isMhtmlActivated( ) )
+        {
+            // we use absolute urls if there is no preproduction process
+            boolean useAbsoluteUrl = isAbsoluteUrl( );
+            String strTemplate = templateNewsletter.getHtml( );
+            strTemplate = StringUtil.substitute( strTemplate, strBaseUrl,
+                    NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE );
+            urlAttachments = MailService.getUrlAttachmentList( strTemplate, strBaseUrl, useAbsoluteUrl );
+
+            // all images, css urls are relative
+            if ( !useAbsoluteUrl )
+            {
+                templateNewsletter.substitute( strBaseUrl, strBaseUrl.replaceFirst( "https?://[^/]+/", "/" ) );
+            }
+            else
+            {
+                //                String strContent = NewsletterUtils.rewriteUrls( templateNewsletter.getHtml(  ), strBaseUrl );
+                //                templateNewsletter = new HtmlTemplate( strContent );
+            }
+        }
+
+        for ( Subscriber subscriber : listSubscribers )
+        {
+            HtmlTemplate t = new HtmlTemplate( templateNewsletter );
+            t.substitute( NewsLetterConstants.MARK_SUBSCRIBER_EMAIL_EACH, subscriber.getEmail( ) );
+
+            String strNewsLetterCode = t.getHtml( );
+
+            if ( ( urlAttachments == null ) || ( urlAttachments.size( ) == 0 ) )
+            {
+                MailService.sendMailHtml( subscriber.getEmail( ), newsletter.getNewsletterSenderName( ),
+                        newsletter.getNewsletterSenderMail( ), strObject, strNewsLetterCode );
+            }
+            else
+            {
+                MailService.sendMailMultipartHtml( subscriber.getEmail( ), newsletter.getNewsletterSenderName( ),
+                        newsletter.getNewsletterSenderMail( ), strObject, strNewsLetterCode, urlAttachments );
+            }
+        }
+    }
+
+    /**
+     * Check the property in property file to know if url must be absolutes or
+     * relatives
+     * @return true if absolute or false else
+     */
+    public boolean isAbsoluteUrl( )
+    {
+        boolean useAbsoluteUrl = false;
+        String strUseAbsoluteUrl = AppPropertiesService.getProperty( PROPERTY_ABSOLUTE_URL_MAIL );
+
+        if ( ( strUseAbsoluteUrl != null ) && strUseAbsoluteUrl.equalsIgnoreCase( Boolean.TRUE.toString( ) ) )
+        {
+            useAbsoluteUrl = true;
+        }
+
+        return useAbsoluteUrl;
+    }
+
+    /**
+     * Determine if mails must be sent in MHTML
+     * @return true whether MHTML is needed
+     */
+    public boolean isMhtmlActivated( )
+    {
+        String strProperty = AppPropertiesService.getProperty( NewsLetterConstants.PROPERTY_MAIL_MULTIPART );
+        return ( strProperty != null ) && Boolean.valueOf( strProperty ).booleanValue( );
+    }
+
+    /**
+     * Fetches the list of subscribers on a specific newsletter
+     * @param nNewsletterId The id of the newsletter
+     * @return The byte representation of the list of subscribers
+     */
+    public byte[] getSubscribersCsvExport( int nNewsletterId )
+    {
+        byte[] byteSubscribersList = null;
+
+        try
+        {
+            ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream( );
+            CSVWriter writer = new CSVWriter( new BufferedWriter( new OutputStreamWriter( byteArrayStream, "UTF-8" ) ) );
+            Collection<Subscriber> listSubscriber = SubscriberHome.findSubscribers( nNewsletterId, getPlugin( ) );
+
+            for ( Subscriber subscriber : listSubscriber )
+            {
+                String[] arraySubscriber = new String[3];
+                arraySubscriber[0] = Integer.toString( subscriber.getId( ) );
+                arraySubscriber[1] = subscriber.getEmail( );
+                arraySubscriber[2] = subscriber.getDateSubscription( ).toString( );
+                writer.writeNext( arraySubscriber );
+            }
+
+            writer.close( );
+            byteSubscribersList = byteArrayStream.toByteArray( );
+        }
+        catch ( UnsupportedEncodingException e )
+        {
+            AppLogService.error( e );
+        }
+        catch ( IOException e )
+        {
+            AppLogService.error( e );
+        }
+
+        return byteSubscribersList;
     }
 
     /**
@@ -118,15 +259,14 @@ public class NewsletterService
      * 
      * @param newsletter the newsletter to generate the HTML of
      * @param nTemplateNewsLetterId the newsletter template id
-     * @param nTemplateDocumentId the document template id
      * @param strBaseUrl The base url of the portal
      * @param user the current user
      * @param locale The locale
      * @return the html code for the newsletter content of null if no template
      *         available
      */
-    public String generateNewsletterHtmlCode( NewsLetter newsletter, int nTemplateNewsLetterId,
-            int nTemplateDocumentId, String strBaseUrl, AdminUser user, Locale locale )
+    public String generateNewsletterHtmlCode( NewsLetter newsletter, int nTemplateNewsLetterId, String strBaseUrl,
+            AdminUser user, Locale locale )
     {
         String strTemplatePath = NewsletterUtils.getHtmlTemplatePath( nTemplateNewsLetterId, getPlugin( ) );
         //        String strDocumentPath = generateDocumentsList( nNewsLetterId, nTemplateDocumentId, strBaseUrl );

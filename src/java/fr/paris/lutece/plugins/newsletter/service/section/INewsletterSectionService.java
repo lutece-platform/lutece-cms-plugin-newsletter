@@ -38,11 +38,12 @@ public interface INewsletterSectionService
      * Get the configuration page of the content type.
      * @param newsletterSection The newsletter section to get the configuration
      *            of.
+     * @param strBaseUrl The base url
      * @param user The current user
      * @param locale The locale
      * @return The HTML code of the configuration page
      */
-    String getConfigurationPage( NewsletterSection newsletterSection, AdminUser user, Locale locale );
+    String getConfigurationPage( NewsletterSection newsletterSection, String strBaseUrl, AdminUser user, Locale locale );
 
     /**
      * @param mapParameters The collection of parameters of the configuration.
@@ -51,9 +52,8 @@ public interface INewsletterSectionService
      *            of.
      * @param user The current user
      * @param locale The locale
-     * @return The title of the newsletter section.
      */
-    String saveConfiguration( Map<String, Object> mapParameters, NewsletterSection newsletterSection, AdminUser user,
+    void saveConfiguration( Map<String, String[]> mapParameters, NewsletterSection newsletterSection, AdminUser user,
             Locale locale );
 
     /**

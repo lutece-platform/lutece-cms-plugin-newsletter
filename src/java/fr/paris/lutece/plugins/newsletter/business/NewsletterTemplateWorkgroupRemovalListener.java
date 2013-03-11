@@ -50,24 +50,22 @@ public class NewsletterTemplateWorkgroupRemovalListener implements RemovalListen
     private static final String PROPERTY_WORKGROUP_CANNOT_BE_REMOVED = "newsletter.message.newsletterTemplate.workgroupCannotBeRemoved";
 
     /**
-    * Check if the object can be safely removed
-    * @param strId The object id
-    * @return true if the object can be removed otherwise false
-    */
+     * Check if the object can be safely removed
+     * @param strId The object id
+     * @return true if the object can be removed otherwise false
+     */
     public boolean canBeRemoved( String strId )
     {
         if ( strId == null )
         {
             return true;
         }
-
-        Collection<NewsLetterTemplate> listNewsletterTemplates = NewsLetterTemplateHome.getTemplatesList( PluginService.getPlugin( 
-                    NewsletterPlugin.PLUGIN_NAME ) );
+        Collection<NewsLetterTemplate> listNewsletterTemplates = NewsLetterTemplateHome.getTemplatesListByWorkgoup(
+                strId, PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
 
         for ( NewsLetterTemplate newsletterTemplate : listNewsletterTemplates )
         {
-            if ( ( newsletterTemplate.getWorkgroup(  ) != null ) &&
-                    newsletterTemplate.getWorkgroup(  ).equals( strId ) )
+            if ( ( newsletterTemplate.getWorkgroup( ) != null ) && newsletterTemplate.getWorkgroup( ).equals( strId ) )
             {
                 return false;
             }

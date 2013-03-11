@@ -98,7 +98,7 @@ public class NewsLetterConstants
     public static final String PROPERTY_BASE_URL = "lutece.prod.url";
     public static final String PROPERTY_PATH_DOCUMENTS_IMAGES = "document.path.images";
     public static final String PROPERTY_PORTAL_JSP_PATH = "lutece.portal.path";
-    public static final String PROPERTY_MAIL_MULTIPART = ".mail.multipart";
+    public static final String PROPERTY_MAIL_MULTIPART = "newsletter.mail.multipart";
     public static final String ALL_GROUPS = "all"; //FIXME
     public static final String PROPERTY_LABEL_ALL_GROUPS = "portal.workgroup.labelAllGroups"; //FIXME
     public static final String PROPERTY_CHECKBOX_ON = "on";

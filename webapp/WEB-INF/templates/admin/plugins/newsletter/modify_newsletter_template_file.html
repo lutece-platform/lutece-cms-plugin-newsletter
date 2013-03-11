@@ -14,11 +14,7 @@
 			<div class="control-group">
 			<label class="control-label" for="newsletter_template_type">#i18n{newsletter.add_newsletter_template.templateType} *:</label>
 				<div class="controls">
-				<#list template_type  as item>
-					<label class="radio">
-						<input class="radio" <#if item.isChecked() >checked="checked"</#if> type="radio" name="newsletter_template_type" value="${item.code}" /> #i18n{${plugin.name}.${item.name}}
-					</label>
-				</#list>
+					<@combo items=template_type default_value=template.sectionType name="newsletter_template_type" />
 				</div>
 			</div>
 			<div class="control-group">

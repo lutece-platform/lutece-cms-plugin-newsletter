@@ -11,6 +11,7 @@ import fr.paris.lutece.util.ReferenceItem;
 import fr.paris.lutece.util.ReferenceList;
 
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -94,25 +95,45 @@ public class NewsletterSectionService
 
     /**
      * Get the configuration page of a section
-     * @param nIdSection The id of the section
+     * @param newsletterSection The section to get the configuration page of.
+     * @param strBaseUrl the base url
      * @param user The current user
      * @param locale The locale to use
      * @return The HTML content of the configuration page of the section
      */
-    public String getConfigurationPage( int nIdSection, AdminUser user, Locale locale )
+    public String getConfigurationPage( NewsletterSection newsletterSection, String strBaseUrl, AdminUser user,
+            Locale locale )
     {
-        Plugin plugin = PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME );
-        NewsletterSection newsletterSection = NewsletterSectionHome.findByPrimaryKey( nIdSection, plugin );
         for ( INewsletterSectionService service : SpringContextService.getBeansOfType( INewsletterSectionService.class ) )
         {
             if ( StringUtils.equals( service.getNewsletterSectionTypeCode( ), newsletterSection.getSectionTypeCode( ) ) )
             {
-                return service.getConfigurationPage( newsletterSection, user, locale );
+                return service.getConfigurationPage( newsletterSection, strBaseUrl, user, locale );
             }
         }
         return null;
     }
     
+    /**
+     * Save the configuration of a section
+     * @param mapParameters The map of parameters of the the configuration. The
+     *            map contains request parameter if it is a request context.
+     * @param newsletterSection The section to save the configuration of
+     * @param user The current user, or null if there is no current user
+     * @param locale The locale to use
+     */
+    public void saveConfiguration( Map<String, String[]> mapParameters, NewsletterSection newsletterSection,
+            AdminUser user, Locale locale )
+    {
+        for ( INewsletterSectionService service : SpringContextService.getBeansOfType( INewsletterSectionService.class ) )
+        {
+            if ( StringUtils.equals( service.getNewsletterSectionTypeCode( ), newsletterSection.getSectionTypeCode( ) ) )
+            {
+                service.saveConfiguration( mapParameters, newsletterSection, user, locale );
+            }
+        }
+    }
+
     /**
      * Move a section up or down in its category
      * @param newsletterSection The section to move
