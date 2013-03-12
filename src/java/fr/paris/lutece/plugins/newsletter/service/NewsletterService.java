@@ -49,6 +49,7 @@ import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppLogService;
+import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.mail.UrlAttachment;
@@ -83,6 +84,11 @@ public class NewsletterService
 
     // PROPERTIES
     private static final String PROPERTY_ABSOLUTE_URL_MAIL = "newsletter.absolute.mail.url";
+    private static final String PROPERTY_PATH_IMAGE_NEWSLETTER_TEMPLATE = "newsletter.path.image.newsletter.template";
+    private static final String PROPERTY_NO_SECURED_IMG_FOLDER = "newsletter.nosecured.img.folder.name";
+    private static final String PROPERTY_WEBAPP_PATH = "newsletter.nosecured.webapp.path";
+    private static final String PROPERTY_WEBAPP_URL = "newsletter.nosecured.webapp.url";
+    private static final String PROPERTY_NO_SECURED_IMG_OPTION = "newsletter.nosecured.img.option";
 
     private NewsletterSectionService _newsletterSectionService;
     private Plugin _plugin;
@@ -127,8 +133,8 @@ public class NewsletterService
             }
             else
             {
-                //                String strContent = NewsletterUtils.rewriteUrls( templateNewsletter.getHtml(  ), strBaseUrl );
-                //                templateNewsletter = new HtmlTemplate( strContent );
+                String strContent = NewsletterUtils.rewriteUrls( templateNewsletter.getHtml( ), strBaseUrl );
+                templateNewsletter = new HtmlTemplate( strContent );
             }
         }
 
@@ -328,6 +334,58 @@ public class NewsletterService
         HtmlTemplate templateNewsLetter = AppTemplateService.getTemplate( strTemplatePath, locale, model );
 
         return templateNewsLetter.getHtml( );
+    }
+
+    /**
+     * Get the url of the image folder used by templates
+     * @param strBaseUrl The base url
+     * @return The absolute url of the folder containing images of templates.
+     */
+    public String getImageFolderPath( String strBaseUrl )
+    {
+        return strBaseUrl + AppPropertiesService.getProperty( PROPERTY_PATH_IMAGE_NEWSLETTER_TEMPLATE );
+    }
+
+    /**
+     * Check if images of the newsletter should be transfered on an unsecured
+     * webapp or not
+     * @return True if images of the newsletter should be transfered on an
+     *         unsecured webapp, false otherwise
+     */
+    public boolean useUnsecuredImages( )
+    {
+        return Boolean.parseBoolean( AppPropertiesService.getProperty( PROPERTY_NO_SECURED_IMG_OPTION ) );
+    }
+
+    /**
+     * Get the unsecured image folder inside the unsecured folder
+     * @return The unsecured image folder inside the unsecured folder
+     */
+    public String getUnsecuredImagefolder( )
+    {
+        return AppPropertiesService.getProperty( PROPERTY_NO_SECURED_IMG_FOLDER ) + NewsLetterConstants.CONSTANT_SLASH;
+    }
+
+    /**
+     * Get the absolute path to the unsecured folder where files should be
+     * saved
+     * @return The absolute path to the unsecured folder where files should be
+     *         saved, or the webapp path if none is defined
+     */
+    public String getUnsecuredFolderPath( )
+    {
+        return AppPropertiesService.getProperty( PROPERTY_WEBAPP_PATH, AppPathService.getWebAppPath( )
+                + NewsLetterConstants.CONSTANT_SLASH );
+    }
+
+    /**
+     * Get the absolute url to the unsecured webapp.
+     * @return The absolute url to the unsecured webapp, or the base url of this
+     *         webapp if none is defined
+     */
+    public String getUnsecuredWebappUrl( )
+    {
+        return AppPropertiesService.getProperty( PROPERTY_WEBAPP_URL, AppPathService.getBaseUrl( ) );
     }
 
     /**

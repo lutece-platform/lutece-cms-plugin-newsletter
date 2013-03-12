@@ -60,7 +60,6 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     private Timestamp _dateLastSending;
     private String _strHtml;
     private int _nNewsLetterTemplateId;
-    private int _nDocumentTemplateId;
     private boolean _bIsValidationActive;
     private boolean _bIsCaptchaActive;
     private String _strWorkgroup;
@@ -301,26 +300,6 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     public void setNewsLetterTemplateId( int nNewsLetterTemplateId )
     {
         _nNewsLetterTemplateId = nNewsLetterTemplateId;
-    }
-
-    /**
-     * Returns the identifier of the document template
-     *
-     * @return the Document template identifier
-     */
-    public int getDocumentTemplateId(  )
-    {
-        return _nDocumentTemplateId;
-    }
-
-    /**
-     * Sets the identifier of the Document template
-     *
-     * @param nDocumentTemplateId the Document template identifier
-     */
-    public void setDocumentTemplateId( int nDocumentTemplateId )
-    {
-        _nDocumentTemplateId = nDocumentTemplateId;
     }
 
     /**

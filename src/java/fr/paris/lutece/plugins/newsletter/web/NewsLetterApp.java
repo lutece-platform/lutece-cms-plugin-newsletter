@@ -89,7 +89,7 @@ public class NewsLetterApp implements XPageApplication
     private CaptchaSecurityService _captchaService;
 
     /**
-     *
+     * 
      * @param request The HTTP request
      * @param plugin The plugin
      */
@@ -104,10 +104,10 @@ public class NewsLetterApp implements XPageApplication
      * @param nMode The current mode.
      * @param plugin The Plugin
      * @return The page content.
-     * @throws fr.paris.lutece.portal.service.message.SiteMessageException Throws a message interpreted by the front office
+     * @throws fr.paris.lutece.portal.service.message.SiteMessageException
+     *             Throws a message interpreted by the front office
      */
-    public XPage getPage( HttpServletRequest request, int nMode, Plugin plugin )
-        throws SiteMessageException
+    public XPage getPage( HttpServletRequest request, int nMode, Plugin plugin ) throws SiteMessageException
     {
         String strAction = request.getParameter( NewsLetterConstants.PARAMETER_ACTION );
         init( request, plugin );
@@ -121,19 +121,19 @@ public class NewsLetterApp implements XPageApplication
 
         if ( strAction.equals( NewsLetterConstants.ACTION_REGISTER ) )
         {
-            NewsLetterRegistrationService.getInstance(  ).doSubscription( request );
+            NewsLetterRegistrationService.getInstance( ).doSubscription( request );
         }
         else if ( strAction.equals( NewsLetterConstants.ACTION_CONFIRM_UNSUBSCRIBE ) )
         {
-            NewsLetterRegistrationService.getInstance(  ).doConfirmUnSubscribe( request );
+            NewsLetterRegistrationService.getInstance( ).doConfirmUnSubscribe( request );
         }
         else if ( strAction.equals( NewsLetterConstants.ACTION_UNSUBSCRIBE ) )
         {
-            NewsLetterRegistrationService.getInstance(  ).doUnSubscribe( request );
+            NewsLetterRegistrationService.getInstance( ).doUnSubscribe( request );
         }
         else if ( strAction.equals( NewsLetterConstants.ACTION_CONFIRM_SUBSCRIBE ) )
         {
-            NewsLetterRegistrationService.getInstance(  ).doConfirmSubscribe( request );
+            NewsLetterRegistrationService.getInstance( ).doConfirmSubscribe( request );
         }
 
         resultPage = getPage( request, plugin );
@@ -142,33 +142,33 @@ public class NewsLetterApp implements XPageApplication
     }
 
     /**
-     *
+     * 
      * @param request
      * @param plugin
      * @return
      */
     private XPage getPage( HttpServletRequest request, Plugin plugin )
     {
-        XPage page = new XPage(  );
+        XPage page = new XPage( );
 
         if ( request.getParameter( PARAMETER_VIEW_REQUIREMENT ) != null )
         {
             //See conditional use
-            page.setTitle( I18nService.getLocalizedString( PROPERTY_PATHLABEL, request.getLocale(  ) ) );
-            page.setPathLabel( I18nService.getLocalizedString( PROPERTY_PAGETITLE, request.getLocale(  ) ) );
+            page.setTitle( I18nService.getLocalizedString( PROPERTY_PATHLABEL, request.getLocale( ) ) );
+            page.setPathLabel( I18nService.getLocalizedString( PROPERTY_PAGETITLE, request.getLocale( ) ) );
             page.setContent( getRequirement( request, plugin ) );
         }
         else
         {
-            page.setPathLabel( I18nService.getLocalizedString( PROPERTY_PATHLABEL, request.getLocale(  ) ) );
-            page.setTitle( I18nService.getLocalizedString( PROPERTY_PAGETITLE, request.getLocale(  ) ) );
+            page.setPathLabel( I18nService.getLocalizedString( PROPERTY_PATHLABEL, request.getLocale( ) ) );
+            page.setTitle( I18nService.getLocalizedString( PROPERTY_PAGETITLE, request.getLocale( ) ) );
 
-            HashMap<String, Object> model = new HashMap<String, Object>(  );
+            HashMap<String, Object> model = new HashMap<String, Object>( );
             Collection<NewsLetter> list = NewsLetterHome.findAll( plugin );
             NewsLetterProperties properties = NewsletterPropertiesHome.find( plugin );
             model.put( MARK_PROPERTIES, properties );
             model.put( MARK_NEWSLETTERS_LIST, list );
-            model.put( MARK_TOS, properties.getTOS(  ) );
+            model.put( MARK_TOS, properties.getTOS( ) );
 
             model.put( MARK_PLUGIN, plugin );
 
@@ -177,12 +177,12 @@ public class NewsLetterApp implements XPageApplication
 
             if ( bIsCaptchaEnabled )
             {
-                _captchaService = new CaptchaSecurityService(  );
-                model.put( MARK_CAPTCHA, _captchaService.getHtmlCode(  ) );
+                _captchaService = new CaptchaSecurityService( );
+                model.put( MARK_CAPTCHA, _captchaService.getHtmlCode( ) );
             }
-            HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_XPAGE_NEWSLETTER, request.getLocale(  ),
+            HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_XPAGE_NEWSLETTER, request.getLocale( ),
                     model );
-            page.setContent( template.getHtml(  ) );
+            page.setContent( template.getHtml( ) );
         }
 
         return page;
@@ -195,32 +195,31 @@ public class NewsLetterApp implements XPageApplication
      * @param request The HTTP request.
      * @throws SiteMessageException A site message exception
      */
-    public String getShowArchivePage( HttpServletRequest request )
-        throws SiteMessageException
+    public String getShowArchivePage( HttpServletRequest request ) throws SiteMessageException
     {
-        return NewsLetterArchiveService.getInstance(  ).getShowArchivePage( request );
+        return NewsLetterArchiveService.getInstance( ).getShowArchivePage( request );
     }
 
     /**
      * Performs the subscription process
      * @param request The Http request
-     * @throws fr.paris.lutece.portal.service.message.SiteMessageException The error message thrown to the user
+     * @throws fr.paris.lutece.portal.service.message.SiteMessageException The
+     *             error message thrown to the user
      */
-    public void doSubscription( HttpServletRequest request )
-        throws SiteMessageException
+    public void doSubscription( HttpServletRequest request ) throws SiteMessageException
     {
-        NewsLetterRegistrationService.getInstance(  ).doSubscription( request );
+        NewsLetterRegistrationService.getInstance( ).doSubscription( request );
     }
 
     /**
      * Performs unsubscription process
      * @param request The http request
-     * @throws fr.paris.lutece.portal.service.message.SiteMessageException The error message handled by the front office
+     * @throws fr.paris.lutece.portal.service.message.SiteMessageException The
+     *             error message handled by the front office
      */
-    public void doUnSubscribe( HttpServletRequest request )
-        throws SiteMessageException
+    public void doUnSubscribe( HttpServletRequest request ) throws SiteMessageException
     {
-        NewsLetterRegistrationService.getInstance(  ).doUnSubscribe( request );
+        NewsLetterRegistrationService.getInstance( ).doUnSubscribe( request );
     }
 
     /**
@@ -228,10 +227,9 @@ public class NewsLetterApp implements XPageApplication
      * @param request The request
      * @throws SiteMessageException A site message exception
      */
-    public void doConfirmSubscribe( HttpServletRequest request )
-        throws SiteMessageException
+    public void doConfirmSubscribe( HttpServletRequest request ) throws SiteMessageException
     {
-        NewsLetterRegistrationService.getInstance(  ).doConfirmSubscribe( request );
+        NewsLetterRegistrationService.getInstance( ).doConfirmSubscribe( request );
     }
 
     /**
@@ -241,18 +239,19 @@ public class NewsLetterApp implements XPageApplication
      * @param plugin The Plugin
      * @return the form recap
      * @throws SiteMessageException SiteMessageException
-    /**/
+     *             /
+     **/
     private String getRequirement( HttpServletRequest request, Plugin plugin )
     {
-        Map<String, Object> model = new HashMap<String, Object>(  );
-        Locale locale = request.getLocale(  );
+        Map<String, Object> model = new HashMap<String, Object>( );
+        Locale locale = request.getLocale( );
 
         NewsLetterProperties properties = NewsletterPropertiesHome.find( plugin );
-        model.put( MARK_TOS, properties.getTOS(  ) );
+        model.put( MARK_TOS, properties.getTOS( ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_XPAGE_TOS, locale, model );
 
-        return template.getHtml(  );
-    } 
-    
+        return template.getHtml( );
+    }
+
 }

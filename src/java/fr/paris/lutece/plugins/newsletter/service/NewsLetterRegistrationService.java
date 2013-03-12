@@ -95,10 +95,12 @@ public class NewsLetterRegistrationService
     //Captcha
     private CaptchaSecurityService _captchaService;
 
+    private Plugin _plugin;
+
     /**
-    * Constructor
-    */
-    private NewsLetterRegistrationService(  )
+     * Constructor
+     */
+    private NewsLetterRegistrationService( )
     {
         if ( _singleton == null )
         {
@@ -110,11 +112,11 @@ public class NewsLetterRegistrationService
      * Fetches the singleton instance
      * @return The singleton instance
      */
-    public static NewsLetterRegistrationService getInstance(  )
+    public static NewsLetterRegistrationService getInstance( )
     {
         if ( _singleton == null )
         {
-            _singleton = new NewsLetterRegistrationService(  );
+            _singleton = new NewsLetterRegistrationService( );
         }
 
         return _singleton;
@@ -124,109 +126,106 @@ public class NewsLetterRegistrationService
      * Performs the subscription process
      * Throw a SiteMessage
      * @param request The Http request
-     * @throws fr.paris.lutece.portal.service.message.SiteMessageException The error message thrown to the user
+     * @throws fr.paris.lutece.portal.service.message.SiteMessageException The
+     *             error message thrown to the user
      */
-    public void doSubscription( HttpServletRequest request )
-        throws SiteMessageException
+    public void doSubscription( HttpServletRequest request ) throws SiteMessageException
     {
         String strEmail = request.getParameter( NewsLetterConstants.PARAMETER_EMAIL );
-        String strPluginName = request.getParameter( NewsLetterConstants.PARAMETER_PLUGIN_NAME );
         String[] arrayNewsletters = request.getParameterValues( NewsLetterConstants.PARAMETER_NEWSLETTER_ID );
         String strTOS = request.getParameter( PARAMETER_TOS );
 
         if ( ( strEmail == null ) || !StringUtil.checkEmail( strEmail ) )
         {
             SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_INVALID_MAIL_ERROR_MESSAGE,
-                NewsLetterConstants.PROPERTY_INVALID_MAIL_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
+                    NewsLetterConstants.PROPERTY_INVALID_MAIL_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
         }
-
-        Plugin plugin = PluginService.getPlugin( strPluginName );
 
         if ( arrayNewsletters == null )
         {
             SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_NO_NEWSLETTER_CHOSEN_ERROR_MESSAGE,
-                NewsLetterConstants.PROPERTY_NO_NEWSLETTER_CHOSEN_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
+                    NewsLetterConstants.PROPERTY_NO_NEWSLETTER_CHOSEN_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
         }
         else
         {
-            NewsLetterProperties properties = NewsletterPropertiesHome.find( plugin );
+            NewsLetterProperties properties = NewsletterPropertiesHome.find( getPlugin( ) );
 
             //test the requirement
-            if ( properties.getTOS(  ) != null )
+            if ( properties.getTOS( ) != null )
             {
                 if ( strTOS == null )
                 {
                     SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_NO_TOS_MESSAGE,
-                        NewsLetterConstants.PROPERTY_NO_TOS_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
+                            NewsLetterConstants.PROPERTY_NO_TOS_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
                 }
             }
 
             //test the captcha
-            if ( PluginService.isPluginEnable( JCAPTCHA_PLUGIN ) && properties.isCaptchaActive(  ) )
+            if ( PluginService.isPluginEnable( JCAPTCHA_PLUGIN ) && properties.isCaptchaActive( ) )
             {
-                _captchaService = new CaptchaSecurityService(  );
+                _captchaService = new CaptchaSecurityService( );
 
                 if ( !_captchaService.validate( request ) )
                 {
                     SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_NO_JCAPTCHA_MESSAGE,
-                        NewsLetterConstants.PROPERTY_NO_JCAPTCHA_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
+                            NewsLetterConstants.PROPERTY_NO_JCAPTCHA_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
                 }
             }
 
             //Checks if a subscriber with the same email address doesn't exist yet
-            Subscriber subscriber = SubscriberHome.findByEmail( strEmail, plugin );
+            Subscriber subscriber = SubscriberHome.findByEmail( strEmail, getPlugin( ) );
 
             if ( subscriber == null )
             {
                 // The email doesn't exist, so create a new subcriber
-                subscriber = new Subscriber(  );
+                subscriber = new Subscriber( );
                 subscriber.setEmail( strEmail );
-                subscriber = SubscriberHome.create( subscriber, plugin );
+                subscriber = SubscriberHome.create( subscriber, getPlugin( ) );
             }
 
             for ( String strId : arrayNewsletters )
             {
-                NewsLetterHome.addSubscriber( Integer.parseInt( strId ), subscriber.getId(  ),
-                    !properties.isValidationActive(  ), new Timestamp( new Date(  ).getTime(  ) ), plugin );
+                NewsLetterHome.addSubscriber( Integer.parseInt( strId ), subscriber.getId( ),
+                        !properties.isValidationActive( ), new Timestamp( new Date( ).getTime( ) ), getPlugin( ) );
             }
 
-            if ( properties.isValidationActive(  ) )
+            if ( properties.isValidationActive( ) )
             {
                 // generate validation key
-                Random random = new Random(  );
-                int nAlea = random.nextInt(  );
+                Random random = new Random( );
+                int nAlea = random.nextInt( );
                 // add pair in db
-                AwaitingActivationHome.create( subscriber.getId(  ), nAlea, plugin );
+                AwaitingActivationHome.create( subscriber.getId( ), nAlea, getPlugin( ) );
 
-                StringBuilder sbUrl = new StringBuilder( AppPathService.getBaseUrl(request) );
+                StringBuilder sbUrl = new StringBuilder( AppPathService.getBaseUrl( request ) );
                 sbUrl.append( JSP_PORTAL );
 
-                UrlItem urlItem = new UrlItem( sbUrl.toString(  ) );
-                urlItem.addParameter( NewsLetterConstants.PARAMETER_PAGE, NewsLetterConstants.PROPERTY_PLUGIN_NAME );
-                urlItem.addParameter( NewsLetterConstants.PARAMETER_ACTION, NewsLetterConstants.ACTION_CONFIRM_SUBSCRIBE );
+                UrlItem urlItem = new UrlItem( sbUrl.toString( ) );
+                urlItem.addParameter( NewsLetterConstants.PARAMETER_PAGE, NewsletterPlugin.PLUGIN_NAME );
+                urlItem.addParameter( NewsLetterConstants.PARAMETER_ACTION,
+                        NewsLetterConstants.ACTION_CONFIRM_SUBSCRIBE );
                 urlItem.addParameter( NewsLetterConstants.PARAMETER_KEY, nAlea );
                 urlItem.addParameter( NewsLetterConstants.PARAMETER_EMAIL, strEmail );
-                urlItem.addParameter( NewsLetterConstants.PARAMETER_USER_ID, subscriber.getId(  ) );
-                urlItem.addParameter( NewsLetterConstants.PARAMETER_PLUGIN_NAME, strPluginName );
+                urlItem.addParameter( NewsLetterConstants.PARAMETER_USER_ID, subscriber.getId( ) );
                 NewsletterUtils.addParameters( urlItem, NewsLetterConstants.PARAMETER_NEWSLETTER_ID,
-                    request.getParameterValues( NewsLetterConstants.PARAMETER_NEWSLETTER_ID ) );
+                        request.getParameterValues( NewsLetterConstants.PARAMETER_NEWSLETTER_ID ) );
 
-                Map<Object, String> model = new HashMap<Object, String>(  );
-                model.put( NewsLetterConstants.MARK_CONFIRM_URL, urlItem.getUrl(  ) );
+                Map<Object, String> model = new HashMap<Object, String>( );
+                model.put( NewsLetterConstants.MARK_CONFIRM_URL, urlItem.getUrl( ) );
 
-                HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CONFIRM_MAIL, request.getLocale(  ),
+                HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CONFIRM_MAIL, request.getLocale( ),
                         model );
 
-                MailService.sendMailHtml( subscriber.getEmail(  ),
-                    NewsLetterConstants.PROPERTY_CONFIRM_MAIL_SENDER_NAME,
-                    NewsLetterConstants.PROPERTY_CONFIRM_MAIL_SENDER_ADDRESS,
-                    I18nService.getLocalizedString( PROPERTY_MESSAGE_CONFIRM_MAIL_TITLE, request.getLocale(  ) ),
-                    template.getHtml(  ) );
+                MailService.sendMailHtml( subscriber.getEmail( ),
+                        NewsLetterConstants.PROPERTY_CONFIRM_MAIL_SENDER_NAME,
+                        NewsLetterConstants.PROPERTY_CONFIRM_MAIL_SENDER_ADDRESS,
+                        I18nService.getLocalizedString( PROPERTY_MESSAGE_CONFIRM_MAIL_TITLE, request.getLocale( ) ),
+                        template.getHtml( ) );
             }
 
             String strMessage;
 
-            if ( properties.isValidationActive(  ) )
+            if ( properties.isValidationActive( ) )
             {
                 strMessage = NewsLetterConstants.PROPERTY_SUBSCRIPTION_OK_ALERT_MESSAGE_CONFIRM;
             }
@@ -236,7 +235,7 @@ public class NewsLetterRegistrationService
             }
 
             SiteMessageService.setMessage( request, strMessage,
-                NewsLetterConstants.PROPERTY_SUBSCRIPTION_OK_TITLE_MESSAGE, SiteMessage.TYPE_INFO );
+                    NewsLetterConstants.PROPERTY_SUBSCRIPTION_OK_TITLE_MESSAGE, SiteMessage.TYPE_INFO );
         }
     }
 
@@ -245,10 +244,8 @@ public class NewsLetterRegistrationService
      * @param request The request
      * @throws SiteMessageException Site message exception
      */
-    public void doConfirmSubscribe( HttpServletRequest request )
-        throws SiteMessageException
+    public void doConfirmSubscribe( HttpServletRequest request ) throws SiteMessageException
     {
-        String strPluginName = request.getParameter( NewsLetterConstants.PARAMETER_PLUGIN_NAME );
         String[] arrayNewsletters = request.getParameterValues( NewsLetterConstants.PARAMETER_NEWSLETTER_ID );
 
         String strEmail = request.getParameter( NewsLetterConstants.PARAMETER_EMAIL );
@@ -256,7 +253,7 @@ public class NewsLetterRegistrationService
         if ( StringUtils.isBlank( strEmail ) || !StringUtil.checkEmail( strEmail ) )
         {
             SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_INVALID_MAIL_ERROR_MESSAGE,
-                NewsLetterConstants.PROPERTY_INVALID_MAIL_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
+                    NewsLetterConstants.PROPERTY_INVALID_MAIL_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
         }
 
         String strIdUser = request.getParameter( NewsLetterConstants.PARAMETER_USER_ID );
@@ -269,8 +266,8 @@ public class NewsLetterRegistrationService
         catch ( NumberFormatException nfe )
         {
             SiteMessageService.setMessage( request,
-                NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_USER_ERROR_MESSAGE,
-                NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_USER_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
+                    NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_USER_ERROR_MESSAGE,
+                    NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_USER_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
         }
 
         String strKey = request.getParameter( NewsLetterConstants.PARAMETER_KEY );
@@ -283,43 +280,42 @@ public class NewsLetterRegistrationService
         catch ( NumberFormatException nfe )
         {
             SiteMessageService.setMessage( request,
-                NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_KEY_ERROR_MESSAGE,
-                NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_KEY_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
+                    NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_KEY_ERROR_MESSAGE,
+                    NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_KEY_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
         }
-
-        Plugin plugin = PluginService.getPlugin( strPluginName );
 
         if ( arrayNewsletters == null )
         {
             SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_NO_NEWSLETTER_CHOSEN_ERROR_MESSAGE,
-                NewsLetterConstants.PROPERTY_NO_NEWSLETTER_CHOSEN_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
+                    NewsLetterConstants.PROPERTY_NO_NEWSLETTER_CHOSEN_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
         }
         else
         {
             //Checks if a subscriber with the same email address doesn't exist yet
-            Subscriber subscriber = SubscriberHome.findByEmail( strEmail, plugin );
+            Subscriber subscriber = SubscriberHome.findByEmail( strEmail, getPlugin( ) );
 
             if ( subscriber == null )
             {
                 SiteMessageService.setMessage( request,
-                    NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_USER_ERROR_MESSAGE,
-                    NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_USER_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
+                        NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_USER_ERROR_MESSAGE,
+                        NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_USER_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
             }
 
-            boolean bValidKey = AwaitingActivationHome.checkKey( nIdUser, nKey, plugin );
+            boolean bValidKey = AwaitingActivationHome.checkKey( nIdUser, nKey, getPlugin( ) );
 
             if ( !bValidKey )
             {
                 SiteMessageService.setMessage( request,
-                    NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_KEY_ERROR_MESSAGE,
-                    NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_KEY_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
+                        NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_KEY_ERROR_MESSAGE,
+                        NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_KEY_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
             }
 
             for ( String strIdNewsLetter : arrayNewsletters )
             {
                 try
                 {
-                    NewsLetterHome.validateSubscriber( Integer.parseInt( strIdNewsLetter ), subscriber.getId(  ), plugin );
+                    NewsLetterHome.validateSubscriber( Integer.parseInt( strIdNewsLetter ), subscriber.getId( ),
+                            getPlugin( ) );
                 }
                 catch ( NumberFormatException nfe )
                 {
@@ -328,29 +324,29 @@ public class NewsLetterRegistrationService
             }
 
             // remove validation key entry
-            AwaitingActivationHome.remove( nIdUser, nKey, plugin );
+            AwaitingActivationHome.remove( nIdUser, nKey, getPlugin( ) );
         }
 
         SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_SUBSCRIPTION_CONFIRM_ALERT_MESSAGE,
-            SiteMessage.TYPE_INFO, request.getRequestURI(  ),
-            NewsLetterConstants.PROPERTY_SUBSCRIPTION_CONFIRM_TITLE_MESSAGE, null );
+                SiteMessage.TYPE_INFO, request.getRequestURI( ),
+                NewsLetterConstants.PROPERTY_SUBSCRIPTION_CONFIRM_TITLE_MESSAGE, null );
     }
 
     /**
      * Performs unsubscription process
      * Throw a SiteMessage
      * @param request The http request
-     * @throws fr.paris.lutece.portal.service.message.SiteMessageException The error message handled by the front office
+     * @throws fr.paris.lutece.portal.service.message.SiteMessageException The
+     *             error message handled by the front office
      */
-    public void doUnSubscribe( HttpServletRequest request )
-        throws SiteMessageException
+    public void doUnSubscribe( HttpServletRequest request ) throws SiteMessageException
     {
         String strEmail = request.getParameter( NewsLetterConstants.PARAMETER_EMAIL );
 
         if ( ( strEmail == null ) || !StringUtil.checkEmail( strEmail ) )
         {
             SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_INVALID_MAIL_ERROR_MESSAGE,
-                SiteMessage.TYPE_ERROR );
+                    SiteMessage.TYPE_ERROR );
         }
 
         String strNewsletterId = request.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_ID );
@@ -358,7 +354,7 @@ public class NewsLetterRegistrationService
         if ( ( strNewsletterId == null ) || !strNewsletterId.matches( REGEX_ID ) )
         {
             SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_NO_NEWSLETTER_CHOSEN_ERROR_MESSAGE,
-                SiteMessage.TYPE_ERROR );
+                    SiteMessage.TYPE_ERROR );
         }
 
         // strNewsletterId cannot be null (exception already thrown by SiteMessageService)
@@ -369,7 +365,7 @@ public class NewsLetterRegistrationService
 
         if ( ( subscriber != null ) && ( newsletter != null ) )
         {
-            int nSubscriberId = subscriber.getId(  );
+            int nSubscriberId = subscriber.getId( );
 
             if ( NewsLetterHome.findRegistration( nNewsletterId, nSubscriberId, plugin ) )
             {
@@ -382,49 +378,60 @@ public class NewsLetterRegistrationService
             }
         }
 
-        UrlItem urlItem = new UrlItem( request.getRequestURI(  ) );
+        UrlItem urlItem = new UrlItem( request.getRequestURI( ) );
         SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_UNSUBSCRIPTION_OK_ALERT_MESSAGE, null,
-            NewsLetterConstants.PROPERTY_UNSUBSCRIPTION_OK_TITLE_MESSAGE, urlItem.getUrl(  ), null,
-            SiteMessage.TYPE_INFO );
+                NewsLetterConstants.PROPERTY_UNSUBSCRIPTION_OK_TITLE_MESSAGE, urlItem.getUrl( ), null,
+                SiteMessage.TYPE_INFO );
     }
 
     /**
      * Performs confirm unsubscription process
      * @param request The http request
-     * @throws SiteMessageException The error message handled by the front office
+     * @throws SiteMessageException The error message handled by the front
+     *             office
      */
-    public void doConfirmUnSubscribe( HttpServletRequest request )
-        throws SiteMessageException
+    public void doConfirmUnSubscribe( HttpServletRequest request ) throws SiteMessageException
     {
-        UrlItem urlItem = new UrlItem( request.getRequestURI(  ) );
-        urlItem.addParameter( NewsLetterConstants.PARAMETER_PAGE, NewsLetterConstants.PROPERTY_PLUGIN_NAME );
+        UrlItem urlItem = new UrlItem( request.getRequestURI( ) );
+        urlItem.addParameter( NewsLetterConstants.PARAMETER_PAGE, NewsletterPlugin.PLUGIN_NAME );
         urlItem.addParameter( NewsLetterConstants.PARAMETER_ACTION, NewsLetterConstants.ACTION_UNSUBSCRIBE );
         urlItem.addParameter( NewsLetterConstants.PARAMETER_EMAIL,
-            request.getParameter( NewsLetterConstants.MARK_SUBSCRIBER_EMAIL ) );
+                request.getParameter( NewsLetterConstants.MARK_SUBSCRIBER_EMAIL ) );
         urlItem.addParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_ID,
-            request.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_ID ) );
-        urlItem.addParameter( NewsLetterConstants.PARAMETER_PLUGIN_NAME,
-            request.getParameter( NewsLetterConstants.PARAMETER_PLUGIN_NAME ) );
+                request.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_ID ) );
         SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_CONFIRM_UNSUBSCRIPTION_ALERT_MESSAGE,
-            null, NewsLetterConstants.PROPERTY_CONFIRM_UNSUBSCRIPTION_TITLE_MESSAGE, urlItem.getUrl(  ), null,
-            SiteMessage.TYPE_INFO );
+                null, NewsLetterConstants.PROPERTY_CONFIRM_UNSUBSCRIPTION_TITLE_MESSAGE, urlItem.getUrl( ), null,
+                SiteMessage.TYPE_INFO );
     }
 
     /**
      * Performs confirm unsubscription process
      * @return logs the logs
      */
-    public String doRemoveOldUnconfirmed(  )
+    public String doRemoveOldUnconfirmed( )
     {
-        StringBuffer sbLogs = new StringBuffer(  );
+        StringBuffer sbLogs = new StringBuffer( );
         sbLogs.append( "\r\n[Start] Starting cleaning newsletter subscribers daemon...\r\n" );
 
-        long lDuration = System.currentTimeMillis(  );
+        long lDuration = System.currentTimeMillis( );
         Plugin plugin = PluginService.getPlugin( NewsLetterConstants.PLUGIN_NAME );
         int nConfirmLimit = AppPropertiesService.getPropertyInt( PROPERTY_LIMIT_CONFIRM_DAYS, DEFAULT_LIMIT );
         NewsLetterHome.removeOldUnconfirmed( nConfirmLimit, plugin );
-        sbLogs.append( "\r\n[End] Duration : " + ( System.currentTimeMillis(  ) - lDuration ) + " milliseconds\r\n" );
+        sbLogs.append( "\r\n[End] Duration : " + ( System.currentTimeMillis( ) - lDuration ) + " milliseconds\r\n" );
 
-        return sbLogs.toString(  );
+        return sbLogs.toString( );
+    }
+
+    /**
+     * Get the newsletter plugin
+     * @return the newsletter plugin
+     */
+    private Plugin getPlugin( )
+    {
+        if ( _plugin == null )
+        {
+            _plugin = PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME );
+        }
+        return _plugin;
     }
 }

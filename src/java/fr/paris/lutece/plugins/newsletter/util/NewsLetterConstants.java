@@ -43,7 +43,6 @@ public class NewsLetterConstants
 {
     public static final String CONSTANT_EMPTY_STRING = "";
     public static final String CONSTANT_SLASH = "/";
-    public static final String CONSTANT_DOCUMENT = "document";
     public static final String CONSTANT_IMG_FILE_TYPE = "image";
     public static final String CONSTANT_PDF_FILE_TYPE = "pdf";
 
@@ -67,22 +66,8 @@ public class NewsLetterConstants
     public static final String PROPERTY_UNSUBSCRIBE_FALSE = "FALSE"; //FIXME
     public static final String PROPERTY_ABSOLUTE_URL_TRUE = "TRUE"; //FIXME
 
-    ///////////////////////////////////////////////////////////////////////
-    // bookmarks to use for documents templates
-    public static final String MARK_DOCUMENT_PORTLETS_COLLEC = "portlets_collec";
-    public static final String MARK_DOCUMENT_ID = "document_id";
-    public static final String MARK_DOCUMENT = "document";
-    public static final String MARK_DOCUMENT_LIST = "document_list";
-    public static final String MARK_DOCUMENT_THUMBNAIL = "document_thumbnail";
-    public static final String MARK_DOCUMENT_TITLE = "document_title";
-    public static final String MARK_DOCUMENT_INTRO = "document_intro";
-    public static final String MARK_DOCUMENT_PUBLICATION_DATE = "document_publication_date";
     public static final String MARK_SENDING = "sending";
     public static final String WEBAPP_PATH_FOR_LINKSERVICE = "@webapp_path_for_linkservice@";
-
-    ///////////////////////////////////////////////////////////////////////
-    // bookmark to use for newsletter templates
-    public static final String MARK_DOCUMENTS_LIST = "@documents_list@"; //TODO remove the @
 
     ///////////////////////////////////////////////////////////////////////
     // bookmark to use for mail template
@@ -96,19 +81,14 @@ public class NewsLetterConstants
     // properties
     public static final String PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE = "newsletter.path.file.newsletter.template";
     public static final String PROPERTY_BASE_URL = "lutece.prod.url";
-    public static final String PROPERTY_PATH_DOCUMENTS_IMAGES = "document.path.images";
     public static final String PROPERTY_PORTAL_JSP_PATH = "lutece.portal.path";
     public static final String PROPERTY_MAIL_MULTIPART = "newsletter.mail.multipart";
     public static final String ALL_GROUPS = "all"; //FIXME
     public static final String PROPERTY_LABEL_ALL_GROUPS = "portal.workgroup.labelAllGroups"; //FIXME
     public static final String PROPERTY_CHECKBOX_ON = "on";
-    public static final String PROPERTY_UNCATEGORIZED_DOCUMENTS_KEY = "-1";
-    public static final String PROPERTY_PLUGIN_NAME = "newsletter";
-    public static final String MARK_DOCUMENT_PORTLET_ID = "portlet_id";
 
     /////////////////////////////////////////////////////////////////
     // parameters
-    public static final String PARAMETER_PLUGIN_NAME = "plugin_name";
     public static final String PARAMETER_EMAIL = "email";
     public static final String PARAMETER_SUBSCRIBER_SEARCH = "subscriber_search";
     public static final String PARAMETER_SENDING_ID = "sending_id";

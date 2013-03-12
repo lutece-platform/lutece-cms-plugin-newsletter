@@ -83,18 +83,6 @@ CREATE TABLE newsletter_subscriber (
 );
 CREATE INDEX index_newsletter_subscriber ON newsletter_subscriber (id_subscriber);
 
-
---
--- Table structure for table newsletter_category_list
---
-
-DROP TABLE IF EXISTS newsletter_category_list;
-CREATE TABLE newsletter_category_list (
-  id_category_list INT DEFAULT '0' NOT NULL,
-  id_newsletter INT DEFAULT '0' NOT NULL,
-  PRIMARY KEY (id_category_list,id_newsletter)
-);
-
 --
 -- Table structure for table newsletter_awaiting_confirmation
 --

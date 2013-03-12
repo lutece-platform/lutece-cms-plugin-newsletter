@@ -189,15 +189,6 @@ public interface INewsLetterDAO
     boolean isTemplateUsed( int nTemplateId, Plugin plugin );
 
     /**
-    * loads the list of categories linked to the newsletter
-    *
-    * @param nNewsletterId the newsletter identifier
-    * @param plugin the plugin
-    * @return the array of categories id
-    */
-    int[] selectNewsletterCategoryIds( int nNewsletterId, Plugin plugin );
-
-    /**
       * Counts the subscribers for a newsletter
       *
       * @param nNewsLetterId the newsletter newsletter

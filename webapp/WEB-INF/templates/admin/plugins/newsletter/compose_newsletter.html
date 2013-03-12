@@ -11,13 +11,13 @@
                     <p>#i18n{newsletter.modify_newsletter.dateLastSend} :<strong>${newsletter.dateLastSending?date}</strong></p>
                     <p class="lead">#i18n{newsletter.compose_newsletter.automaticGeneration}</p>
                     <#if newsletter_templates?has_content>
-                    <label class="radio inline" for="">#i18n{newsletter.compose_newsletter.newsletterTemplate} :</label>
-                    <#list newsletter_templates as template >
-                    <input class="radio inline" type="radio" name="newsletter_template_id" value="${template.id}" <#if template.id=newsletter_template_id>checked="checked"</#if> />
+                    	<label class="radio inline" for="">#i18n{newsletter.compose_newsletter.newsletterTemplate} :</label>
+                    	<#list newsletter_templates as template >
+                   			<input class="radio inline" type="radio" name="newsletter_template_id" value="${template.id}" <#if template.id=newsletter_template_id>checked="checked"</#if> />
                            <img src="${img_path}/${template.picture}" border="0"  height="24" width="24" alt="${template.description}" title="${template.description}" />
-                    </#list>
+                   		</#list>
                     <#else>
-                    <p class="label label-warning">#i18n{newsletter.compose_newsletter.noNewsletterTemplate}</p>
+                    	<p class="label label-warning">#i18n{newsletter.compose_newsletter.noNewsletterTemplate}</p>
                     </#if>
                     <div class="form-actions">
                         <button class="btn btn-primary btn-small" type="submit" ><i class="icon-cog icon-white"></i>&nbsp;#i18n{newsletter.compose_newsletter.generate}</button>

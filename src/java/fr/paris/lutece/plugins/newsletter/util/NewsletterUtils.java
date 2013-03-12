@@ -44,6 +44,8 @@ import fr.paris.lutece.util.url.UrlItem;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * This classe provides utility methods for newsletters.
@@ -53,38 +55,36 @@ public final class NewsletterUtils
     /**
      * Private constructor
      */
-    private NewsletterUtils(  )
+    private NewsletterUtils( )
     {
     }
 
     /**
      * Retrieve the html template for the given template id
-     *
      * @param nTemplateId the id of the template to retrieve
      * @param plugin the plugin
-     * @return the html template to use of null if no NewsletterTemplate found for this Id
+     * @return the html template to use of null if no NewsletterTemplate found
+     *         for this Id
      */
     public static String getHtmlTemplatePath( int nTemplateId, Plugin plugin )
     {
         NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome.findByPrimaryKey( nTemplateId, plugin );
 
-        if ( ( newsletterTemplate == null ) || ( newsletterTemplate.getFileName(  ) == null ) ||
-                newsletterTemplate.getFileName(  ).equals( "" ) )
+        if ( ( newsletterTemplate == null ) || StringUtils.isEmpty( newsletterTemplate.getFileName( ) ) )
         {
             return null;
         }
 
         String strTemplatePathName = AppPropertiesService
                 .getProperty( NewsLetterConstants.PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE );
-        strTemplatePathName += "/";
-        strTemplatePathName += newsletterTemplate.getFileName(  );
+        strTemplatePathName += NewsLetterConstants.CONSTANT_SLASH;
+        strTemplatePathName += newsletterTemplate.getFileName( );
 
         return strTemplatePathName;
     }
 
     /**
      * Cleans a string in order to make it usable in a javascript script
-     *
      * @param strIn the string to clean
      * @return the javascript escaped String
      */
@@ -93,7 +93,7 @@ public final class NewsletterUtils
         // Convert problem characters to JavaScript Escaped values
         if ( strIn == null )
         {
-            return "";
+            return StringUtils.EMPTY;
         }
 
         String strOut = strIn;
@@ -111,10 +111,8 @@ public final class NewsletterUtils
         return strOut;
     }
 
-
     /**
      * Encode a string for passage in parameter in URL
-     *
      * @param strEntry the string entry
      * @return the string encoding
      */
@@ -125,14 +123,13 @@ public final class NewsletterUtils
 
     /**
      * Addition of information as header of the http response
-     *
      * @param request The Http Request
      * @param response The Http Response
      * @param strFileName THe filename of the file
      * @param strFileExtension The file extension
      */
     public static void addHeaderResponse( HttpServletRequest request, HttpServletResponse response, String strFileName,
-        String strFileExtension )
+            String strFileExtension )
     {
         response.setHeader( "Content-Disposition", "attachment ;filename=\"" + strFileName + "\"" );
 
@@ -142,7 +139,7 @@ public final class NewsletterUtils
         }
         else
         {
-            String strMimeType = request.getSession(  ).getServletContext(  ).getMimeType( strFileName );
+            String strMimeType = request.getSession( ).getServletContext( ).getMimeType( strFileName );
 
             if ( strMimeType != null )
             {
@@ -162,7 +159,8 @@ public final class NewsletterUtils
     /**
      * Adds all parameter values to the urlItem
      * @param urlItem the urlItem
-     * @param strParameterName the name of the parameter which has multiple values
+     * @param strParameterName the name of the parameter which has multiple
+     *            values
      * @param values parameter values
      */
     public static void addParameters( UrlItem urlItem, String strParameterName, String[] values )
@@ -188,4 +186,23 @@ public final class NewsletterUtils
         }
         return null;
     }
+
+    /**
+     * Rewrite relatives url to absolutes urls
+     * @param strContent The content to analyze
+     * @param strBaseUrl The base url
+     * @return The converted content
+     */
+    public static String rewriteUrls( String strContent, String strBaseUrl )
+    {
+        HtmlDomDocNewsletter doc = new HtmlDomDocNewsletter( strContent, strBaseUrl );
+        doc.convertAllRelativesUrls( HtmlDomDocNewsletter.ELEMENT_IMG );
+        doc.convertAllRelativesUrls( HtmlDomDocNewsletter.ELEMENT_A );
+        doc.convertAllRelativesUrls( HtmlDomDocNewsletter.ELEMENT_FORM );
+        doc.convertAllRelativesUrls( HtmlDomDocNewsletter.ELEMENT_CSS );
+        doc.convertAllRelativesUrls( HtmlDomDocNewsletter.ELEMENT_JAVASCRIPT );
+
+        return doc.getContent( );
+    }
+
 }

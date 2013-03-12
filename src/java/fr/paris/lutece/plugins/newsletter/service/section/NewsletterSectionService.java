@@ -34,6 +34,7 @@ public class NewsletterSectionService
     {
         return SpringContextService.getBean( BEAN_NAME );
     }
+
     /**
      * Get a reference list with every newsletter section types
      * @param locale The locale to get the section types name in.
@@ -113,7 +114,7 @@ public class NewsletterSectionService
         }
         return null;
     }
-    
+
     /**
      * Save the configuration of a section
      * @param mapParameters The map of parameters of the the configuration. The
@@ -190,7 +191,7 @@ public class NewsletterSectionService
      * Get the html content of a newsletter section
      * @param newsletterSection The section to get the content of
      * @param user The current user
-     * @param locale The locale to display the content in
+     * @param locale The locale to display the content in.
      * @return The html content of the section
      */
     public String getSectionContent( NewsletterSection newsletterSection, AdminUser user, Locale locale )

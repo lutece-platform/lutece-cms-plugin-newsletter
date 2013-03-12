@@ -55,6 +55,8 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * This class represents the business object NewsLetterSubscriptionPortlet.
@@ -85,16 +87,13 @@ public class NewsLetterSubscriptionPortlet extends Portlet
     private static final String JCAPTCHA_PLUGIN = "jcaptcha";
 
     // Comparator for sorting - date descendant order
-    private static final Comparator COMPARATOR_DATE_DESC = new Comparator(  )
+    private static final Comparator<NewsLetter> COMPARATOR_DATE_DESC = new Comparator<NewsLetter>( )
+    {
+        public int compare( NewsLetter obj1, NewsLetter obj2 )
         {
-            public int compare( Object obj1, Object obj2 )
-            {
-                NewsLetter sending1 = (NewsLetter) obj1;
-                NewsLetter sending2 = (NewsLetter) obj2;
-
-                return sending2.getDateLastSending(  ).compareTo( sending1.getDateLastSending(  ) );
-            }
-        };
+            return obj2.getDateLastSending( ).compareTo( obj1.getDateLastSending( ) );
+        }
+    };
 
     //Captcha
     private CaptchaSecurityService _captchaService;
@@ -102,7 +101,7 @@ public class NewsLetterSubscriptionPortlet extends Portlet
 
     /**
      * Sets the name of the plugin associated with this portlet.
-     *
+     * 
      * @param strPluginName The plugin name.
      */
     public void setPluginName( String strPluginName )
@@ -115,18 +114,18 @@ public class NewsLetterSubscriptionPortlet extends Portlet
 
     /**
      * Returns the Xml code of the Subscriber portlet with XML heading
-     *
+     * 
      * @param request The HTTP servlet request
      * @return the Xml code of the Subscription portlet
      */
     public String getXmlDocument( HttpServletRequest request )
     {
-        return XmlUtil.getXmlHeader(  ) + getXml( request );
+        return XmlUtil.getXmlHeader( ) + getXml( request );
     }
 
     /**
      * Returns the Xml code of the Subscuption portlet without XML heading
-     *
+     * 
      * @param request The HTTP servlet request
      * @return the Xml code of the Subscription portlet content
      */
@@ -142,17 +141,17 @@ public class NewsLetterSubscriptionPortlet extends Portlet
             strNoChoiceError = request.getParameter( PARAMETER_NO_NEWSLETTER_CHOSEN );
         }
 
-        if ( ( strMailError == null ) || ( strMailError.trim(  ).equals( "" ) ) )
+        if ( StringUtils.isBlank( strMailError ) )
         {
-            strMailError = "";
+            strMailError = StringUtils.EMPTY;
         }
 
-        if ( ( strNoChoiceError == null ) || ( strNoChoiceError.trim(  ).equals( "" ) ) )
+        if ( StringUtils.isBlank( strNoChoiceError ) )
         {
-            strNoChoiceError = "";
+            strNoChoiceError = StringUtils.EMPTY;
         }
 
-        StringBuffer strXml = new StringBuffer(  );
+        StringBuffer strXml = new StringBuffer( );
 
         XmlUtil.beginElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_LIST );
 
@@ -163,39 +162,39 @@ public class NewsLetterSubscriptionPortlet extends Portlet
         // everything into a single SQL request.
         // Hence the manual join and ordering below.
         // Get the ids of the newsletter sendings to display in the portlet.
-        Set sendingIds = NewsLetterSubscriptionPortletHome.findSelectedNewsletters( this.getId(  ) );
-        Iterator iterIds = sendingIds.iterator(  );
+        Set<Integer> sendingIds = NewsLetterSubscriptionPortletHome.findSelectedNewsletters( this.getId( ) );
+        Iterator<Integer> iterIds = sendingIds.iterator( );
 
         // Read all the sendings from the plugin-specific datasource
-        List sendings = new ArrayList(  );
+        List<NewsLetter> sendings = new ArrayList<NewsLetter>( );
 
-        while ( iterIds.hasNext(  ) )
+        while ( iterIds.hasNext( ) )
         {
-            int sendingId = ( (Integer) iterIds.next(  ) ).intValue(  );
+            int sendingId = iterIds.next( ).intValue( );
 
             // Read the content of the sending on the PluginConnectionService :
             NewsLetter sending = NewsLetterHome.findByPrimaryKey( sendingId, _plugin );
 
             sendings.add( sending );
         }
-        
+
         // Then order the sendings by date
         Collections.sort( sendings, COMPARATOR_DATE_DESC );
 
         // Then generate the XML code
-        Iterator iterSendings = sendings.iterator(  );
+        Iterator<NewsLetter> iterSendings = sendings.iterator( );
 
-        while ( iterSendings.hasNext(  ) )
+        while ( iterSendings.hasNext( ) )
         {
-            NewsLetter sending = (NewsLetter) iterSendings.next(  );
+            NewsLetter sending = iterSendings.next( );
 
             // Generate the XML code for the sending :
             XmlUtil.beginElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION );
-            XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_ID, sending.getId(  ) );
-            XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_DESC, sending.getName(  ) );
+            XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_ID, sending.getId( ) );
+            XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_DESC, sending.getName( ) );
             XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_DATE,
-                DateUtil.getDateString( sending.getDateLastSending(  ) ) );
-           XmlUtil.endElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION );
+                    DateUtil.getDateString( sending.getDateLastSending( ) ) );
+            XmlUtil.endElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION );
         }
 
         XmlUtil.endElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_LIST );
@@ -203,40 +202,37 @@ public class NewsLetterSubscriptionPortlet extends Portlet
         boolean bIsCaptchaEnabled = PluginService.isPluginEnable( JCAPTCHA_PLUGIN );
         NewsLetterProperties properties = NewsletterPropertiesHome.find( _plugin );
 
-        if ( bIsCaptchaEnabled && properties.isCaptchaActive(  ) )
+        if ( bIsCaptchaEnabled && properties.isCaptchaActive( ) )
         {
-            _captchaService = new CaptchaSecurityService(  );
-            XmlUtil.addElement( strXml, TAG_NEWSLETTER_CAPTCHA,
-                TAG_CDATA_BEGIN + _captchaService.getHtmlCode(  ) + TAG_CDATA_END );
+            _captchaService = new CaptchaSecurityService( );
+            XmlUtil.addElement( strXml, TAG_NEWSLETTER_CAPTCHA, TAG_CDATA_BEGIN + _captchaService.getHtmlCode( )
+                    + TAG_CDATA_END );
         }
 
-        if ( ( properties.getTOS(  ) != null ) && ( properties.getTOS(  ) != NewsLetterConstants.CONSTANT_EMPTY_STRING ) )
+        if ( ( properties.getTOS( ) != null ) && ( properties.getTOS( ) != NewsLetterConstants.CONSTANT_EMPTY_STRING ) )
         {
             XmlUtil.addElement( strXml, TAG_NEWSLETTER_TOS, "true" );
-            XmlUtil.addElementHtml( strXml, TAG_NEWSLETTER_TOS_CONTENT, properties.getTOS() );
-        }
-
-        if ( !strMailError.equals( "" ) )
-        {
-            XmlUtil.addElement( strXml, TAG_NEWSLETTER_EMAIL_ERROR,
-                I18nService.getLocalizedString( PROPERTY_ERROR_INVALID_MAIL, request.getLocale(  ) ) );
-        }
-
-        if ( !strNoChoiceError.equals( "" ) )
-        {
-            XmlUtil.addElement( strXml, TAG_NEWSLETTER_NO_CHOICE_ERROR,
-                I18nService.getLocalizedString( PROPERTY_ERROR_NO_CHOICE_ERROR, request.getLocale(  ) ) );
+            XmlUtil.addElementHtml( strXml, TAG_NEWSLETTER_TOS_CONTENT, properties.getTOS( ) );
         }
 
         if ( request != null )
         {
-            XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_BUTTON,
-                I18nService.getLocalizedString( PROPERTY_LABEL_BUTTON, request.getLocale(  ) ) );
-            XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_EMAIL,
-                I18nService.getLocalizedString( PROPERTY_LABEL_MAIL, request.getLocale(  ) ) );
+            if ( StringUtils.isNotEmpty( strMailError ) )
+            {
+                XmlUtil.addElement( strXml, TAG_NEWSLETTER_EMAIL_ERROR,
+                        I18nService.getLocalizedString( PROPERTY_ERROR_INVALID_MAIL, request.getLocale( ) ) );
+            }
 
-            /*XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_BUTTON,
-                I18nService.getLocalizedString( PROPERTY_LABEL_BUTTON, request.getLocale(  ) ) );*/
+            if ( StringUtils.isNotEmpty( strNoChoiceError ) )
+            {
+                XmlUtil.addElement( strXml, TAG_NEWSLETTER_NO_CHOICE_ERROR,
+                        I18nService.getLocalizedString( PROPERTY_ERROR_NO_CHOICE_ERROR, request.getLocale( ) ) );
+            }
+
+            XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_BUTTON,
+                    I18nService.getLocalizedString( PROPERTY_LABEL_BUTTON, request.getLocale( ) ) );
+            XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_EMAIL,
+                    I18nService.getLocalizedString( PROPERTY_LABEL_MAIL, request.getLocale( ) ) );
         }
 
         String str = addPortletTags( strXml );
@@ -247,16 +243,16 @@ public class NewsLetterSubscriptionPortlet extends Portlet
     /**
      * Updates the current instance of the HtmlPortlet object
      */
-    public void update(  )
+    public void update( )
     {
-        NewsLetterSubscriptionPortletHome.getInstance(  ).update( this );
+        NewsLetterSubscriptionPortletHome.getInstance( ).update( this );
     }
 
     /**
      * Removes the current instance of the HtmlPortlet object
      */
-    public void remove(  )
+    public void remove( )
     {
-        NewsLetterSubscriptionPortletHome.getInstance(  ).remove( this );
+        NewsLetterSubscriptionPortletHome.getInstance( ).remove( this );
     }
 }

@@ -206,18 +206,6 @@ public final class NewsLetterHome
     }
 
     /**
-     * loads the list of categories of the newsletter
-     *
-     * @param nNewsletterId the newsletter identifier
-     * @param plugin the plugin
-     * @return the array of ids
-     */
-    public static int[] findNewsletterCategoryIds( int nNewsletterId, Plugin plugin )
-    {
-        return _dao.selectNewsletterCategoryIds( nNewsletterId, plugin );
-    }
-
-    /**
      * Returns the number of subscriber for a newsletter
      *
      * @param nNewsLetterId the identifier of the newsletter

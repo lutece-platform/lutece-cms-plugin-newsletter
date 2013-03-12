@@ -43,6 +43,9 @@ import fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation;
  */
 public class NewsletterPlugin extends PluginDefaultImplementation
 {
+    /**
+     * Name of the newsletter plugin
+     */
     public static final String PLUGIN_NAME = "newsletter";
 
     /**
