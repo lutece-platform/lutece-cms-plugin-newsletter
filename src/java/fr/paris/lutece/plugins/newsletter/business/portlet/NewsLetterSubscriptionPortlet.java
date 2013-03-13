@@ -85,9 +85,19 @@ public class NewsLetterSubscriptionPortlet extends Portlet
     private static final String PARAMETER_NO_NEWSLETTER_CHOSEN = "nochoice-error";
     private static final String JCAPTCHA_PLUGIN = "jcaptcha";
 
-    // Comparator for sorting - date descendant order
+    /**
+     * Comparator for sorting - date descendant order
+     */
     private static final Comparator<NewsLetter> COMPARATOR_DATE_DESC = new Comparator<NewsLetter>( )
     {
+        /**
+         * Compare the last sending dates of two newsletters.
+         * @param obj1 The first newsletter
+         * @param obj2 The second newsletter
+         * @return the value <code>0</code> if the two objects are equal; a
+         *         value less than <code>0</code> if the first object is before
+         *         the second; and a value greater than <code>0</code> otherwise
+         */
         public int compare( NewsLetter obj1, NewsLetter obj2 )
         {
             return obj2.getDateLastSending( ).compareTo( obj1.getDateLastSending( ) );
