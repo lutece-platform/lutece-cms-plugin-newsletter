@@ -16,10 +16,10 @@
 				<tbody>
 				<#list newsletters_list as newsletter>
 				<tr>	        	
-					<td>${newsletter.emailSubject}</td>
+					<td><a target="_blank" href="jsp/site/plugins/newsletter/ViewNewsletterArchive.jsp?sending_id=${newsletter.id}">${newsletter.emailSubject}</a></td>
 					<td>${newsletter.date}</td>
 					<td>
-					<a class="btn btn-danger btn-small" href="jsp/admin/plugins/newsletter/RemoveSendingNewsLetter.jsp?newsletter_id=${newsletter_id}&sending_newsletter_id=${newsletter.id}"  title="" >
+					<a class="btn btn-danger btn-small" href="jsp/admin/plugins/newsletter/RemoveSendingNewsLetter.jsp?newsletter_id=${newsletter_id}&sending_newsletter_id=${newsletter.id}"  title="#i18n{portal.util.labelRemove}" >
 						<i class="icon-trash icon-white"></i>
 					</a>
 					</td>

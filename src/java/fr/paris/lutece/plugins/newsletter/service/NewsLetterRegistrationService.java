@@ -358,7 +358,7 @@ public class NewsLetterRegistrationService
 
         // strNewsletterId cannot be null (exception already thrown by SiteMessageService)
         int nNewsletterId = Integer.parseInt( strNewsletterId );
-        Plugin plugin = PluginService.getPlugin( NewsLetterConstants.PLUGIN_NAME );
+        Plugin plugin = PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME );
         Subscriber subscriber = SubscriberHome.findByEmail( strEmail, plugin );
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, plugin );
 
@@ -415,7 +415,7 @@ public class NewsLetterRegistrationService
         sbLogs.append( "\r\n[Start] Starting cleaning newsletter subscribers daemon...\r\n" );
 
         long lDuration = System.currentTimeMillis( );
-        Plugin plugin = PluginService.getPlugin( NewsLetterConstants.PLUGIN_NAME );
+        Plugin plugin = PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME );
         int nConfirmLimit = AppPropertiesService.getPropertyInt( PROPERTY_LIMIT_CONFIRM_DAYS, DEFAULT_LIMIT );
         NewsLetterHome.removeOldUnconfirmed( nConfirmLimit, plugin );
         sbLogs.append( "\r\n[End] Duration : " + ( System.currentTimeMillis( ) - lDuration ) + " milliseconds\r\n" );

@@ -35,7 +35,7 @@ package fr.paris.lutece.plugins.newsletter.business.portlet;
 
 import fr.paris.lutece.plugins.newsletter.business.SendingNewsLetter;
 import fr.paris.lutece.plugins.newsletter.business.SendingNewsLetterHome;
-import fr.paris.lutece.plugins.newsletter.util.NewsLetterConstants;
+import fr.paris.lutece.plugins.newsletter.service.NewsletterPlugin;
 import fr.paris.lutece.portal.business.portlet.Portlet;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
@@ -79,7 +79,7 @@ public class NewsLetterArchivePortlet extends Portlet
     public String getXml( HttpServletRequest request )
     {
         StringBuffer sbXml = new StringBuffer(  );
-        Plugin plugin = PluginService.getPlugin( NewsLetterConstants.PLUGIN_NAME );
+        Plugin plugin = PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME );
         XmlUtil.beginElement( sbXml, TAG_NEWSLETTER_SENDING_LIST );
 
         ArrayList<Integer> listSendingIds = NewsLetterArchivePortletHome.findSendingsInPortlet( this.getId(  ) );

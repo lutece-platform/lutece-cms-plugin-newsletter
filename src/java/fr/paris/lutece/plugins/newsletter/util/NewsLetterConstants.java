@@ -50,7 +50,6 @@ public final class NewsLetterConstants
     // BOOKMARKS
     public static final String MARK_ROWS = "rows";
     public static final String MARK_TEMPLATE_ID = "template_id";
-    public static final String PLUGIN_NAME = "newsletter";
     public static final String MARK_TEMPLATE_TYPE = "template_type";
     public static final String MARK_TEMPLATE_DESCRIPTION = "template_description";
     public static final String MARK_TEMPLATE_FILE_NAME = "template_file_name";

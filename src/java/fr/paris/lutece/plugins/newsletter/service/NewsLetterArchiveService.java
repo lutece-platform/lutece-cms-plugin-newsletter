@@ -91,7 +91,7 @@ public final class NewsLetterArchiveService
      */
     public String getShowArchivePage( HttpServletRequest request ) throws SiteMessageException
     {
-        Plugin plugin = PluginService.getPlugin( NewsLetterConstants.PLUGIN_NAME );
+        Plugin plugin = PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME );
         String strSendingId = request.getParameter( NewsLetterConstants.PARAMETER_SENDING_ID );
         String strBaseUrl = AppPathService.getBaseUrl( request );
 
@@ -105,7 +105,7 @@ public final class NewsLetterArchiveService
         int nSendingId = Integer.parseInt( strSendingId );
         SendingNewsLetter sending = SendingNewsLetterHome.findByPrimaryKey( nSendingId, plugin );
 
-        if ( ( sending == null ) || sending.getHtml( ).equals( "" ) )
+        if ( ( sending == null ) || StringUtils.isEmpty( sending.getHtml( ) ) )
         {
             SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_NO_NEWSLETTER_CHOSEN_TITLE_MESSAGE,
                     SiteMessage.TYPE_ERROR );
