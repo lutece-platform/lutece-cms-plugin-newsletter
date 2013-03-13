@@ -10,6 +10,7 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.util.ReferenceItem;
 import fr.paris.lutece.util.ReferenceList;
 
+import java.io.Serializable;
 import java.util.Locale;
 import java.util.Map;
 
@@ -19,12 +20,17 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Service to manage newsletter content types
  */
-public class NewsletterSectionService
+public class NewsletterSectionService implements Serializable
 {
     /**
      * Name of the bean of this service
      */
     public static final String BEAN_NAME = "newsletter.newsletterSectionService";
+
+    /**
+     * Serial version UID
+     */
+    private static final long serialVersionUID = -555734991348133022L;
 
     /**
      * Get the service from Spring context

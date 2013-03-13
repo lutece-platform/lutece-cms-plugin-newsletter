@@ -59,6 +59,7 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,6 +69,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.persistence.Transient;
+
 import au.com.bytecode.opencsv.CSVWriter;
 
 
@@ -75,12 +78,17 @@ import au.com.bytecode.opencsv.CSVWriter;
  * The newsletter service
  * 
  */
-public class NewsletterService
+public class NewsletterService implements Serializable
 {
     /**
      * Name of the bean of this service
      */
     public static final String BEAN_NAME = "newsletter.newsletterService";
+
+    /**
+     * Serial version UID
+     */
+    private static final long serialVersionUID = 1644159439192572037L;
 
     // PROPERTIES
     private static final String PROPERTY_ABSOLUTE_URL_MAIL = "newsletter.absolute.mail.url";
@@ -91,6 +99,7 @@ public class NewsletterService
     private static final String PROPERTY_NO_SECURED_IMG_OPTION = "newsletter.nosecured.img.option";
 
     private NewsletterSectionService _newsletterSectionService;
+    @Transient
     private Plugin _plugin;
 
     /**
