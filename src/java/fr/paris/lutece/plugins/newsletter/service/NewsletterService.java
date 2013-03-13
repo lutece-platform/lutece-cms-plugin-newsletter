@@ -51,6 +51,7 @@ import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
+import fr.paris.lutece.portal.service.util.CryptoService;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.mail.UrlAttachment;
 import fr.paris.lutece.util.string.StringUtil;
@@ -97,6 +98,7 @@ public class NewsletterService implements Serializable
     private static final String PROPERTY_WEBAPP_PATH = "newsletter.nosecured.webapp.path";
     private static final String PROPERTY_WEBAPP_URL = "newsletter.nosecured.webapp.url";
     private static final String PROPERTY_NO_SECURED_IMG_OPTION = "newsletter.nosecured.img.option";
+    private static final String PROPERTY_UNSUBSCRIBE_KEY_ENCRYPTION_ALGORITHM = "newsletter.unsubscribe.key.encryptionAlgorithm";
 
     private NewsletterSectionService _newsletterSectionService;
     @Transient
@@ -150,7 +152,13 @@ public class NewsletterService implements Serializable
         for ( Subscriber subscriber : listSubscribers )
         {
             HtmlTemplate t = new HtmlTemplate( templateNewsletterToUse );
+
             t.substitute( NewsLetterConstants.MARK_SUBSCRIBER_EMAIL_EACH, subscriber.getEmail( ) );
+            if ( Boolean.parseBoolean( newsletter.getUnsubscribe( ) ) )
+            {
+                String strUnsubscribeKey = getUnsubscriptionKey( subscriber.getEmail( ) );
+                t.substitute( NewsLetterConstants.MARK_UNSUBSCRIBE_KEY_EACH, strUnsubscribeKey );
+            }
 
             String strNewsLetterCode = t.getHtml( );
 
@@ -395,6 +403,17 @@ public class NewsletterService implements Serializable
     public String getUnsecuredWebappUrl( )
     {
         return AppPropertiesService.getProperty( PROPERTY_WEBAPP_URL, AppPathService.getBaseUrl( ) );
+    }
+
+    /**
+     * Get the unsubscription key associated with the given email address.
+     * @param strEmail The email to get the unsubscription key of.
+     * @return The unsubscription key of the email
+     */
+    public String getUnsubscriptionKey( String strEmail )
+    {
+        return CryptoService.encrypt( CryptoService.getCryptoKey( ) + strEmail,
+                AppPropertiesService.getProperty( PROPERTY_UNSUBSCRIBE_KEY_ENCRYPTION_ALGORITHM ) );
     }
 
     /**

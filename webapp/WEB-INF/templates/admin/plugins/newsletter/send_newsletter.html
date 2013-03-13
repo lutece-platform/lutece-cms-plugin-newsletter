@@ -10,7 +10,7 @@
         <#if unsubscribe?exists>
             <#if unsubscribe = "TRUE">
             <hr />
-               #i18n{newsletter.send_newsletter.labelToUnsubscribe}<a href="${base_url}jsp/site/Portal.jsp?page=newsletter&action=confirm_unsubscribe&subscriber_email=${subscriber_email}&newsletter_id=${newsletter_id}&plugin_name=newsletter" class="newsletter">#i18n{newsletter.send_newsletter.labelClickHere}</a>
+               #i18n{newsletter.send_newsletter.labelToUnsubscribe}<a href="${base_url}jsp/site/Portal.jsp?page=newsletter&action=confirm_unsubscribe&subscriber_email=${subscriber_email}&newsletter_id=${newsletter_id}&unsubscribe_key=${unsubscribe_key!}&plugin_name=newsletter" class="newsletter">#i18n{newsletter.send_newsletter.labelClickHere}</a>
             </#if>
         </#if>
     </body>

@@ -2352,6 +2352,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         sendingModel.put( MARK_NEWSLETTER_CONTENT, newsletter.getHtml( ) );
         sendingModel.put( NewsLetterConstants.MARK_BASE_URL, strBaseUrl );
         sendingModel.put( NewsLetterConstants.MARK_SUBSCRIBER_EMAIL, NewsLetterConstants.MARK_SUBSCRIBER_EMAIL_EACH );
+        sendingModel.put( NewsLetterConstants.MARK_UNSUBSCRIBE_KEY, NewsLetterConstants.MARK_UNSUBSCRIBE_KEY_EACH );
 
         HtmlTemplate templateNewsLetter = AppTemplateService.getTemplate( TEMPLATE_SEND_NEWSLETTER, getLocale( ),
                 sendingModel );

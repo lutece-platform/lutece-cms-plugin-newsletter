@@ -338,8 +338,10 @@ public class NewsLetterRegistrationService
     public void doUnSubscribe( HttpServletRequest request ) throws SiteMessageException
     {
         String strEmail = request.getParameter( NewsLetterConstants.PARAMETER_EMAIL );
+        String strKey = request.getParameter( NewsLetterConstants.MARK_UNSUBSCRIBE_KEY );
 
-        if ( ( strEmail == null ) || !StringUtil.checkEmail( strEmail ) )
+        if ( ( strEmail == null ) || !StringUtil.checkEmail( strEmail )
+                || !StringUtils.equals( strKey, NewsletterService.getService( ).getUnsubscriptionKey( strEmail ) ) )
         {
             SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_INVALID_MAIL_ERROR_MESSAGE,
                     SiteMessage.TYPE_ERROR );
@@ -396,6 +398,8 @@ public class NewsLetterRegistrationService
                 request.getParameter( NewsLetterConstants.MARK_SUBSCRIBER_EMAIL ) );
         urlItem.addParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_ID,
                 request.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_ID ) );
+        urlItem.addParameter( NewsLetterConstants.MARK_UNSUBSCRIBE_KEY,
+                request.getParameter( NewsLetterConstants.MARK_UNSUBSCRIBE_KEY ) );
         SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_CONFIRM_UNSUBSCRIPTION_ALERT_MESSAGE,
                 null, NewsLetterConstants.PROPERTY_CONFIRM_UNSUBSCRIPTION_TITLE_MESSAGE, urlItem.getUrl( ), null,
                 SiteMessage.TYPE_INFO );
