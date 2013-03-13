@@ -50,6 +50,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * The service that renders the archived newsletters
@@ -58,12 +60,12 @@ public final class NewsLetterArchiveService
 {
     private static final String REGEX_ID = "^[\\d]+$";
     private static final String TEMPLATE_VIEW_NEWSLETTER_ARCHIVE = "skin/plugins/newsletter/page_newsletter_archive.html";
-    private static NewsLetterArchiveService _singleton;
+    private static NewsLetterArchiveService _singleton = new NewsLetterArchiveService( );
 
     /**
      * Constructor
      */
-    private NewsLetterArchiveService(  )
+    private NewsLetterArchiveService( )
     {
         if ( _singleton == null )
         {
@@ -75,13 +77,8 @@ public final class NewsLetterArchiveService
      * Fetches the instance of the class
      * @return The singleton
      */
-    public static NewsLetterArchiveService getInstance(  )
+    public static NewsLetterArchiveService getInstance( )
     {
-        if ( _singleton == null )
-        {
-            _singleton = new NewsLetterArchiveService(  );
-        }
-
         return _singleton;
     }
 
@@ -92,8 +89,7 @@ public final class NewsLetterArchiveService
      * @param request The HTTP request.
      * @throws SiteMessageException If parameters are not correct
      */
-    public String getShowArchivePage( HttpServletRequest request )
-        throws SiteMessageException
+    public String getShowArchivePage( HttpServletRequest request ) throws SiteMessageException
     {
         Plugin plugin = PluginService.getPlugin( NewsLetterConstants.PLUGIN_NAME );
         String strSendingId = request.getParameter( NewsLetterConstants.PARAMETER_SENDING_ID );
@@ -102,25 +98,27 @@ public final class NewsLetterArchiveService
         if ( ( strSendingId == null ) || !strSendingId.matches( REGEX_ID ) )
         {
             SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_NO_NEWSLETTER_CHOSEN_TITLE_MESSAGE,
-                SiteMessage.TYPE_ERROR );
+                    SiteMessage.TYPE_ERROR );
+            return StringUtils.EMPTY;
         }
 
         int nSendingId = Integer.parseInt( strSendingId );
         SendingNewsLetter sending = SendingNewsLetterHome.findByPrimaryKey( nSendingId, plugin );
 
-        if ( ( sending == null ) || sending.getHtml(  ).equals( "" ) )
+        if ( ( sending == null ) || sending.getHtml( ).equals( "" ) )
         {
             SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_NO_NEWSLETTER_CHOSEN_TITLE_MESSAGE,
-                SiteMessage.TYPE_ERROR );
+                    SiteMessage.TYPE_ERROR );
+            return StringUtils.EMPTY;
         }
 
         Map<String, Object> model = new HashMap<String, Object>( );
         model.put( NewsLetterConstants.MARK_SENDING, sending );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_VIEW_NEWSLETTER_ARCHIVE,
-                request.getLocale(  ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_VIEW_NEWSLETTER_ARCHIVE, request.getLocale( ),
+                model );
         template.substitute( NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE, strBaseUrl );
 
-        return template.getHtml(  );
+        return template.getHtml( );
     }
 }

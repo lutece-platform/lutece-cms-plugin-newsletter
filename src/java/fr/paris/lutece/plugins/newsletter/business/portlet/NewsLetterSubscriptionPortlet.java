@@ -37,7 +37,6 @@ import fr.paris.lutece.plugins.newsletter.business.NewsLetter;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterHome;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterProperties;
 import fr.paris.lutece.plugins.newsletter.business.NewsletterPropertiesHome;
-import fr.paris.lutece.plugins.newsletter.util.NewsLetterConstants;
 import fr.paris.lutece.portal.business.portlet.Portlet;
 import fr.paris.lutece.portal.service.captcha.CaptchaSecurityService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
@@ -209,7 +208,7 @@ public class NewsLetterSubscriptionPortlet extends Portlet
                     + TAG_CDATA_END );
         }
 
-        if ( ( properties.getTOS( ) != null ) && ( properties.getTOS( ) != NewsLetterConstants.CONSTANT_EMPTY_STRING ) )
+        if ( StringUtils.isNotEmpty( properties.getTOS( ) ) )
         {
             XmlUtil.addElement( strXml, TAG_NEWSLETTER_TOS, "true" );
             XmlUtil.addElementHtml( strXml, TAG_NEWSLETTER_TOS_CONTENT, properties.getTOS( ) );

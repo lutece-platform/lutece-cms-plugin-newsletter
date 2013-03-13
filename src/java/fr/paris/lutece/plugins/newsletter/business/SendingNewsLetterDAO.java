@@ -49,8 +49,7 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
     private static final String SQL_QUERY_INSERT = "INSERT INTO newsletter_sending ( id_sending, id_newsletter , date_sending, subscriber_count, html, email_subject ) VALUES ( ?, ?, ?, ?, ?, ? )";
     private static final String SQL_QUERY_DELETE = "DELETE FROM newsletter_sending WHERE id_sending = ? ";
     private static final String SQL_QUERY_SELECT = "SELECT id_newsletter, date_sending, subscriber_count, html, email_subject FROM newsletter_sending WHERE id_sending = ? ";
-    private static final String SQL_QUERY_SELECT_LAST_SENDIND_BY_NEWSLETTER = " SELECT id_sending, id_newsletter, date_sending, subscriber_count, html, email_subject FROM newsletter_sending " +
-        "WHERE id_newsletter = ? " + "ORDER BY date_sending DESC";
+    private static final String SQL_QUERY_SELECT_LAST_SENDIND_BY_NEWSLETTER = " SELECT id_sending, id_newsletter, date_sending, subscriber_count, html, email_subject FROM newsletter_sending WHERE id_newsletter = ? ORDER BY date_sending DESC";
     private static final String SQL_QUERY_SELECT_ALL_SENDINDS = "SELECT id_sending, id_newsletter, date_sending, subscriber_count, html, email_subject FROM newsletter_sending ORDER BY date_sending DESC";
     private static final String SQL_QUERY_UPDATE = "UPDATE newsletter_sending SET date_sending = ? WHERE id_sending = ?";
     private static final String SQL_QUERY_CHECK_PRIMARY_KEY = "SELECT id_sending FROM newsletter_sending WHERE id_sending = ?";
@@ -61,7 +60,7 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
 
     /**
      * Insert a new record in the table.
-     *
+     * 
      * @param sending the object to be inserted
      * @param plugin the Plugin
      */
@@ -72,19 +71,19 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
 
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
 
-        daoUtil.setInt( 1, sending.getId(  ) );
-        daoUtil.setInt( 2, sending.getNewsLetterId(  ) );
-        daoUtil.setTimestamp( 3, sending.getDate(  ) );
-        daoUtil.setInt( 4, sending.getCountSubscribers(  ) );
-        daoUtil.setString( 5, sending.getHtml(  ) );
-        daoUtil.setString( 6, sending.getEmailSubject(  ) );
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.setInt( 1, sending.getId( ) );
+        daoUtil.setInt( 2, sending.getNewsLetterId( ) );
+        daoUtil.setTimestamp( 3, sending.getDate( ) );
+        daoUtil.setInt( 4, sending.getCountSubscribers( ) );
+        daoUtil.setString( 5, sending.getHtml( ) );
+        daoUtil.setString( 6, sending.getEmailSubject( ) );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
      * Delete the record in the database
-     *
+     * 
      * @param nSendingId the sending Identifier
      * @param plugin the Plugin
      */
@@ -92,13 +91,13 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
         daoUtil.setInt( 1, nSendingId );
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
      * Loads the data from the database
-     *
+     * 
      * @param nSendingId the sending identifier
      * @param plugin the Plugin
      * @return an object SendingNewsLetter
@@ -110,11 +109,11 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
 
         daoUtil.setInt( 1, nSendingId );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        if ( daoUtil.next(  ) )
+        if ( daoUtil.next( ) )
         {
-            sending = new SendingNewsLetter(  );
+            sending = new SendingNewsLetter( );
             sending.setId( nSendingId );
             sending.setNewsLetterId( daoUtil.getInt( 1 ) );
             sending.setDate( daoUtil.getTimestamp( 2 ) );
@@ -123,29 +122,29 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
             sending.setEmailSubject( daoUtil.getString( 5 ) );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return sending;
     }
 
     /**
      * Update the record in the table
-     *
+     * 
      * @param sending an instance of the class SendingNewsLetter
      * @param plugin the Plugin
      */
     public void store( SendingNewsLetter sending, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
-        daoUtil.setTimestamp( 1, sending.getDate(  ) );
-        daoUtil.setInt( 2, sending.getId(  ) );
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.setTimestamp( 1, sending.getDate( ) );
+        daoUtil.setInt( 2, sending.getId( ) );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
      * Check the unicity of a primary key
-     *
+     * 
      * @param nKey the identifier to check
      * @param plugin the Plugin
      * @return true if the identifier exist and false if not
@@ -154,23 +153,23 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_PRIMARY_KEY, plugin );
         daoUtil.setInt( 1, nKey );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        if ( !daoUtil.next(  ) )
+        if ( !daoUtil.next( ) )
         {
-            daoUtil.free(  );
+            daoUtil.free( );
 
             return false;
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return true;
     }
 
     /**
      * Generate a new primary key to add a new sending
-     *
+     * 
      * @param plugin the Plugin
      * @return the primary key
      */
@@ -179,9 +178,9 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PRIMARY_KEY, plugin );
         int nKey;
 
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        if ( !daoUtil.next(  ) )
+        if ( !daoUtil.next( ) )
         {
             // If the table is empty
             nKey = 1;
@@ -189,7 +188,7 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
 
         nKey = daoUtil.getInt( 1 ) + 1;
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return nKey;
     }
@@ -198,7 +197,8 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
      * Returns the last sending performed for the newsletter of given id
      * @param newsletterId the newsletter id for wich we need the last sending
      * @param plugin the plugin
-     * @return the last sending for the given newsletter id - null if no sending found
+     * @return the last sending for the given newsletter id - null if no sending
+     *         found
      */
     public SendingNewsLetter selectLastSendingForNewsletterId( int newsletterId, Plugin plugin )
     {
@@ -206,11 +206,11 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
 
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_LAST_SENDIND_BY_NEWSLETTER, plugin );
         daoUtil.setInt( 1, newsletterId );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        if ( daoUtil.next(  ) )
+        if ( daoUtil.next( ) )
         {
-            sending = new SendingNewsLetter(  );
+            sending = new SendingNewsLetter( );
             sending.setId( daoUtil.getInt( 1 ) );
             sending.setNewsLetterId( daoUtil.getInt( 2 ) );
             sending.setDate( daoUtil.getTimestamp( 3 ) );
@@ -219,7 +219,7 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
             sending.setEmailSubject( daoUtil.getString( 6 ) );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return sending;
     }
@@ -228,19 +228,20 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
      * Returns all the last sending performed for the newsletter of given id
      * @param newsletterId the newsletter id for wich we need the last sending
      * @param plugin the plugin
-     * @return the last sending for the given newsletter id - null if no sending found
+     * @return the last sending for the given newsletter id - null if no sending
+     *         found
      */
     public List<SendingNewsLetter> selectAllLastSendingForNewsletterId( int newsletterId, Plugin plugin )
     {
         SendingNewsLetter sending = null;
-        List<SendingNewsLetter> results = new ArrayList<SendingNewsLetter>(  );
+        List<SendingNewsLetter> results = new ArrayList<SendingNewsLetter>( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_LAST_SENDIND_BY_NEWSLETTER, plugin );
         daoUtil.setInt( 1, newsletterId );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
-            sending = new SendingNewsLetter(  );
+            sending = new SendingNewsLetter( );
             sending.setId( daoUtil.getInt( 1 ) );
             sending.setNewsLetterId( daoUtil.getInt( 2 ) );
             sending.setDate( daoUtil.getTimestamp( 3 ) );
@@ -251,27 +252,27 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
             results.add( sending );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return results;
     }
 
     /**
      * Returns all the sendings in the database.
-     *
+     * 
      * @param plugin the plugin
      * @return a list of SendingNewsLetter objects.
      */
     public List<SendingNewsLetter> findAllSendings( Plugin plugin )
     {
-        List<SendingNewsLetter> results = new ArrayList<SendingNewsLetter>(  );
+        List<SendingNewsLetter> results = new ArrayList<SendingNewsLetter>( );
 
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL_SENDINDS, plugin );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
-            SendingNewsLetter sending = new SendingNewsLetter(  );
+            SendingNewsLetter sending = new SendingNewsLetter( );
             sending.setId( daoUtil.getInt( 1 ) );
             sending.setNewsLetterId( daoUtil.getInt( 2 ) );
             sending.setDate( daoUtil.getTimestamp( 3 ) );
@@ -282,7 +283,7 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
             results.add( sending );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return results;
     }
@@ -295,15 +296,15 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
      */
     public ArrayList<SendingNewsLetter> findSendingsByIds( ArrayList<Integer> listId, Plugin plugin )
     {
-        ArrayList<SendingNewsLetter> results = new ArrayList<SendingNewsLetter>(  );
+        ArrayList<SendingNewsLetter> results = new ArrayList<SendingNewsLetter>( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL_SENDINDS, plugin );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
-            if ( listId.contains( new Integer( daoUtil.getInt( 1 ) ) ) )
+            if ( listId.contains( Integer.valueOf( daoUtil.getInt( 1 ) ) ) )
             {
-                SendingNewsLetter sending = new SendingNewsLetter(  );
+                SendingNewsLetter sending = new SendingNewsLetter( );
                 sending.setId( daoUtil.getInt( 1 ) );
                 sending.setNewsLetterId( daoUtil.getInt( 2 ) );
                 sending.setDate( daoUtil.getTimestamp( 3 ) );
@@ -315,7 +316,7 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
             }
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return results;
     }

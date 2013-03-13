@@ -48,7 +48,7 @@ public interface IAwaitingActivationDAO
      * @param nKey the generated key
      * @param plugin the plugin
      */
-    public void insert( int nIdUser, int nKey, Plugin plugin );
+    void insert( int nIdUser, int nKey, Plugin plugin );
 
     /**
      * Removes the entry
@@ -56,7 +56,7 @@ public interface IAwaitingActivationDAO
      * @param nKey the key
      * @param plugin the plugin
      */
-    public void delete( int nIdUser, int nKey, Plugin plugin );
+    void delete( int nIdUser, int nKey, Plugin plugin );
 
     /**
      * Checks if the pair user/key already exists.
@@ -65,5 +65,5 @@ public interface IAwaitingActivationDAO
      * @param plugin the plugin
      * @return <b>true</b> if the pair already exists, <b>false</b> otherwise.
      */
-    public boolean exists( int nIdUser, int nKey, Plugin plugin );
+    boolean exists( int nIdUser, int nKey, Plugin plugin );
 }

@@ -55,13 +55,13 @@ import org.w3c.tidy.Tidy;
 
 
 /**
- * This classes provides implementation to retrieve urls from specified tags on an HTML page.
+ * This classes provides implementation to retrieve urls from specified tags on
+ * an HTML page.
  */
 public class HtmlDomDocNewsletter
 {
     public static final String CONSTANT_STATIC_URL = "https?://[^/]+/";
     public static final String CONSTANT_PROTOCOL_DELIMITER = ":";
-    private static final String PROPERTY_LUTECE_ENCODING = "lutece.encoding";
 
     // Definition of some basic html elements
     /**
@@ -111,6 +111,8 @@ public class HtmlDomDocNewsletter
      */
     public static final ElementUrl ELEMENT_FORM;
 
+    private static final String PROPERTY_LUTECE_ENCODING = "lutece.encoding";
+
     static
     {
         ELEMENT_CSS = new ElementUrl( "link", "href", "rel", "stylesheet" );
@@ -125,14 +127,14 @@ public class HtmlDomDocNewsletter
 
     /**
      * Instantiates an HtmlDocument after having built the DOM tree.
-     *
+     * 
      * @param strHtml The Html code to be parsed.
      * @param strBaseUrl The Base url used to retrieve urls.
      */
     public HtmlDomDocNewsletter( String strHtml, String strBaseUrl )
     {
         // use of tidy to retrieve the DOM tree
-        Tidy tidy = new Tidy(  );
+        Tidy tidy = new Tidy( );
         tidy.setQuiet( true );
         tidy.setShowWarnings( false );
 
@@ -146,13 +148,12 @@ public class HtmlDomDocNewsletter
         }
         catch ( UnsupportedEncodingException e )
         {
-            AppLogService.error( "Error when parsing Html document (Newsletter) : UnsupporterEncodingException (" +
-                strEncoding + ")", e );
+            AppLogService.error( "Error when parsing Html document (Newsletter) : UnsupporterEncodingException ("
+                    + strEncoding + ")", e );
         }
 
         _strBaseUrl = ( strBaseUrl == null ) ? "" : strBaseUrl;
     }
-
 
     /**
      * Get the relatives urls of all html elements specified by elementType and
@@ -200,42 +201,50 @@ public class HtmlDomDocNewsletter
      * 
      * @return The String content
      */
-    public String getContent(  )
+    public String getContent( )
     {
         DOMSource domSource = new DOMSource( _content );
-        StringWriter writer = new StringWriter(  );
+        StringWriter writer = new StringWriter( );
         StreamResult result = new StreamResult( writer );
-        TransformerFactory tf = TransformerFactory.newInstance(  );
+        TransformerFactory tf = TransformerFactory.newInstance( );
         Transformer transformer;
 
         try
         {
-            transformer = tf.newTransformer(  );
+            transformer = tf.newTransformer( );
             transformer.transform( domSource, result );
         }
         catch ( TransformerConfigurationException e )
         {
-            AppLogService.error( e.getMessage(  ) );
+            AppLogService.error( e.getMessage( ) );
 
             return null;
         }
         catch ( TransformerException e )
         {
-            AppLogService.error( e.getMessage(  ) );
+            AppLogService.error( e.getMessage( ) );
 
             return null;
         }
 
-        String stringResult = writer.toString(  );
+        String stringResult = writer.toString( );
 
         return stringResult;
     }
-    
+
+    /**
+     * Get the document used by this instance
+     * @return The document used by this instance
+     */
     protected org.w3c.dom.Document getDomDocument( )
     {
         return _content;
     }
-    
+
+    /**
+     * Get the base url
+     * @return The base url
+     */
     protected String getBaseUrl( )
     {
         return _strBaseUrl;
@@ -253,15 +262,20 @@ public class HtmlDomDocNewsletter
 
         /**
          * Instanciates an ElementUrl
-         *
-         * @param strTagName the tag name to get (example: link, script, img, ...)
-         * @param strAttributeName the attribute name to get (example: src, href, ...)
+         * 
+         * @param strTagName the tag name to get (example: link, script, img,
+         *            ...)
+         * @param strAttributeName the attribute name to get (example: src,
+         *            href, ...)
          * @param strTestedAttributeName the attribute name to test
-         * @param strTestedAttributeValue the value of the attribute to test : if the value of the attribute strTestedAttributeName equals
-         * strTestedAttributeValue, then we get the element's url, else we do nothing.
+         * @param strTestedAttributeValue the value of the attribute to test :
+         *            if the value of the attribute strTestedAttributeName
+         *            equals
+         *            strTestedAttributeValue, then we get the element's url,
+         *            else we do nothing.
          */
         public ElementUrl( String strTagName, String strAttributeName, String strTestedAttributeName,
-            String strTestedAttributeValue )
+                String strTestedAttributeValue )
         {
             _strTagName = strTagName;
             _strAttributeName = strAttributeName;
@@ -271,40 +285,40 @@ public class HtmlDomDocNewsletter
 
         /**
          * Returns the attributeName
-         *
+         * 
          * @return the attributeName
          */
-        public String getAttributeName(  )
+        public String getAttributeName( )
         {
             return _strAttributeName;
         }
 
         /**
          * Returns the tagName
-         *
+         * 
          * @return the tagName
          */
-        public String getTagName(  )
+        public String getTagName( )
         {
             return _strTagName;
         }
 
         /**
          * Returns the testedAttributeName
-         *
+         * 
          * @return the testedAttributeName
          */
-        public String getTestedAttributeName(  )
+        public String getTestedAttributeName( )
         {
             return _strTestedAttributeName;
         }
 
         /**
          * Returns the testedAttributeValue
-         *
+         * 
          * @return the testedAttributeValue
          */
-        public String getTestedAttributeValue(  )
+        public String getTestedAttributeValue( )
         {
             return _strTestedAttributeValue;
         }

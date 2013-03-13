@@ -50,8 +50,6 @@ import java.util.Locale;
  */
 public class NewsletterResourceIdService extends ResourceIdService
 {
-    private static final String REGEX_ID = "^[\\d]+$";
-
     /** Permission for creating a newsletter */
     public static final String PERMISSION_ARCHIVE = "ARCHIVE";
 
@@ -81,6 +79,8 @@ public class NewsletterResourceIdService extends ResourceIdService
 
     /** Permission for adding Subscriber */
     public static final String PERMISSION_ADD_SUBSCRIBER = "ADD_SUBSCRIBERS";
+
+    private static final String REGEX_ID = "^[\\d]+$";
 
     //i18n properties
     private static final String PROPERTY_LABEL_RESOURCE_TYPE = "newsletter.newsletter.resourceType";

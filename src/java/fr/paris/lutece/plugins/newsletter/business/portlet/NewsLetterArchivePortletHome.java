@@ -42,12 +42,13 @@ import java.util.ArrayList;
 
 
 /**
- * This class provides instances management methods for NewsLetterArchivePortlet objects
+ * This class provides instances management methods for NewsLetterArchivePortlet
+ * objects
  */
 public class NewsLetterArchivePortletHome extends PortletHome
 {
     // This class implements the Singleton design pattern.
-    private static NewsLetterArchivePortletHome _singleton;
+    private static NewsLetterArchivePortletHome _singleton = new NewsLetterArchivePortletHome( );
 
     // Static variable pointed at the DAO instance
     private static INewsLetterArchivePortletDAO _dao = SpringContextService
@@ -56,7 +57,7 @@ public class NewsLetterArchivePortletHome extends PortletHome
     /**
      * Constructor
      */
-    public NewsLetterArchivePortletHome(  )
+    public NewsLetterArchivePortletHome( )
     {
         if ( _singleton == null )
         {
@@ -66,45 +67,40 @@ public class NewsLetterArchivePortletHome extends PortletHome
 
     /**
      * Returns the identifier of the portlet type
-     *
+     * 
      * @return the portlet type identifier
      */
-    public String getPortletTypeId(  )
+    public String getPortletTypeId( )
     {
-        String strCurrentClassName = this.getClass(  ).getName(  );
+        String strCurrentClassName = this.getClass( ).getName( );
         String strPortletTypeId = PortletTypeHome.getPortletTypeId( strCurrentClassName );
 
         return strPortletTypeId;
     }
 
     /**
-     * Returns the instance of  NewsLetterArchive Portlet
-     *
+     * Returns the instance of NewsLetterArchive Portlet
+     * 
      * @return the Archive Portlet instance
      */
-    public static PortletHome getInstance(  )
+    public static PortletHome getInstance( )
     {
-        if ( _singleton == null )
-        {
-            _singleton = new NewsLetterArchivePortletHome(  );
-        }
-
         return _singleton;
     }
 
     /**
      * Returns the instance of the portlet DAO singleton
-     *
+     * 
      * @return the instance of the DAO singleton
      */
-    public IPortletInterfaceDAO getDAO(  )
+    public IPortletInterfaceDAO getDAO( )
     {
         return _dao;
     }
 
     /**
      * Associates a new sending to a given portlet.
-     *
+     * 
      * @param nPortletId the identifier of the portlet.
      * @param nSendingId
      *            the identifier of the sending.
@@ -116,7 +112,7 @@ public class NewsLetterArchivePortletHome extends PortletHome
 
     /**
      * De-associate a sending from a given portlet.
-     *
+     * 
      * @param nPortletId
      *            the identifier of the portlet.
      * @param nSendingId
@@ -129,7 +125,7 @@ public class NewsLetterArchivePortletHome extends PortletHome
 
     /**
      * Returns all the sendings associated with a given portlet.
-     *
+     * 
      * @param nPortletId the identifier of the portlet.
      * @return a Set of Integer containing the identifiers.
      */

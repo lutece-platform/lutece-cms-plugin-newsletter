@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Home for FreeHtmlSection objects
  */
-public class FreeHtmlSectionHome
+public final class FreeHtmlSectionHome
 {
     private static IFreeHtmlSectionDAO _dao = SpringContextService.getBean( "newsletter.freeHtmlSectionDAO" );
 

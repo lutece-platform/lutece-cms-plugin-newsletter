@@ -51,7 +51,7 @@ public class NewsLetterSubscriptionPortletHome extends PortletHome
 
     // Static variable pointed at the DAO instance
     private static INewsLetterSubscriptionPortletDAO _dao = SpringContextService
-            .getBean( "newsletter.snewsLetterSubscriptionPortletDAO" );
+            .getBean( "newsletter.newsLetterSubscriptionPortletDAO" );
 
     /**
      * Returns the identifier of the portlet type

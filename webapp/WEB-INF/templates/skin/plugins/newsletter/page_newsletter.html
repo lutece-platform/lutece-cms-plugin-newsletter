@@ -6,55 +6,55 @@
                 <div class="alert alert-error">#i18n{newsletter.page_newsletter.page_newsletter.labelNoLetter}</div>
             <#else>
                 <form class="form" name="newsletter" action="jsp/site/Portal.jsp" method="post">
-                <input type="hidden" name="plugin_name" value="${plugin.name}" />
-                <input type="hidden" name="page" value="newsletter" />
-                <input type="hidden" name="action" value="register" />
-                <label for="email">#i18n{newsletter.page_newsletter.labelEmail}</label>
-                <input type="text" name="email" id="email" class="input-large" maxlength="100" />
-                <p class="lead">#i18n{newsletter.page_newsletter.labelChooseNewsletters}</p>
-                <#if newsletters_list?has_content>
-                <ul class="span10 unstyled">
-                    <#list newsletters_list as newsletter>
-                    <li>
-                        <label class="checkbox" for="newsletter_id_${newsletter.id}">
-                            <input type="checkbox" name="newsletter_id_${newsletter.id}" id="newsletter_id_${newsletter.id}" value="${newsletter.id}" checked="checked" />
-                            ${newsletter.name}
-                        </label>
-                        ${newsletter.description}
-                    </li>
-                    </#list>
-                </ul>
-                </#if>
-                <#if properties.TOS ??>
-                <label class="checkbox" for="tos">
-                    <input type="checkbox" name="tos" id="tos" value="1" /> #i18n{newsletter.page_newsletter.requirement}
-                    <!-- a id="requirement" href="jsp/site/RunStandaloneApp.jsp?page=newsletter&view_requirement=view_requirement"  target="_blank"> #i18n{newsletter.page_newsletter.requirement}</a -->
-                    <a href="#requirement" role="button" class="btn btn-link" data-toggle="modal"> #i18n{newsletter.page_newsletter.requirement}</a>
-                </label>
-                </#if>	
-                <#if properties.captchaActive>
-                    <#if is_active_captcha>
-                        <div >${captcha}</div>
-                    </#if>
-                </#if>
-                <button class="btn btn-primary btn-small" type="submit">
-                    #i18n{newsletter.page_newsletter.buttonSubscribe} 
-                </button>
-            </form>
+	                <input type="hidden" name="plugin_name" value="${plugin.name}" />
+	                <input type="hidden" name="page" value="newsletter" />
+	                <input type="hidden" name="action" value="register" />
+	                <label for="email">#i18n{newsletter.page_newsletter.labelEmail}</label>
+	                <input type="text" name="email" id="email" class="input-large" maxlength="100" />
+	                <p class="lead">#i18n{newsletter.page_newsletter.labelChooseNewsletters}</p>
+	                <#if newsletters_list?has_content>
+		                <ul class="span10 unstyled">
+		                    <#list newsletters_list as newsletter>
+		                    <li>
+		                        <label class="checkbox" for="newsletter_id_${newsletter.id}">
+		                            <input type="checkbox" name="newsletter_id_${newsletter.id}" id="newsletter_id_${newsletter.id}" value="${newsletter.id}" checked="checked" />
+		                            ${newsletter.name}
+		                        </label>
+		                        ${newsletter.description}
+		                    </li>
+		                    </#list>
+		                </ul>
+	                </#if>
+	                <#if properties.TOS ??>
+		                <label class="checkbox" for="tos">
+		                    <input type="checkbox" name="tos" id="tos" value="1" /> #i18n{newsletter.page_newsletter.requirement}
+		                    <!-- a id="requirement" href="jsp/site/RunStandaloneApp.jsp?page=newsletter&view_requirement=view_requirement"  target="_blank"> #i18n{newsletter.page_newsletter.requirement}</a -->
+		                    <a href="#requirement" role="button" class="btn btn-link" data-toggle="modal"> #i18n{newsletter.page_newsletter.requirement}</a>
+		                </label>
+	                </#if>	
+	                <#if properties.captchaActive>
+	                    <#if is_active_captcha>
+	                        <div >${captcha}</div>
+	                    </#if>
+	                </#if>
+	                <button class="btn btn-primary btn-small" type="submit">
+	                    #i18n{newsletter.page_newsletter.buttonSubscribe} 
+	                </button>
+            	</form>  	
+			</#if>
         </fieldset>
         <!-- Modal -->
         <div id="requirement" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="requirementLabel" aria-hidden="true">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">ï¿½</button>
             <h3 id="requirementLabel">#i18n{newsletter.page_newsletter.tos.header}</h3>
           </div>
-          <div class="modal-body">${tos}</div>
+          <div class="modal-body">${properties.TOS!}</div>
           <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
           </div>
         </div>
     </div>  	
-</div>  	
-</#if>
+</div>
 
 

@@ -41,7 +41,7 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
  *
  *  This class provides instances management methods (create, find, ...) for awaiting activations
  */
-public class AwaitingActivationHome
+public final class AwaitingActivationHome
 {
     // Static variable pointed at the DAO instance
     private static IAwaitingActivationDAO _dao = SpringContextService.getBean( "newsletter.awaitingActivationDAO" );

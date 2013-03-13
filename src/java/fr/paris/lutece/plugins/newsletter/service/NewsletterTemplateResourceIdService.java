@@ -46,12 +46,11 @@ import java.util.Locale;
 
 
 /**
- * Resource Id service for RBAC features to control access to newsletter templates
+ * Resource Id service for RBAC features to control access to newsletter
+ * templates
  */
 public class NewsletterTemplateResourceIdService extends ResourceIdService
 {
-    private static final String REGEX_ID = "^[\\d]+$";
-
     /** Permission for creating a newsletter template */
     public static final String PERMISSION_CREATE = "CREATE";
 
@@ -61,6 +60,8 @@ public class NewsletterTemplateResourceIdService extends ResourceIdService
     /** Permission for modifying a newsletter template */
     public static final String PERMISSION_MODIFY = "MODIFY";
 
+    private static final String REGEX_ID = "^[\\d]+$";
+
     //i18n properties
     private static final String PROPERTY_LABEL_RESOURCE_TYPE = "newsletter.newsletter_template.resourceType";
     private static final String PROPERTY_LABEL_CREATE = "newsletter.permission.newsletter_template.label.create";
@@ -68,7 +69,7 @@ public class NewsletterTemplateResourceIdService extends ResourceIdService
     private static final String PROPERTY_LABEL_MODIFY = "newsletter.permission.newsletter_template.label.modify";
 
     /** Creates a new instance of NewsletterTemplateResourceIdService */
-    public NewsletterTemplateResourceIdService(  )
+    public NewsletterTemplateResourceIdService( )
     {
         setPluginName( NewsletterPlugin.PLUGIN_NAME );
     }
@@ -76,25 +77,25 @@ public class NewsletterTemplateResourceIdService extends ResourceIdService
     /**
      * Initializes the service
      */
-    public void register(  )
+    public void register( )
     {
-        ResourceType rt = new ResourceType(  );
-        rt.setResourceIdServiceClass( NewsletterTemplateResourceIdService.class.getName(  ) );
+        ResourceType rt = new ResourceType( );
+        rt.setResourceIdServiceClass( NewsletterTemplateResourceIdService.class.getName( ) );
         rt.setPluginName( NewsletterPlugin.PLUGIN_NAME );
         rt.setResourceTypeKey( NewsLetterTemplate.RESOURCE_TYPE );
         rt.setResourceTypeLabelKey( PROPERTY_LABEL_RESOURCE_TYPE );
 
-        Permission p = new Permission(  );
+        Permission p = new Permission( );
         p.setPermissionKey( PERMISSION_CREATE );
         p.setPermissionTitleKey( PROPERTY_LABEL_CREATE );
         rt.registerPermission( p );
 
-        p = new Permission(  );
+        p = new Permission( );
         p.setPermissionKey( PERMISSION_DELETE );
         p.setPermissionTitleKey( PROPERTY_LABEL_DELETE );
         rt.registerPermission( p );
 
-        p = new Permission(  );
+        p = new Permission( );
         p.setPermissionKey( PERMISSION_MODIFY );
         p.setPermissionTitleKey( PROPERTY_LABEL_MODIFY );
         rt.registerPermission( p );
@@ -128,6 +129,6 @@ public class NewsletterTemplateResourceIdService extends ResourceIdService
         NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome.findByPrimaryKey( Integer.parseInt( strId ),
                 PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
 
-        return ( newsletterTemplate != null ) ? newsletterTemplate.getDescription(  ) : null;
+        return ( newsletterTemplate != null ) ? newsletterTemplate.getDescription( ) : null;
     }
 }

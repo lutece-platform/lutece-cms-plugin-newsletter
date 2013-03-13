@@ -41,7 +41,8 @@ import java.util.Set;
 
 
 /**
- * This class provides Data Access methods for NewsLetterSubscriptionPortlet objects
+ * This class provides Data Access methods for NewsLetterSubscriptionPortlet
+ * objects
  */
 public final class NewsLetterSubscriptionPortletDAO implements INewsLetterSubscriptionPortletDAO
 {
@@ -57,7 +58,7 @@ public final class NewsLetterSubscriptionPortletDAO implements INewsLetterSubscr
 
     /**
      * Inserts a new record in the table. Not implemented.
-     *
+     * 
      * @param portlet
      *            the object to be inserted
      */
@@ -68,47 +69,47 @@ public final class NewsLetterSubscriptionPortletDAO implements INewsLetterSubscr
 
     /**
      * Deletes a record from the table.
-     *
+     * 
      * @param nPortletId the portlet id
-     *
+     * 
      */
     public void delete( int nPortletId )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE );
         daoUtil.setInt( 1, nPortletId );
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
      * Loads the data of the portlet from the table.
-     *
+     * 
      * @param nPortletId the portlet id
      * @return the Portlet object
      */
     public Portlet load( int nPortletId )
     {
-        NewsLetterSubscriptionPortlet portlet = new NewsLetterSubscriptionPortlet(  );
+        NewsLetterSubscriptionPortlet portlet = new NewsLetterSubscriptionPortlet( );
 
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT );
 
         daoUtil.setInt( 1, nPortletId );
 
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        if ( daoUtil.next(  ) )
+        if ( daoUtil.next( ) )
         {
             portlet.setId( nPortletId );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return portlet;
     }
 
     /**
      * Updates the record in the table. Not implemented.
-     *
+     * 
      * @param portlet
      *            the instance of Portlet class to be updated
      */
@@ -119,7 +120,7 @@ public final class NewsLetterSubscriptionPortletDAO implements INewsLetterSubscr
 
     /**
      * Associates a new subscription to a given portlet.
-     *
+     * 
      * @param nPortletId
      *            the identifier of the portlet.
      * @param nNewsletterId
@@ -131,13 +132,13 @@ public final class NewsLetterSubscriptionPortletDAO implements INewsLetterSubscr
         daoUtil.setInt( 1, nPortletId );
         daoUtil.setInt( 2, nNewsletterId );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
      * De-associate a subscription from a given portlet.
-     *
+     * 
      * @param nPortletId
      *            the identifier of the portlet.
      * @param nNewsletterId
@@ -149,13 +150,13 @@ public final class NewsLetterSubscriptionPortletDAO implements INewsLetterSubscr
         daoUtil.setInt( 1, nPortletId );
         daoUtil.setInt( 2, nNewsletterId );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
      * Returns all the newsletters associated to a given portlet.
-     *
+     * 
      * @param nPortletId
      *            the identifier of the portlet.
      * @return a Set of Integer objects containing the identifers of the
@@ -163,18 +164,18 @@ public final class NewsLetterSubscriptionPortletDAO implements INewsLetterSubscr
      */
     public Set<Integer> findSelectedNewsletters( int nPortletId )
     {
-        HashSet<Integer> results = new HashSet<Integer>(  );
+        HashSet<Integer> results = new HashSet<Integer>( );
 
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_SUBSCRIPTION_BY_PORTLET );
         daoUtil.setInt( 1, nPortletId );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
-            results.add( new Integer( daoUtil.getInt( 1 ) ) );
+            results.add( Integer.valueOf( daoUtil.getInt( 1 ) ) );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return results;
     }

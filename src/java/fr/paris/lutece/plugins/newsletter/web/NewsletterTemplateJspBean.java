@@ -133,7 +133,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
             newsletterTemplateDisplay.put( MARK_NEWSLETTER_TEMPLATE_ALLOW_MODIFICATION, RBACService.isAuthorized(
                     newsletterTemplate, NewsletterTemplateResourceIdService.PERMISSION_MODIFY, getUser( ) ) );
 
-            //The workgroup description is needed for coherence and not the key
+            // The workgroup description is needed for coherence and not the key
             if ( newsletterTemplate.getWorkgroup( ).equals( NewsLetterConstants.ALL_GROUPS ) )
             {
                 newsletterTemplateDisplay.put( MARK_NEWSLETTER_TEMPLATE_WORKGROUP_DESCRIPTION,
@@ -210,86 +210,100 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                     + AppPropertiesService.getProperty( NewsLetterConstants.PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE );
 
             // create the multipart request
-            MultipartHttpServletRequest multi = (MultipartHttpServletRequest) request;
-
-            // Mandatory fields
-            String strSectionType = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_TYPE );
-            String strDescription = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_NAME );
-            String strWorkgroup = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_WORKGROUP );
-
-            if ( StringUtils.isEmpty( strWorkgroup ) )
+            if ( request instanceof MultipartHttpServletRequest )
             {
-                return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+                MultipartHttpServletRequest multi = (MultipartHttpServletRequest) request;
+
+                // Mandatory fields
+                String strSectionType = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_TYPE );
+                String strDescription = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_NAME );
+                String strWorkgroup = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_WORKGROUP );
+
+                if ( StringUtils.isEmpty( strWorkgroup ) )
+                {
+                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
+                            AdminMessage.TYPE_STOP );
+                }
+
+                if ( StringUtils.isEmpty( strSectionType ) )
+                {
+                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
+                            AdminMessage.TYPE_STOP );
+                }
+
+                if ( StringUtils.isEmpty( strDescription ) )
+                {
+                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
+                            AdminMessage.TYPE_STOP );
+                }
+
+                FileItem imageItem = multi.getFile( PARAMETER_TEMPLATE_PICTURE );
+                if ( imageItem == null )
+                {
+                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
+                            AdminMessage.TYPE_STOP );
+                }
+                String strImageFileName = UploadUtil.cleanFileName( imageItem.getName( ) );
+
+                if ( StringUtils.isEmpty( strImageFileName ) )
+                {
+                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
+                            AdminMessage.TYPE_STOP );
+                }
+
+                // create the directory if it doesn't exist
+                if ( !new File( strPathImageNewsletterTemplate ).exists( ) )
+                {
+                    File fDirectory = new File( strPathImageNewsletterTemplate );
+                    if ( !fDirectory.exists( ) )
+                    {
+                        fDirectory.mkdir( );
+                    }
+                }
+
+                File fileImage = new File( strPathImageNewsletterTemplate + File.separator + strImageFileName );
+
+                if ( fileImage.exists( ) )
+                {
+                    return AdminMessageService.getMessageUrl( request, MESSAGE_IMAGE_FILE_ALREADY_EXISTS,
+                            AdminMessage.TYPE_STOP );
+                }
+
+                FileItem modelItem = multi.getFile( PARAMETER_TEMPLATE_FILE );
+                if ( modelItem == null )
+                {
+                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
+                            AdminMessage.TYPE_STOP );
+                }
+                String strTemplateFileName = UploadUtil.cleanFileName( modelItem.getName( ) );
+
+                if ( StringUtils.isEmpty( strTemplateFileName ) )
+                {
+                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
+                            AdminMessage.TYPE_STOP );
+                }
+
+                File fileTemplate = new File( strPathFileNewsletterTemplate + File.separator + strTemplateFileName );
+
+                if ( fileTemplate.exists( ) )
+                {
+                    return AdminMessageService.getMessageUrl( request, MESSAGE_FILE_ALREADY_EXISTS,
+                            AdminMessage.TYPE_STOP );
+                }
+
+                // if files are ok, save them
+                imageItem.write( fileImage );
+                newsletterTemplate.setPicture( strImageFileName );
+
+                modelItem.write( fileTemplate );
+                newsletterTemplate.setFileName( strTemplateFileName );
+
+                // Complete the newsLetterTemplate
+                newsletterTemplate.setDescription( strDescription );
+                newsletterTemplate.setSectionType( strSectionType );
+                newsletterTemplate.setWorkgroup( strWorkgroup );
+                NewsLetterTemplateHome.create( newsletterTemplate, getPlugin( ) );
             }
-
-            if ( StringUtils.isEmpty( strSectionType ) )
-            {
-                return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
-            }
-
-            if ( StringUtils.isEmpty( strDescription ) )
-            {
-                return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
-            }
-
-            FileItem imageItem = multi.getFile( PARAMETER_TEMPLATE_PICTURE );
-            if ( imageItem == null )
-            {
-                return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
-            }
-            String strImageFileName = UploadUtil.cleanFileName( imageItem.getName( ) );
-
-            if ( StringUtils.isEmpty( strImageFileName ) )
-            {
-                return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
-            }
-
-            //create the directory if it doesn't exist
-            if ( !new File( strPathImageNewsletterTemplate ).exists( ) )
-            {
-                File fDirectory = new File( strPathImageNewsletterTemplate );
-                fDirectory.mkdir( );
-            }
-
-            File fileImage = new File( strPathImageNewsletterTemplate + File.separator + strImageFileName );
-
-            if ( fileImage.exists( ) )
-            {
-                return AdminMessageService.getMessageUrl( request, MESSAGE_IMAGE_FILE_ALREADY_EXISTS,
-                        AdminMessage.TYPE_STOP );
-            }
-
-            FileItem modelItem = multi.getFile( PARAMETER_TEMPLATE_FILE );
-            if ( modelItem == null )
-            {
-                return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
-            }
-            String strTemplateFileName = UploadUtil.cleanFileName( modelItem.getName( ) );
-
-            if ( StringUtils.isEmpty( strTemplateFileName ) )
-            {
-                return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
-            }
-
-            File fileTemplate = new File( strPathFileNewsletterTemplate + File.separator + strTemplateFileName );
-
-            if ( fileTemplate.exists( ) )
-            {
-                return AdminMessageService.getMessageUrl( request, MESSAGE_FILE_ALREADY_EXISTS, AdminMessage.TYPE_STOP );
-            }
-
-            //if files are ok, save them
-            imageItem.write( fileImage );
-            newsletterTemplate.setPicture( strImageFileName );
-
-            modelItem.write( fileTemplate );
-            newsletterTemplate.setFileName( strTemplateFileName );
-
-            // Complete the newsLetterTemplate
-            newsletterTemplate.setDescription( strDescription );
-            newsletterTemplate.setSectionType( strSectionType );
-            newsletterTemplate.setWorkgroup( strWorkgroup );
-            NewsLetterTemplateHome.create( newsletterTemplate, getPlugin( ) );
         }
         catch ( Exception e )
         {
@@ -352,100 +366,107 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                     + AppPropertiesService.getProperty( NewsLetterConstants.PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE );
 
             // create the multipart request
-            MultipartHttpServletRequest multi = (MultipartHttpServletRequest) request;
-
-            // creation of the NewsLetterTemplate
-            NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome.findByPrimaryKey(
-                    Integer.parseInt( multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID ) ),
-                    getPlugin( ) );
-
-            //Workgroup & RBAC permissions
-            if ( !AdminWorkgroupService.isAuthorized( newsletterTemplate, getUser( ) )
-                    || !RBACService.isAuthorized( NewsLetterTemplate.RESOURCE_TYPE,
-                            Integer.toString( newsletterTemplate.getId( ) ),
-                            NewsletterTemplateResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+            if ( request instanceof MultipartHttpServletRequest )
             {
-                return AdminMessageService
-                        .getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
-            }
+                MultipartHttpServletRequest multi = (MultipartHttpServletRequest) request;
 
-            // Mandatory fields
-            String strType = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_TYPE );
-            String strDescription = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_NAME );
-            String strWorkgroup = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_WORKGROUP );
+                // creation of the NewsLetterTemplate
+                NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome.findByPrimaryKey(
+                        Integer.parseInt( multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID ) ),
+                        getPlugin( ) );
 
-            if ( StringUtils.isEmpty( strDescription ) )
-            {
-                return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
-            }
-
-            if ( StringUtils.isEmpty( strWorkgroup ) )
-            {
-                return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
-            }
-
-            // Names of the old files
-            String strOldFileName = newsletterTemplate.getFileName( );
-            String strOldImageName = newsletterTemplate.getPicture( );
-
-            FileItem imageItem = multi.getFile( "newsletter_template_new_picture" ); //Todo
-            String strImageFileName = null;
-            File fileImage = null;
-
-            if ( ( imageItem != null ) && ( imageItem.getSize( ) != 0 ) )
-            {
-                strImageFileName = UploadUtil.cleanFileName( imageItem.getName( ) );
-
-                String strFullPathNewImageFileName = strPathImageNewsletterTemplate + File.separator + strImageFileName;
-                String strFullPathOldImageFileName = strPathImageNewsletterTemplate + File.separator + strOldImageName;
-                fileImage = new File( strFullPathNewImageFileName );
-
-                if ( fileImage.exists( ) && !( strFullPathNewImageFileName ).equals( strFullPathOldImageFileName ) )
+                //Workgroup & RBAC permissions
+                if ( !AdminWorkgroupService.isAuthorized( newsletterTemplate, getUser( ) )
+                        || !RBACService.isAuthorized( NewsLetterTemplate.RESOURCE_TYPE,
+                                Integer.toString( newsletterTemplate.getId( ) ),
+                                NewsletterTemplateResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
                 {
-                    return AdminMessageService.getMessageUrl( request, MESSAGE_IMAGE_FILE_ALREADY_EXISTS,
+                    return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED,
+                            AdminMessage.TYPE_ERROR );
+                }
+
+                // Mandatory fields
+                String strType = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_TYPE );
+                String strDescription = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_NAME );
+                String strWorkgroup = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_WORKGROUP );
+
+                if ( StringUtils.isEmpty( strDescription ) )
+                {
+                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
                             AdminMessage.TYPE_STOP );
                 }
 
-                // we delete the old picture
-                File oldImageFile = new File( strFullPathOldImageFileName );
-                oldImageFile.delete( );
-            }
-
-            FileItem modelItem = multi.getFile( "newsletter_template_new_file" );
-
-            if ( ( modelItem != null ) && ( modelItem.getSize( ) != 0 ) )
-            {
-                String strFileName = UploadUtil.cleanFileName( modelItem.getName( ) );
-                String strFullPathNewFileName = strPathFileNewsletterTemplate + File.separator + strFileName;
-                String strFullPathOldFileName = strPathFileNewsletterTemplate + File.separator + strOldFileName;
-                File fileTemplate = new File( strFullPathNewFileName );
-
-                if ( fileTemplate.exists( ) && !( strFullPathNewFileName ).equals( strFullPathOldFileName ) )
+                if ( StringUtils.isEmpty( strWorkgroup ) )
                 {
-                    return AdminMessageService.getMessageUrl( request, MESSAGE_FILE_ALREADY_EXISTS,
+                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
                             AdminMessage.TYPE_STOP );
                 }
 
-                // we delete the old file
-                File oldFile = new File( strFullPathOldFileName );
-                oldFile.delete( );
+                // Names of the old files
+                String strOldFileName = newsletterTemplate.getFileName( );
+                String strOldImageName = newsletterTemplate.getPicture( );
 
-                modelItem.write( fileTemplate );
-                newsletterTemplate.setFileName( strFileName );
+                FileItem imageItem = multi.getFile( "newsletter_template_new_picture" ); //Todo
+                String strImageFileName = null;
+                File fileImage = null;
+
+                if ( ( imageItem != null ) && ( imageItem.getSize( ) != 0 ) )
+                {
+                    strImageFileName = UploadUtil.cleanFileName( imageItem.getName( ) );
+
+                    String strFullPathNewImageFileName = strPathImageNewsletterTemplate + File.separator
+                            + strImageFileName;
+                    String strFullPathOldImageFileName = strPathImageNewsletterTemplate + File.separator
+                            + strOldImageName;
+                    fileImage = new File( strFullPathNewImageFileName );
+
+                    if ( fileImage.exists( ) && !( strFullPathNewImageFileName ).equals( strFullPathOldImageFileName ) )
+                    {
+                        return AdminMessageService.getMessageUrl( request, MESSAGE_IMAGE_FILE_ALREADY_EXISTS,
+                                AdminMessage.TYPE_STOP );
+                    }
+
+                    // we delete the old picture
+                    File oldImageFile = new File( strFullPathOldImageFileName );
+                    oldImageFile.delete( );
+                }
+
+                FileItem modelItem = multi.getFile( "newsletter_template_new_file" );
+
+                if ( ( modelItem != null ) && ( modelItem.getSize( ) != 0 ) )
+                {
+                    String strFileName = UploadUtil.cleanFileName( modelItem.getName( ) );
+                    String strFullPathNewFileName = strPathFileNewsletterTemplate + File.separator + strFileName;
+                    String strFullPathOldFileName = strPathFileNewsletterTemplate + File.separator + strOldFileName;
+                    File fileTemplate = new File( strFullPathNewFileName );
+
+                    if ( fileTemplate.exists( ) && !( strFullPathNewFileName ).equals( strFullPathOldFileName ) )
+                    {
+                        return AdminMessageService.getMessageUrl( request, MESSAGE_FILE_ALREADY_EXISTS,
+                                AdminMessage.TYPE_STOP );
+                    }
+
+                    // we delete the old file
+                    File oldFile = new File( strFullPathOldFileName );
+                    oldFile.delete( );
+
+                    modelItem.write( fileTemplate );
+                    newsletterTemplate.setFileName( strFileName );
+                }
+
+                //if the two files are ok, write them
+                if ( imageItem != null && fileImage != null && strImageFileName != null )
+                {
+                    imageItem.write( fileImage );
+                    newsletterTemplate.setPicture( strImageFileName );
+                }
+
+                // Complete the newsLetterTemplate
+                newsletterTemplate.setDescription( strDescription );
+                newsletterTemplate.setSectionType( strType );
+                newsletterTemplate.setWorkgroup( strWorkgroup );
+                NewsLetterTemplateHome.update( newsletterTemplate, getPlugin( ) );
             }
-
-            //if the two files are ok, write them
-            if ( imageItem != null && fileImage != null && strImageFileName != null )
-            {
-                imageItem.write( fileImage );
-                newsletterTemplate.setPicture( strImageFileName );
-            }
-
-            // Complete the newsLetterTemplate
-            newsletterTemplate.setDescription( strDescription );
-            newsletterTemplate.setSectionType( strType );
-            newsletterTemplate.setWorkgroup( strWorkgroup );
-            NewsLetterTemplateHome.update( newsletterTemplate, getPlugin( ) );
         }
         catch ( IOException io )
         {
@@ -499,12 +520,12 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 fileReader = new BufferedReader( new FileReader( strPathFileNewsletterTemplate + File.separator
                         + strFileName ) );
 
-                String strSource = StringUtils.EMPTY;
+                StringBuilder sbSource = new StringBuilder( );
                 String line = fileReader.readLine( );
 
                 while ( line != null )
                 {
-                    strSource += ( line + "\n" );
+                    sbSource.append( line + "\n" );
                     line = fileReader.readLine( );
                 }
 
@@ -513,7 +534,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 model.put( NewsLetterConstants.MARK_TEMPLATE_TYPE,
                         buildTemplateTypeList( AdminUserService.getLocale( request ) ) );
 
-                model.put( NewsLetterConstants.MARK_TEMPLATE_SOURCE, strSource );
+                model.put( NewsLetterConstants.MARK_TEMPLATE_SOURCE, sbSource.toString( ) );
                 model.put( NewsLetterConstants.MARK_TEMPLATE_FILE_NAME, strFileName );
                 model.put( NewsLetterConstants.MARK_TEMPLATE, newsletterTemplate );
             }
@@ -562,60 +583,64 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                     + AppPropertiesService.getProperty( NewsLetterConstants.PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE );
 
             // create the multipart request
-            MultipartHttpServletRequest multi = (MultipartHttpServletRequest) request;
-
-            // creation of the NewsLetterTemplate
-            NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome.findByPrimaryKey(
-                    Integer.parseInt( multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID ) ),
-                    getPlugin( ) );
-
-            //Workgroup & RBAC permissions
-            if ( !AdminWorkgroupService.isAuthorized( newsletterTemplate, getUser( ) )
-                    || !RBACService.isAuthorized( NewsLetterTemplate.RESOURCE_TYPE,
-                            Integer.toString( newsletterTemplate.getId( ) ),
-                            NewsletterTemplateResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+            if ( request instanceof MultipartHttpServletRequest )
             {
-                return AdminMessageService
-                        .getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
+                MultipartHttpServletRequest multi = (MultipartHttpServletRequest) request;
+
+                // creation of the NewsLetterTemplate
+                NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome.findByPrimaryKey(
+                        Integer.parseInt( multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID ) ),
+                        getPlugin( ) );
+
+                //Workgroup & RBAC permissions
+                if ( !AdminWorkgroupService.isAuthorized( newsletterTemplate, getUser( ) )
+                        || !RBACService.isAuthorized( NewsLetterTemplate.RESOURCE_TYPE,
+                                Integer.toString( newsletterTemplate.getId( ) ),
+                                NewsletterTemplateResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+                {
+                    return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED,
+                            AdminMessage.TYPE_ERROR );
+                }
+
+                // Mandatory fields
+                String strType = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_TYPE );
+                String strDescription = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_NAME );
+
+                if ( StringUtils.isEmpty( strDescription ) )
+                {
+                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
+                            AdminMessage.TYPE_STOP );
+                }
+
+                // Names of the old files
+                String strOldFileName = newsletterTemplate.getFileName( );
+                String strOldImageName = newsletterTemplate.getPicture( );
+
+                FileItem imageItem = multi.getFile( "newsletter_template_new_picture" );
+
+                if ( ( imageItem != null ) && ( imageItem.getSize( ) != 0 ) )
+                {
+                    String strFileName = UploadUtil.cleanFileName( imageItem.getName( ) );
+                    imageItem.write( new File( strPathImageNewsletterTemplate + File.separator + strFileName ) );
+                    newsletterTemplate.setPicture( strFileName );
+
+                    // we delete the old picture
+                    File oldImageFile = new File( strPathImageNewsletterTemplate + File.separator + strOldImageName );
+                    oldImageFile.delete( );
+                }
+
+                // Writes the new content of the file.
+                String fileContent = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_SOURCE );
+
+                FileWriter fileWriter = new FileWriter( strPathFileNewsletterTemplate + File.separator + strOldFileName );
+                fileWriter.write( fileContent );
+                fileWriter.close( );
+
+                // Complete the newsLetterTemplate
+                newsletterTemplate.setDescription( strDescription );
+                newsletterTemplate.setSectionType( strType );
+                NewsLetterTemplateHome.update( newsletterTemplate, getPlugin( ) );
             }
-
-            // Mandatory fields
-            String strType = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_TYPE );
-            String strDescription = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_NAME );
-
-            if ( StringUtils.isEmpty( strDescription ) )
-            {
-                return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
-            }
-
-            // Names of the old files
-            String strOldFileName = newsletterTemplate.getFileName( );
-            String strOldImageName = newsletterTemplate.getPicture( );
-
-            FileItem imageItem = multi.getFile( "newsletter_template_new_picture" );
-
-            if ( ( imageItem != null ) && ( imageItem.getSize( ) != 0 ) )
-            {
-                String strFileName = UploadUtil.cleanFileName( imageItem.getName( ) );
-                imageItem.write( new File( strPathImageNewsletterTemplate + File.separator + strFileName ) );
-                newsletterTemplate.setPicture( strFileName );
-
-                // we delete the old picture
-                File oldImageFile = new File( strPathImageNewsletterTemplate + File.separator + strOldImageName );
-                oldImageFile.delete( );
-            }
-
-            // Writes the new content of the file.
-            String fileContent = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_SOURCE );
-
-            FileWriter fileWriter = new FileWriter( strPathFileNewsletterTemplate + File.separator + strOldFileName );
-            fileWriter.write( fileContent );
-            fileWriter.close( );
-
-            // Complete the newsLetterTemplate
-            newsletterTemplate.setDescription( strDescription );
-            newsletterTemplate.setSectionType( strType );
-            NewsLetterTemplateHome.update( newsletterTemplate, getPlugin( ) );
         }
         catch ( IOException io )
         {
@@ -730,7 +755,6 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
 
     /**
      * Build a radio buttons list of template types from properties
-     * @param strCheckedType the element to be selected
      * @param locale The locale
      * @return the html code for the radio buttons list
      */
@@ -741,12 +765,6 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
         refItemTemplate.setCode( NewsLetterTemplate.RESOURCE_TYPE );
         refItemTemplate.setName( I18nService.getLocalizedString( MESSAGE_NEWSLETTER_TEMPLATE, locale ) );
         refTemplateTypeList.add( 0, refItemTemplate );
-
-        //        refTemplateTypeList.addItem( NewsLetterTemplate.CONSTANT_ID_NEWSLETTER,
-        //                NewsLetterTemplate.TEMPLATE_NAMES[NewsLetterTemplate.CONSTANT_ID_NEWSLETTER] );
-        //        refTemplateTypeList.addItem( NewsLetterTemplate.CONSTANT_ID_DOCUMENT,
-        //                NewsLetterTemplate.TEMPLATE_NAMES[NewsLetterTemplate.CONSTANT_ID_DOCUMENT] );
-        //        refTemplateTypeList.checkItems( new String[] { strCheckedType } );
 
         return refTemplateTypeList;
     }

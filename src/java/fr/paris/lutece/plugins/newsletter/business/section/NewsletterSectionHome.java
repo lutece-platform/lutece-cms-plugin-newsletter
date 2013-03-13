@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Home for NewsletterSection objects
  */
-public class NewsletterSectionHome
+public final class NewsletterSectionHome
 {
     private static INewsletterSectionDAO _dao = SpringContextService.getBean( "newsletter.newsletterSectionDAO" );
 

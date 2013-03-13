@@ -85,12 +85,12 @@ public class NewsLetterRegistrationService
     private static final String JCAPTCHA_PLUGIN = "jcaptcha";
 
     //default values
-    private static int DEFAULT_LIMIT = 7;
+    private static final int DEFAULT_LIMIT = 7;
 
     /**
      * The registration service
      */
-    private static NewsLetterRegistrationService _singleton;
+    private static NewsLetterRegistrationService _singleton = new NewsLetterRegistrationService( );
 
     //Captcha
     private CaptchaSecurityService _captchaService;
@@ -114,11 +114,6 @@ public class NewsLetterRegistrationService
      */
     public static NewsLetterRegistrationService getInstance( )
     {
-        if ( _singleton == null )
-        {
-            _singleton = new NewsLetterRegistrationService( );
-        }
-
         return _singleton;
     }
 
@@ -299,6 +294,7 @@ public class NewsLetterRegistrationService
                 SiteMessageService.setMessage( request,
                         NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_USER_ERROR_MESSAGE,
                         NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_USER_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
+                return;
             }
 
             boolean bValidKey = AwaitingActivationHome.checkKey( nIdUser, nKey, getPlugin( ) );
@@ -355,6 +351,7 @@ public class NewsLetterRegistrationService
         {
             SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_NO_NEWSLETTER_CHOSEN_ERROR_MESSAGE,
                     SiteMessage.TYPE_ERROR );
+            return;
         }
 
         // strNewsletterId cannot be null (exception already thrown by SiteMessageService)

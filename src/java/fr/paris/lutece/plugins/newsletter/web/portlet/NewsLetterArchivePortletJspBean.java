@@ -33,6 +33,7 @@
  */
 package fr.paris.lutece.plugins.newsletter.web.portlet;
 
+import fr.paris.lutece.plugins.newsletter.business.SendingNewsLetter;
 import fr.paris.lutece.plugins.newsletter.business.SendingNewsLetterHome;
 import fr.paris.lutece.plugins.newsletter.business.portlet.NewsLetterArchivePortlet;
 import fr.paris.lutece.plugins.newsletter.business.portlet.NewsLetterArchivePortletHome;
@@ -61,6 +62,11 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class NewsLetterArchivePortletJspBean extends PortletJspBean
 {
+    /**
+     * Serial version UID
+     */
+    private static final long serialVersionUID = -5219786237834856528L;
+
     // Prefix of the properties related to this checkbox
     private static final String PROPERTIES_PREFIX = "portlet.newsletter_archive";
 
@@ -71,18 +77,13 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
     private static final String BOOKMARK_PAGE_ID = "@page_id@";
     private static final String BOOKMARK_PORTLET_ID = "@portlet_id@";
 
-    // Parameters
-    private static final String PARAMETER_PAGE_ID = "page_id";
-    private static final String PARAMETER_PORTLET_ID = "portlet_id";
-    private static final String PARAMETER_PORTLET_TYPE_ID = "portlet_type_id";
-
     // Templates
     private static final String MARK_SENDING_NEWSLETTER_LIST = "sending_newsletter_list";
     private static final String MARK_SELECTED_SENDING_LIST = "selected_sendings_list";
 
     /**
      * Returns the creation form for the portlet
-     *
+     * 
      * @param request the HTML request
      * @return the HTML code for the page
      */
@@ -93,18 +94,18 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
 
         HtmlTemplate template = getCreateTemplate( strPageId, strPortletTypeId );
 
-        return template.getHtml(  );
+        return template.getHtml( );
     }
 
     /**
      * Processes the creation of the portlet
-     *
+     * 
      * @param request the HTML request
      * @return the URL to redirect to
      */
     public String doCreate( HttpServletRequest request )
     {
-        NewsLetterArchivePortlet portlet = new NewsLetterArchivePortlet(  );
+        NewsLetterArchivePortlet portlet = new NewsLetterArchivePortlet( );
 
         // Standard controls on the creation form
         String strIdPage = request.getParameter( PARAMETER_PAGE_ID );
@@ -112,7 +113,7 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
 
         String strStyleId = request.getParameter( Parameters.STYLE );
 
-        if ( ( strStyleId == null ) || strStyleId.trim(  ).equals( "" ) )
+        if ( ( strStyleId == null ) || strStyleId.trim( ).equals( "" ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
@@ -120,9 +121,9 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
         setPortletCommonData( request, portlet );
 
         // mandatory field
-        String strName = portlet.getName(  );
+        String strName = portlet.getName( );
 
-        if ( strName.trim(  ).equals( "" ) )
+        if ( strName.trim( ).equals( "" ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
@@ -130,7 +131,7 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
         portlet.setPageId( nIdPage );
 
         // Creating portlet
-        NewsLetterArchivePortletHome.getInstance(  ).create( portlet );
+        NewsLetterArchivePortletHome.getInstance( ).create( portlet );
 
         //Displays the page with the new Portlet
         return getPageUrl( nIdPage );
@@ -138,7 +139,7 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
 
     /**
      * Returns the modification form for the portlet
-     *
+     * 
      * @param request the HTML request
      * @return the HTML code for the page
      */
@@ -152,27 +153,27 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
         String strIdPage = request.getParameter( PARAMETER_PAGE_ID );
 
         // Load the modify template and fill in
-        HashMap model = new HashMap(  );
+        HashMap<String, Object> model = new HashMap<String, Object>( );
         model.put( BOOKMARK_PORTLET_ID, strPortletId );
         model.put( BOOKMARK_PAGE_ID, strIdPage );
 
         // Get the plugin for the portlet
-        Plugin plugin = PluginService.getPlugin( portlet.getPluginName(  ) );
+        Plugin plugin = PluginService.getPlugin( portlet.getPluginName( ) );
 
         ArrayList<Integer> selectedSendings = NewsLetterArchivePortletHome.findSendingsInPortlet( nPortletId );
-        List sendingNewsletterList = SendingNewsLetterHome.findAllSendings( plugin );
+        List<SendingNewsLetter> sendingNewsletterList = SendingNewsLetterHome.findAllSendings( plugin );
         model.put( MARK_SENDING_NEWSLETTER_LIST, sendingNewsletterList );
         model.put( MARK_SELECTED_SENDING_LIST, selectedSendings );
 
         // Fill the specific part of the modify form
         HtmlTemplate template = getModifyTemplate( portlet, model );
 
-        return template.getHtml(  );
+        return template.getHtml( );
     }
 
     /**
      * Processes the modification of the portlet
-     *
+     * 
      * @param request the HTTP request
      * @return the URL to redirect to
      */
@@ -186,7 +187,7 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
         // Standard controls on the creation form
         String strStyleId = request.getParameter( Parameters.STYLE );
 
-        if ( ( strStyleId == null ) || strStyleId.trim(  ).equals( "" ) )
+        if ( ( strStyleId == null ) || strStyleId.trim( ).equals( "" ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
@@ -194,29 +195,29 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
         setPortletCommonData( request, portlet );
 
         // mandatory field
-        String strName = portlet.getName(  );
+        String strName = portlet.getName( );
 
-        if ( strName.trim(  ).equals( "" ) )
+        if ( strName.trim( ).equals( "" ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
 
         // Update generic values
-        portlet.update(  );
+        portlet.update( );
 
         // Update the selected sendings
         modifySendings( request, portlet );
 
         // displays the page with the potlet updated
-        return getPageUrl( portlet.getPageId(  ) );
+        return getPageUrl( portlet.getPageId( ) );
     }
 
     /**
      * Returns portlet's properties prefix
-     *
+     * 
      * @return prefix
      */
-    public String getPropertiesPrefix(  )
+    public String getPropertiesPrefix( )
     {
         return PROPERTIES_PREFIX;
     }
@@ -224,41 +225,42 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
     /**
      * Helper method to determine which sendings were checked in the portlet
      * modification form, and update the database accordingly.
-     *
+     * 
      * @param request the HTTP request
      * @param portlet the portlet
      */
     private static void modifySendings( HttpServletRequest request, NewsLetterArchivePortlet portlet )
     {
         // Build the set of the sendings that were checked in the page
-        Set<Integer> checkedSendings = new HashSet<Integer>(  );
+        Set<Integer> checkedSendings = new HashSet<Integer>( );
 
         // Read all request parameters
-        Enumeration enumParameterNames = request.getParameterNames(  );
+        @SuppressWarnings( "unchecked" )
+        Enumeration<String> enumParameterNames = request.getParameterNames( );
 
-        while ( enumParameterNames.hasMoreElements(  ) )
+        while ( enumParameterNames.hasMoreElements( ) )
         {
-            String strParameterName = (String) enumParameterNames.nextElement(  );
+            String strParameterName = enumParameterNames.nextElement( );
 
             // If parameter is a sending checkbox
             if ( strParameterName.startsWith( PREFIX_CHECKBOX_NAME ) )
             {
                 // Extract the int value concatenated to the prefix
-                String strSendingId = strParameterName.substring( PREFIX_CHECKBOX_NAME.length(  ) );
+                String strSendingId = strParameterName.substring( PREFIX_CHECKBOX_NAME.length( ) );
 
                 // Add the Integer object to the set
                 checkedSendings.add( new Integer( strSendingId ) );
             }
         }
 
-        ArrayList<Integer> previousSendings = NewsLetterArchivePortletHome.findSendingsInPortlet( portlet.getId(  ) );
+        ArrayList<Integer> previousSendings = NewsLetterArchivePortletHome.findSendingsInPortlet( portlet.getId( ) );
 
         // Add the sendings that are checked now but were not present before
         for ( Integer newSending : checkedSendings )
         {
             if ( !previousSendings.contains( newSending ) )
             {
-                NewsLetterArchivePortletHome.insertSending( portlet.getId(  ), newSending.intValue(  ) );
+                NewsLetterArchivePortletHome.insertSending( portlet.getId( ), newSending.intValue( ) );
             }
         }
 
@@ -267,7 +269,7 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
         {
             if ( !checkedSendings.contains( oldSending ) )
             {
-                NewsLetterArchivePortletHome.removeSending( portlet.getId(  ), oldSending.intValue(  ) );
+                NewsLetterArchivePortletHome.removeSending( portlet.getId( ), oldSending.intValue( ) );
             }
         }
     }

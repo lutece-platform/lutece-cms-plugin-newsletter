@@ -120,7 +120,7 @@ public interface INewsLetterDAO
      * @param plugin the Plugin
      * @return a {@link ReferenceList} of id and name
      */
-    public ReferenceList selectAllId( Plugin plugin );
+    ReferenceList selectAllId( Plugin plugin );
 
     /**
      * Insert a new subscriber for a newsletter

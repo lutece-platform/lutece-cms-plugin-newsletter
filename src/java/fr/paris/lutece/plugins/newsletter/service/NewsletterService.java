@@ -116,12 +116,12 @@ public class NewsletterService
             Collection<Subscriber> listSubscribers )
     {
         List<UrlAttachment> urlAttachments = null;
-
+        HtmlTemplate templateNewsletterToUse = templateNewsletter;
         if ( isMhtmlActivated( ) )
         {
             // we use absolute urls if there is no preproduction process
             boolean useAbsoluteUrl = isAbsoluteUrl( );
-            String strTemplate = templateNewsletter.getHtml( );
+            String strTemplate = templateNewsletterToUse.getHtml( );
             strTemplate = StringUtil.substitute( strTemplate, strBaseUrl,
                     NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE );
             urlAttachments = MailService.getUrlAttachmentList( strTemplate, strBaseUrl, useAbsoluteUrl );
@@ -129,18 +129,18 @@ public class NewsletterService
             // all images, css urls are relative
             if ( !useAbsoluteUrl )
             {
-                templateNewsletter.substitute( strBaseUrl, strBaseUrl.replaceFirst( "https?://[^/]+/", "/" ) );
+                templateNewsletterToUse.substitute( strBaseUrl, strBaseUrl.replaceFirst( "https?://[^/]+/", "/" ) );
             }
             else
             {
-                String strContent = NewsletterUtils.rewriteUrls( templateNewsletter.getHtml( ), strBaseUrl );
-                templateNewsletter = new HtmlTemplate( strContent );
+                String strContent = NewsletterUtils.rewriteUrls( templateNewsletterToUse.getHtml( ), strBaseUrl );
+                templateNewsletterToUse = new HtmlTemplate( strContent );
             }
         }
 
         for ( Subscriber subscriber : listSubscribers )
         {
-            HtmlTemplate t = new HtmlTemplate( templateNewsletter );
+            HtmlTemplate t = new HtmlTemplate( templateNewsletterToUse );
             t.substitute( NewsLetterConstants.MARK_SUBSCRIBER_EMAIL_EACH, subscriber.getEmail( ) );
 
             String strNewsLetterCode = t.getHtml( );

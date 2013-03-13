@@ -142,10 +142,10 @@ public class NewsLetterApp implements XPageApplication
     }
 
     /**
-     * 
-     * @param request
-     * @param plugin
-     * @return
+     * Get the main page of this app.
+     * @param request The request
+     * @param plugin The newsletter plugin
+     * @return The Html content to display
      */
     private XPage getPage( HttpServletRequest request, Plugin plugin )
     {
@@ -223,7 +223,7 @@ public class NewsLetterApp implements XPageApplication
     }
 
     /**
-     * Confirma a suscribtion
+     * Confirm a subscribtion
      * @param request The request
      * @throws SiteMessageException A site message exception
      */
@@ -235,11 +235,8 @@ public class NewsLetterApp implements XPageApplication
     /**
      * Return the newsletter requirement
      * @param request The HTTP request
-     * @param nMode The current mode.
      * @param plugin The Plugin
      * @return the form recap
-     * @throws SiteMessageException SiteMessageException
-     *             /
      **/
     private String getRequirement( HttpServletRequest request, Plugin plugin )
     {

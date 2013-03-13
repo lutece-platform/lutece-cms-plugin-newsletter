@@ -56,7 +56,7 @@ public final class NewsLetterArchivePortletDAO implements INewsLetterArchivePort
 
     /**
      * Inserts a new record in the table. Not implemented.
-     *
+     * 
      * @param portlet
      *            the object to be inserted
      */
@@ -67,47 +67,47 @@ public final class NewsLetterArchivePortletDAO implements INewsLetterArchivePort
 
     /**
      * Deletes a record from the table.
-     *
+     * 
      * @param nPortletId the portlet id
-     *
+     * 
      */
     public void delete( int nPortletId )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE );
         daoUtil.setInt( 1, nPortletId );
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
      * Loads the data of the portlet from the table.
-     *
+     * 
      * @param nPortletId the portlet id
      * @return the Portlet object
      */
     public Portlet load( int nPortletId )
     {
-        NewsLetterArchivePortlet portlet = new NewsLetterArchivePortlet(  );
+        NewsLetterArchivePortlet portlet = new NewsLetterArchivePortlet( );
 
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT );
 
         daoUtil.setInt( 1, nPortletId );
 
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        if ( daoUtil.next(  ) )
+        if ( daoUtil.next( ) )
         {
             portlet.setId( nPortletId );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return portlet;
     }
 
     /**
      * Updates the record in the table. Not implemented.
-     *
+     * 
      * @param portlet
      *            the instance of Portlet class to be updated
      */
@@ -118,7 +118,7 @@ public final class NewsLetterArchivePortletDAO implements INewsLetterArchivePort
 
     /**
      * Associates a new sending to a given portlet.
-     *
+     * 
      * @param nPortletId
      *            the identifier of the portlet.
      * @param nSendingId
@@ -130,13 +130,13 @@ public final class NewsLetterArchivePortletDAO implements INewsLetterArchivePort
         daoUtil.setInt( 1, nPortletId );
         daoUtil.setInt( 2, nSendingId );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
      * De-associate a sending from a given portlet.
-     *
+     * 
      * @param nPortletId
      *            the identifier of the portlet.
      * @param nSendingId
@@ -148,13 +148,13 @@ public final class NewsLetterArchivePortletDAO implements INewsLetterArchivePort
         daoUtil.setInt( 1, nPortletId );
         daoUtil.setInt( 2, nSendingId );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
      * Returns all the sendings associated with a given portlet.
-     *
+     * 
      * @param nPortletId
      *            the identifier of the portlet.
      * @return a Set of Integer objects containing the identifers of the
@@ -162,18 +162,18 @@ public final class NewsLetterArchivePortletDAO implements INewsLetterArchivePort
      */
     public ArrayList<Integer> findSendingsInPortlet( int nPortletId )
     {
-        ArrayList<Integer> results = new ArrayList<Integer>(  );
+        ArrayList<Integer> results = new ArrayList<Integer>( );
 
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_SENDINGS_BY_PORTLET );
         daoUtil.setInt( 1, nPortletId );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
-            results.add( new Integer( daoUtil.getInt( 1 ) ) );
+            results.add( Integer.valueOf( daoUtil.getInt( 1 ) ) );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return results;
     }

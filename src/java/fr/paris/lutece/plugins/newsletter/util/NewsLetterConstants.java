@@ -39,7 +39,7 @@ import fr.paris.lutece.portal.service.util.AppPropertiesService;
 /**
  * Shared constants
  */
-public class NewsLetterConstants
+public final class NewsLetterConstants
 {
     public static final String CONSTANT_EMPTY_STRING = "";
     public static final String CONSTANT_SLASH = "/";
@@ -72,10 +72,10 @@ public class NewsLetterConstants
     ///////////////////////////////////////////////////////////////////////
     // bookmark to use for mail template
     public static final String MARK_CONFIRM_URL = "confirm_url";
-    public static final String PROPERTY_CONFIRM_MAIL_SENDER_NAME = AppPropertiesService.getProperty( "newsletter.confirm.senderName",
-            "CONFIRMATION" );
-    public static final String PROPERTY_CONFIRM_MAIL_SENDER_ADDRESS = AppPropertiesService.getProperty( "newsletter.confirm.sender",
-            "noreply@paris.fr" );
+    public static final String PROPERTY_CONFIRM_MAIL_SENDER_NAME = AppPropertiesService.getProperty(
+            "newsletter.confirm.senderName", "CONFIRMATION" );
+    public static final String PROPERTY_CONFIRM_MAIL_SENDER_ADDRESS = AppPropertiesService.getProperty(
+            "newsletter.confirm.sender", "noreply@paris.fr" );
 
     ///////////////////////////////////////////////////////////////////////
     // properties
@@ -152,4 +152,11 @@ public class NewsLetterConstants
     public static final String JSP_URL_DO_UNSUBSCRIBE = "/jsp/site/plugins/newsletter/DoUnsubscribeNewsLetter.jsp";
     public static final String MARK_CONTENT = "content";
     public static final String MARK_CONTENT_CATEGORY = "content_";
+
+    /**
+     * Private constructor
+     */
+    private NewsLetterConstants( )
+    {
+    }
 }

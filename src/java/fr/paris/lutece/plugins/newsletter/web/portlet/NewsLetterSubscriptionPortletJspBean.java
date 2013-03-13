@@ -60,26 +60,33 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
- * This class provides the user interface to manage newsletter subscription portlets.
+ * This class provides the user interface to manage newsletter subscription
+ * portlets.
  */
 public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
 {
-    // Prefix of the properties related to this checkbox
+    /**
+     * Serial version UID
+     */
+    private static final long serialVersionUID = -2321192141005152468L;
+
+    /**
+     * Prefix of the properties related to this checkbox
+     */
     private static final String PROPERTIES_PREFIX = "portlet.newsletter_subscription";
 
-    // Prefix used to generate checkbox names
+    /**
+     * Prefix used to generate checkbox names
+     */
     private static final String PREFIX_CHECKBOX_NAME = "cbx_snd_";
 
     // Bookmarks
     private static final String BOOKMARK_PAGE_ID = "@page_id@"; //Todo remove the @
     private static final String BOOKMARK_PORTLET_ID = "@portlet_id@"; //Todo remove the @
-
-    // Parameters
-    private static final String PARAMETER_PAGE_ID = "page_id";
-    private static final String PARAMETER_PORTLET_ID = "portlet_id";
-    private static final String PARAMETER_PORTLET_TYPE_ID = "portlet_type_id";
 
     // Templates
     private static final String MARK_NEWSLETTER_LIST = "subscribed_newsletter_list";
@@ -87,7 +94,6 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
 
     /**
      * Returns the creation form for the portlet
-     *
      * @param request the HTML request
      * @return the HTML code for the page
      */
@@ -98,18 +104,17 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
 
         HtmlTemplate template = getCreateTemplate( strPageId, strPortletTypeId );
 
-        return template.getHtml(  );
+        return template.getHtml( );
     }
 
     /**
      * Processes the creation of the portlet
-     *
      * @param request the HTML request
      * @return the URL to redirect to
      */
     public String doCreate( HttpServletRequest request )
     {
-        NewsLetterSubscriptionPortlet portlet = new NewsLetterSubscriptionPortlet(  );
+        NewsLetterSubscriptionPortlet portlet = new NewsLetterSubscriptionPortlet( );
 
         // Standard controls on the creation form
         String strIdPage = request.getParameter( PARAMETER_PAGE_ID );
@@ -117,7 +122,7 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
 
         String strStyleId = request.getParameter( Parameters.STYLE );
 
-        if ( ( strStyleId == null ) || strStyleId.trim(  ).equals( "" ) )
+        if ( StringUtils.isEmpty( strStyleId ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
@@ -125,9 +130,9 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
         setPortletCommonData( request, portlet );
 
         // mandatory field
-        String strName = portlet.getName(  );
+        String strName = portlet.getName( );
 
-        if ( strName.trim(  ).equals( "" ) )
+        if ( StringUtils.isBlank( strName ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
@@ -135,7 +140,7 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
         portlet.setPageId( nIdPage );
 
         // Creating portlet
-        NewsLetterSubscriptionPortletHome.getInstance(  ).create( portlet );
+        NewsLetterSubscriptionPortletHome.getInstance( ).create( portlet );
 
         //Displays the page with the new Portlet
         return getPageUrl( nIdPage );
@@ -143,7 +148,6 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
 
     /**
      * Returns the modification form for the portlet
-     *
      * @param request the HTML request
      * @return the HTML code for the page
      */
@@ -152,32 +156,32 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
         // Use the id in the request to load the portlet
         String strPortletId = request.getParameter( PARAMETER_PORTLET_ID );
         int nPortletId = Integer.parseInt( strPortletId );
-        NewsLetterSubscriptionPortlet portlet = (NewsLetterSubscriptionPortlet) PortletHome.findByPrimaryKey( nPortletId );
+        NewsLetterSubscriptionPortlet portlet = (NewsLetterSubscriptionPortlet) PortletHome
+                .findByPrimaryKey( nPortletId );
 
         String strIdPage = request.getParameter( PARAMETER_PAGE_ID );
 
-        HashMap model = new HashMap(  );
+        HashMap<String, Object> model = new HashMap<String, Object>( );
         model.put( BOOKMARK_PORTLET_ID, strPortletId );
         model.put( BOOKMARK_PAGE_ID, strIdPage );
 
-        Plugin plugin = PluginService.getPlugin( portlet.getPluginName(  ) );
+        Plugin plugin = PluginService.getPlugin( portlet.getPluginName( ) );
 
         Collection<NewsLetter> colNewsLetter = NewsLetterHome.findAll( plugin );
-        colNewsLetter = AdminWorkgroupService.getAuthorizedCollection( colNewsLetter, getUser(  ) );
+        colNewsLetter = AdminWorkgroupService.getAuthorizedCollection( colNewsLetter, getUser( ) );
 
-        Set selectedNewsletterList = NewsLetterSubscriptionPortletHome.findSelectedNewsletters( nPortletId );
+        Set<Integer> selectedNewsletterList = NewsLetterSubscriptionPortletHome.findSelectedNewsletters( nPortletId );
         model.put( MARK_NEWSLETTER_LIST, colNewsLetter );
         model.put( MARK_SELECTED_NEWSLETTER_LIST, selectedNewsletterList );
 
         // Fill the specific part of the modify form
         HtmlTemplate template = getModifyTemplate( portlet, model );
 
-        return template.getHtml(  );
+        return template.getHtml( );
     }
 
     /**
      * Processes the modification of the portlet
-     *
      * @param request the HTTP request
      * @return the URL to redirect to
      */
@@ -186,12 +190,13 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
         // Use the id in the request to load the portlet
         String strPortletId = request.getParameter( PARAMETER_PORTLET_ID );
         int nPortletId = Integer.parseInt( strPortletId );
-        NewsLetterSubscriptionPortlet portlet = (NewsLetterSubscriptionPortlet) PortletHome.findByPrimaryKey( nPortletId );
+        NewsLetterSubscriptionPortlet portlet = (NewsLetterSubscriptionPortlet) PortletHome
+                .findByPrimaryKey( nPortletId );
 
         // Standard controls on the creation form
         String strStyleId = request.getParameter( Parameters.STYLE );
 
-        if ( ( strStyleId == null ) || strStyleId.trim(  ).equals( "" ) )
+        if ( StringUtils.isEmpty( strStyleId ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
@@ -199,57 +204,57 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
         setPortletCommonData( request, portlet );
 
         // mandatory field
-        String strName = portlet.getName(  );
+        String strName = portlet.getName( );
 
-        if ( strName.trim(  ).equals( "" ) )
+        if ( StringUtils.isBlank( strName ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
 
         // Update generic values
-        portlet.update(  );
+        portlet.update( );
 
         // Update the selected subscriptions
         modifySubscriptions( request, portlet );
 
         // displays the page with the potlet updated
-        return getPageUrl( portlet.getPageId(  ) );
+        return getPageUrl( portlet.getPageId( ) );
     }
 
     /**
      * Returns portlet's properties prefix
-     *
      * @return prefix
      */
-    public String getPropertiesPrefix(  )
+    public String getPropertiesPrefix( )
     {
         return PROPERTIES_PREFIX;
     }
 
     /**
-     * Helper method to determine which subscriptions were checked in the portlet
+     * Helper method to determine which subscriptions were checked in the
+     * portlet
      * modification form, and update the database accordingly.
-     *
      * @param request the HTTP request
      * @param portlet the portlet
      */
     private static void modifySubscriptions( HttpServletRequest request, NewsLetterSubscriptionPortlet portlet )
     {
         // Build the set of the subscriptions that were checked in the page
-        Set<Integer> checkedSubscriptions = new HashSet<Integer>(  );
+        Set<Integer> checkedSubscriptions = new HashSet<Integer>( );
 
         // Read all request parameters
-        Enumeration enumParameterNames = request.getParameterNames(  );
+        @SuppressWarnings( "unchecked" )
+        Enumeration<String> enumParameterNames = request.getParameterNames( );
 
-        while ( enumParameterNames.hasMoreElements(  ) )
+        while ( enumParameterNames.hasMoreElements( ) )
         {
-            String strParameterName = (String) enumParameterNames.nextElement(  );
+            String strParameterName = enumParameterNames.nextElement( );
 
             // If parameter is a subscription checkbox
             if ( strParameterName.startsWith( PREFIX_CHECKBOX_NAME ) )
             {
                 // Extract the int value concatenated to the prefix
-                String strSubscriptionId = strParameterName.substring( PREFIX_CHECKBOX_NAME.length(  ) );
+                String strSubscriptionId = strParameterName.substring( PREFIX_CHECKBOX_NAME.length( ) );
 
                 // Add the Integer object to the set
                 checkedSubscriptions.add( new Integer( strSubscriptionId ) );
@@ -258,14 +263,15 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
 
         // Build the set of the subscriptions that were previously associated to the
         // portlet
-        Set<Integer> previousSubscriptions = NewsLetterSubscriptionPortletHome.findSelectedNewsletters( portlet.getId(  ) );
+        Set<Integer> previousSubscriptions = NewsLetterSubscriptionPortletHome
+                .findSelectedNewsletters( portlet.getId( ) );
 
         // Add the subscriptions that are checked now but were not present before
         for ( Integer newSubscription : checkedSubscriptions )
         {
             if ( !previousSubscriptions.contains( newSubscription ) )
             {
-                NewsLetterSubscriptionPortletHome.insertSubscription( portlet.getId(  ), newSubscription.intValue(  ) );
+                NewsLetterSubscriptionPortletHome.insertSubscription( portlet.getId( ), newSubscription.intValue( ) );
             }
         }
 
@@ -274,7 +280,7 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
         {
             if ( !checkedSubscriptions.contains( oldSubscription ) )
             {
-                NewsLetterSubscriptionPortletHome.removeNewsletter( portlet.getId(  ), oldSubscription.intValue(  ) );
+                NewsLetterSubscriptionPortletHome.removeNewsletter( portlet.getId( ), oldSubscription.intValue( ) );
             }
         }
     }
@@ -282,15 +288,15 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
     /**
      * Performs the registration action
      * @param request The http request
-     * @throws fr.paris.lutece.portal.service.message.SiteMessageException A message handled by the front office
+     * @throws fr.paris.lutece.portal.service.message.SiteMessageException A
+     *             message handled by the front office
      * @return An error message
      */
-    public static String doRegister( HttpServletRequest request )
-        throws SiteMessageException
+    public static String doRegister( HttpServletRequest request ) throws SiteMessageException
     {
         SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_SUBSCRIPTION_OK_ALERT_MESSAGE, null,
-            NewsLetterConstants.PROPERTY_SUBSCRIPTION_OK_TITLE_MESSAGE, null, null, SiteMessage.TYPE_STOP );
+                NewsLetterConstants.PROPERTY_SUBSCRIPTION_OK_TITLE_MESSAGE, null, null, SiteMessage.TYPE_STOP );
 
-        return "";
+        return StringUtils.EMPTY;
     }
 }

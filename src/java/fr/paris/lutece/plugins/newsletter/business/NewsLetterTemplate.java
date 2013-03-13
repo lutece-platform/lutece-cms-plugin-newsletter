@@ -59,7 +59,7 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
     /**
      * Initialisation method
      */
-    public static void init( )
+    public static synchronized void init( )
     {
         if ( _listenerWorkgroup == null )
         {

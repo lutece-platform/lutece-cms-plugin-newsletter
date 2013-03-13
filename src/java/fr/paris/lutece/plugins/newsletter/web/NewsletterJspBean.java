@@ -323,7 +323,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     //constants
     private static final String JCAPTCHA_PLUGIN = "jcaptcha";
-    private static int DEFAULT_LIMIT = 7;
+    private static final int DEFAULT_LIMIT = 7;
     private int _nItemsPerPage;
     private int _nDefaultItemsPerPage;
     private String _strCurrentPageIndex;
@@ -730,21 +730,26 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
 
+        String strMessageParam = null;
+        String strMessage = null;
+
         String strWrongEmail = isWrongEmail( strTestRecipients );
         if ( StringUtils.isNotEmpty( strWrongEmail ) )
         {
-            Object[] messageArgs = { strWrongEmail };
-
-            return AdminMessageService
-                    .getMessageUrl( request, MESSAGE_WRONG_EMAIL, messageArgs, AdminMessage.TYPE_STOP );
+            strMessageParam = strWrongEmail;
+            strMessage = MESSAGE_WRONG_EMAIL;
         }
 
-        if ( !StringUtil.checkEmail( strSenderMail ) )
+        if ( strMessageParam == null && strMessage == null && !StringUtil.checkEmail( strSenderMail ) )
         {
-            Object[] messageArgs = { strSenderMail };
+            strMessageParam = strSenderMail;
+            strMessage = MESSAGE_WRONG_EMAIL_SENDER;
+        }
 
-            return AdminMessageService.getMessageUrl( request, MESSAGE_WRONG_EMAIL_SENDER, messageArgs,
-                    AdminMessage.TYPE_STOP );
+        if ( strMessageParam != null && strMessage != null )
+        {
+            Object[] messageArgs = { strMessageParam };
+            return AdminMessageService.getMessageUrl( request, strMessage, messageArgs, AdminMessage.TYPE_STOP );
         }
 
         NewsLetter newsletter = new NewsLetter( );
@@ -1420,27 +1425,33 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
 
+        String strErrorMessage = null;
+
         // allow to send only if the newsletter is not empty
         if ( StringUtils.isEmpty( newsletter.getHtml( ) ) )
         {
-            return AdminMessageService.getMessageUrl( request, MESSAGE_SENDING_EMPTY_NOT_ALLOWED,
-                    AdminMessage.TYPE_STOP );
+            strErrorMessage = MESSAGE_SENDING_EMPTY_NOT_ALLOWED;
         }
 
         // allow to send only if at least one active subscriber
         int nNbrSubscribers = NewsLetterHome.findNbrActiveSubscribers( nNewsletterId, getPlugin( ) );
 
-        if ( nNbrSubscribers == 0 )
+        if ( strErrorMessage == null && nNbrSubscribers == 0 )
         {
-            return AdminMessageService.getMessageUrl( request, MESSAGE_NO_SUBSCRIBER, AdminMessage.TYPE_STOP );
+            strErrorMessage = MESSAGE_NO_SUBSCRIBER;
         }
 
         String strObject = request.getParameter( PARAMETER_NEWSLETTER_OBJECT );
 
         // Block access if no object for the newsletter specified
-        if ( StringUtils.isEmpty( strObject ) )
+        if ( strErrorMessage == null && StringUtils.isEmpty( strObject ) )
         {
-            return AdminMessageService.getMessageUrl( request, MESSAGE_OBJECT_NOT_SPECIFIED, AdminMessage.TYPE_STOP );
+            strErrorMessage = MESSAGE_OBJECT_NOT_SPECIFIED;
+        }
+
+        if ( strErrorMessage != null )
+        {
+            return AdminMessageService.getMessageUrl( request, strErrorMessage, AdminMessage.TYPE_STOP );
         }
 
         UrlItem urlItem = new UrlItem( JSP_URL_SEND_NEWSLETTER );
@@ -1453,12 +1464,12 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         SendingNewsLetter lastSending = SendingNewsLetterHome.findLastSendingForNewsletterId( nNewsletterId,
                 getPlugin( ) );
 
+        String strMessage = MESSAGE_CONFIRM_SEND_NEWSLETTER;
         if ( ( lastSending != null ) && lastSending.getHtml( ).equals( newsletter.getHtml( ) ) )
         {
-            return AdminMessageService.getMessageUrl( request, MESSAGE_FRAGMENT_NO_CHANGE, urlItem.getUrl( ),
-                    AdminMessage.TYPE_CONFIRMATION, requestedParameters );
+            strMessage = MESSAGE_FRAGMENT_NO_CHANGE;
         }
-        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_SEND_NEWSLETTER, urlItem.getUrl( ),
+        return AdminMessageService.getMessageUrl( request, strMessage, urlItem.getUrl( ),
                 AdminMessage.TYPE_CONFIRMATION, requestedParameters );
     }
 
@@ -1717,7 +1728,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         int nNewsletterId = Integer.parseInt( strNewsletterId );
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
-        //Workgroup & RBAC permissions
+        // Workgroup & RBAC permissions
         if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
                 || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
                         NewsletterResourceIdService.PERMISSION_IMPORT_SUBSCRIBERS, getUser( ) ) )
@@ -1727,73 +1738,77 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         try
         {
-            // create the multipart request
-            MultipartHttpServletRequest multi = (MultipartHttpServletRequest) request;
-
-            FileItem csvItem = multi.getFile( PARAMETER_SUBSCRIBERS_FILE );
-            String strMultiFileName = csvItem == null ? StringUtils.EMPTY : UploadUtil
-                    .cleanFileName( csvItem.getName( ) );
-            if ( csvItem == null || StringUtils.isEmpty( strMultiFileName ) )
+            if ( request instanceof MultipartHttpServletRequest )
             {
-                return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
-            }
+                // create the multipart request
+                MultipartHttpServletRequest multi = (MultipartHttpServletRequest) request;
 
-            // test the extension of the file must be 'csv'
-            String strExtension = strMultiFileName
-                    .substring( strMultiFileName.length( ) - 4, strMultiFileName.length( ) );
-
-            if ( !strExtension.equals( CONSTANT_CSV_FILE_EXTENSION ) )
-            {
-                return AdminMessageService.getMessageUrl( request, MESSAGE_CSV_FILE_EXTENSION, AdminMessage.TYPE_STOP );
-            }
-
-            Reader fileReader = new InputStreamReader( csvItem.getInputStream( ) );
-            CSVReader csvReader = new CSVReader( fileReader, AppPropertiesService.getProperty(
-                    PROPERTY_IMPORT_DELIMITER ).charAt( 0 ) );
-
-            @SuppressWarnings( "unchecked" )
-            List<String[]> tabUsers = csvReader.readAll( );
-
-            // the file is empty
-            if ( ( tabUsers == null ) || ( tabUsers.size( ) == 0 ) )
-            {
-                return AdminMessageService.getMessageUrl( request, MESSAGE_CSV_FILE_EMPTY_OR_NOT_VALID_EMAILS,
-                        AdminMessage.TYPE_STOP );
-            }
-            int nColumnIndex = Integer.parseInt( AppPropertiesService.getProperty( CONSTANT_EMAIL_COLUMN_INDEX ) );
-            // the current date
-            Timestamp tToday = new java.sql.Timestamp( new java.util.Date( ).getTime( ) );
-
-            // Add the new users
-            for ( String[] strEmailTemp : tabUsers )
-            {
-                if ( strEmailTemp.length < nColumnIndex )
+                FileItem csvItem = multi.getFile( PARAMETER_SUBSCRIBERS_FILE );
+                String strMultiFileName = csvItem == null ? StringUtils.EMPTY : UploadUtil.cleanFileName( csvItem
+                        .getName( ) );
+                if ( csvItem == null || StringUtils.isEmpty( strMultiFileName ) )
                 {
-                    return AdminMessageService.getMessageUrl( request, MESSAGE_COLUMN_INDEX_NOT_EXIST,
-                            AdminMessage.TYPE_ERROR );
+                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
+                            AdminMessage.TYPE_STOP );
                 }
 
-                String strEmail = strEmailTemp[nColumnIndex];
+                // test the extension of the file must be 'csv'
+                String strExtension = strMultiFileName.substring( strMultiFileName.length( ) - 4,
+                        strMultiFileName.length( ) );
 
-                //check if the email is not null and is valid
-                if ( ( strEmail != null ) && StringUtil.checkEmail( strEmail.trim( ) ) )
+                if ( !strExtension.equals( CONSTANT_CSV_FILE_EXTENSION ) )
                 {
-                    // Checks if a subscriber with the same email address doesn't exist yet
-                    Subscriber subscriber = SubscriberHome.findByEmail( strEmail, getPlugin( ) );
+                    return AdminMessageService.getMessageUrl( request, MESSAGE_CSV_FILE_EXTENSION,
+                            AdminMessage.TYPE_STOP );
+                }
 
-                    if ( subscriber == null )
+                Reader fileReader = new InputStreamReader( csvItem.getInputStream( ) );
+                CSVReader csvReader = new CSVReader( fileReader, AppPropertiesService.getProperty(
+                        PROPERTY_IMPORT_DELIMITER ).charAt( 0 ) );
+
+                @SuppressWarnings( "unchecked" )
+                List<String[]> tabUsers = csvReader.readAll( );
+
+                // the file is empty
+                if ( ( tabUsers == null ) || ( tabUsers.size( ) == 0 ) )
+                {
+                    return AdminMessageService.getMessageUrl( request, MESSAGE_CSV_FILE_EMPTY_OR_NOT_VALID_EMAILS,
+                            AdminMessage.TYPE_STOP );
+                }
+                int nColumnIndex = Integer.parseInt( AppPropertiesService.getProperty( CONSTANT_EMAIL_COLUMN_INDEX ) );
+                // the current date
+                Timestamp tToday = new java.sql.Timestamp( new java.util.Date( ).getTime( ) );
+
+                // Add the new users
+                for ( String[] strEmailTemp : tabUsers )
+                {
+                    if ( strEmailTemp.length < nColumnIndex )
                     {
-                        // The email doesn't exist, so create a new subcriber
-                        subscriber = new Subscriber( );
-                        subscriber.setEmail( strEmail );
-                        SubscriberHome.create( subscriber, getPlugin( ) );
+                        return AdminMessageService.getMessageUrl( request, MESSAGE_COLUMN_INDEX_NOT_EXIST,
+                                AdminMessage.TYPE_ERROR );
                     }
 
-                    // adds a subscriber to the current newsletter
-                    NewsLetterHome.addSubscriber( nNewsletterId, subscriber.getId( ), tToday, getPlugin( ) );
+                    String strEmail = strEmailTemp[nColumnIndex];
+
+                    //check if the email is not null and is valid
+                    if ( ( strEmail != null ) && StringUtil.checkEmail( strEmail.trim( ) ) )
+                    {
+                        // Checks if a subscriber with the same email address doesn't exist yet
+                        Subscriber subscriber = SubscriberHome.findByEmail( strEmail, getPlugin( ) );
+
+                        if ( subscriber == null )
+                        {
+                            // The email doesn't exist, so create a new subcriber
+                            subscriber = new Subscriber( );
+                            subscriber.setEmail( strEmail );
+                            SubscriberHome.create( subscriber, getPlugin( ) );
+                        }
+
+                        // adds a subscriber to the current newsletter
+                        NewsLetterHome.addSubscriber( nNewsletterId, subscriber.getId( ), tToday, getPlugin( ) );
+                    }
                 }
             }
-
             UrlItem urlItem = new UrlItem( JSP_URL_MANAGE_SUBSCRIBERS );
             urlItem.addParameter( PARAMETER_NEWSLETTER_ID, nNewsletterId );
 
@@ -2259,20 +2274,19 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
      */
     private String getCssContent( )
     {
-        String strContent = StringUtils.EMPTY;
+        StringBuilder sbContent = new StringBuilder( StringUtils.EMPTY );
         String strListCssFileName = AppPropertiesService.getProperty( PROPERTY_CSS_FILES );
-
+        String strWebappPath = AppPathService.getWebAppPath( ) + NewsLetterConstants.CONSTANT_SLASH;
         if ( StringUtils.isNotEmpty( strListCssFileName ) )
         {
             for ( String strName : strListCssFileName.split( SEPARATOR_PROPERTY_CSS_FILES ) )
             {
-                strContent += getTextFileContent( AppPathService.getWebAppPath( ) + NewsLetterConstants.CONSTANT_SLASH
-                        + strName );
-                strContent += SEPARATOR_CSS_FILES_CONTENT;
+                sbContent.append( getTextFileContent( strWebappPath + strName ) );
+                sbContent.append( SEPARATOR_CSS_FILES_CONTENT );
             }
         }
 
-        return strContent;
+        return sbContent.toString( );
     }
 
     /**
@@ -2283,7 +2297,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private String getTextFileContent( String strFileName )
     {
         BufferedReader fileReader;
-        String strSource = StringUtils.EMPTY;
+        StringBuilder sbSource = new StringBuilder( StringUtils.EMPTY );
 
         try
         {
@@ -2295,7 +2309,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
             while ( line != null )
             {
-                strSource += ( line + SEPARATOR_CSS_FILES_CONTENT );
+                sbSource.append( line + SEPARATOR_CSS_FILES_CONTENT );
                 line = fileReader.readLine( );
             }
 
@@ -2311,7 +2325,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                     .error( "plugin-newsletter - error when reading CSS '" + strFileName + "' ! " + e.getMessage( ) );
         }
 
-        return strSource;
+        return sbSource.toString( );
     }
 
     /**

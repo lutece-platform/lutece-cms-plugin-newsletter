@@ -74,29 +74,29 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     /**
      * Initialize the Newsletter
      */
-    public static void init(  )
+    public static synchronized void init( )
     {
         // Create removal listeners and register them
         if ( _listenerWorkgroup == null )
         {
-            _listenerWorkgroup = new NewsletterWorkgroupRemovalListener(  );
-            WorkgroupRemovalListenerService.getService(  ).registerListener( _listenerWorkgroup );
+            _listenerWorkgroup = new NewsletterWorkgroupRemovalListener( );
+            WorkgroupRemovalListenerService.getService( ).registerListener( _listenerWorkgroup );
         }
     }
 
     /**
      * Returns the identifier of the newsletter
-     *
+     * 
      * @return the newsletter identifier
      */
-    public int getId(  )
+    public int getId( )
     {
         return _nId;
     }
 
     /**
      * Sets the identifier of the newsletter
-     *
+     * 
      * @param nId the newsletter identifier
      */
     public void setId( int nId )
@@ -106,10 +106,10 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
 
     /**
      * Returns the subject of the newsletter
-     *
+     * 
      * @return the newsletter identifier
      */
-    public String getTestSubject(  )
+    public String getTestSubject( )
     {
         return _strSubject;
     }
@@ -125,7 +125,7 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     }
 
     /**
-     *
+     * 
      * Set if the user must validate by mail
      * @param bIsValidationActive the boolean
      */
@@ -138,13 +138,13 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
      * return if the validation by mail is active
      * @return _bIsValidationActive the boolean
      */
-    public boolean isValidationActive(  )
+    public boolean isValidationActive( )
     {
         return _bIsValidationActive;
     }
 
     /**
-     *
+     * 
      * Set if the user must enter a captcha to subscribe
      * @param bIsCaptchaActive the boolean
      */
@@ -157,24 +157,24 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
      * return if the user must enter a captcha to subscribe
      * @return bIsCaptchaActive the boolean
      */
-    public boolean isCaptchaActive(  )
+    public boolean isCaptchaActive( )
     {
         return _bIsCaptchaActive;
     }
 
     /**
      * Returns the name of the newsletter
-     *
+     * 
      * @return the newsletter name
      */
-    public String getName(  )
+    public String getName( )
     {
         return _strName;
     }
 
     /**
      * Sets the name of the newsletter
-     *
+     * 
      * @param strName the newsletter name
      */
     public void setName( String strName )
@@ -184,10 +184,10 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
 
     /**
      * Returns the name of the newsletter
-     *
+     * 
      * @return the newsletter name
      */
-    public String getDescription(  )
+    public String getDescription( )
     {
         return _strDescription;
     }
@@ -203,18 +203,18 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     }
 
     /**
-    * Returns the unsubscription of the newsletter
-    *
-    * @return the newsletter unsubscrition value
-    */
-    public String getUnsubscribe(  )
+     * Returns the unsubscription of the newsletter
+     * 
+     * @return the newsletter unsubscrition value
+     */
+    public String getUnsubscribe( )
     {
         return _strUnsubscribe;
     }
 
     /**
      * Sets the value of the unsubscription to the newsletter
-     *
+     * 
      * @param strUnsubscribe the newsletter name
      */
     public void setUnsubscribe( String strUnsubscribe )
@@ -224,7 +224,7 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
 
     /**
      * Sets the date of the last newsletter sending
-     *
+     * 
      * @param dateLastSending the last date of sending
      */
     public void setDateLastSending( Timestamp dateLastSending )
@@ -234,27 +234,27 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
 
     /**
      * Returns the date of the last sending
-     *
+     * 
      * @return the last sending date
      */
-    public Timestamp getDateLastSending(  )
+    public Timestamp getDateLastSending( )
     {
         return _dateLastSending;
     }
 
     /**
      * Returns the html content of the newsletter
-     *
+     * 
      * @return the html content of the newsletter
      */
-    public String getHtml(  )
+    public String getHtml( )
     {
         return _strHtml;
     }
 
     /**
      * Sets the html content of the newsletter
-     *
+     * 
      * @param strHtml the html content of the newsletter
      */
     public void setHtml( String strHtml )
@@ -264,17 +264,17 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
 
     /**
      * Returns the tos content of the newsletter
-     *
+     * 
      * @return the tos content of the newsletter
      */
-    public String getTOS(  )
+    public String getTOS( )
     {
         return _strTermOfService;
     }
 
     /**
      * Sets the tos content of the newsletter
-     *
+     * 
      * @param strTermOfService the tos content of the newsletter
      */
     public void setTOS( String strTermOfService )
@@ -284,17 +284,17 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
 
     /**
      * Returns the identifier of the newsletter template
-     *
+     * 
      * @return the newsletter template identifier
      */
-    public int getNewsLetterTemplateId(  )
+    public int getNewsLetterTemplateId( )
     {
         return _nNewsLetterTemplateId;
     }
 
     /**
      * Sets the identifier of the newsletter template
-     *
+     * 
      * @param nNewsLetterTemplateId the newsletter template identifier
      */
     public void setNewsLetterTemplateId( int nNewsLetterTemplateId )
@@ -306,7 +306,7 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
      * Returns the workgroup
      * @return The workgroup
      */
-    public String getWorkgroup(  )
+    public String getWorkgroup( )
     {
         return _strWorkgroup;
     }
@@ -321,10 +321,10 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     }
 
     /**
-    * Returns the test recipients
-    * @return The test recipients
-    */
-    public String getTestRecipients(  )
+     * Returns the test recipients
+     * @return The test recipients
+     */
+    public String getTestRecipients( )
     {
         return _strTestRecipients;
     }
@@ -339,10 +339,10 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     }
 
     /**
-    * Returns the Newsletter sender mail
-    * @return The Newsletter sender mail
-    */
-    public String getNewsletterSenderMail(  )
+     * Returns the Newsletter sender mail
+     * @return The Newsletter sender mail
+     */
+    public String getNewsletterSenderMail( )
     {
         return _strNewsletterSenderMail;
     }
@@ -357,10 +357,10 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     }
 
     /**
-    * Returns the Newsletter sender name
-    * @return The Newsletter sender name
-    */
-    public String getNewsletterSenderName(  )
+     * Returns the Newsletter sender name
+     * @return The Newsletter sender name
+     */
+    public String getNewsletterSenderName( )
     {
         return _strNewsletterSenderName;
     }
@@ -378,16 +378,16 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
      * Returns the Resource Type Code that identify the resource type
      * @return The Resource Type Code
      */
-    public String getResourceId(  )
+    public String getResourceId( )
     {
-        return "" + getId(  );
+        return "" + getId( );
     }
 
     /**
      * Returns the resource Id of the current object
      * @return The resource Id of the current object
      */
-    public String getResourceTypeCode(  )
+    public String getResourceTypeCode( )
     {
         return RESOURCE_TYPE;
     }
