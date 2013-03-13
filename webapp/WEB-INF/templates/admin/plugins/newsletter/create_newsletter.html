@@ -12,7 +12,7 @@
 			<div class="control-group">
 			<label class="control-label" for="newsletter_description">#i18n{newsletter.create_newsletter.description} *</label>
 				<div class="controls">
-					<textarea id="newsletter_description" name="newsletter_description" class="span5" rows="4" ></textarea>
+					<textarea class="richtext" id="newsletter_description" name="newsletter_description" class="span5" rows="4" ></textarea>
 				</div>
 			</div>
 			<div class="control-group">
@@ -25,22 +25,6 @@
 				</div>
 			</div>
 			<div class="control-group">
-			<label class="control-label" for="category_list_id">#i18n{newsletter.create_newsletter.categoryList} *</label>
-			<div class="controls">
-				<#if category_list?has_content>
-				<select id="category_list_id" name="category_list_id" multiple="multiple" class="span3" >
-					<#list category_list as categoryDisplay>
-						<option <#if categoryDisplay.assigned = true>selected="selected"</#if> value="${categoryDisplay.category.id}" >${categoryDisplay.category.name}</option>
-					</#list>
-					<option value="-1" >#i18n{newsletter.create_newsletter.uncategorizedDocuments.label}</option>
-				</select>
-				<#else>
-					<p class="alert alert-error">#i18n{newsletter.create_newsletter.labelNoCategory}</p>
-					<input type="hidden" id="newsletter_no_category" name="newsletter_no_category" value="no_category" />
-				</#if>
-				</div>
-			</div>
-			<div class="control-group">
 				<label class="control-label" for="newsletter_workgroup" >#i18n{newsletter.create_newsletter.labelWorkgroup} *</label>
 				<div class="controls">
 					<@combo name="newsletter_workgroup" default_value="" items=workgroup_list />
@@ -49,7 +33,7 @@
 			<div class="control-group">
 				<label class="control-label" for="category_number" >#i18n{newsletter.create_newsletter.labelCategoryNumber}</label>  
 				<div class="controls">
-					<input class="input-mini" name="category_number" id="category_number" type="text" value="${newsletter.nbCategories}">
+					<input class="input-mini" name="category_number" id="category_number" type="text" value="1">
 				</div>
 			</div>
 			<div class="control-group">

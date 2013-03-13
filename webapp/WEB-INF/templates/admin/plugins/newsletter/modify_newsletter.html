@@ -8,6 +8,9 @@
 				<li>
 					<a href="jsp/admin/plugins/newsletter/GetManageNewsletterSections.jsp?newsletter_id=${newsletter.id}">#i18n{newsletter.modify_newsletter.manageSections}</a>
 				</li>
+				<li>
+					<a href="jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}">#i18n{newsletter.compose_newsletter.boxTitle}</a>
+				</li>
 			</ul>
 			<form class="form-horizontal" method="post" name="modify_newsletter" action="jsp/admin/plugins/newsletter/DoModifyNewsLetter.jsp">
 				<input type="hidden" name="newsletter_id" value="${newsletter.id}" />

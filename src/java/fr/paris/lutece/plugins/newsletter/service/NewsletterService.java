@@ -70,8 +70,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.persistence.Transient;
-
 import au.com.bytecode.opencsv.CSVWriter;
 
 
@@ -101,8 +99,6 @@ public class NewsletterService implements Serializable
     private static final String PROPERTY_UNSUBSCRIBE_KEY_ENCRYPTION_ALGORITHM = "newsletter.unsubscribe.key.encryptionAlgorithm";
 
     private NewsletterSectionService _newsletterSectionService;
-    @Transient
-    private Plugin _plugin;
 
     /**
      * Returns the instance of the singleton
@@ -422,11 +418,7 @@ public class NewsletterService implements Serializable
      */
     private Plugin getPlugin( )
     {
-        if ( _plugin == null )
-        {
-            _plugin = PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME );
-        }
-        return _plugin;
+        return PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME );
     }
 
     /**

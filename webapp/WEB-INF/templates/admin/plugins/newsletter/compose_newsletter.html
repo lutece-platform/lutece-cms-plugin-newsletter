@@ -1,7 +1,17 @@
 <div class="row-fluid">
     <div class="span12">
         <fieldset>
-            <legend>#i18n{newsletter.compose_newsletter.boxTitle}</legend>
+        	<ul class="nav nav-tabs">
+				<li>
+					<a href="jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletter.id}">#i18n{newsletter.modify_newsletter.manageAttributes}</a>
+				</li>
+				<li>
+					<a href="jsp/admin/plugins/newsletter/GetManageNewsletterSections.jsp?newsletter_id=${newsletter.id}">#i18n{newsletter.modify_newsletter.manageSections}</a>
+				</li>
+				<li class="active">
+					<a href="jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}">#i18n{newsletter.compose_newsletter.boxTitle}</a>
+				</li>
+			</ul>
             <div class="span3">
                 <form class="form" method="post" action="jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp" method="post">
                     <input type="hidden" name="newsletter_id" value="${newsletter.id}" />
@@ -14,7 +24,7 @@
                     	<label class="radio inline" for="">#i18n{newsletter.compose_newsletter.newsletterTemplate} :</label>
                     	<#list newsletter_templates as template >
                    			<input class="radio inline" type="radio" name="newsletter_template_id" value="${template.id}" <#if template.id=newsletter_template_id>checked="checked"</#if> />
-                           <img src="${img_path}/${template.picture}" border="0"  height="24" width="24" alt="${template.description}" title="${template.description}" />
+							<img src="${img_path}/${template.picture}" border="0"  height="24" width="24" alt="${template.description}" title="${template.description}" />
                    		</#list>
                     <#else>
                     	<p class="label label-warning">#i18n{newsletter.compose_newsletter.noNewsletterTemplate}</p>

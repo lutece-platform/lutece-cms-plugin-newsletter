@@ -247,6 +247,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String PARAMETER_MOVE_UP = "move_up";
     private static final String PARAMETER_CATEGORY_NUMBER = "category_number";
     private static final String PARAMETER_TITLE = "title";
+    private static final String PARAMETER_UPDATE_TEMPLATE = "update_template";
 
     // URL
     private static final String JSP_URL_DO_COMPOSE_NEWSLETTER = "ComposeNewsLetter.jsp";
@@ -1887,6 +1888,18 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         }
         setPageTitleProperty( MESSAGE_PAGE_TITLE_MANAGE_SECTIONS );
 
+        // We check if we must update the template
+        if ( Boolean.parseBoolean( request.getParameter( PARAMETER_UPDATE_TEMPLATE ) ) )
+        {
+            String strTemplateId = request.getParameter( MARK_NEWSLETTER_TEMPLATE_ID );
+            if ( StringUtils.isNumeric( strTemplateId ) )
+            {
+                int nTemplateId = Integer.parseInt( strTemplateId );
+                newsletter.setNewsLetterTemplateId( nTemplateId );
+                NewsLetterHome.update( newsletter, getPlugin( ) );
+            }
+        }
+
         Map<String, Object> model = new HashMap<String, Object>( );
         List<NewsletterSection> listSections = NewsletterSectionHome
                 .findAllByIdNewsletter( nNewsletterId, getPlugin( ) );
@@ -1933,6 +1946,12 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         Locale locale = AdminUserService.getLocale( request );
         String strBaseUrl = AppPathService.getBaseUrl( request );
 
+        Collection<NewsLetterTemplate> newsletterTemplatesList = NewsLetterTemplateHome.getTemplatesCollectionByType(
+                NewsLetterTemplate.RESOURCE_TYPE, getPlugin( ) );
+        newsletterTemplatesList = AdminWorkgroupService.getAuthorizedCollection( newsletterTemplatesList, user );
+
+        String strPathImageTemplate = _newsletterService.getImageFolderPath( AppPathService.getBaseUrl( request ) );
+
         model.put( MARK_NEWSLETTER, newsletter );
         model.put( MARK_NEWSLETTER_TABLE_MANAGER, tableManager );
         model.put( MARK_LIST_SECTION_TYPES, refListSectionType );
@@ -1941,6 +1960,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                 newsletter.getNewsLetterTemplateId( ), strBaseUrl, user, locale ) );
         model.put( MARK_WEBAPP_URL, strBaseUrl );
         model.put( MARK_LOCALE, getLocale( ) );
+        model.put( MARK_LIST_NEWSLETTER_TEMPLATES, newsletterTemplatesList );
+        model.put( MARK_NEWSLETTER_TEMPLATE_ID, newsletter.getNewsLetterTemplateId( ) );
+        model.put( MARK_IMG_PATH, strPathImageTemplate );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_NEWSLETTER_SECTIONS,
                 AdminUserService.getLocale( request ), model );
