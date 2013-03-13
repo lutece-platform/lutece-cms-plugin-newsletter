@@ -103,6 +103,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
 import au.com.bytecode.opencsv.CSVReader;
@@ -1845,15 +1846,17 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsletterUtils.addHeaderResponse( request, response, strFileName, CONSTANT_CSV_FILE_EXTENSION );
         response.setContentLength( byteSubscribersList.length );
 
+        OutputStream os = null;
         try
         {
-            OutputStream os = response.getOutputStream( );
+            os = response.getOutputStream( );
             os.write( byteSubscribersList );
             os.close( );
         }
         catch ( IOException e )
         {
             AppLogService.error( e );
+            IOUtils.closeQuietly( os );
         }
 
         return getHomeUrl( request );
@@ -2296,7 +2299,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
      */
     private String getTextFileContent( String strFileName )
     {
-        BufferedReader fileReader;
+        BufferedReader fileReader = null;
         StringBuilder sbSource = new StringBuilder( StringUtils.EMPTY );
 
         try
@@ -2323,6 +2326,10 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         {
             AppLogService
                     .error( "plugin-newsletter - error when reading CSS '" + strFileName + "' ! " + e.getMessage( ) );
+        }
+        finally
+        {
+            IOUtils.closeQuietly( fileReader );
         }
 
         return sbSource.toString( );

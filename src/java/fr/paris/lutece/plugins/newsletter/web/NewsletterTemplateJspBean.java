@@ -46,6 +46,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
 
@@ -468,10 +469,6 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 NewsLetterTemplateHome.update( newsletterTemplate, getPlugin( ) );
             }
         }
-        catch ( IOException io )
-        {
-            AppLogService.error( io.getMessage( ), io );
-        }
         catch ( Exception e )
         {
             AppLogService.error( e.getMessage( ), e );
@@ -493,73 +490,60 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
 
         Map<String, Object> model = new HashMap<String, Object>( );
 
+        BufferedReader fileReader = null;
         try
         {
-            BufferedReader fileReader = null;
-            try
+            int nIdTemplate = Integer.parseInt( request
+                    .getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID ) );
+            NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome.findByPrimaryKey( nIdTemplate, getPlugin( ) );
+
+            //Workgroup & RBAC permissions
+            if ( !AdminWorkgroupService.isAuthorized( newsletterTemplate, getUser( ) )
+                    || !RBACService.isAuthorized( NewsLetterTemplate.RESOURCE_TYPE,
+                            Integer.toString( newsletterTemplate.getId( ) ),
+                            NewsletterTemplateResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
             {
-                int nIdTemplate = Integer.parseInt( request
-                        .getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID ) );
-                NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome.findByPrimaryKey( nIdTemplate,
-                        getPlugin( ) );
-
-                //Workgroup & RBAC permissions
-                if ( !AdminWorkgroupService.isAuthorized( newsletterTemplate, getUser( ) )
-                        || !RBACService.isAuthorized( NewsLetterTemplate.RESOURCE_TYPE,
-                                Integer.toString( newsletterTemplate.getId( ) ),
-                                NewsletterTemplateResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
-                {
-                    return getManageTemplates( request );
-                }
-
-                // get the file content
-                String strPathFileNewsletterTemplate = AppPathService.getPath( PROPERTY_PATH_TEMPLATE )
-                        + AppPropertiesService.getProperty( NewsLetterConstants.PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE );
-
-                String strFileName = newsletterTemplate.getFileName( );
-                fileReader = new BufferedReader( new FileReader( strPathFileNewsletterTemplate + File.separator
-                        + strFileName ) );
-
-                StringBuilder sbSource = new StringBuilder( );
-                String line = fileReader.readLine( );
-
-                while ( line != null )
-                {
-                    sbSource.append( line + "\n" );
-                    line = fileReader.readLine( );
-                }
-
-                fileReader.close( );
-
-                model.put( NewsLetterConstants.MARK_TEMPLATE_TYPE,
-                        buildTemplateTypeList( AdminUserService.getLocale( request ) ) );
-
-                model.put( NewsLetterConstants.MARK_TEMPLATE_SOURCE, sbSource.toString( ) );
-                model.put( NewsLetterConstants.MARK_TEMPLATE_FILE_NAME, strFileName );
-                model.put( NewsLetterConstants.MARK_TEMPLATE, newsletterTemplate );
+                return getManageTemplates( request );
             }
-            catch ( FileNotFoundException f )
+
+            // get the file content
+            String strPathFileNewsletterTemplate = AppPathService.getPath( PROPERTY_PATH_TEMPLATE )
+                    + AppPropertiesService.getProperty( NewsLetterConstants.PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE );
+
+            String strFileName = newsletterTemplate.getFileName( );
+            fileReader = new BufferedReader( new FileReader( strPathFileNewsletterTemplate + File.separator
+                    + strFileName ) );
+
+            StringBuilder sbSource = new StringBuilder( );
+            String line = fileReader.readLine( );
+
+            while ( line != null )
             {
-                AppLogService.debug( f );
-                if ( fileReader != null )
-                {
-                    fileReader.close( );
-                }
+                sbSource.append( line + "\n" );
+                line = fileReader.readLine( );
             }
-            catch ( IOException i )
-            {
-                AppLogService.debug( i );
-                if ( fileReader != null )
-                {
-                    fileReader.close( );
-                }
-            }
+
+            fileReader.close( );
+
+            model.put( NewsLetterConstants.MARK_TEMPLATE_TYPE,
+                    buildTemplateTypeList( AdminUserService.getLocale( request ) ) );
+
+            model.put( NewsLetterConstants.MARK_TEMPLATE_SOURCE, sbSource.toString( ) );
+            model.put( NewsLetterConstants.MARK_TEMPLATE_FILE_NAME, strFileName );
+            model.put( NewsLetterConstants.MARK_TEMPLATE, newsletterTemplate );
         }
-        catch ( IOException e )
+        catch ( FileNotFoundException f )
         {
-            AppLogService.error( e.getMessage( ), e );
+            AppLogService.debug( f );
         }
-
+        catch ( IOException i )
+        {
+            AppLogService.debug( i );
+        }
+        finally
+        {
+            IOUtils.closeQuietly( fileReader );
+        }
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_NEWSLETTER_TEMPLATE_FILE, getLocale( ),
                 model );
 
@@ -575,6 +559,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
      */
     public String doModifyNewsletterTemplateFile( HttpServletRequest request )
     {
+        FileWriter fileWriter = null;
         try
         {
             // initialize the paths
@@ -632,7 +617,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 // Writes the new content of the file.
                 String fileContent = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_SOURCE );
 
-                FileWriter fileWriter = new FileWriter( strPathFileNewsletterTemplate + File.separator + strOldFileName );
+                fileWriter = new FileWriter( strPathFileNewsletterTemplate + File.separator + strOldFileName );
                 fileWriter.write( fileContent );
                 fileWriter.close( );
 
@@ -649,6 +634,10 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
         catch ( Exception e )
         {
             AppLogService.error( e.getMessage( ), e );
+        }
+        finally
+        {
+            IOUtils.closeQuietly( fileWriter );
         }
 
         return getHomeUrl( request );
