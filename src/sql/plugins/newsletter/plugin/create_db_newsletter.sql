@@ -35,6 +35,7 @@ CREATE TABLE newsletter_template (
   picture VARCHAR(100) DEFAULT NULL,
   workgroup_key VARCHAR(50) DEFAULT NULL,
   section_type VARCHAR(100) NOT NULL,
+  categories INT DEFAULT '1' NOT NULL,
   PRIMARY KEY (id_template)
 );
 

@@ -11,30 +11,34 @@
 				<li>
 					<a href="jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}">#i18n{newsletter.compose_newsletter.boxTitle}</a>
 				</li>
-				<div class="pull-right">
-					<form class="form-inline spaced" action="jsp/admin/plugins/newsletter/DoAddNewsletterSection.jsp">
-						<input type="hidden" name="newsletter_id" id="newsletter_id" value="${newsletter.id}">
-						
-						<label for="section_type">#i18n{newsletter.manage_sections.labelSectionType} : </label>
-						<@combo name="section_type" items=list_section_types default_value="" />
-						<#if 1 < newsletter.nbCategories>
-							<label for="section_category_number">#i18n{newsletter.manage_sections.labelCategoryNumber} : </label>
-							<select class="input-mini" name="section_category_number">
-								<#list 1..newsletter.nbCategories as i>
-									<option value="${i}">${i}</option>
-								</#list>
-							</select>
-						<#else>
-							<input type="hidden" name="section_category_number" value="1">
-						</#if>
-						<button class="btn btn-primary btn-small" title="#i18n{newsletter.manage_sections.labelAddSection}"><i class="icon-plus icon-white">&nbsp;</i>&nbsp;<span class="hidden-phone">#i18n{newsletter.manage_sections.labelAddSection}</span></button>
-					</form>
-				</div>
+				<#if 0 < newsletter_template_id>
+					<div class="pull-right">
+						<form class="form-inline spaced" action="jsp/admin/plugins/newsletter/DoAddNewsletterSection.jsp">
+							<input type="hidden" name="newsletter_id" id="newsletter_id" value="${newsletter.id}">
+							
+							<label for="section_type">#i18n{newsletter.manage_sections.labelSectionType} : </label>
+							<@combo name="section_type" items=list_section_types default_value="" />
+							<#if 1 < newsletter.nbCategories>
+								<label for="section_category_number">#i18n{newsletter.manage_sections.labelCategoryNumber} : </label>
+								<select class="input-mini" name="section_category_number">
+									<#list 1..newsletter.nbCategories as i>
+										<option value="${i}">${i}</option>
+									</#list>
+								</select>
+							<#else>
+								<input type="hidden" name="section_category_number" value="1">
+							</#if>
+							<button class="btn btn-primary btn-small" title="#i18n{newsletter.manage_sections.labelAddSection}"><i class="icon-plus icon-white">&nbsp;</i>&nbsp;<span class="hidden-phone">#i18n{newsletter.manage_sections.labelAddSection}</span></button>
+						</form>
+					</div>
+				</#if>
 			</ul>
 			<div class="span7">
-				<@dataTable dataTableManager=table_manager actionMacro="getActionColumn" />
-				<br />
-				<br />
+				<#if 0 < newsletter_template_id>
+					<@dataTable dataTableManager=table_manager actionMacro="getActionColumn" />
+					<br />
+					<br />
+				</#if>
 				<div>
 					<form class="form" method="post" action="jsp/admin/plugins/newsletter/GetManageNewsletterSections.jsp" method="post">
 	                    <input type="hidden" name="newsletter_id" value="${newsletter.id}" />

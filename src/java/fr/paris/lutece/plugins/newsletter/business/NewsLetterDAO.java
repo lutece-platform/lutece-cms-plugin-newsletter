@@ -67,6 +67,8 @@ public final class NewsLetterDAO implements INewsLetterDAO
     private static final String SQL_QUERY_CHECK_IS_TEMPLATE_USED = "SELECT id_newsletter FROM newsletter_description WHERE id_newsletter_template = ? ";
     private static final String SQL_QUERY_DELETE_UNUSED_EMAIL = "DELETE FROM newsletter_subscriber_details WHERE id_subscriber NOT IN (SELECT id_subscriber FROM newsletter_subscriber)";
 
+    private static final String CONSTANT_PERCENT = "%";
+
     ///////////////////////////////////////////////////////////////////////////////////////
     //Access methods to data
 
@@ -436,7 +438,6 @@ public final class NewsLetterDAO implements INewsLetterDAO
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_IS_TEMPLATE_USED, plugin );
 
         daoUtil.setInt( 1, nTemplateId );
-        daoUtil.setInt( 2, nTemplateId );
         daoUtil.executeQuery( );
 
         if ( !daoUtil.next( ) )
@@ -465,7 +466,7 @@ public final class NewsLetterDAO implements INewsLetterDAO
 
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_NBR_SUBSCRIBERS, plugin );
 
-        daoUtil.setString( 1, "%" + strSearchString + "%" );
+        daoUtil.setString( 1, CONSTANT_PERCENT + strSearchString + CONSTANT_PERCENT );
         daoUtil.setInt( 2, nNewsLetterId );
 
         daoUtil.executeQuery( );
@@ -475,8 +476,10 @@ public final class NewsLetterDAO implements INewsLetterDAO
             // If the table is empty
             nCount = 0;
         }
-
-        nCount = daoUtil.getInt( 1 );
+        else
+        {
+            nCount = daoUtil.getInt( 1 );
+        }
 
         daoUtil.free( );
 
@@ -497,7 +500,7 @@ public final class NewsLetterDAO implements INewsLetterDAO
 
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_NBR_ACTIVE_SUBSCRIBERS, plugin );
 
-        daoUtil.setString( 1, "%" + strSearchString + "%" );
+        daoUtil.setString( 1, CONSTANT_PERCENT + strSearchString + CONSTANT_PERCENT );
         daoUtil.setInt( 2, nNewsLetterId );
 
         daoUtil.executeQuery( );
@@ -507,8 +510,10 @@ public final class NewsLetterDAO implements INewsLetterDAO
             // If the table is empty
             nCount = 0;
         }
-
-        nCount = daoUtil.getInt( 1 );
+        else
+        {
+            nCount = daoUtil.getInt( 1 );
+        }
 
         daoUtil.free( );
 

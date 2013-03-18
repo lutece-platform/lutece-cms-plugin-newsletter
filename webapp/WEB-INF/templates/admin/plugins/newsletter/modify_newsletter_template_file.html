@@ -6,21 +6,27 @@
 		<form class="form-horizontal" method="post" enctype="multipart/form-data" action="jsp/admin/plugins/newsletter/DoModifyNewsLetterTemplateFile.jsp" method="post">
 			<input type="hidden" name="newsletter_template_id" value="${template.id}" />
 			<div class="control-group">
-			<label class="control-label" for="newsletter_template_name">#i18n{newsletter.add_newsletter_template.name} *:</label>
+				<label class="control-label" for="newsletter_template_name">#i18n{newsletter.add_newsletter_template.name} *:</label>
 				<div class="controls">
 					<input type="text" id="newsletter_template_name" name="newsletter_template_name" maxlength="50" value="${template.description}" />
 				</div>
 			</div>
 			<div class="control-group">
-			<label class="control-label" for="newsletter_template_type">#i18n{newsletter.add_newsletter_template.templateType} *:</label>
+				<label class="control-label" for="newsletter_template_type">#i18n{newsletter.add_newsletter_template.templateType} *:</label>
 				<div class="controls">
 					<@combo items=template_type default_value=template.sectionType name="newsletter_template_type" />
 				</div>
 			</div>
 			<div class="control-group">
-			<label class="control-label" for="newsletter_template_new_picture">#i18n{newsletter.add_newsletter_template.imageFileName} :</label>
+				<label class="control-label" for="newsletter_template_new_picture">#i18n{newsletter.add_newsletter_template.imageFileName} :</label>
 				<div class="controls">
 					<input type="file" id="newsletter_template_new_picture" name="newsletter_template_new_picture" class="input-small"value="" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="newsletter_template_category">#i18n{newsletter.add_newsletter_template.categoryNumber} :</label>
+				<div class="controls">
+					<input type="text" id="newsletter_template_category" name="newsletter_template_category" class="input-small" value="${template.categoryNumber}" />
 				</div>
 			</div>
 			<div class="control-group">
@@ -30,7 +36,7 @@
 				</div>
 			</div>
 			<div class="control-group">
-			<label class="control-label" for="newsletter_template_source">#i18n{newsletter.modify_newsletter_template.fileContent} : </label>
+				<label class="control-label" for="newsletter_template_source">#i18n{newsletter.modify_newsletter_template.fileContent} : </label>
 				<div class="controls">
 					<textarea class="span8 field" rows="20" id="newsletter_template_source" name="newsletter_template_source">${template_source}</textarea>
 					<p class="help-block">#i18n{newsletter.modify_newsletter_template.contentHelp}</p>

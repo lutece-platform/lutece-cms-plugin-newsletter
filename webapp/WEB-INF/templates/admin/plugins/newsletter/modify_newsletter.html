@@ -42,12 +42,6 @@
 					</div>
 				</div>
 				<div class="control-group">
-					<label class="control-label" for="category_number" >#i18n{newsletter.modify_newsletter.labelCategoryNumber}</label>  
-					<div class="controls">
-						<input class="input-mini" name="category_number" id="category_number" type="text" value="${newsletter.nbCategories}">
-					</div>
-				</div>
-				<div class="control-group">
 					<label class="control-label" for="newsletter_unsubscribe" >#i18n{newsletter.modify_newsletter.labelUnsubscribe} *</label>  
 						<div class="controls">
 							<@combo name="newsletter_unsubscribe" default_value="${newsletter.unsubscribe}" items=unsubscribe_list />

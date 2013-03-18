@@ -245,7 +245,6 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String PARAMETER_SECTION_ID = "section_id";
     private static final String PARAMETER_NEWSLETTER_SECTIONS_TABLE_MANAGER = "newsletter_sections_table_manager";
     private static final String PARAMETER_MOVE_UP = "move_up";
-    private static final String PARAMETER_CATEGORY_NUMBER = "category_number";
     private static final String PARAMETER_TITLE = "title";
     private static final String PARAMETER_UPDATE_TEMPLATE = "update_template";
 
@@ -715,7 +714,6 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         String strSenderMail = request.getParameter( PARAMETER_NEWSLETTER_SENDER_MAIL );
         String strTestRecipients = request.getParameter( PARAMETER_TEST_RECIPIENTS );
         String strTestSubject = request.getParameter( PARAMETER_TEST_SUBJECT );
-        String strCategoryNumber = request.getParameter( PARAMETER_CATEGORY_NUMBER );
 
         //RBAC permission
         if ( !isNewsletterCreationAllowed( request ) )
@@ -726,8 +724,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         // Mandatory fields
         if ( StringUtils.isEmpty( strSenderMail ) || StringUtils.isEmpty( strTestRecipients )
                 || StringUtils.isEmpty( strNewsletterName ) || StringUtils.isEmpty( strDateFirstSend )
-                || StringUtils.isEmpty( strWorkGroup ) || StringUtils.isEmpty( strSenderName )
-                || StringUtils.isEmpty( strCategoryNumber ) )
+                || StringUtils.isEmpty( strWorkGroup ) || StringUtils.isEmpty( strSenderName ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
@@ -774,8 +771,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         newsletter.setTestSubject( strTestSubject );
         newsletter.setNewsletterSenderMail( strSenderMail );
         newsletter.setNewsletterSenderName( strSenderName );
-        newsletter.setNbCategories( StringUtils.isNumeric( strCategoryNumber ) ? Integer.parseInt( strCategoryNumber )
-                : 1 );
+        newsletter.setNbCategories( 1 );
         newsletter.setUnsubscribe( request.getParameter( PARAMETER_NEWSLETTER_UNSUBSCRIBE ) );
 
         NewsLetterHome.create( newsletter, getPlugin( ) );
@@ -845,7 +841,6 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         int nNewsletterId = Integer.parseInt( strNewsletterId );
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
         String strTestSubject = request.getParameter( PARAMETER_TEST_SUBJECT );
-        String strCategoryNumber = request.getParameter( PARAMETER_CATEGORY_NUMBER );
 
         // RBAC permission
         if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
@@ -858,8 +853,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         // Mandatory fields
         if ( StringUtils.isEmpty( strSenderMail ) || StringUtils.isEmpty( strTestRecipients )
                 || StringUtils.isEmpty( strNewsletterName ) || StringUtils.isEmpty( strDateLastSend )
-                || StringUtils.isEmpty( strWorkGroup ) || StringUtils.isEmpty( strSenderName )
-                || StringUtils.isEmpty( strCategoryNumber ) )
+                || StringUtils.isEmpty( strWorkGroup ) || StringUtils.isEmpty( strSenderName ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
@@ -890,8 +884,6 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         newsletter.setTestSubject( strTestSubject );
         newsletter.setNewsletterSenderMail( strSenderMail );
         newsletter.setNewsletterSenderName( strSenderName );
-        newsletter.setNbCategories( StringUtils.isNumeric( strCategoryNumber ) ? Integer.parseInt( strCategoryNumber )
-                : 1 );
 
         Timestamp dateLastSend = DateUtil.formatTimestamp( strDateLastSend, getLocale( ) );
 
@@ -1888,6 +1880,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         }
         setPageTitleProperty( MESSAGE_PAGE_TITLE_MANAGE_SECTIONS );
 
+        List<NewsletterSection> listSections = NewsletterSectionHome
+                .findAllByIdNewsletter( nNewsletterId, getPlugin( ) );
+
         // We check if we must update the template
         if ( Boolean.parseBoolean( request.getParameter( PARAMETER_UPDATE_TEMPLATE ) ) )
         {
@@ -1895,14 +1890,27 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             if ( StringUtils.isNumeric( strTemplateId ) )
             {
                 int nTemplateId = Integer.parseInt( strTemplateId );
+                NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome.findByPrimaryKey( nTemplateId,
+                        getPlugin( ) );
+                newsletter.setNbCategories( newsletterTemplate.getCategoryNumber( ) );
                 newsletter.setNewsLetterTemplateId( nTemplateId );
                 NewsLetterHome.update( newsletter, getPlugin( ) );
+                int nNewOrder = NewsletterSectionHome.getNewOrder( nNewsletterId,
+                        newsletterTemplate.getCategoryNumber( ), getPlugin( ) );
+                for ( NewsletterSection section : listSections )
+                {
+                    if ( section.getCategory( ) > newsletterTemplate.getCategoryNumber( ) )
+                    {
+                        section.setCategory( newsletterTemplate.getCategoryNumber( ) );
+                        section.setOrder( nNewOrder );
+                        nNewOrder++;
+                        NewsletterSectionHome.updateNewsletterSection( section, getPlugin( ) );
+                    }
+                }
             }
         }
 
         Map<String, Object> model = new HashMap<String, Object>( );
-        List<NewsletterSection> listSections = NewsletterSectionHome
-                .findAllByIdNewsletter( nNewsletterId, getPlugin( ) );
 
         // We create an array with the number of sections in every category
         Integer[] tblCategorySize = new Integer[newsletter.getNbCategories( )];

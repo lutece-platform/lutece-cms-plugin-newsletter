@@ -88,6 +88,9 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
     // PARAMETERS
     private static final String PARAMETER_TEMPLATE_PICTURE = "newsletter_template_picture";
     private static final String PARAMETER_TEMPLATE_FILE = "newsletter_template_file";
+    private static final String PARAMETER_TEMPLATE_CATEGORY = "newsletter_template_category";
+    private static final String PARAMETER_NEWSLETTER_TEMPLATE_NEW_PICTURE = "newsletter_template_new_picture";
+    private static final String PARAMETER_NEWSLETTER_TEMPLATE_NEW_FILE = "newsletter_template_new_file";
 
     // PROPERTIES
     private static final String PROPERTY_PATH_IMAGE_NEWSLETTER_TEMPLATE = "newsletter.path.image.newsletter.template";
@@ -101,6 +104,8 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
     // URL
     private static final String JSP_URL_MANAGE_NEWSLETTER_TEMPLATES = "ManageTemplates.jsp";
     private static final String JSP_DO_REMOVE_NEWSLETTER_TEMPLATE = "jsp/admin/plugins/newsletter/DoRemoveNewsLetterTemplate.jsp";
+
+    private static final String CONSTANT_END_OF_LINE = "\n";
 
     private NewsletterSectionService _newsletterSectionService = NewsletterSectionService.getService( );
 
@@ -277,12 +282,14 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                             AdminMessage.TYPE_STOP );
                 }
                 String strTemplateFileName = UploadUtil.cleanFileName( modelItem.getName( ) );
+                String strCategoryNumber = request.getParameter( PARAMETER_TEMPLATE_CATEGORY );
 
-                if ( StringUtils.isEmpty( strTemplateFileName ) )
+                if ( StringUtils.isEmpty( strTemplateFileName ) || !StringUtils.isNumeric( strCategoryNumber ) )
                 {
                     return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
                             AdminMessage.TYPE_STOP );
                 }
+                int nCategories = Integer.parseInt( strCategoryNumber );
 
                 File fileTemplate = new File( strPathFileNewsletterTemplate + File.separator + strTemplateFileName );
 
@@ -303,6 +310,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 newsletterTemplate.setDescription( strDescription );
                 newsletterTemplate.setSectionType( strSectionType );
                 newsletterTemplate.setWorkgroup( strWorkgroup );
+                newsletterTemplate.setCategoryNumber( nCategories );
                 NewsLetterTemplateHome.create( newsletterTemplate, getPlugin( ) );
             }
         }
@@ -390,24 +398,21 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 String strType = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_TYPE );
                 String strDescription = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_NAME );
                 String strWorkgroup = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_WORKGROUP );
+                String strCategoryNumber = request.getParameter( PARAMETER_TEMPLATE_CATEGORY );
 
-                if ( StringUtils.isEmpty( strDescription ) )
+                if ( StringUtils.isEmpty( strDescription ) || StringUtils.isEmpty( strWorkgroup )
+                        || !StringUtils.isNumeric( strCategoryNumber ) )
                 {
                     return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
                             AdminMessage.TYPE_STOP );
                 }
-
-                if ( StringUtils.isEmpty( strWorkgroup ) )
-                {
-                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
-                            AdminMessage.TYPE_STOP );
-                }
+                int nCategories = Integer.parseInt( strCategoryNumber );
 
                 // Names of the old files
                 String strOldFileName = newsletterTemplate.getFileName( );
                 String strOldImageName = newsletterTemplate.getPicture( );
 
-                FileItem imageItem = multi.getFile( "newsletter_template_new_picture" ); //Todo
+                FileItem imageItem = multi.getFile( PARAMETER_NEWSLETTER_TEMPLATE_NEW_PICTURE );
                 String strImageFileName = null;
                 File fileImage = null;
 
@@ -432,7 +437,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                     oldImageFile.delete( );
                 }
 
-                FileItem modelItem = multi.getFile( "newsletter_template_new_file" );
+                FileItem modelItem = multi.getFile( PARAMETER_NEWSLETTER_TEMPLATE_NEW_FILE );
 
                 if ( ( modelItem != null ) && ( modelItem.getSize( ) != 0 ) )
                 {
@@ -466,6 +471,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 newsletterTemplate.setDescription( strDescription );
                 newsletterTemplate.setSectionType( strType );
                 newsletterTemplate.setWorkgroup( strWorkgroup );
+                newsletterTemplate.setCategoryNumber( nCategories );
                 NewsLetterTemplateHome.update( newsletterTemplate, getPlugin( ) );
             }
         }
@@ -519,7 +525,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
 
             while ( line != null )
             {
-                sbSource.append( line + "\n" );
+                sbSource.append( line + CONSTANT_END_OF_LINE );
                 line = fileReader.readLine( );
             }
 
@@ -590,18 +596,20 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 // Mandatory fields
                 String strType = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_TYPE );
                 String strDescription = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_NAME );
+                String strCategoryNumber = request.getParameter( PARAMETER_TEMPLATE_CATEGORY );
 
-                if ( StringUtils.isEmpty( strDescription ) )
+                if ( StringUtils.isEmpty( strDescription ) || !StringUtils.isNumeric( strCategoryNumber ) )
                 {
                     return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
                             AdminMessage.TYPE_STOP );
                 }
+                int nCategories = Integer.parseInt( strCategoryNumber );
 
                 // Names of the old files
                 String strOldFileName = newsletterTemplate.getFileName( );
                 String strOldImageName = newsletterTemplate.getPicture( );
 
-                FileItem imageItem = multi.getFile( "newsletter_template_new_picture" );
+                FileItem imageItem = multi.getFile( PARAMETER_NEWSLETTER_TEMPLATE_NEW_PICTURE );
 
                 if ( ( imageItem != null ) && ( imageItem.getSize( ) != 0 ) )
                 {
@@ -624,6 +632,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 // Complete the newsLetterTemplate
                 newsletterTemplate.setDescription( strDescription );
                 newsletterTemplate.setSectionType( strType );
+                newsletterTemplate.setCategoryNumber( nCategories );
                 NewsLetterTemplateHome.update( newsletterTemplate, getPlugin( ) );
             }
         }

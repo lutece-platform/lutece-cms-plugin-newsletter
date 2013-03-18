@@ -326,7 +326,10 @@ public class NewsletterService implements Serializable
                         sbCategoryContent.append( getNewsletterSectionService( ).getSectionContent( section, user,
                                 locale ) );
                     }
-                    strContentByCategory[nCurrentCategory - 1] = sbCategoryContent.toString( );
+                    if ( nCurrentCategory - 1 < strContentByCategory.length )
+                    {
+                        strContentByCategory[nCurrentCategory - 1] = sbCategoryContent.toString( );
+                    }
                 }
                 if ( newsletterSection != null )
                 {

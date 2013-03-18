@@ -55,6 +55,7 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
     private String _strFileName;
     private String _strPicture;
     private String _strWorkgroup;
+    private int _nCategoryNumber;
 
     /**
      * Initialisation method
@@ -192,5 +193,23 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
     public String getResourceTypeCode( )
     {
         return RESOURCE_TYPE;
+    }
+
+    /**
+     * Get the number of categories of this template
+     * @return The number of categories of this template
+     */
+    public int getCategoryNumber( )
+    {
+        return _nCategoryNumber;
+    }
+
+    /**
+     * Set the number of categories of this template
+     * @param nCategoryNumber The number of categories of this template
+     */
+    public void setCategoryNumber( int nCategoryNumber )
+    {
+        this._nCategoryNumber = nCategoryNumber;
     }
 }
