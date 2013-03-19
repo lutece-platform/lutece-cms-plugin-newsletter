@@ -44,7 +44,8 @@ import java.util.Collection;
 
 
 /**
- * This class provides instances management methods (create, find, ...) for NewsLetter objects
+ * This class provides instances management methods (create, find, ...) for
+ * NewsLetter objects
  */
 public final class NewsLetterHome
 {
@@ -54,13 +55,12 @@ public final class NewsLetterHome
     /**
      * Private constructor - this class need not be instantiated
      */
-    private NewsLetterHome(  )
+    private NewsLetterHome( )
     {
     }
 
     /**
      * Create an instance of the newsletter
-     *
      * @param newsLetter the object to insert into the database
      * @param plugin the Plugin
      * @return the instance created
@@ -74,8 +74,8 @@ public final class NewsLetterHome
 
     /**
      * update of the newsletter which is specified in parameter
-     *
-     * @param newsLetter the instacne of newsletter which contains the data to store
+     * @param newsLetter the instance of newsletter which contains the data to
+     *            store
      * @param plugin the Plugin
      * @return the new instance updated
      */
@@ -88,7 +88,6 @@ public final class NewsLetterHome
 
     /**
      * Remove the record from the identifier a newsletter
-     *
      * @param nNewsLetterId the newsletter identifier
      * @param plugin the Plugin
      */
@@ -102,7 +101,6 @@ public final class NewsLetterHome
 
     /**
      * Returns an object NewsLetter from its identifier
-     *
      * @param nKey the primary key of the newsletter
      * @param plugin the Plugin
      * @return an instance of the class
@@ -114,7 +112,6 @@ public final class NewsLetterHome
 
     /**
      * Returns a collection of NewsLetter objects
-     *
      * @param plugin the Plugin
      * @return the collection of objects
      */
@@ -125,7 +122,6 @@ public final class NewsLetterHome
 
     /**
      * Returns a ReferenceList of NewsLetter ids and names
-     *
      * @param plugin the Plugin
      * @return the ReferenceList of id and name
      */
@@ -134,15 +130,25 @@ public final class NewsLetterHome
         return _dao.selectAllId( plugin );
     }
 
+    /**
+     * Gets a collection of NewsLetter associated with a given template
+     * @param nTemplateId The id of the template
+     * @param plugin the Plugin
+     * @return the collection of objects
+     */
+    public static Collection<NewsLetter> findAllByTemplateId( int nTemplateId, Plugin plugin )
+    {
+        return _dao.selectAllByTemplateId( nTemplateId, plugin );
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     // Operations
 
     /**
-     * insert a new subscriber for e newsletter.
-     * subscriber is automaticaly marked as confirmed
-     *
+     * insert a new subscriber for e newsletter. The subscriber is automatically
+     * marked as confirmed
      * @param nNewsLetterId the newsletter identifier
-     * @param nSubscriberId the subscriber indentifier
+     * @param nSubscriberId the subscriber identifier
      * @param plugin the Plugin
      * @param tToday the day
      */
@@ -153,24 +159,23 @@ public final class NewsLetterHome
 
     /**
      * insert a new subscriber for e newsletter
-     *
      * @param nNewsLetterId the newsletter identifier
-     * @param nSubscriberId the subscriber indentifier
-     * @param bValidate <b>true</b> if user is automaticaly confirmed, <b>false</b> otherwise
+     * @param nSubscriberId the subscriber identifier
+     * @param bValidate <b>true</b> if user is automatically confirmed,
+     *            <b>false</b> otherwise
      * @param plugin the Plugin
      * @param tToday the day
      */
     public static void addSubscriber( int nNewsLetterId, int nSubscriberId, boolean bValidate, Timestamp tToday,
-        Plugin plugin )
+            Plugin plugin )
     {
         _dao.insertSubscriber( nNewsLetterId, nSubscriberId, bValidate, tToday, plugin );
     }
 
     /**
      * validates a new subscriber for a newsletter
-     *
      * @param nNewsLetterId the newsletter identifier
-     * @param nSubscriberId the subscriber indentifier
+     * @param nSubscriberId the subscriber identifier
      * @param plugin the Plugin
      */
     public static void validateSubscriber( int nNewsLetterId, int nSubscriberId, Plugin plugin )
@@ -180,7 +185,6 @@ public final class NewsLetterHome
 
     /**
      * removes an subscriber's inscription for a newsletter
-     *
      * @param nNewsLetterId the newsletter identifier
      * @param nSubscriberId the subscriber identifier
      * @param plugin the Plugin
@@ -192,22 +196,20 @@ public final class NewsLetterHome
 
     /**
      * Performs confirm unsubscription process
-     *
      * @param nConfirmLimit How many days before deleting a subscriber
      * @param plugin the plugin
      */
     public static void removeOldUnconfirmed( int nConfirmLimit, Plugin plugin )
     {
-        Calendar cal = Calendar.getInstance(  );
+        Calendar cal = Calendar.getInstance( );
         cal.add( Calendar.DATE, -nConfirmLimit );
 
-        Timestamp limitDate = new java.sql.Timestamp( cal.getTimeInMillis(  ) );
+        Timestamp limitDate = new java.sql.Timestamp( cal.getTimeInMillis( ) );
         _dao.deleteOldUnconfirmed( limitDate, plugin );
     }
 
     /**
      * Returns the number of subscriber for a newsletter
-     *
      * @param nNewsLetterId the identifier of the newsletter
      * @param plugin the Plugin
      * @return the number of subscriber for a newsletter
@@ -219,7 +221,6 @@ public final class NewsLetterHome
 
     /**
      * Returns the number of active subscriber for a newsletter
-     *
      * @param nNewsLetterId the identifier of the newsletter
      * @param plugin the Plugin
      * @return the number of subscriber for a newsletter
@@ -230,22 +231,7 @@ public final class NewsLetterHome
     }
 
     /**
-     * Returns the number of subscriber with an email containing a given string for a newsletter
-     *
-     * @param nNewsLetterId the identifier of the newsletter
-     * @param strSearchString the string to search in the subscriber's email
-     * @param plugin the Plugin
-     * @return the number of subscriber for a newsletter
-     *
-     * public static int findNbrSubscribers( int nNewsLetterId, String strSearchString, Plugin plugin )
-     * {
-     * return _dao.selectNbrSubscribers( nNewsLetterId, strSearchString, plugin );
-     * }
-     **/
-
-    /**
      * controls that a subscriber is not yet registered for a newsletter
-     *
      * @param nNewsLetterId the newsletter identifier
      * @param nSubscriberId the subscriber identifier
      * @param plugin the Plugin
@@ -258,12 +244,11 @@ public final class NewsLetterHome
 
     /**
      * controls that a template is used by a newsletter
-     *
      * @param nTemplateId the template identifier
      * @param plugin the Plugin
      * @return true if the template is used, false if not
      */
-    public static boolean findTemplate( int nTemplateId, Plugin plugin )
+    public static boolean isTemplateUsedByNewsletter( int nTemplateId, Plugin plugin )
     {
         return _dao.isTemplateUsed( nTemplateId, plugin );
     }

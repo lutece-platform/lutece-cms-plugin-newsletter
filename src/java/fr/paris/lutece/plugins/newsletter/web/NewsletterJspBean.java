@@ -43,13 +43,13 @@ import fr.paris.lutece.plugins.newsletter.business.SendingNewsLetter;
 import fr.paris.lutece.plugins.newsletter.business.SendingNewsLetterHome;
 import fr.paris.lutece.plugins.newsletter.business.Subscriber;
 import fr.paris.lutece.plugins.newsletter.business.SubscriberHome;
-import fr.paris.lutece.plugins.newsletter.business.section.NewsletterSection;
-import fr.paris.lutece.plugins.newsletter.business.section.NewsletterSectionHome;
+import fr.paris.lutece.plugins.newsletter.business.topic.NewsletterTopic;
+import fr.paris.lutece.plugins.newsletter.business.topic.NewsletterTopicHome;
 import fr.paris.lutece.plugins.newsletter.service.NewsLetterRegistrationService;
 import fr.paris.lutece.plugins.newsletter.service.NewsletterPlugin;
 import fr.paris.lutece.plugins.newsletter.service.NewsletterResourceIdService;
 import fr.paris.lutece.plugins.newsletter.service.NewsletterService;
-import fr.paris.lutece.plugins.newsletter.service.section.NewsletterSectionService;
+import fr.paris.lutece.plugins.newsletter.service.topic.NewsletterTopicService;
 import fr.paris.lutece.plugins.newsletter.util.NewsLetterConstants;
 import fr.paris.lutece.plugins.newsletter.util.NewsletterUtils;
 import fr.paris.lutece.portal.business.rbac.RBAC;
@@ -159,8 +159,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String TEMPLATE_MANAGE_SUBSCRIBERS = "admin/plugins/newsletter/manage_subscribers.html";
     private static final String TEMPLATE_IMPORT_SUBSCRIBERS = "admin/plugins/newsletter/import_subscribers.html";
     private static final String TEMPLATE_MANAGE_OLD_NEWSLETTERS = "admin/plugins/newsletter/manage_old_newsletters.html";
-    private static final String TEMPLATE_MANAGE_NEWSLETTER_SECTIONS = "admin/plugins/newsletter/manage_newsletter_sections.html";
-    private static final String TEMPLATE_MODIFY_SECTION_CONFIG = "admin/plugins/newsletter/modify_section_config.html";
+    private static final String TEMPLATE_MANAGE_NEWSLETTER_TOPICS = "admin/plugins/newsletter/manage_newsletter_topics.html";
+    private static final String TEMPLATE_MODIFY_TOPIC_CONFIG = "admin/plugins/newsletter/modify_topic_config.html";
 
     //marks
     private static final String MARK_LIST_NEWSLETTER_TEMPLATES = "newsletter_templates";
@@ -192,9 +192,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String MARK_PROPERTIES = "properties";
     private static final String MARK_NEWSLETTER_LIST = "newsletters_list";
     private static final String MARK_ALLOW_CREATION = "creation_allowed";
-    private static final String MARK_LIST_SECTION_TYPES = "list_section_types";
+    private static final String MARK_LIST_TOPIC_TYPES = "list_topic_types";
     private static final String MARK_NEWSLETTER_TABLE_MANAGER = "table_manager";
-    private static final String MARK_CATEGORY_SIZES = "category_size";
+    private static final String MARK_SECTION_SIZES = "section_size";
     private static final String MARK_SUBSCRIBERS_LIST = "subscribers_list";
     private static final String MARK_WORKGROUP_LIST = "workgroup_list";
     private static final String MARK_PAGINATOR = "paginator";
@@ -207,19 +207,19 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String MARK_ADD_SUBSCRIBER_RIGHT = "is_add_subscriber_right";
     private static final String MARK_IMPORT_SUBSCRIBER_RIGHT = "is_import_subscriber_right";
     private static final String MARK_CLEAN_RIGHT = "is_clean_subscriber_right";
-    private static final String MARK_NEWSLETTER_SECTION_TITLE = "title";
-    private static final String MARK_NEWSLETTER_SECTION_TYPE = "sectionTypeCode";
-    private static final String MARK_NEWSLETTER_SECTION_ORDER = "order";
+    private static final String MARK_NEWSLETTER_TOPIC_TITLE = "title";
+    private static final String MARK_NEWSLETTER_TOPIC_TYPE = "topicTypeName";
+    private static final String MARK_NEWSLETTER_TOPIC_ORDER = "order";
     private static final String MARK_CONTENT = "content";
-    private static final String MARK_SECTION = "section";
+    private static final String MARK_TOPIC = "topic";
     private static final String MARK_SEARCH_STRING = "search_string";
 
     // PARAMETER
     private static final String PARAMETER_ACTION = "action";
     private static final String PARAMETER_NEWSLETTER_ID = "newsletter_id";
-    private static final String PARAMETER_SECTION_TYPE = "section_type";
+    private static final String PARAMETER_TOPIC_TYPE = "topic_type";
     private static final String PARAMETER_SENDING_NEWSLETTER_ID = "sending_newsletter_id";
-    private static final String PARAMETER_SECTION_CATEGORY_NUMBER = "section_category_number";
+    private static final String PARAMETER_TOPIC_SECTION_NUMBER = "topic_section_number";
     private static final String PARAMETER_CANCEL = "cancel";
     private static final String PARAMETER_NEWSLETTER_NAME = "newsletter_name";
     private static final String PARAMETER_NEWSLETTER_DESCRIPTION = "newsletter_description";
@@ -241,8 +241,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String PARAMETER_ACTIVE_CAPTCHA = "active_captcha";
     private static final String PARAMETER_ACTIVE_VALIDATION = "active_validation";
     private static final String PARAMETER_SUBSCRIBERS_SELECTION = "subscriber_selection";
-    private static final String PARAMETER_SECTION_ID = "section_id";
-    private static final String PARAMETER_NEWSLETTER_SECTIONS_TABLE_MANAGER = "newsletter_sections_table_manager";
+    private static final String PARAMETER_TOPIC_ID = "topic_id";
+    private static final String PARAMETER_NEWSLETTER_TOPICS_TABLE_MANAGER = "newsletter_topics_table_manager";
     private static final String PARAMETER_MOVE_UP = "move_up";
     private static final String PARAMETER_TITLE = "title";
     private static final String PARAMETER_UPDATE_TEMPLATE = "update_template";
@@ -261,10 +261,11 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String JSP_URL_PREPARE_NEWSLETTER = "PrepareNewsLetter.jsp";
     private static final String JSP_URL_SEND_NEWSLETTER = "jsp/admin/plugins/newsletter/DoSendNewsLetter.jsp";
     private static final String JSP_URL_TEST_NEWSLETTER = "jsp/admin/plugins/newsletter/DoTestNewsLetter.jsp";
-    private static final String JSP_URL_MANAGE_NEWSLETTER_SECTION = "jsp/admin/plugins/newsletter/GetManageNewsletterSections.jsp";
-    private static final String JSP_URL_MODIFY_SECTION_CONFIG = "GetModifySectionConfig.jsp";
-    private static final String JSP_URL_DO_REMOVE_SECTION = "jsp/admin/plugins/newsletter/DoRemoveNewsletterSection.jsp";
-    private static final String JSP_URL_MANAGE_SECTIONS = "GetManageNewsletterSections.jsp";
+    private static final String JSP_URL_MANAGE_NEWSLETTER_TOPIC = "jsp/admin/plugins/newsletter/GetManageNewsletterTopics.jsp";
+    private static final String JSP_URL_MODIFY_TOPIC_CONFIG = "GetModifyTopicConfig.jsp";
+    private static final String JSP_URL_DO_REMOVE_TOPIC = "jsp/admin/plugins/newsletter/DoRemoveNewsletterTopic.jsp";
+    private static final String JSP_URL_MANAGE_TOPICS = "GetManageNewsletterTopics.jsp";
+    private static final String JSP_URL_MODIFY_NEWSLETTER = "ModifyNewsLetter.jsp";
 
     // messages
     private static final String MESSAGE_CONFIRM_TEST_NEWSLETTER = "newsletter.message.confirmTestNewsletter";
@@ -289,8 +290,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String MESSAGE_NO_TEMPLATE = "newsletter.message.noTemplate";
     private static final String MESSAGE_OBJECT_NOT_SPECIFIED = "newsletter.message.noObjectSpecified";
     private static final String MESSAGE_SUBSCRIBERS_CLEANED = "newsletter.message.subscribersCleaned";
-    private static final String MESSAGE_PAGE_TITLE_MANAGE_SECTIONS = "newsletter.manage_sections.pageTitle";
-    private static final String MESSAGE_CONFIRM_REMOVE_SECTION = "newsletter.manage_sections.confirmRemoveSection";
+    private static final String MESSAGE_PAGE_TITLE_MANAGE_TOPICS = "newsletter.manage_topics.pageTitle";
+    private static final String MESSAGE_CONFIRM_REMOVE_TOPIC = "newsletter.manage_topics.confirmRemoveTopic";
     private static final String MESSAGE_FRAGMENT_NO_CHANGE = "newsletter.message.fragment_no_change";
 
     private static final String PROPERTY_PAGE_TITLE_IMPORT = "newsletter.import_subscribers.pageTitle";
@@ -298,15 +299,14 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String PROPERTY_PAGE_TITLE_ARCHIVE = "newsletter.manage_archive.pageTitle";
     private static final String PROPERTY_PAGE_TITLE_NEWSLETTERS_PROPERTIES = "newsletter.manage_newsletters_properties.pageTitle";
     private static final String PROPERTY_PAGE_TITLE_CREATE = "newsletter.create_newsletter.pageTitle";
-    private static final String PROPERTY_PAGE_TITLE_MODIFY_SECTION_CONFIGURATION = "newsletter.modify_section_config.pageTitle";
+    private static final String PROPERTY_PAGE_TITLE_MODIFY_TOPIC_CONFIGURATION = "newsletter.modify_topic_config.pageTitle";
 
-    private static final String LABEL_NEWSLETTER_SECTION_TITLE = "newsletter.manage_sections.labelSectionTitle";
-    private static final String LABEL_NEWSLETTER_SECTION_TYPE = "newsletter.manage_sections.labelSectionType";
-    private static final String LABEL_NEWSLETTER_SECTION_ORDER = "newsletter.manage_sections.labelSectionOrder";
-    private static final String LABEL_NEWSLETTER_SECTION_CATEGORY = "newsletter.manage_sections.labelSectionCategory";
-    private static final String LABEL_NEWSLETTER_ACTION = "newsletter.manage_sections.labelActions";
+    private static final String LABEL_NEWSLETTER_TOPIC_TITLE = "newsletter.manage_topics.labelTopicTitle";
+    private static final String LABEL_NEWSLETTER_TOPIC_TYPE = "newsletter.manage_topics.labelTopicType";
+    private static final String LABEL_NEWSLETTER_TOPIC_ORDER = "newsletter.manage_topics.labelTopicOrder";
+    private static final String LABEL_NEWSLETTER_TOPIC_SECTION = "newsletter.manage_topics.labelTopicSection";
+    private static final String LABEL_NEWSLETTER_ACTION = "newsletter.manage_topics.labelActions";
 
-    //Uncategorized document labels
     private static final String PROPERTY_PAGE_TITLE_COMPOSE = "newsletter.compose_newsletter.pageTitle";
     private static final String PROPERTY_PAGE_TITLE_MODIFY = "newsletter.modify_newsletter.pageTitle";
     private static final String PROPERTY_PAGE_TITLE_MANAGE_SUBSCRIBERS = "newsletter.manage_subscribers.pageTitle";
@@ -319,7 +319,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String PROPERTY_ITEMS_PER_PAGE = "newsletter.itemsPerPage";
 
     private static final int CONSTANT_DEFAULT_ITEM_PER_PAGE = 50;
-    private static final String CONSTANT_FREEMARKER_MACRO_COLUMN_CATEGORY = "getCategoryColumn";
+    private static final String CONSTANT_FREEMARKER_MACRO_COLUMN_SECTION = "getSectionColumn";
 
     //constants
     private static final String JCAPTCHA_PLUGIN = "jcaptcha";
@@ -329,7 +329,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private String _strCurrentPageIndex;
     private String[] _multiSelectionValues;
     private NewsletterService _newsletterService = NewsletterService.getService( );
-    private NewsletterSectionService _newsletterSectionService = NewsletterSectionService.getService( );
+    private NewsletterTopicService _newsletterTopicService = NewsletterTopicService.getService( );
 
     /**
      * Creates a new NewsletterJspBean object.
@@ -569,10 +569,6 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         setPageTitleProperty( PROPERTY_PAGE_TITLE_COMPOSE );
 
-        Collection<NewsLetterTemplate> newsletterTemplatesList = NewsLetterTemplateHome.getTemplatesCollectionByType(
-                NewsLetterTemplate.RESOURCE_TYPE, getPlugin( ) );
-        newsletterTemplatesList = AdminWorkgroupService.getAuthorizedCollection( newsletterTemplatesList, getUser( ) );
-
         String strBaseUrl = AppPathService.getProdUrl( request );
 
         String strPathImageTemplate = _newsletterService.getImageFolderPath( AppPathService.getBaseUrl( request ) );
@@ -583,13 +579,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         String strGenerate = request.getParameter( PARAMETER_GENERATE );
 
         int nTemplateNewsLetterId = newsletter.getNewsLetterTemplateId( );
-        String strHtmlContent;
-
-        if ( nTemplateNewsLetterId == 0 )
-        {
-            nTemplateNewsLetterId = ( newsletterTemplatesList.size( ) > 0 ) ? newsletterTemplatesList.iterator( )
-                    .next( ).getId( ) : 0;
-        }
+        String strHtmlContent = null;
 
         if ( ( strGenerate == null ) )
         {
@@ -599,9 +589,27 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         }
         else
         {
-            strHtmlContent = _newsletterService.generateNewsletterHtmlCode( newsletter, nTemplateNewsLetterId,
-                    strBaseUrl, user, getLocale( ) );
+            if ( nTemplateNewsLetterId == 0 )
+            {
+                Collection<NewsLetterTemplate> newsletterTemplatesList = NewsLetterTemplateHome
+                        .getTemplatesCollectionByType( NewsLetterTemplate.RESOURCE_TYPE, getPlugin( ) );
+                newsletterTemplatesList = AdminWorkgroupService.getAuthorizedCollection( newsletterTemplatesList,
+                        getUser( ) );
 
+                for ( NewsLetterTemplate template : newsletterTemplatesList )
+                {
+                    if ( StringUtils.equals( template.getResourceTypeCode( ), NewsLetter.RESOURCE_TYPE ) )
+                    {
+                        nTemplateNewsLetterId = template.getId( );
+                        break;
+                    }
+                }
+            }
+            if ( nTemplateNewsLetterId > 0 )
+            {
+                strHtmlContent = _newsletterService.generateNewsletterHtmlCode( newsletter, nTemplateNewsLetterId,
+                        strBaseUrl, user, getLocale( ) );
+            }
             if ( strHtmlContent == null )
             {
                 strHtmlContent = NewsLetterConstants.CONSTANT_EMPTY_STRING; //if no template available (newsletter and/or document), return an empty html content
@@ -614,7 +622,6 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         model.put( MARK_HTML_CONTENT, strHtmlContent );
 
-        model.put( MARK_LIST_NEWSLETTER_TEMPLATES, newsletterTemplatesList );
         model.put( MARK_NEWSLETTER, newsletter );
         model.put( MARK_NEWSLETTER_TEMPLATE_ID, nTemplateNewsLetterId );
         model.put( MARK_REGISTER_ACTION, AppPropertiesService.getProperty( PROPERTY_REGISTER_ACTION ) );
@@ -761,7 +768,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         newsletter.setTestSubject( strTestSubject );
         newsletter.setNewsletterSenderMail( strSenderMail );
         newsletter.setNewsletterSenderName( strSenderName );
-        newsletter.setNbCategories( 1 );
+        newsletter.setNbSections( 1 );
         newsletter.setUnsubscribe( request.getParameter( PARAMETER_NEWSLETTER_UNSUBSCRIBE ) );
 
         NewsLetterHome.create( newsletter, getPlugin( ) );
@@ -889,7 +896,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetterHome.update( newsletter, getPlugin( ) );
 
         String strId = Integer.toString( nNewsletterId );
-        UrlItem url = new UrlItem( JSP_URL_MANAGE_NEWSLETTER );
+        UrlItem url = new UrlItem( JSP_URL_MODIFY_NEWSLETTER );
         url.addParameter( PARAMETER_NEWSLETTER_ID, strId );
 
         return url.getUrl( );
@@ -1120,6 +1127,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         }
 
         // removes the newsletter
+        NewsletterTopicHome.removeAllByIdNewsletter( nNewsletterId, getPlugin( ) );
         NewsLetterHome.remove( nNewsletterId, getPlugin( ) );
 
         return getHomeUrl( request );
@@ -1641,8 +1649,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
             if ( strAction.equals( I18nService.getLocalizedString( PROPERTY_REGISTER_ACTION, getLocale( ) ) ) )
             {
-                // register action
-                strReturn = getHomeUrl( request );
+                UrlItem url = new UrlItem( JSP_URL_DO_COMPOSE_NEWSLETTER );
+                url.addParameter( PARAMETER_NEWSLETTER_ID, nNewsletterId );
+                strReturn = url.getUrl( );
             }
             else if ( strAction
                     .equals( I18nService.getLocalizedString( PROPERTY_PREPARE_SENDING_ACTION, getLocale( ) ) ) )
@@ -1843,12 +1852,12 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     }
 
     /**
-     * Get the manage sections page
+     * Get the manage topics page
      * @param request The request
      * @return The HTML to display
      */
     @SuppressWarnings( "unchecked" )
-    public String getManageNewsletterSections( HttpServletRequest request )
+    public String getManageNewsletterTopics( HttpServletRequest request )
     {
         String strNewsletterId = request.getParameter( PARAMETER_NEWSLETTER_ID );
 
@@ -1865,9 +1874,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         {
             return getManageNewsLetters( request );
         }
-        setPageTitleProperty( MESSAGE_PAGE_TITLE_MANAGE_SECTIONS );
+        setPageTitleProperty( MESSAGE_PAGE_TITLE_MANAGE_TOPICS );
 
-        List<NewsletterSection> listSections = NewsletterSectionHome
+        List<NewsletterTopic> listTopics = NewsletterTopicHome
                 .findAllByIdNewsletter( nNewsletterId, getPlugin( ) );
 
         // We check if we must update the template
@@ -1879,19 +1888,19 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                 int nTemplateId = Integer.parseInt( strTemplateId );
                 NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome.findByPrimaryKey( nTemplateId,
                         getPlugin( ) );
-                newsletter.setNbCategories( newsletterTemplate.getCategoryNumber( ) );
+                newsletter.setNbSections( newsletterTemplate.getSectionNumber( ) );
                 newsletter.setNewsLetterTemplateId( nTemplateId );
                 NewsLetterHome.update( newsletter, getPlugin( ) );
-                int nNewOrder = NewsletterSectionHome.getNewOrder( nNewsletterId,
-                        newsletterTemplate.getCategoryNumber( ), getPlugin( ) );
-                for ( NewsletterSection section : listSections )
+                int nNewOrder = NewsletterTopicHome.getNewOrder( nNewsletterId,
+                        newsletterTemplate.getSectionNumber( ), getPlugin( ) );
+                for ( NewsletterTopic topic : listTopics )
                 {
-                    if ( section.getCategory( ) > newsletterTemplate.getCategoryNumber( ) )
+                    if ( topic.getSection( ) > newsletterTemplate.getSectionNumber( ) )
                     {
-                        section.setCategory( newsletterTemplate.getCategoryNumber( ) );
-                        section.setOrder( nNewOrder );
+                        topic.setSection( newsletterTemplate.getSectionNumber( ) );
+                        topic.setOrder( nNewOrder );
                         nNewOrder++;
-                        NewsletterSectionHome.updateNewsletterSection( section, getPlugin( ) );
+                        NewsletterTopicHome.updateNewsletterTopic( topic, getPlugin( ) );
                     }
                 }
             }
@@ -1899,24 +1908,24 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         Map<String, Object> model = new HashMap<String, Object>( );
 
-        // We create an array with the number of sections in every category
-        Integer[] tblCategorySize = new Integer[newsletter.getNbCategories( )];
-        for ( int i = 0; i < newsletter.getNbCategories( ); i++ )
+        // We create an array with the number of topics in every section
+        Integer[] tblSectionSize = new Integer[newsletter.getNbSections( )];
+        for ( int i = 0; i < newsletter.getNbSections( ); i++ )
         {
-            // The first category is 1, and we start from 0 so we consider the category i + 1
-            tblCategorySize[i] = NewsletterSectionHome.getLastOrder( nNewsletterId, i + 1, getPlugin( ) );
+            // The first section is 1, and we start from 0 so we consider the section i + 1
+            tblSectionSize[i] = NewsletterTopicHome.getLastOrder( nNewsletterId, i + 1, getPlugin( ) );
         }
 
-        ReferenceList refListSectionType = _newsletterSectionService.getNewsletterSectionTypeRefList( AdminUserService
+        ReferenceList refListTopicType = _newsletterTopicService.getNewsletterTopicTypeRefList( AdminUserService
                 .getLocale( request ) );
 
-        UrlItem url = new UrlItem( JSP_URL_MANAGE_NEWSLETTER_SECTION );
+        UrlItem url = new UrlItem( JSP_URL_MANAGE_NEWSLETTER_TOPIC );
         url.addParameter( PARAMETER_NEWSLETTER_ID, strNewsletterId );
-        Object object = request.getSession( ).getAttribute( PARAMETER_NEWSLETTER_SECTIONS_TABLE_MANAGER );
-        DataTableManager<NewsletterSection> tableManager = null;
+        Object object = request.getSession( ).getAttribute( PARAMETER_NEWSLETTER_TOPICS_TABLE_MANAGER );
+        DataTableManager<NewsletterTopic> tableManager = null;
         if ( object instanceof DataTableManager<?> )
         {
-            tableManager = (DataTableManager<NewsletterSection>) object;
+            tableManager = (DataTableManager<NewsletterTopic>) object;
             // If the table manager saved in session is not associated with this newsletter we create a new one
             if ( !StringUtils.equals( tableManager.getSortUrl( ), url.getUrl( ) ) )
             {
@@ -1925,17 +1934,17 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         }
         if ( tableManager == null )
         {
-            tableManager = new DataTableManager<NewsletterSection>( url.getUrl( ), url.getUrl( ),
+            tableManager = new DataTableManager<NewsletterTopic>( url.getUrl( ), url.getUrl( ),
                     AppPropertiesService.getPropertyInt( PROPERTY_ITEMS_PER_PAGE, CONSTANT_DEFAULT_ITEM_PER_PAGE ),
                     true );
-            tableManager.addFreeColumn( LABEL_NEWSLETTER_SECTION_CATEGORY, CONSTANT_FREEMARKER_MACRO_COLUMN_CATEGORY );
-            tableManager.addColumn( LABEL_NEWSLETTER_SECTION_ORDER, MARK_NEWSLETTER_SECTION_ORDER, false );
-            tableManager.addColumn( LABEL_NEWSLETTER_SECTION_TITLE, MARK_NEWSLETTER_SECTION_TITLE, false );
-            tableManager.addColumn( LABEL_NEWSLETTER_SECTION_TYPE, MARK_NEWSLETTER_SECTION_TYPE, false );
+            tableManager.addFreeColumn( LABEL_NEWSLETTER_TOPIC_SECTION, CONSTANT_FREEMARKER_MACRO_COLUMN_SECTION );
+            tableManager.addColumn( LABEL_NEWSLETTER_TOPIC_ORDER, MARK_NEWSLETTER_TOPIC_ORDER, false );
+            tableManager.addColumn( LABEL_NEWSLETTER_TOPIC_TITLE, MARK_NEWSLETTER_TOPIC_TITLE, false );
+            tableManager.addColumn( LABEL_NEWSLETTER_TOPIC_TYPE, MARK_NEWSLETTER_TOPIC_TYPE, false );
             tableManager.addActionColumn( LABEL_NEWSLETTER_ACTION );
         }
 
-        tableManager.filterSortAndPaginate( request, listSections );
+        tableManager.filterSortAndPaginate( request, listTopics );
 
         AdminUser user = AdminUserService.getAdminUser( request );
         Locale locale = AdminUserService.getLocale( request );
@@ -1949,8 +1958,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         model.put( MARK_NEWSLETTER, newsletter );
         model.put( MARK_NEWSLETTER_TABLE_MANAGER, tableManager );
-        model.put( MARK_LIST_SECTION_TYPES, refListSectionType );
-        model.put( MARK_CATEGORY_SIZES, tblCategorySize );
+        model.put( MARK_LIST_TOPIC_TYPES, refListTopicType );
+        model.put( MARK_SECTION_SIZES, tblSectionSize );
         model.put( MARK_HTML_CONTENT, _newsletterService.generateNewsletterHtmlCode( newsletter,
                 newsletter.getNewsLetterTemplateId( ), strBaseUrl, user, locale ) );
         model.put( MARK_WEBAPP_URL, strBaseUrl );
@@ -1959,53 +1968,53 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         model.put( MARK_NEWSLETTER_TEMPLATE_ID, newsletter.getNewsLetterTemplateId( ) );
         model.put( MARK_IMG_PATH, strPathImageTemplate );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_NEWSLETTER_SECTIONS,
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_NEWSLETTER_TOPICS,
                 AdminUserService.getLocale( request ), model );
         String strContent = template.getHtml( );
         tableManager.clearItems( );
-        request.getSession( ).setAttribute( PARAMETER_NEWSLETTER_SECTIONS_TABLE_MANAGER, tableManager );
+        request.getSession( ).setAttribute( PARAMETER_NEWSLETTER_TOPICS_TABLE_MANAGER, tableManager );
 
         return getAdminPage( strContent );
     }
 
     /**
-     * Create a news section in a newsletter
+     * Create a news topic in a newsletter
      * @param request The request
      * @return The URL to redirect to.
      */
-    public String doAddNewsletterSection( HttpServletRequest request )
+    public String doAddNewsletterTopic( HttpServletRequest request )
     {
         String strNewsletterId = request.getParameter( PARAMETER_NEWSLETTER_ID );
-        String strSectionType = request.getParameter( PARAMETER_SECTION_TYPE );
+        String strTopicType = request.getParameter( PARAMETER_TOPIC_TYPE );
         int nNewsletterId = Integer.parseInt( strNewsletterId );
 
-        NewsletterSection newsletterSection = new NewsletterSection( );
-        newsletterSection.setIdNewsletter( nNewsletterId );
-        newsletterSection.setSectionTypeCode( strSectionType );
-        String strCategoryNumber = request.getParameter( PARAMETER_SECTION_CATEGORY_NUMBER );
-        if ( StringUtils.isNumeric( strCategoryNumber ) )
+        NewsletterTopic newsletterTopic = new NewsletterTopic( );
+        newsletterTopic.setIdNewsletter( nNewsletterId );
+        newsletterTopic.setTopicTypeCode( strTopicType );
+        String strSectionNumber = request.getParameter( PARAMETER_TOPIC_SECTION_NUMBER );
+        if ( StringUtils.isNumeric( strSectionNumber ) )
         {
-            newsletterSection.setCategory( Integer.parseInt( strCategoryNumber ) );
+            newsletterTopic.setSection( Integer.parseInt( strSectionNumber ) );
         }
         else
         {
-            newsletterSection.setCategory( 1 );
+            newsletterTopic.setSection( 1 );
         }
-        _newsletterSectionService.createNewsletterSection( newsletterSection, getUser( ),
+        _newsletterTopicService.createNewsletterTopic( newsletterTopic, getUser( ),
                 AdminUserService.getLocale( request ) );
 
-        UrlItem urlItem = new UrlItem( JSP_URL_MODIFY_SECTION_CONFIG );
+        UrlItem urlItem = new UrlItem( JSP_URL_MODIFY_TOPIC_CONFIG );
         urlItem.addParameter( PARAMETER_NEWSLETTER_ID, strNewsletterId );
-        urlItem.addParameter( PARAMETER_SECTION_ID, newsletterSection.getId( ) );
+        urlItem.addParameter( PARAMETER_TOPIC_ID, newsletterTopic.getId( ) );
         return urlItem.getUrl( );
     }
 
     /**
-     * Get a confirmation page before removing a newsletter section
+     * Get a confirmation page before removing a newsletter topic
      * @param request The request
      * @return The URL to redirect to.
      */
-    public String confirmRemoveNewsletterSection( HttpServletRequest request )
+    public String confirmRemoveNewsletterTopic( HttpServletRequest request )
     {
         String strNewsletterId = request.getParameter( PARAMETER_NEWSLETTER_ID );
         if ( !StringUtils.isNumeric( strNewsletterId ) )
@@ -2021,20 +2030,20 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         {
             return JSP_URL_MANAGE_NEWSLETTER;
         }
-        UrlItem urlItem = new UrlItem( JSP_URL_DO_REMOVE_SECTION );
+        UrlItem urlItem = new UrlItem( JSP_URL_DO_REMOVE_TOPIC );
         urlItem.addParameter( PARAMETER_NEWSLETTER_ID, strNewsletterId );
-        urlItem.addParameter( PARAMETER_SECTION_ID, request.getParameter( PARAMETER_SECTION_ID ) );
-        urlItem.addParameter( PARAMETER_SECTION_TYPE, request.getParameter( PARAMETER_SECTION_TYPE ) );
-        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_SECTION, urlItem.getUrl( ),
+        urlItem.addParameter( PARAMETER_TOPIC_ID, request.getParameter( PARAMETER_TOPIC_ID ) );
+        urlItem.addParameter( PARAMETER_TOPIC_TYPE, request.getParameter( PARAMETER_TOPIC_TYPE ) );
+        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_TOPIC, urlItem.getUrl( ),
                 AdminMessage.TYPE_CONFIRMATION );
     }
 
     /**
-     * Remove a newsletter section
+     * Remove a newsletter topic
      * @param request The request
      * @return The URL to redirect to.
      */
-    public String doRemoveNewsletterSection( HttpServletRequest request )
+    public String doRemoveNewsletterTopic( HttpServletRequest request )
     {
         String strNewsletterId = request.getParameter( PARAMETER_NEWSLETTER_ID );
         if ( !StringUtils.isNumeric( strNewsletterId ) )
@@ -2050,89 +2059,89 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         {
             return JSP_URL_MANAGE_NEWSLETTER;
         }
-        String strSectionId = request.getParameter( PARAMETER_SECTION_ID );
-        if ( !StringUtils.isNumeric( strSectionId ) )
+        String strTopicId = request.getParameter( PARAMETER_TOPIC_ID );
+        if ( !StringUtils.isNumeric( strTopicId ) )
         {
             return JSP_URL_MANAGE_NEWSLETTER;
         }
-        int nIdSection = Integer.parseInt( strSectionId );
-        NewsletterSection newslettersection = NewsletterSectionHome.findByPrimaryKey( nIdSection, getPlugin( ) );
-        _newsletterSectionService.removeNewsletterSection( newslettersection, AdminUserService.getAdminUser( request ) );
+        int nIdTopic = Integer.parseInt( strTopicId );
+        NewsletterTopic newsletterTopic = NewsletterTopicHome.findByPrimaryKey( nIdTopic, getPlugin( ) );
+        _newsletterTopicService.removeNewsletterTopic( newsletterTopic, AdminUserService.getAdminUser( request ) );
 
-        UrlItem urlItem = new UrlItem( JSP_URL_MANAGE_SECTIONS );
+        UrlItem urlItem = new UrlItem( JSP_URL_MANAGE_TOPICS );
         urlItem.addParameter( PARAMETER_NEWSLETTER_ID, strNewsletterId );
         return urlItem.getUrl( );
 
     }
 
     /**
-     * Change the order of a section, and display the manage sections page.
+     * Change the order of a topic, and display the manage topics page.
      * @param request The request
      * @return The HTML content to display
      */
-    public String getMoveNewsletterSection( HttpServletRequest request )
+    public String getMoveNewsletterTopic( HttpServletRequest request )
     {
-        String strSectionId = request.getParameter( PARAMETER_SECTION_ID );
+        String strTopicId = request.getParameter( PARAMETER_TOPIC_ID );
 
-        if ( !StringUtils.isNumeric( strSectionId ) )
+        if ( !StringUtils.isNumeric( strTopicId ) )
         {
-            return getManageNewsletterSections( request );
+            return getManageNewsletterTopics( request );
         }
-        int nIdSection = Integer.parseInt( strSectionId );
+        int nIdTopic = Integer.parseInt( strTopicId );
         String strMoveUp = request.getParameter( PARAMETER_MOVE_UP );
-        NewsletterSection newsletterSection = NewsletterSectionHome.findByPrimaryKey( nIdSection, getPlugin( ) );
-        _newsletterSectionService.modifyNewsletterSectionOrder( newsletterSection, Boolean.parseBoolean( strMoveUp ) );
+        NewsletterTopic newsletterTopic = NewsletterTopicHome.findByPrimaryKey( nIdTopic, getPlugin( ) );
+        _newsletterTopicService.modifyNewsletterTopicOrder( newsletterTopic, Boolean.parseBoolean( strMoveUp ) );
 
-        return getManageNewsletterSections( request );
+        return getManageNewsletterTopics( request );
     }
 
     /**
-     * Get the modification page of a newsletter section configuration
+     * Get the modification page of a newsletter topic configuration
      * @param request The request
      * @return The html content to display
      */
-    public String getModifySectionConfig( HttpServletRequest request )
+    public String getModifyTopicConfig( HttpServletRequest request )
     {
-        String strSectionId = request.getParameter( PARAMETER_SECTION_ID );
+        String strTopicId = request.getParameter( PARAMETER_TOPIC_ID );
 
-        if ( !StringUtils.isNumeric( strSectionId ) )
+        if ( !StringUtils.isNumeric( strTopicId ) )
         {
-            return getManageNewsletterSections( request );
+            return getManageNewsletterTopics( request );
         }
-        int nIdSection = Integer.parseInt( strSectionId );
+        int nIdTopic = Integer.parseInt( strTopicId );
 
-        setPageTitleProperty( PROPERTY_PAGE_TITLE_MODIFY_SECTION_CONFIGURATION );
-        NewsletterSection newsletterSection = NewsletterSectionHome.findByPrimaryKey( nIdSection, getPlugin( ) );
+        setPageTitleProperty( PROPERTY_PAGE_TITLE_MODIFY_TOPIC_CONFIGURATION );
+        NewsletterTopic newsletterTopic = NewsletterTopicHome.findByPrimaryKey( nIdTopic, getPlugin( ) );
         Locale locale = AdminUserService.getLocale( request );
-        String strContent = _newsletterSectionService.getConfigurationPage( newsletterSection,
+        String strContent = _newsletterTopicService.getConfigurationPage( newsletterTopic,
                 AppPathService.getBaseUrl( request ), AdminUserService.getAdminUser( request ), locale );
 
         Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_CONTENT, strContent );
-        model.put( MARK_SECTION, newsletterSection );
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_SECTION_CONFIG, locale, model );
+        model.put( MARK_TOPIC, newsletterTopic );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_TOPIC_CONFIG, locale, model );
         return getAdminPage( template.getHtml( ) );
     }
 
     /**
-     * Save the configuration of a section
+     * Save the configuration of a topic
      * @param request The request
      * @return The URL to redirect to
      */
-    public String doModifySectionConfig( HttpServletRequest request )
+    public String doModifyTopicConfig( HttpServletRequest request )
     {
-        String strSectionId = request.getParameter( PARAMETER_SECTION_ID );
+        String strTopicId = request.getParameter( PARAMETER_TOPIC_ID );
 
-        if ( !StringUtils.isNumeric( strSectionId ) )
+        if ( !StringUtils.isNumeric( strTopicId ) )
         {
             return JSP_URL_MANAGE_NEWSLETTER;
         }
-        int nIdSection = Integer.parseInt( strSectionId );
+        int nIdTopic = Integer.parseInt( strTopicId );
 
-        NewsletterSection newsletterSection = NewsletterSectionHome.findByPrimaryKey( nIdSection, getPlugin( ) );
+        NewsletterTopic newsletterTopic = NewsletterTopicHome.findByPrimaryKey( nIdTopic, getPlugin( ) );
 
-        UrlItem url = new UrlItem( JSP_URL_MANAGE_NEWSLETTER_SECTION );
-        url.addParameter( PARAMETER_NEWSLETTER_ID, Integer.toString( newsletterSection.getIdNewsletter( ) ) );
+        UrlItem url = new UrlItem( JSP_URL_MANAGE_NEWSLETTER_TOPIC );
+        url.addParameter( PARAMETER_NEWSLETTER_ID, Integer.toString( newsletterTopic.getIdNewsletter( ) ) );
 
         // If the user didn't push the 'cancel' button, we save the configuration
         if ( request.getParameter( PARAMETER_CANCEL ) == null )
@@ -2140,40 +2149,40 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             String strTitle = request.getParameter( PARAMETER_TITLE );
             if ( StringUtils.isNotEmpty( strTitle ) )
             {
-                newsletterSection.setTitle( strTitle );
-                NewsletterSectionHome.updateNewsletterSection( newsletterSection, getPlugin( ) );
+                newsletterTopic.setTitle( strTitle );
+                NewsletterTopicHome.updateNewsletterTopic( newsletterTopic, getPlugin( ) );
             }
 
             @SuppressWarnings( "unchecked" )
             Map<String, String[]> mapParameters = request.getParameterMap( );
-            _newsletterSectionService.saveConfiguration( mapParameters, newsletterSection,
+            _newsletterTopicService.saveConfiguration( mapParameters, newsletterTopic,
                     AdminUserService.getAdminUser( request ), AdminUserService.getLocale( request ) );
         }
         return AppPathService.getBaseUrl( request ) + url.getUrl( );
     }
 
     /**
-     * Change the category of a newsletter section.
+     * Change the section of a newsletter topic.
      * @param request The request
      * @return The html to display
      */
-    public String doChangeNewsletterSectionCategory( HttpServletRequest request )
+    public String doChangeNewsletterTopicSection( HttpServletRequest request )
     {
-        String strSectionId = request.getParameter( PARAMETER_SECTION_ID );
-        String strCategory = request.getParameter( PARAMETER_SECTION_CATEGORY_NUMBER );
+        String strTopicId = request.getParameter( PARAMETER_TOPIC_ID );
+        String strSection = request.getParameter( PARAMETER_TOPIC_SECTION_NUMBER );
 
-        if ( !StringUtils.isNumeric( strSectionId ) || !StringUtils.isNumeric( strCategory ) )
+        if ( !StringUtils.isNumeric( strTopicId ) || !StringUtils.isNumeric( strSection ) )
         {
-            return getManageNewsletterSections( request );
+            return getManageNewsletterTopics( request );
         }
-        int nIdSection = Integer.parseInt( strSectionId );
-        int nCategory = Integer.parseInt( strCategory );
+        int nIdTopic = Integer.parseInt( strTopicId );
+        int nSection = Integer.parseInt( strSection );
 
-        NewsletterSection newsletterSection = NewsletterSectionHome.findByPrimaryKey( nIdSection, getPlugin( ) );
+        NewsletterTopic newsletterTopic = NewsletterTopicHome.findByPrimaryKey( nIdTopic, getPlugin( ) );
 
-        _newsletterSectionService.modifyNewsletterSectionCategory( newsletterSection, nCategory );
+        _newsletterTopicService.modifyNewsletterTopicSection( newsletterTopic, nSection );
 
-        return getManageNewsletterSections( request );
+        return getManageNewsletterTopics( request );
     }
 
     /**

@@ -51,7 +51,7 @@ public interface INewsLetterDAO
 {
     /**
      * Insert a new record in the table.
-     *
+     * 
      * @param newsLetter the object to insert
      * @param plugin the Plugin
      */
@@ -59,7 +59,7 @@ public interface INewsLetterDAO
 
     /**
      * Remove a record from the table
-     *
+     * 
      * @param nNewsLetterId the newsletter identifier
      * @param plugin the Plugin
      */
@@ -67,7 +67,7 @@ public interface INewsLetterDAO
 
     /**
      * loads the data of the newsletter from the table
-     *
+     * 
      * @param nNewsLetterId the newsletter identifier
      * @param plugin the Plugin
      * @return the object inserted
@@ -76,25 +76,25 @@ public interface INewsLetterDAO
 
     /**
      * Update the record in the table
-     *
+     * 
      * @param newsLetter the object to be updated
      * @param plugin the Plugin
      */
     void store( NewsLetter newsLetter, Plugin plugin );
 
     /**
-    * Check the unicity of the primary key
-    *
-    * @param nKey the key to be checked
-    * @param plugin the Plugin
-    * @return true if the identifier exist and false if not
-    */
+     * Check the unicity of the primary key
+     * 
+     * @param nKey the key to be checked
+     * @param plugin the Plugin
+     * @return true if the identifier exist and false if not
+     */
     boolean checkPrimaryKey( int nKey, Plugin plugin );
 
     /**
      * Checks whether a portlet uses the newsletter
-     *
-     *
+     * 
+     * 
      * @return true if the newsletter is used
      * @param nIdNewsletter the id of the newsletter
      */
@@ -102,7 +102,7 @@ public interface INewsLetterDAO
 
     /**
      * Generate a new primary key to add a newsletter
-     *
+     * 
      * @param plugin the Plugin
      * @return the new key
      */
@@ -123,8 +123,16 @@ public interface INewsLetterDAO
     ReferenceList selectAllId( Plugin plugin );
 
     /**
+     * Gets a collection of NewsLetter associated with a given template
+     * @param nTemplateId The id of the template
+     * @param plugin the Plugin
+     * @return the collection of objects
+     */
+    Collection<NewsLetter> selectAllByTemplateId( int nTemplateId, Plugin plugin );
+
+    /**
      * Insert a new subscriber for a newsletter
-     *
+     * 
      * @param nNewsLetterId the newsletter identifier
      * @param nSubscriberId the subscriber identifier
      * @param tToday The day
@@ -134,15 +142,16 @@ public interface INewsLetterDAO
 
     /**
      * Performs confirm unsubscription process
-     *
-     * @param confirmLimitDate all unconfirmed subscriber which subscription date is below confirmLimitDate will be deleted
+     * 
+     * @param confirmLimitDate all unconfirmed subscriber which subscription
+     *            date is below confirmLimitDate will be deleted
      * @param plugin the plugin
      */
     void deleteOldUnconfirmed( Timestamp confirmLimitDate, Plugin plugin );
 
     /**
      * Insert a new subscriber for a newsletter
-     *
+     * 
      * @param nNewsLetterId the newsletter identifier
      * @param nSubscriberId the subscriber identifier
      * @param bValidate the validation status
@@ -153,7 +162,7 @@ public interface INewsLetterDAO
 
     /**
      * Updates a subscriber for a newsletter
-     *
+     * 
      * @param nNewsLetterId the newsletter identifier
      * @param nSubscriberId the subscriber identifier
      * @param plugin the Plugin
@@ -162,7 +171,7 @@ public interface INewsLetterDAO
 
     /**
      * Remove the subscriber's inscription to a newsletter
-     *
+     * 
      * @param nNewsLetterId the newsletter identifier
      * @param nSubscriberId the subscriber identifier
      * @param plugin the Plugin
@@ -171,7 +180,7 @@ public interface INewsLetterDAO
 
     /**
      * check if the subscriber is not yet registered to a newsletter
-     *
+     * 
      * @param nNewsLetterId the newsletter identifier
      * @param nSubscriberId the subscriber identifier
      * @param plugin the Plugin
@@ -181,7 +190,7 @@ public interface INewsLetterDAO
 
     /**
      * controls that a template is used by a newsletter
-     *
+     * 
      * @param nTemplateId the template identifier
      * @param plugin the Plugin
      * @return true if the template is used, false if not
@@ -189,18 +198,18 @@ public interface INewsLetterDAO
     boolean isTemplateUsed( int nTemplateId, Plugin plugin );
 
     /**
-      * Counts the subscribers for a newsletter
-      *
-      * @param nNewsLetterId the newsletter newsletter
-      * @param strSearchString the string to search in the subscriber's email
-      * @param plugin the Plugin
-      * @return the number of subscribers
-      */
+     * Counts the subscribers for a newsletter
+     * 
+     * @param nNewsLetterId the newsletter newsletter
+     * @param strSearchString the string to search in the subscriber's email
+     * @param plugin the Plugin
+     * @return the number of subscribers
+     */
     int selectNbrSubscribers( int nNewsLetterId, String strSearchString, Plugin plugin );
 
     /**
      * Counts the active subscribers for a newsletter
-     *
+     * 
      * @param nNewsLetterId the newsletter newsletter
      * @param strSearchString the string to search in the subscriber's email
      * @param plugin the Plugin

@@ -1,8 +1,8 @@
-package fr.paris.lutece.plugins.newsletter.service.section;
+package fr.paris.lutece.plugins.newsletter.service.topic;
 
-import fr.paris.lutece.plugins.newsletter.business.section.FreeHtmlSection;
-import fr.paris.lutece.plugins.newsletter.business.section.FreeHtmlSectionHome;
-import fr.paris.lutece.plugins.newsletter.business.section.NewsletterSection;
+import fr.paris.lutece.plugins.newsletter.business.topic.FreeHtmlTopic;
+import fr.paris.lutece.plugins.newsletter.business.topic.FreeHtmlTopicHome;
+import fr.paris.lutece.plugins.newsletter.business.topic.NewsletterTopic;
 import fr.paris.lutece.plugins.newsletter.service.NewsletterPlugin;
 import fr.paris.lutece.plugins.newsletter.util.NewsletterUtils;
 import fr.paris.lutece.portal.business.user.AdminUser;
@@ -20,20 +20,20 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
- * Service to manage sections with free html.
+ * Service to manage topics with free html.
  */
-public class FreeHtmlSectionService implements INewsletterSectionService
+public class FreeHtmlTopicService implements INewsletterTopicService
 {
 
     /**
-     * Code of the section type
+     * Code of the topic type
      */
-    public static final String NEWSLETTER_FREE_HTML_SECTION_TYPE_CODE = "FREE_HTML";
+    public static final String NEWSLETTER_FREE_HTML_TOPIC_TYPE_CODE = "FREE_HTML";
 
-    private static final String NEWSLETTER_FREE_HTML_SECTION_TYPE_NAME = "newsletter.section.freeHtmlSectionType";
+    private static final String NEWSLETTER_FREE_HTML_TOPIC_TYPE_NAME = "newsletter.topic.freeHtmlTopicType";
 
     // MARKS
-    private static final String MARK_HTML_SECTION = "htmlSection";
+    private static final String MARK_HTML_TOPIC = "htmlTopic";
     private static final String MARK_WEBAPP_URL = "webapp_url";
     private static final String MARK_LOCALE = "locale";
 
@@ -49,18 +49,18 @@ public class FreeHtmlSectionService implements INewsletterSectionService
      * {@inheritDoc}
      */
     @Override
-    public String getNewsletterSectionTypeCode( )
+    public String getNewsletterTopicTypeCode( )
     {
-        return NEWSLETTER_FREE_HTML_SECTION_TYPE_CODE;
+        return NEWSLETTER_FREE_HTML_TOPIC_TYPE_CODE;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getNewsletterSectionTypeName( Locale locale )
+    public String getNewsletterTopicTypeName( Locale locale )
     {
-        return I18nService.getLocalizedString( NEWSLETTER_FREE_HTML_SECTION_TYPE_NAME, locale );
+        return I18nService.getLocalizedString( NEWSLETTER_FREE_HTML_TOPIC_TYPE_NAME, locale );
     }
 
     /**
@@ -76,13 +76,13 @@ public class FreeHtmlSectionService implements INewsletterSectionService
      * {@inheritDoc}
      */
     @Override
-    public String getConfigurationPage( NewsletterSection newsletterSection, String strBaseUrl, AdminUser user,
+    public String getConfigurationPage( NewsletterTopic newsletterTopic, String strBaseUrl, AdminUser user,
             Locale locale )
     {
-        FreeHtmlSection htmlSection = FreeHtmlSectionHome.findByPrimaryKey( newsletterSection.getId( ), getPlugin( ) );
+        FreeHtmlTopic htmlTopic = FreeHtmlTopicHome.findByPrimaryKey( newsletterTopic.getId( ), getPlugin( ) );
         Map<String, Object> model = new HashMap<String, Object>( );
 
-        model.put( MARK_HTML_SECTION, htmlSection );
+        model.put( MARK_HTML_TOPIC, htmlTopic );
         model.put( MARK_WEBAPP_URL, strBaseUrl );
         model.put( MARK_LOCALE, locale );
 
@@ -95,15 +95,15 @@ public class FreeHtmlSectionService implements INewsletterSectionService
      * {@inheritDoc}
      */
     @Override
-    public void saveConfiguration( Map<String, String[]> mapParameters, NewsletterSection newsletterSection,
+    public void saveConfiguration( Map<String, String[]> mapParameters, NewsletterTopic newsletterTopic,
             AdminUser user, Locale locale )
     {
         String strContent = NewsletterUtils.getStringFromStringArray( mapParameters.get( PARAMETER_CONTENT ) );
         if ( StringUtils.isNotEmpty( strContent ) )
         {
-            FreeHtmlSection section = FreeHtmlSectionHome.findByPrimaryKey( newsletterSection.getId( ), getPlugin( ) );
-            section.setHtmlContent( strContent );
-            FreeHtmlSectionHome.updateFreeHtmlSection( section, getPlugin( ) );
+            FreeHtmlTopic topic = FreeHtmlTopicHome.findByPrimaryKey( newsletterTopic.getId( ), getPlugin( ) );
+            topic.setHtmlContent( strContent );
+            FreeHtmlTopicHome.updateFreeHtmlTopic( topic, getPlugin( ) );
         }
     }
 
@@ -111,32 +111,32 @@ public class FreeHtmlSectionService implements INewsletterSectionService
      * {@inheritDoc}
      */
     @Override
-    public void createNewsletterSection( NewsletterSection newsletterSection, AdminUser user, Locale locale )
+    public void createNewsletterTopic( NewsletterTopic newsletterTopic, AdminUser user, Locale locale )
     {
-        FreeHtmlSection freeHtmlSection = new FreeHtmlSection( );
-        freeHtmlSection.setId( newsletterSection.getId( ) );
-        freeHtmlSection.setHtmlContent( StringUtils.EMPTY );
-        FreeHtmlSectionHome.insertFreeHtmlSection( freeHtmlSection, getPlugin( ) );
+        FreeHtmlTopic freeHtmlTopic = new FreeHtmlTopic( );
+        freeHtmlTopic.setId( newsletterTopic.getId( ) );
+        freeHtmlTopic.setHtmlContent( StringUtils.EMPTY );
+        FreeHtmlTopicHome.insertFreeHtmlTopic( freeHtmlTopic, getPlugin( ) );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void removeNewsletterSection( int nNewsletterSectionId )
+    public void removeNewsletterTopic( int nNewsletterTopicId )
     {
-        FreeHtmlSectionHome.removeFreeHtmlSection( nNewsletterSectionId, getPlugin( ) );
+        FreeHtmlTopicHome.removeFreeHtmlTopic( nNewsletterTopicId, getPlugin( ) );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getHtmlContent( NewsletterSection newsletterSection, AdminUser user, Locale locale )
+    public String getHtmlContent( NewsletterTopic newsletterTopic, AdminUser user, Locale locale )
     {
-        FreeHtmlSection freeHtmlSection = FreeHtmlSectionHome
-                .findByPrimaryKey( newsletterSection.getId( ), getPlugin( ) );
-        return freeHtmlSection.getHtmlContent( );
+        FreeHtmlTopic freeHtmlTopic = FreeHtmlTopicHome
+                .findByPrimaryKey( newsletterTopic.getId( ), getPlugin( ) );
+        return freeHtmlTopic.getHtmlContent( );
     }
 
     /**

@@ -10,14 +10,14 @@
 	<bean id="newsletter.newsLetterSubscriptionPortletDAO"  class="fr.paris.lutece.plugins.newsletter.business.portlet.NewsLetterSubscriptionPortletDAO" />
 	<bean id="newsletter.awaitingActivationDAO" class="fr.paris.lutece.plugins.newsletter.business.AwaitingActivationDAO" />
 	<bean id="newsletter.newsletterPropertiesDAO"  class="fr.paris.lutece.plugins.newsletter.business.NewsletterPropertiesDAO" />
-	<bean id="newsletter.freeHtmlSectionDAO"  class="fr.paris.lutece.plugins.newsletter.business.section.FreeHtmlSectionDao" />
-	<bean id="newsletter.newsletterSectionDAO"  class="fr.paris.lutece.plugins.newsletter.business.section.NewsletterSectionDao" />
+	<bean id="newsletter.freeHtmlTopicDAO"  class="fr.paris.lutece.plugins.newsletter.business.topic.FreeHtmlTopicDao" />
+	<bean id="newsletter.newsletterTopicDAO"  class="fr.paris.lutece.plugins.newsletter.business.topic.NewsletterTopicDao" />
 
 	<bean id="newsletter.newsletterService" class="fr.paris.lutece.plugins.newsletter.service.NewsletterService" />
-	<bean id="newsletter.newsletterSectionService" class="fr.paris.lutece.plugins.newsletter.service.section.NewsletterSectionService" />
-	
-	<!-- Free Html Section -->
-	<bean id="newsletter.freeHtmlSectionService" class="fr.paris.lutece.plugins.newsletter.service.section.FreeHtmlSectionService" />
+	<bean id="newsletter.newsletterTopicService" class="fr.paris.lutece.plugins.newsletter.service.topic.NewsletterTopicService" />
 	<bean id="newsletter.newsletterTemplateRemovalService" class="fr.paris.lutece.portal.service.util.RemovalListenerService" ></bean>
-
+	
+	<!-- Free Html Topic -->
+	<bean id="newsletter.freeHtmlTopicService" class="fr.paris.lutece.plugins.newsletter.service.topic.FreeHtmlTopicService" />
+	
 </beans>

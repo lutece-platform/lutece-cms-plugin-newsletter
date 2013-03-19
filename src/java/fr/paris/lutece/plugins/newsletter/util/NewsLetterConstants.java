@@ -150,7 +150,7 @@ public final class NewsLetterConstants
     public static final String JSP_URL_PORTAL = "../../Portal.jsp";
     public static final String JSP_URL_DO_UNSUBSCRIBE = "/jsp/site/plugins/newsletter/DoUnsubscribeNewsLetter.jsp";
     public static final String MARK_CONTENT = "content";
-    public static final String MARK_CONTENT_CATEGORY = "content_";
+    public static final String MARK_CONTENT_SECTION = "content_";
     public static final String MARK_UNSUBSCRIBE_KEY = "unsubscribe_key";
     public static final String MARK_UNSUBSCRIBE_KEY_EACH = "@unsubscribe_key@";
 

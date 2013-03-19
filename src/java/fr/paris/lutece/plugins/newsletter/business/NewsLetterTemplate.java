@@ -50,12 +50,12 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
     private static final String EMPTY_STRING = "";
     private static NewsletterTemplateWorkgroupRemovalListener _listenerWorkgroup;
     private int _nId;
-    private String _strSectionType;
+    private String _strTopicType;
     private String _strDescription;
     private String _strFileName;
     private String _strPicture;
     private String _strWorkgroup;
-    private int _nCategoryNumber;
+    private int _nSectionNumber;
 
     /**
      * Initialisation method
@@ -88,21 +88,21 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
     }
 
     /**
-     * Returns the section type of the template
-     * @return the section type of the template
+     * Returns the topic type of the template
+     * @return the topic type of the template
      */
-    public String getSectionType( )
+    public String getTopicType( )
     {
-        return _strSectionType;
+        return _strTopicType;
     }
 
     /**
-     * Sets the section type of the template
-     * @param strSectionType the section type of the template
+     * Sets the topic type of the template
+     * @param strTopicType the topic type of the template
      */
-    public void setSectionType( String strSectionType )
+    public void setTopicType( String strTopicType )
     {
-        _strSectionType = strSectionType;
+        _strTopicType = strTopicType;
     }
 
     /**
@@ -196,20 +196,20 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
     }
 
     /**
-     * Get the number of categories of this template
-     * @return The number of categories of this template
+     * Get the number of sections of this template
+     * @return The number of sections of this template
      */
-    public int getCategoryNumber( )
+    public int getSectionNumber( )
     {
-        return _nCategoryNumber;
+        return _nSectionNumber;
     }
 
     /**
-     * Set the number of categories of this template
-     * @param nCategoryNumber The number of categories of this template
+     * Set the number of sections of this template
+     * @param nSectionNumber The number of sections of this template
      */
-    public void setCategoryNumber( int nCategoryNumber )
+    public void setSectionNumber( int nSectionNumber )
     {
-        this._nCategoryNumber = nCategoryNumber;
+        this._nSectionNumber = nSectionNumber;
     }
 }

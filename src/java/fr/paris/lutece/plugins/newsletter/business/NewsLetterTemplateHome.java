@@ -71,24 +71,24 @@ public final class NewsLetterTemplateHome
 
     /**
      * Returns a list of templates depending on the given type
-     * @param strSectionType the section type of templates to retrieve
+     * @param strTopicType the topic type of templates to retrieve
      * @param plugin The Plugin
      * @return a Referencelist object
      */
-    public static ReferenceList getTemplatesListByType( String strSectionType, Plugin plugin )
+    public static ReferenceList getTemplatesListByType( String strTopicType, Plugin plugin )
     {
-        return _dao.selectTemplatesListByType( strSectionType, plugin );
+        return _dao.selectTemplatesListByType( strTopicType, plugin );
     }
 
     /**
-     * Returns a list of templates depending on the given section type
-     * @param strSectionType the section type of templates to retrieve
+     * Returns a list of templates depending on the given topic type
+     * @param strTopicType the topic type of templates to retrieve
      * @param plugin The Plugin
      * @return a Collection object
      */
-    public static List<NewsLetterTemplate> getTemplatesCollectionByType( String strSectionType, Plugin plugin )
+    public static List<NewsLetterTemplate> getTemplatesCollectionByType( String strTopicType, Plugin plugin )
     {
-        return _dao.selectTemplatesCollectionByType( strSectionType, plugin );
+        return _dao.selectTemplatesCollectionByType( strTopicType, plugin );
     }
 
     /**

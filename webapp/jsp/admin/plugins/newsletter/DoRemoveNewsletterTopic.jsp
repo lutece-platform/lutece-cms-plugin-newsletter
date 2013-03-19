@@ -4,6 +4,6 @@
 
 <% newsletter.init( request, newsletter.RIGHT_NEWSLETTER_MANAGEMENT ); %>
 <%
-	response.sendRedirect( newsletter.doModifySectionConfig( request ) );
+    response.sendRedirect( newsletter.doRemoveNewsletterTopic( request ) );
 %>
 

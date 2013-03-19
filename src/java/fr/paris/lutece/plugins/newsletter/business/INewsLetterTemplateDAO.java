@@ -55,21 +55,21 @@ public interface INewsLetterTemplateDAO
 
     /**
      * Returns the list of all templates
-     * @param strSectionType the section type of templates
+     * @param strTopicType the topic type of templates
      * @param plugin The plugin
      * @return the reference list of the templates corresponding to the given
      *         type
      */
-    ReferenceList selectTemplatesListByType( String strSectionType, Plugin plugin );
+    ReferenceList selectTemplatesListByType( String strTopicType, Plugin plugin );
 
     /**
      * Returns a list of templates depending on the given type
-     * @param strSectionType the section type of templates to get
+     * @param strTopicType the topic type of templates to get
      * @param plugin The plugin
      * @return the collection of the templates corresponding to the given
-     *         section type
+     *         topic type
      */
-    List<NewsLetterTemplate> selectTemplatesCollectionByType( String strSectionType, Plugin plugin );
+    List<NewsLetterTemplate> selectTemplatesCollectionByType( String strTopicType, Plugin plugin );
 
     /**
      * Insert a new record in the table.

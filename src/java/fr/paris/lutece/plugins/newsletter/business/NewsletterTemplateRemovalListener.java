@@ -21,7 +21,7 @@ public class NewsletterTemplateRemovalListener implements RemovalListener
     @Override
     public boolean canBeRemoved( String strId )
     {
-        return !NewsLetterHome.findTemplate( Integer.parseInt( strId ),
+        return !NewsLetterHome.isTemplateUsedByNewsletter( Integer.parseInt( strId ),
                 PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
     }
 

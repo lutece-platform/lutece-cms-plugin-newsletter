@@ -48,13 +48,14 @@ import java.util.Collection;
 public final class NewsLetterDAO implements INewsLetterDAO
 {
     // Constants
-    private static final String SQL_QUERY_SELECT = "SELECT name, description, date_last_send, html, id_newsletter_template, workgroup_key, unsubscribe, sender_mail, sender_name, test_recipients, test_subject, nb_categories  FROM newsletter_description WHERE id_newsletter = ? ";
-    private static final String SQL_QUERY_SELECT_ALL = "SELECT id_newsletter , name, description, date_last_send, html, id_newsletter_template, workgroup_key, test_recipients , sender_mail, test_subject, nb_categories FROM newsletter_description ";
+    private static final String SQL_QUERY_SELECT = "SELECT name, description, date_last_send, html, id_newsletter_template, workgroup_key, unsubscribe, sender_mail, sender_name, test_recipients, test_subject, nb_sections  FROM newsletter_description WHERE id_newsletter = ? ";
+    private static final String SQL_QUERY_SELECT_ALL = "SELECT id_newsletter , name, description, date_last_send, html, id_newsletter_template, workgroup_key, test_recipients , sender_mail, sender_name, test_subject, nb_sections FROM newsletter_description ";
     private static final String SQL_QUERY_SELECT_ALL_ID = "SELECT id_newsletter, name FROM newsletter_description ";
+    private static final String SQL_QUERY_SELECT_ALL_BY_ID_TEMPLATE = "SELECT id_newsletter , name, description, date_last_send, html, id_newsletter_template, workgroup_key, test_recipients , sender_mail, sender_name, test_subject, nb_sections FROM newsletter_description WHERE id_newsletter_template = ? ";
     private static final String SQL_QUERY_SELECT_NBR_SUBSCRIBERS = "SELECT count(*) FROM newsletter_subscriber a, newsletter_subscriber_details b WHERE a.id_subscriber = b.id_subscriber AND b.email LIKE ? AND id_newsletter = ? ";
     private static final String SQL_QUERY_SELECT_NBR_ACTIVE_SUBSCRIBERS = "SELECT count(*) FROM newsletter_subscriber a, newsletter_subscriber_details b WHERE a.id_subscriber = b.id_subscriber AND b.email LIKE ? AND id_newsletter = ? AND a.confirmed = 1";
-    private static final String SQL_QUERY_UPDATE = "UPDATE newsletter_description SET name = ?, description = ?, date_last_send = ?, html = ?, id_newsletter_template = ?, workgroup_key = ? , unsubscribe = ? ,sender_mail = ? ,sender_name = ? , test_recipients = ?, test_subject = ?, nb_categories = ? WHERE id_newsletter = ? ";
-    private static final String SQL_QUERY_INSERT = "INSERT INTO newsletter_description ( id_newsletter , name, description, date_last_send, html, id_newsletter_template, workgroup_key, unsubscribe, sender_mail, sender_name, test_recipients , test_subject, nb_categories ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?, ? )";
+    private static final String SQL_QUERY_UPDATE = "UPDATE newsletter_description SET name = ?, description = ?, date_last_send = ?, html = ?, id_newsletter_template = ?, workgroup_key = ? , unsubscribe = ? ,sender_mail = ? ,sender_name = ? , test_recipients = ?, test_subject = ?, nb_sections = ? WHERE id_newsletter = ? ";
+    private static final String SQL_QUERY_INSERT = "INSERT INTO newsletter_description ( id_newsletter , name, description, date_last_send, html, id_newsletter_template, workgroup_key, unsubscribe, sender_mail, sender_name, test_recipients , test_subject, nb_sections ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?, ? )";
     private static final String SQL_QUERY_INSERT_SUBSCRIBER = "INSERT INTO newsletter_subscriber ( id_newsletter , id_subscriber, date_subscription, confirmed ) VALUES ( ?, ?, ?, ? )";
     private static final String SQL_QUERY_VALIDATE_SUBSCRIBER = "UPDATE newsletter_subscriber SET confirmed = 1 WHERE id_newsletter = ? AND id_subscriber = ?";
     private static final String SQL_QUERY_DELETE = "DELETE FROM newsletter_description WHERE id_newsletter = ? ";
@@ -73,11 +74,9 @@ public final class NewsLetterDAO implements INewsLetterDAO
     //Access methods to data
 
     /**
-     * Insert a new record in the table.
-     * 
-     * @param newsLetter the object to insert
-     * @param plugin the Plugin
+     * {@inheritDoc}
      */
+    @Override
     public void insert( NewsLetter newsLetter, Plugin plugin )
     {
         int nNewPrimaryKey = newPrimaryKey( plugin );
@@ -98,18 +97,16 @@ public final class NewsLetterDAO implements INewsLetterDAO
         daoUtil.setString( nIndex++, newsLetter.getNewsletterSenderName( ) );
         daoUtil.setString( nIndex++, newsLetter.getTestRecipients( ) );
         daoUtil.setString( nIndex++, newsLetter.getTestSubject( ) );
-        daoUtil.setInt( nIndex, newsLetter.getNbCategories( ) );
+        daoUtil.setInt( nIndex, newsLetter.getNbSections( ) );
 
         daoUtil.executeUpdate( );
         daoUtil.free( );
     }
 
     /**
-     * Remove a record from the table
-     * 
-     * @param nNewsLetterId the newsletter identifier
-     * @param plugin the Plugin
+     * {@inheritDoc}
      */
+    @Override
     public void delete( int nNewsLetterId, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
@@ -120,12 +117,9 @@ public final class NewsLetterDAO implements INewsLetterDAO
     }
 
     /**
-     * loads the data of the newsletter from the table
-     * 
-     * @param nNewsLetterId the newsletter identifier
-     * @param plugin the Plugin
-     * @return the object inserted
+     * {@inheritDoc}
      */
+    @Override
     public NewsLetter load( int nNewsLetterId, Plugin plugin )
     {
         NewsLetter newsLetter = new NewsLetter( );
@@ -149,7 +143,7 @@ public final class NewsLetterDAO implements INewsLetterDAO
             newsLetter.setNewsletterSenderName( daoUtil.getString( nIndex++ ) );
             newsLetter.setTestRecipients( daoUtil.getString( nIndex++ ) );
             newsLetter.setTestSubject( daoUtil.getString( nIndex++ ) );
-            newsLetter.setNbCategories( daoUtil.getInt( nIndex ) );
+            newsLetter.setNbSections( daoUtil.getInt( nIndex ) );
         }
 
         daoUtil.free( );
@@ -158,11 +152,9 @@ public final class NewsLetterDAO implements INewsLetterDAO
     }
 
     /**
-     * Update the record in the table
-     * 
-     * @param newsLetter the object to be updated
-     * @param plugin the Plugin
+     * {@inheritDoc}
      */
+    @Override
     public void store( NewsLetter newsLetter, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
@@ -178,7 +170,7 @@ public final class NewsLetterDAO implements INewsLetterDAO
         daoUtil.setString( nIndex++, newsLetter.getNewsletterSenderName( ) );
         daoUtil.setString( nIndex++, newsLetter.getTestRecipients( ) );
         daoUtil.setString( nIndex++, newsLetter.getTestSubject( ) );
-        daoUtil.setInt( nIndex++, newsLetter.getNbCategories( ) );
+        daoUtil.setInt( nIndex++, newsLetter.getNbSections( ) );
         daoUtil.setInt( nIndex, newsLetter.getId( ) );
 
         daoUtil.executeUpdate( );
@@ -186,12 +178,9 @@ public final class NewsLetterDAO implements INewsLetterDAO
     }
 
     /**
-     * Check the unicity of the primary key
-     * 
-     * @param nKey the key to be checked
-     * @param plugin the Plugin
-     * @return true if the identifier exist and false if not
+     * {@inheritDoc}
      */
+    @Override
     public boolean checkPrimaryKey( int nKey, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_PRIMARY_KEY, plugin );
@@ -211,11 +200,9 @@ public final class NewsLetterDAO implements INewsLetterDAO
     }
 
     /**
-     * Check whether a portlet is linked to a newsletter
-     * 
-     * @param nIdNewsletter the id of the newsletter
-     * @return true if the newsletter is used by subscription portlet
+     * {@inheritDoc}
      */
+    @Override
     public boolean checkLinkedPortlet( int nIdNewsletter )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_LINKED_PORTLET );
@@ -235,11 +222,9 @@ public final class NewsLetterDAO implements INewsLetterDAO
     }
 
     /**
-     * Generate a new primary key to add a newsletter
-     * 
-     * @param plugin the Plugin
-     * @return the new key
+     * {@inheritDoc}
      */
+    @Override
     public int newPrimaryKey( Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PRIMARY_KEY, plugin );
@@ -261,10 +246,9 @@ public final class NewsLetterDAO implements INewsLetterDAO
     }
 
     /**
-     * Select the list of the newsletters available
-     * @param plugin the Plugin
-     * @return a collection of objects
+     * {@inheritDoc}
      */
+    @Override
     public Collection<NewsLetter> selectAll( Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL, plugin );
@@ -285,8 +269,9 @@ public final class NewsLetterDAO implements INewsLetterDAO
             newsLetter.setWorkgroup( daoUtil.getString( nIndex++ ) );
             newsLetter.setTestRecipients( daoUtil.getString( nIndex++ ) );
             newsLetter.setNewsletterSenderMail( daoUtil.getString( nIndex++ ) );
+            newsLetter.setNewsletterSenderName( daoUtil.getString( nIndex++ ) );
             newsLetter.setTestSubject( daoUtil.getString( nIndex++ ) );
-            newsLetter.setNbCategories( daoUtil.getInt( nIndex ) );
+            newsLetter.setNbSections( daoUtil.getInt( nIndex ) );
             list.add( newsLetter );
         }
 
@@ -296,10 +281,9 @@ public final class NewsLetterDAO implements INewsLetterDAO
     }
 
     /**
-     * Select the list of the newsletters available
-     * @param plugin the Plugin
-     * @return a {@link ReferenceList} of id and name
+     * {@inheritDoc}
      */
+    @Override
     public ReferenceList selectAllId( Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL_ID, plugin );
@@ -318,27 +302,54 @@ public final class NewsLetterDAO implements INewsLetterDAO
     }
 
     /**
-     * Insert a new subscriber for a newsletter
-     * 
-     * @param nNewsLetterId the newsletter identifier
-     * @param nSubscriberId the subscriber identifier
-     * @param tToday The day
-     * @param plugin the Plugin
+     * {@inheritDoc}
      */
+    @Override
+    public Collection<NewsLetter> selectAllByTemplateId( int nTemplateId, Plugin plugin )
+    {
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL_BY_ID_TEMPLATE, plugin );
+        daoUtil.setInt( 1, nTemplateId );
+        daoUtil.executeQuery( );
+
+        ArrayList<NewsLetter> list = new ArrayList<NewsLetter>( );
+
+        while ( daoUtil.next( ) )
+        {
+            int nIndex = 1;
+            NewsLetter newsLetter = new NewsLetter( );
+            newsLetter.setId( daoUtil.getInt( nIndex++ ) );
+            newsLetter.setName( daoUtil.getString( nIndex++ ) );
+            newsLetter.setDescription( daoUtil.getString( nIndex++ ) );
+            newsLetter.setDateLastSending( daoUtil.getTimestamp( nIndex++ ) );
+            newsLetter.setHtml( daoUtil.getString( nIndex++ ) );
+            newsLetter.setNewsLetterTemplateId( daoUtil.getInt( nIndex++ ) );
+            newsLetter.setWorkgroup( daoUtil.getString( nIndex++ ) );
+            newsLetter.setTestRecipients( daoUtil.getString( nIndex++ ) );
+            newsLetter.setNewsletterSenderMail( daoUtil.getString( nIndex++ ) );
+            newsLetter.setNewsletterSenderName( daoUtil.getString( nIndex++ ) );
+            newsLetter.setTestSubject( daoUtil.getString( nIndex++ ) );
+            newsLetter.setNbSections( daoUtil.getInt( nIndex ) );
+            list.add( newsLetter );
+        }
+
+        daoUtil.free( );
+
+        return list;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void insertSubscriber( int nNewsLetterId, int nSubscriberId, Timestamp tToday, Plugin plugin )
     {
         insertSubscriber( nNewsLetterId, nSubscriberId, true, tToday, plugin );
     }
 
     /**
-     * Insert a new subscriber for a newsletter
-     * 
-     * @param nNewsLetterId the newsletter identifier
-     * @param nSubscriberId the subscriber identifier
-     * @param bValidate the validation status
-     * @param tToday The day
-     * @param plugin the Plugin
+     * {@inheritDoc}
      */
+    @Override
     public void insertSubscriber( int nNewsLetterId, int nSubscriberId, boolean bValidate, Timestamp tToday,
             Plugin plugin )
     {
@@ -360,12 +371,9 @@ public final class NewsLetterDAO implements INewsLetterDAO
     }
 
     /**
-     * Remove the subscriber's inscription to a newsletter
-     * 
-     * @param nNewsLetterId the newsletter identifier
-     * @param nSubscriberId the subscriber identifier
-     * @param plugin the Plugin
+     * {@inheritDoc}
      */
+    @Override
     public void deleteSubscriber( int nNewsLetterId, int nSubscriberId, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_FROM_SUBSCRIBER, plugin );
@@ -378,12 +386,9 @@ public final class NewsLetterDAO implements INewsLetterDAO
     }
 
     /**
-     * Performs confirm unsubscription process
-     * 
-     * @param confirmLimitDate all unconfirmed subscriber which subscription
-     *            date is below confirmLimitDate will be deleted
-     * @param plugin the plugin
+     * {@inheritDoc}
      */
+    @Override
     public void deleteOldUnconfirmed( Timestamp confirmLimitDate, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_OLD_FROM_SUBSCRIBER, plugin );
@@ -399,13 +404,9 @@ public final class NewsLetterDAO implements INewsLetterDAO
     }
 
     /**
-     * check if the subscriber is not yet registered to a newsletter
-     * 
-     * @param nNewsLetterId the newsletter identifier
-     * @param nSubscriberId the subscriber identifier
-     * @param plugin the Plugin
-     * @return true if he is registered and false if not
+     * {@inheritDoc}
      */
+    @Override
     public boolean isRegistered( int nNewsLetterId, int nSubscriberId, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_IS_REGISTERED, plugin );
@@ -427,12 +428,9 @@ public final class NewsLetterDAO implements INewsLetterDAO
     }
 
     /**
-     * controls that a template is used by a newsletter
-     * 
-     * @param nTemplateId the template identifier
-     * @param plugin the Plugin
-     * @return true if the template is used, false if not
+     * {@inheritDoc}
      */
+    @Override
     public boolean isTemplateUsed( int nTemplateId, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_IS_TEMPLATE_USED, plugin );
@@ -453,13 +451,9 @@ public final class NewsLetterDAO implements INewsLetterDAO
     }
 
     /**
-     * Counts the subscribers for a newsletter
-     * 
-     * @param nNewsLetterId the newsletter newsletter
-     * @param strSearchString the string to search in the subscriber's email
-     * @param plugin the Plugin
-     * @return the number of subscribers
+     * {@inheritDoc}
      */
+    @Override
     public int selectNbrSubscribers( int nNewsLetterId, String strSearchString, Plugin plugin )
     {
         int nCount;
@@ -487,13 +481,9 @@ public final class NewsLetterDAO implements INewsLetterDAO
     }
 
     /**
-     * Counts the subscribers for a newsletter
-     * 
-     * @param nNewsLetterId the newsletter newsletter
-     * @param strSearchString the string to search in the subscriber's email
-     * @param plugin the Plugin
-     * @return the number of subscribers
+     * {@inheritDoc}
      */
+    @Override
     public int selectNbrActiveSubscribers( int nNewsLetterId, String strSearchString, Plugin plugin )
     {
         int nCount;
@@ -523,6 +513,7 @@ public final class NewsLetterDAO implements INewsLetterDAO
     /**
      * {@inheritDoc}
      */
+    @Override
     public void validateSubscriber( int nNewsLetterId, int nSubscriberId, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_VALIDATE_SUBSCRIBER, plugin );

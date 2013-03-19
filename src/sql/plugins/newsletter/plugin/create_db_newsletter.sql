@@ -16,7 +16,7 @@ CREATE TABLE newsletter_description (
   sender_mail VARCHAR(255) DEFAULT NULL,
   sender_name VARCHAR(255) DEFAULT NULL,
   test_subject VARCHAR(255) DEFAULT NULL,
-  nb_categories INT DEFAULT '1',
+  nb_sections INT DEFAULT '1',
   PRIMARY KEY (id_newsletter)
 );
 
@@ -33,8 +33,8 @@ CREATE TABLE newsletter_template (
   file_name VARCHAR(100) DEFAULT NULL,
   picture VARCHAR(100) DEFAULT NULL,
   workgroup_key VARCHAR(50) DEFAULT NULL,
-  section_type VARCHAR(100) NOT NULL,
-  categories INT DEFAULT '1' NOT NULL,
+  topic_type VARCHAR(100) NOT NULL,
+  sections INT DEFAULT '1' NOT NULL,
   PRIMARY KEY (id_template)
 );
 
@@ -107,23 +107,23 @@ CREATE TABLE newsletter_properties (
 );
 
 --
--- Table structure for table newsletter_section
+-- Table structure for table newsletter_topic
 --
 
-DROP TABLE IF EXISTS newsletter_section;
-CREATE TABLE newsletter_section (
-  id_section INT,
+DROP TABLE IF EXISTS newsletter_topic;
+CREATE TABLE newsletter_topic (
+  id_topic INT,
   id_newsletter INT NOT NULL,
-  section_type VARCHAR(100) NOT NULL,
+  topic_type VARCHAR(100) NOT NULL,
   title VARCHAR(255) DEFAULT '',
-  section_order INT NOT NULL,
-  category INT NOT NULL,
-  PRIMARY KEY (id_section)
+  topic_order INT NOT NULL,
+  section INT NOT NULL,
+  PRIMARY KEY (id_topic)
 );
 
-DROP TABLE IF EXISTS newsletter_section_free_html;
-CREATE TABLE newsletter_section_free_html (
-  id_section INT,
+DROP TABLE IF EXISTS newsletter_topic_free_html;
+CREATE TABLE newsletter_topic_free_html (
+  id_topic INT,
   html_content LONG VARCHAR,
-  PRIMARY KEY (id_section)
+  PRIMARY KEY (id_topic)
 );

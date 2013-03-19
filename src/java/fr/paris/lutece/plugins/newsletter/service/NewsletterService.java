@@ -37,9 +37,9 @@ import fr.paris.lutece.plugins.newsletter.business.NewsLetter;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterHome;
 import fr.paris.lutece.plugins.newsletter.business.Subscriber;
 import fr.paris.lutece.plugins.newsletter.business.SubscriberHome;
-import fr.paris.lutece.plugins.newsletter.business.section.NewsletterSection;
-import fr.paris.lutece.plugins.newsletter.business.section.NewsletterSectionHome;
-import fr.paris.lutece.plugins.newsletter.service.section.NewsletterSectionService;
+import fr.paris.lutece.plugins.newsletter.business.topic.NewsletterTopic;
+import fr.paris.lutece.plugins.newsletter.business.topic.NewsletterTopicHome;
+import fr.paris.lutece.plugins.newsletter.service.topic.NewsletterTopicService;
 import fr.paris.lutece.plugins.newsletter.util.NewsLetterConstants;
 import fr.paris.lutece.plugins.newsletter.util.NewsletterUtils;
 import fr.paris.lutece.portal.business.user.AdminUser;
@@ -98,7 +98,7 @@ public class NewsletterService implements Serializable
     private static final String PROPERTY_NO_SECURED_IMG_OPTION = "newsletter.nosecured.img.option";
     private static final String PROPERTY_UNSUBSCRIBE_KEY_ENCRYPTION_ALGORITHM = "newsletter.unsubscribe.key.encryptionAlgorithm";
 
-    private NewsletterSectionService _newsletterSectionService;
+    private NewsletterTopicService _newsletterTopicService;
 
     /**
      * Returns the instance of the singleton
@@ -296,54 +296,53 @@ public class NewsletterService implements Serializable
         }
 
         Map<String, Object> model = new HashMap<String, Object>( );
-        List<NewsletterSection> listSections = NewsletterSectionHome.findAllByIdNewsletter( newsletter.getId( ),
-                getPlugin( ) );
+        List<NewsletterTopic> listTopics = NewsletterTopicHome
+                .findAllByIdNewsletter( newsletter.getId( ), getPlugin( ) );
 
-        // We sort the elements so that they are ordered by category and order.
-        Collections.sort( listSections );
+        // We sort the elements so that they are ordered by section and order.
+        Collections.sort( listTopics );
 
-        int nCurrentCategory = 0;
-        String[] strContentByCategory = new String[newsletter.getNbCategories( )];
-        List<NewsletterSection> listSelectedSections = new ArrayList<NewsletterSection>( );
-        for ( int i = 0; i < listSections.size( ) + 1; i++ )
+        int nCurrentSection = 0;
+        String[] strContentBySection = new String[newsletter.getNbSections( )];
+        List<NewsletterTopic> listSelectedTopics = new ArrayList<NewsletterTopic>( );
+        for ( int i = 0; i < listTopics.size( ) + 1; i++ )
         {
-            NewsletterSection newsletterSection = null;
-            if ( i < listSections.size( ) )
+            NewsletterTopic newsletterTopic = null;
+            if ( i < listTopics.size( ) )
             {
-                newsletterSection = listSections.get( i );
+                newsletterTopic = listTopics.get( i );
             }
-            if ( newsletterSection != null && newsletterSection.getCategory( ) == nCurrentCategory )
+            if ( newsletterTopic != null && newsletterTopic.getSection( ) == nCurrentSection )
             {
-                listSelectedSections.add( newsletterSection );
+                listSelectedTopics.add( newsletterTopic );
             }
             else
             {
-                if ( nCurrentCategory != 0 )
+                if ( nCurrentSection != 0 )
                 {
-                    StringBuilder sbCategoryContent = new StringBuilder( );
-                    for ( NewsletterSection section : listSelectedSections )
+                    StringBuilder sbSectionContent = new StringBuilder( );
+                    for ( NewsletterTopic topic : listSelectedTopics )
                     {
-                        sbCategoryContent.append( getNewsletterSectionService( ).getSectionContent( section, user,
-                                locale ) );
+                        sbSectionContent.append( getNewsletterTopicService( ).getTopicContent( topic, user, locale ) );
                     }
-                    if ( nCurrentCategory - 1 < strContentByCategory.length )
+                    if ( nCurrentSection - 1 < strContentBySection.length )
                     {
-                        strContentByCategory[nCurrentCategory - 1] = sbCategoryContent.toString( );
+                        strContentBySection[nCurrentSection - 1] = sbSectionContent.toString( );
                     }
                 }
-                if ( newsletterSection != null )
+                if ( newsletterTopic != null )
                 {
-                    nCurrentCategory = newsletterSection.getCategory( );
-                    listSelectedSections = new ArrayList<NewsletterSection>( );
-                    listSelectedSections.add( newsletterSection );
+                    nCurrentSection = newsletterTopic.getSection( );
+                    listSelectedTopics = new ArrayList<NewsletterTopic>( );
+                    listSelectedTopics.add( newsletterTopic );
                 }
             }
         }
 
-        model.put( NewsLetterConstants.MARK_CONTENT, strContentByCategory[0] );
-        for ( int i = 0; i < strContentByCategory.length; i++ )
+        model.put( NewsLetterConstants.MARK_CONTENT, strContentBySection[0] );
+        for ( int i = 0; i < strContentBySection.length; i++ )
         {
-            model.put( NewsLetterConstants.MARK_CONTENT_CATEGORY + Integer.toString( i + 1 ), strContentByCategory[i] );
+            model.put( NewsLetterConstants.MARK_CONTENT_SECTION + Integer.toString( i + 1 ), strContentBySection[i] );
         }
         model.put( NewsLetterConstants.MARK_BASE_URL, strBaseUrl );
 
@@ -425,15 +424,15 @@ public class NewsletterService implements Serializable
     }
 
     /**
-     * Get the NewsletterSectionService instance of this service
-     * @return The NewsletterSectionService instance of this service
+     * Get the NewsletterTopicService instance of this service
+     * @return The NewsletterTopicService instance of this service
      */
-    private NewsletterSectionService getNewsletterSectionService( )
+    private NewsletterTopicService getNewsletterTopicService( )
     {
-        if ( _newsletterSectionService == null )
+        if ( _newsletterTopicService == null )
         {
-            _newsletterSectionService = NewsletterSectionService.getService( );
+            _newsletterTopicService = NewsletterTopicService.getService( );
         }
-        return _newsletterSectionService;
+        return _newsletterTopicService;
     }
 }

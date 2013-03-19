@@ -1,0 +1,102 @@
+<div class="row-fluid">
+	<div class="span12">
+		<fieldset>
+			<ul class="nav nav-tabs">
+				<li>
+					<a href="jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletter.id}">#i18n{newsletter.modify_newsletter.manageAttributes}</a>
+				</li>
+				<li class="active">
+					<a href="jsp/admin/plugins/newsletter/GetManageNewsletterTopics.jsp?newsletter_id=${newsletter.id}">#i18n{newsletter.modify_newsletter.manageTopics}</a>
+				</li>
+				<li>
+					<a href="jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}">#i18n{newsletter.compose_newsletter.boxTitle}</a>
+				</li>
+				<#if 0 < newsletter_template_id>
+					<div class="pull-right">
+						<form class="form-inline spaced" action="jsp/admin/plugins/newsletter/DoAddNewsletterTopic.jsp">
+							<input type="hidden" name="newsletter_id" id="newsletter_id" value="${newsletter.id}">
+							
+							<label for="topic_type">#i18n{newsletter.manage_topics.labelTopicType} : </label>
+							<@combo name="topic_type" items=list_topic_types default_value="" />
+							<#if 1 < newsletter.nbSections>
+								<label for="topic_section_number">#i18n{newsletter.manage_topics.labelSectionNumber} : </label>
+								<select class="input-mini" name="topic_section_number">
+									<#list 1..newsletter.nbSections as i>
+										<option value="${i}">${i}</option>
+									</#list>
+								</select>
+							<#else>
+								<input type="hidden" name="topic_section_number" value="1">
+							</#if>
+							<button class="btn btn-primary btn-small" title="#i18n{newsletter.manage_topics.labelAddTopic}"><i class="icon-plus icon-white">&nbsp;</i>&nbsp;<span class="hidden-phone">#i18n{newsletter.manage_topics.labelAddTopic}</span></button>
+						</form>
+					</div>
+				</#if>
+			</ul>
+			<div class="span7">
+				<#if 0 < newsletter_template_id>
+					<@dataTable dataTableManager=table_manager actionMacro="getActionColumn" />
+					<br />
+					<br />
+				</#if>
+				<div>
+					<form class="form" method="post" action="jsp/admin/plugins/newsletter/GetManageNewsletterTopics.jsp" method="post">
+	                    <input type="hidden" name="newsletter_id" value="${newsletter.id}" />
+	                    <input type="hidden" name="update_template" value="true" />
+	                    <#if newsletter_templates?has_content>
+	                    	<div class="control-group">
+		                    	<label class="radio inline" for="">#i18n{newsletter.compose_newsletter.newsletterTemplate} :</label>
+		                    	<#list newsletter_templates as template >
+		                   			<input class="radio inline" type="radio" name="newsletter_template_id" value="${template.id}" <#if template.id=newsletter_template_id>checked="checked"</#if> />
+									<img src="${img_path}/${template.picture}" border="0"  height="24" width="24" alt="${template.description}" title="${template.description}" />
+								</#list>
+							</div>
+	                    <#else>
+	                    	<p class="label label-warning">#i18n{newsletter.compose_newsletter.noNewsletterTemplate}</p>
+	                    </#if>
+	                    <div class="form-actions">
+	                    	<button class="btn btn-primary btn-small" type="submit" ><i class="icon-ok icon-white"></i>&nbsp;#i18n{portal.util.labelValidate}</button>
+	                    </div>
+	                </form>
+	        	</div>
+			</div>
+			<div class="span4">
+				<#if html_content?? && html_content?has_content>
+					<h5>#i18n{newsletter.manage_topics.labelPreview} : </h5>
+					<div style="border: 1px solid black;">
+ 						${html_content!}
+ 					</div>
+ 				</#if>
+			</div>
+		</fieldset>
+	</div>
+</div>
+
+<#macro getActionColumn item>
+	<a class="btn btn-primary btn-small" title="#i18n{portal.util.labelModify}" href="jsp/admin/plugins/newsletter/GetModifyTopicConfig.jsp?newsletter_id=${item.idNewsletter}&topic_id=${item.id}"><i class="icon-edit icon-white"></i></a>
+	<#if 1< item.order >
+		<a class="btn btn-primary btn-small" title="#i18n{newsletter.manage_topics.labelUp}" href="jsp/admin/plugins/newsletter/DoMoveNewsletterTopic.jsp?newsletter_id=${item.idNewsletter}&topic_id=${item.id}&move_up=true"><i class="icon-chevron-up icon-white"></i></a>
+	</#if>
+	<#if item.order < section_size[item.section - 1]>
+		<a class="btn btn-primary btn-small" title="#i18n{newsletter.manage_topics.labelDown}" href="jsp/admin/plugins/newsletter/DoMoveNewsletterTopic.jsp?newsletter_id=${item.idNewsletter}&topic_id=${item.id}&move_up=false"><i class="icon-chevron-down icon-white"></i></a>
+	</#if>
+	<a class="btn btn-danger btn-small" title="#i18n{portal.util.labelDelete}" href="jsp/admin/plugins/newsletter/ConfirmRemoveNewsletterTopic.jsp?newsletter_id=${item.idNewsletter}&topic_id=${item.id}"><i class="icon-trash icon-white"></i></a>
+</#macro>
+<#macro getSectionColumn item>
+		<#if 1 < newsletter.nbSections>
+		<form class="form-inline" action="jsp/admin/plugins/newsletter/DoChangeNewsletterTopicSection.jsp">
+			<input type="hidden" name="newsletter_id" id="newsletter_id" value="${newsletter.id}">
+			<input type="hidden" name="topic_id" id="topic_id" value="${item.id}">
+			<select class="input-mini" name="topic_section_number">
+				<#list 1..newsletter.nbSections as i>
+					<option value="${i}" <#if i==item.section >selected="selected"</#if>>${i}</option>
+				</#list>
+			</select>
+			<button class="btn btn-primary btn-small" title="#i18n{newsletter.manage_topics.labelChangeTopicSection}">
+				<i class="icon-move icon-white"></i>
+			</button>
+		</form>
+	<#else>
+		${item.section}
+	</#if>
+</#macro>

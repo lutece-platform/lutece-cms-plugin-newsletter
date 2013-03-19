@@ -70,7 +70,7 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     private String _strNewsletterSenderName;
     private String _strTermOfService;
     private String _strSubject;
-    private int _nNbCategories;
+    private int _nNbSections;
 
     /**
      * Initialize the Newsletter
@@ -395,20 +395,20 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     }
 
     /**
-     * Get the number of categories of this newsletter
-     * @return The number of categories of this newsletter
+     * Get the number of sections of this newsletter
+     * @return The number of sections of this newsletter
      */
-    public int getNbCategories( )
+    public int getNbSections( )
     {
-        return _nNbCategories;
+        return _nNbSections;
     }
 
     /**
-     * Set the number of categories of this newsletter
-     * @param nNbCategories The number of categories of this newsletter
+     * Set the number of sections of this newsletter
+     * @param nNbSections The number of sections of this newsletter
      */
-    public void setNbCategories( int nNbCategories )
+    public void setNbSections( int nNbSections )
     {
-        this._nNbCategories = nNbCategories;
+        this._nNbSections = nNbSections;
     }
 }

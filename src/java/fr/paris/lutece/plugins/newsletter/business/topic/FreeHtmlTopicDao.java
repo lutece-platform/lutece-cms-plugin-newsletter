@@ -1,4 +1,4 @@
-package fr.paris.lutece.plugins.newsletter.business.section;
+package fr.paris.lutece.plugins.newsletter.business.topic;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
@@ -8,15 +8,15 @@ import java.util.List;
 
 
 /**
- * DAO implementation for {@link FreeHtmlSection}
+ * DAO implementation for {@link FreeHtmlTopic}
  */
-public class FreeHtmlSectionDao implements IFreeHtmlSectionDAO
+public class FreeHtmlTopicDao implements IFreeHtmlTopicDAO
 {
-    private static final String SQL_QUERY_FIND_BY_PRIMARY_KEY = " SELECT id_section, html_content FROM newsletter_section_free_html WHERE id_section = ? ";
-    private static final String SQL_QUERY_UPDATE = " UPDATE newsletter_section_free_html SET html_content = ? WHERE id_section = ? ";
-    private static final String SQL_QUERY_INSERT = " INSERT INTO newsletter_section_free_html (id_section, html_content) VALUES (?,?) ";
-    private static final String SQL_QUERY_DELETE = " DELETE FROM newsletter_section_free_html WHERE id_section = ? ";
-    private static final String SQL_QUERY_FIND_BY_ID_LIST = "  SELECT id_section, html_content FROM newsletter_section_free_html WHERE id_section IN ( ";
+    private static final String SQL_QUERY_FIND_BY_PRIMARY_KEY = " SELECT id_topic, html_content FROM newsletter_topic_free_html WHERE id_topic = ? ";
+    private static final String SQL_QUERY_UPDATE = " UPDATE newsletter_topic_free_html SET html_content = ? WHERE id_topic = ? ";
+    private static final String SQL_QUERY_INSERT = " INSERT INTO newsletter_topic_free_html (id_topic, html_content) VALUES (?,?) ";
+    private static final String SQL_QUERY_DELETE = " DELETE FROM newsletter_topic_free_html WHERE id_topic = ? ";
+    private static final String SQL_QUERY_FIND_BY_ID_LIST = "  SELECT id_topic, html_content FROM newsletter_topic_free_html WHERE id_topic IN ( ";
 
     private static final String CONSTANT_COMMA = ",";
     private static final String CONSTANT_CLOSE_PARENTHESIS = ")";
@@ -25,32 +25,32 @@ public class FreeHtmlSectionDao implements IFreeHtmlSectionDAO
      * {@inheritDoc}
      */
     @Override
-    public FreeHtmlSection findByPrimaryKey( int nId, Plugin plugin )
+    public FreeHtmlTopic findByPrimaryKey( int nId, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_FIND_BY_PRIMARY_KEY, plugin );
         daoUtil.setInt( 1, nId );
-        FreeHtmlSection section = null;
+        FreeHtmlTopic topic = null;
 
         daoUtil.executeQuery( );
         if ( daoUtil.next( ) )
         {
-            section = new FreeHtmlSection( );
-            section.setId( daoUtil.getInt( 1 ) );
-            section.setHtmlContent( daoUtil.getString( 2 ) );
+            topic = new FreeHtmlTopic( );
+            topic.setId( daoUtil.getInt( 1 ) );
+            topic.setHtmlContent( daoUtil.getString( 2 ) );
         }
         daoUtil.free( );
-        return section;
+        return topic;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void insert( FreeHtmlSection freeHtmlSection, Plugin plugin )
+    public void insert( FreeHtmlTopic freeHtmlTopic, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
-        daoUtil.setInt( 1, freeHtmlSection.getId( ) );
-        daoUtil.setString( 2, freeHtmlSection.getHtmlContent( ) );
+        daoUtil.setInt( 1, freeHtmlTopic.getId( ) );
+        daoUtil.setString( 2, freeHtmlTopic.getHtmlContent( ) );
         daoUtil.executeUpdate( );
         daoUtil.free( );
     }
@@ -59,11 +59,11 @@ public class FreeHtmlSectionDao implements IFreeHtmlSectionDAO
      * {@inheritDoc}
      */
     @Override
-    public void update( FreeHtmlSection freeHtmlSection, Plugin plugin )
+    public void update( FreeHtmlTopic freeHtmlTopic, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
-        daoUtil.setString( 1, freeHtmlSection.getHtmlContent( ) );
-        daoUtil.setInt( 2, freeHtmlSection.getId( ) );
+        daoUtil.setString( 1, freeHtmlTopic.getHtmlContent( ) );
+        daoUtil.setInt( 2, freeHtmlTopic.getId( ) );
         daoUtil.executeUpdate( );
         daoUtil.free( );
     }
@@ -84,9 +84,9 @@ public class FreeHtmlSectionDao implements IFreeHtmlSectionDAO
      * {@inheritDoc}
      */
     @Override
-    public List<FreeHtmlSection> findCollection( List<Integer> listIds, Plugin plugin )
+    public List<FreeHtmlTopic> findCollection( List<Integer> listIds, Plugin plugin )
     {
-        List<FreeHtmlSection> listSections = new ArrayList<FreeHtmlSection>( );
+        List<FreeHtmlTopic> listTopic = new ArrayList<FreeHtmlTopic>( );
         if ( listIds != null )
         {
             List<Integer> listPrivIds = new ArrayList<Integer>( listIds );
@@ -112,13 +112,13 @@ public class FreeHtmlSectionDao implements IFreeHtmlSectionDAO
             daoUtil.executeQuery( );
             while ( daoUtil.next( ) )
             {
-                FreeHtmlSection section = new FreeHtmlSection( );
-                section.setId( daoUtil.getInt( 1 ) );
-                section.setHtmlContent( daoUtil.getString( 2 ) );
-                listSections.add( section );
+                FreeHtmlTopic topic = new FreeHtmlTopic( );
+                topic.setId( daoUtil.getInt( 1 ) );
+                topic.setHtmlContent( daoUtil.getString( 2 ) );
+                listTopic.add( topic );
             }
             daoUtil.free( );
         }
-        return listSections;
+        return listTopic;
     }
 }

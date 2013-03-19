@@ -28,51 +28,51 @@
 				<td>${newsletterDisplay.newsletter.dateLastSending?string.short}</td>
 				<td>${newsletterDisplay.newsletter_count_subscribers}</td>
 				<td>
-				<#if newsletterDisplay.newsletter_allow_modification>
-				<a class="btn btn-small btn-primary" href="jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleModify}" >
-					<i class="icon-edit icon-white"></i>
-				</a>
-			</#if>
-			<#if newsletterDisplay.newsletter_allow_manage_subscribers>
-				<a class="btn btn-small btn-primary" href="jsp/admin/plugins/newsletter/ManageSubscribers.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleManageSubscribers}" >
-					<i class="icon-user icon-white"></i>
-				</a>
-			<#else>
-				</#if>
-				<#if newsletterDisplay.newsletter_allow_modification>
-				<a class="btn  btn-small btn-primary" href="jsp/admin/plugins/newsletter/DoComposeNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleCompose}" >
-					<i class="icon-cog icon-white"></i>
-				</a>
-				<#else>
-				&nbsp;
-				</#if>
-				<#if newsletterDisplay.newsletter_allow_sending>
-				   <a class="btn btn-small btn-primary" href="jsp/admin/plugins/newsletter/DoPrepareNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitlePrepareSending}" >
-				<i class="icon-envelope icon-white"></i>
-				</a>
-				<#else>
-				&nbsp;
-				</#if>
-				 <#if newsletterDisplay.newsletter_allow_manage_archive>
-				<a class="btn btn-small btn-primary" href="jsp/admin/plugins/newsletter/ManageArchive.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleArchive}" >
-					<i class="icon-inbox icon-white"></i>
-				</a>
-				<#else>
-				&nbsp;
-				</#if>
-				<#if newsletterDisplay.newsletter_allow_export_subscribers>
-					<a class="btn btn-small btn-primary" href="jsp/admin/plugins/newsletter/DoExportCsv.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleExportCsv}" >
-						<i class="icon-download icon-white"></i></a>
-				<#else>
-				&nbsp;
-				</#if>
-			   <#if newsletterDisplay.newsletter_allow_deletion>
-				<a class="btn btn-danger btn-small" href="jsp/admin/plugins/newsletter/RemoveNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleDelete}" >
-					<i class="icon-trash icon-white"></i>
-				</a>
-				<#else>
-				&nbsp;
-				</#if>
+					<#if newsletterDisplay.newsletter_allow_modification>
+						<a class="btn btn-small btn-primary" href="jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleModify}" >
+							<i class="icon-edit icon-white"></i>
+						</a>
+						<a class="btn btn-small btn-primary" href="jsp/admin/plugins/newsletter/GetManageNewsletterTopics.jsp?newsletter_id=${newsletterDisplay.newsletter.id}" title="#i18n{newsletter.manage_newsletters.columnTitleManageGeneration}">
+							<i class="icon-th-list icon-white"></i>
+						</a>
+						<a class="btn  btn-small btn-primary" href="jsp/admin/plugins/newsletter/DoComposeNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}" title="#i18n{newsletter.manage_newsletters.columnTitleCompose}" >
+							<i class="icon-cog icon-white"></i>
+						</a>
+					<#else>
+						&nbsp;
+					</#if>
+					<#if newsletterDisplay.newsletter_allow_sending>
+						<a class="btn btn-small btn-primary" href="jsp/admin/plugins/newsletter/DoPrepareNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}" title="#i18n{newsletter.manage_newsletters.columnTitlePrepareSending}" >
+							<i class="icon-envelope icon-white"></i>
+						</a>
+					<#else>
+						&nbsp;
+					</#if>
+					<#if newsletterDisplay.newsletter_allow_manage_archive>
+						<a class="btn btn-small btn-primary" href="jsp/admin/plugins/newsletter/ManageArchive.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleArchive}" >
+							<i class="icon-inbox icon-white"></i>
+						</a>
+					<#else>
+						&nbsp;
+					</#if>
+					<#if newsletterDisplay.newsletter_allow_manage_subscribers>
+						<a class="btn btn-small btn-primary" href="jsp/admin/plugins/newsletter/ManageSubscribers.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleManageSubscribers}" >
+							<i class="icon-user icon-white"></i>
+						</a>
+					</#if>
+					<#if newsletterDisplay.newsletter_allow_export_subscribers>
+						<a class="btn btn-small btn-primary" href="jsp/admin/plugins/newsletter/DoExportCsv.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleExportCsv}" >
+							<i class="icon-download icon-white"></i></a>
+					<#else>
+						&nbsp;
+					</#if>
+				   <#if newsletterDisplay.newsletter_allow_deletion>
+						<a class="btn btn-danger btn-small" href="jsp/admin/plugins/newsletter/RemoveNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleDelete}" >
+							<i class="icon-trash icon-white"></i>
+						</a>
+					<#else>
+						&nbsp;
+					</#if>
 				</td>
 			</tr>
 			  <#if newsletterDisplay.newsletter_allow_creation>

@@ -1,16 +1,16 @@
-package fr.paris.lutece.plugins.newsletter.business.section;
+package fr.paris.lutece.plugins.newsletter.business.topic;
 
 /**
- * Describe a free html section of a newsletter.
+ * Describe a free html topic of a newsletter.
  */
-public class FreeHtmlSection
+public class FreeHtmlTopic
 {
     private int _nId;
     private String _strHtmlContent;
 
     /**
-     * Get the id of the section
-     * @return The id of the section
+     * Get the id of the topic
+     * @return The id of the topic
      */
     public int getId( )
     {
@@ -18,8 +18,8 @@ public class FreeHtmlSection
     }
 
     /**
-     * Set the id of the section
-     * @param nId The id of the section
+     * Set the id of the topic
+     * @param nId The id of the topic
      */
     public void setId( int nId )
     {
@@ -27,8 +27,8 @@ public class FreeHtmlSection
     }
 
     /**
-     * Get the html content of the section
-     * @return The html content of the section
+     * Get the html content of the topic
+     * @return The html content of the topic
      */
     public String getHtmlContent( )
     {
@@ -36,8 +36,8 @@ public class FreeHtmlSection
     }
 
     /**
-     * Get the html content of the section
-     * @param strHtmlContent The html content of the section
+     * Get the html content of the topic
+     * @param strHtmlContent The html content of the topic
      */
     public void setHtmlContent( String strHtmlContent )
     {

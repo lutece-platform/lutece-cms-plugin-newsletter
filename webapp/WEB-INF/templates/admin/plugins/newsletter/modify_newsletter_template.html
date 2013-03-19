@@ -13,7 +13,7 @@
 			<div class="control-group">
 			<label class="control-label" for="newsletter_template_type">#i18n{newsletter.add_newsletter_template.templateType} *:</label>
 				<div class="controls">
-					<@combo items=template_type default_value=template.sectionType name="newsletter_template_type" />
+					<@combo items=template_type default_value=template.topicType name="newsletter_template_type" />
 				</div>
 			</div>
 			<div class="control-group">
@@ -35,9 +35,9 @@
 				</div>
 			</div>
 			<div class="control-group">
-			<label class="control-label" for="newsletter_template_category">#i18n{newsletter.add_newsletter_template.categoryNumber} :</label>
+			<label class="control-label" for="newsletter_template_section">#i18n{newsletter.add_newsletter_template.sectionNumber} :</label>
 				<div class="controls">
-					<input type="text" id="newsletter_template_category" name="newsletter_template_category" class="input-small" value="${template.categoryNumber}" />
+					<input type="text" id="newsletter_template_section" name="newsletter_template_section" class="input-small" value="${template.sectionNumber}" />
 				</div>
 			</div>
 			<div class="control-group">

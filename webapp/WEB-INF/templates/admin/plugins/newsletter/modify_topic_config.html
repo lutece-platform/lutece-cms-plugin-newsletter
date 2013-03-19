@@ -1,17 +1,17 @@
 <div class="span12">
-	<form class="form-horizontal" action="jsp/admin/plugins/newsletter/DoModifyNewsletterSectionConfig.jsp">
+	<form class="form-horizontal" action="jsp/admin/plugins/newsletter/DoModifyNewsletterTopicConfig.jsp">
 		<fieldset>
-			<legend>#i18n{newsletter.modify_section_config.modifyConfigTitle}</legend>
+			<legend>#i18n{newsletter.modify_topic_config.modifyConfigTitle}</legend>
 			<div class="control-group">
-				<label class="control-label" for="title">#i18n{newsletter.modify_section_config.sectionTitle} :</label>
+				<label class="control-label" for="title">#i18n{newsletter.modify_topic_config.topicTitle} :</label>
 				<div class="controls">
-					<input type="text" name="title" id="title" value="${section.title!}">
+					<input type="text" name="title" id="title" value="${topic.title!}">
 				</div>
 			</div>
 			${content!}
 			<div class="form-actions">
-				<input type="hidden" name="newsletter_id" value="${section.idNewsletter}">
-				<input type="hidden" name="section_id" value="${section.id}">
+				<input type="hidden" name="newsletter_id" value="${topic.idNewsletter}">
+				<input type="hidden" name="topic_id" value="${topic.id}">
 				<button class="btn btn-small btn-primary" title="#i18n{portal.util.labelValidate}"><i class="icon-ok icon-white">&nbsp;</i>&nbsp;#i18n{portal.util.labelValidate}</button>
 				<button class="btn btn-small btn-danger" name="cancel" title="#i18n{portal.util.labelCancel}"><i class="icon-remove-circle icon-white">&nbsp;</i>&nbsp;#i18n{portal.util.labelCancel}</button>
 			</div>
