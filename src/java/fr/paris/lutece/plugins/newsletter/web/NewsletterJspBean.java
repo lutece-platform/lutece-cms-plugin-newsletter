@@ -206,6 +206,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String MARK_IS_ACTIVE_CAPTCHA = "is_active_captcha";
     private static final String MARK_ADD_SUBSCRIBER_RIGHT = "is_add_subscriber_right";
     private static final String MARK_IMPORT_SUBSCRIBER_RIGHT = "is_import_subscriber_right";
+    private static final String MARK_EXPORT_SUBSCRIBER_RIGTH = "is_export_subscriber_right";
     private static final String MARK_CLEAN_RIGHT = "is_clean_subscriber_right";
     private static final String MARK_NEWSLETTER_TOPIC_TITLE = "title";
     private static final String MARK_NEWSLETTER_TOPIC_TYPE = "topicTypeName";
@@ -213,6 +214,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String MARK_CONTENT = "content";
     private static final String MARK_TOPIC = "topic";
     private static final String MARK_SEARCH_STRING = "search_string";
+    private static final String MARK_RIGHT_MANAGE_NEWSLETTER_PROPERTIES = "right_manage_newsletter_properties";
 
     // PARAMETER
     private static final String PARAMETER_ACTION = "action";
@@ -403,6 +405,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         model.put( MARK_PAGINATOR, paginator );
         model.put( MARK_ALLOW_CREATION, isNewsletterCreationAllowed( request ) );
         model.put( MARK_NB_ITEMS_PER_PAGE, StringUtils.EMPTY + _nItemsPerPage );
+        model.put( MARK_RIGHT_MANAGE_NEWSLETTER_PROPERTIES, RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE,
+                RBAC.WILDCARD_RESOURCES_ID, NewsletterResourceIdService.PERMISSION_NEWSLETTER_ADVANCED_SETTINGS,
+                getUser( ) ) );
 
         // Collection refListAllTemplates = NewsLetterTemplateHome.getTemplatesList( getPlugin(  ) );
         HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_MANAGE_NEWSLETTERS, getLocale( ), model );
@@ -1227,6 +1232,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                 NewsletterResourceIdService.PERMISSION_ADD_SUBSCRIBER, getUser( ) ) );
         model.put( MARK_IMPORT_SUBSCRIBER_RIGHT, RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
                 NewsletterResourceIdService.PERMISSION_IMPORT_SUBSCRIBERS, getUser( ) ) );
+        model.put( MARK_EXPORT_SUBSCRIBER_RIGTH, RBACService.isAuthorized( newsletter,
+                NewsletterResourceIdService.PERMISSION_EXPORT_SUBSCRIBERS, getUser( ) ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_SUBSCRIBERS, getLocale( ), model );
 

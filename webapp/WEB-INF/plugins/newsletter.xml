@@ -42,13 +42,6 @@
             <feature-level>2</feature-level>
             <feature-url>jsp/admin/plugins/newsletter/ManageTemplates.jsp</feature-url>
         </admin-feature>
-        <admin-feature>
-            <feature-id>NEWSLETTER_PROPERTIES_MANAGEMENT</feature-id>
-            <feature-title>newsletter.adminFeature.newsletter_properties_management.name</feature-title>
-            <feature-description>newsletter.adminFeature.newsletter_properties_management.description</feature-description>
-            <feature-level>2</feature-level>
-            <feature-url>jsp/admin/plugins/newsletter/ManageNewsLetterProperties.jsp</feature-url>
-        </admin-feature>
     </admin-features>
     
     <!-- Portlet parameters -->

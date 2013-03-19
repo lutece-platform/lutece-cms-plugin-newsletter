@@ -2,18 +2,26 @@
 	<div class="span12">
 	<fieldset>
 	<legend>#i18n{newsletter.manage_subscribers.boxTitle}
+	<#if is_export_subscriber_right>
+		<form class="form-search pull-right spaced" method="post" action="jsp/admin/plugins/newsletter/DoExportCsv.jsp">
+			<input type="hidden" name="newsletter_id" value="${newsletter.id}" />
+			<button class="btn btn-small btn-primary" href=""  title="#i18n{newsletter.manage_newsletters.columnTitleExportCsv}" >
+				<i class="icon-download icon-white"></i>&nbsp;#i18n{newsletter.manage_newsletters.columnTitleExportCsv}
+			</button>
+		</form>
+	</#if>
 	<#if is_import_subscriber_right>
-	<form class="form-search pull-right spaced" method="post" action="jsp/admin/plugins/newsletter/ImportSubscribers.jsp">
-		<input type="hidden" name="newsletter_id" value="${newsletter.id}" />
-		<button class="btn btn-primary btn-small" type="submit" ><i class="icon-upload icon-white"></i>&nbsp;#i18n{newsletter.manage_subscribers.buttonImport}</button>
-	</form>
+		<form class="form-search pull-right spaced" method="post" action="jsp/admin/plugins/newsletter/ImportSubscribers.jsp">
+			<input type="hidden" name="newsletter_id" value="${newsletter.id}" />
+			<button class="btn btn-primary btn-small" type="submit" ><i class="icon-upload icon-white"></i>&nbsp;#i18n{newsletter.manage_subscribers.buttonImport}</button>
+		</form>
 	</#if>
 	<#if is_add_subscriber_right>
-	<form class="form-search pull-right" method="post" action="jsp/admin/plugins/newsletter/DoAddSubscriber.jsp">
-		<input class="input-xlarge" type="text" name="email" value="" placeholder="#i18n{newsletter.manage_subscribers.enterEmail}" />
-		<input type="hidden" name="newsletter_id" value="${newsletter.id}" />
-		<button class="btn btn-primary btn-small" type="submit" ><i class="icon-plus icon-white"></i>&nbsp;#i18n{newsletter.manage_subscribers.buttonAdd}</button>
-	</form>
+		<form class="form-search pull-right" method="post" action="jsp/admin/plugins/newsletter/DoAddSubscriber.jsp">
+			<input class="input-xlarge" type="text" name="email" value="" placeholder="#i18n{newsletter.manage_subscribers.enterEmail}" />
+			<input type="hidden" name="newsletter_id" value="${newsletter.id}" />
+			<button class="btn btn-primary btn-small" type="submit" ><i class="icon-plus icon-white"></i>&nbsp;#i18n{newsletter.manage_subscribers.buttonAdd}</button>
+		</form>
 	</#if>
 	</legend>
 	<form class="form-search well" method="post" action="jsp/admin/plugins/newsletter/ManageSubscribers.jsp">

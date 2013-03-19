@@ -1,17 +1,20 @@
 <div class="row-fluid">
 	<div class="span12">
+		<ul class="nav nav-tabs">
+			<li>
+				<a href="jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletter.id}">#i18n{newsletter.modify_newsletter.manageAttributes}</a>
+			</li>
+			<li class="active">
+				<a href="jsp/admin/plugins/newsletter/GetManageNewsletterTopics.jsp?newsletter_id=${newsletter.id}">#i18n{newsletter.modify_newsletter.manageTopics}</a>
+			</li>
+			<li>
+				<a href="jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}">#i18n{newsletter.compose_newsletter.boxTitle}</a>
+			</li>
+		</ul>
 		<fieldset>
-			<ul class="nav nav-tabs">
-				<li>
-					<a href="jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletter.id}">#i18n{newsletter.modify_newsletter.manageAttributes}</a>
-				</li>
-				<li class="active">
-					<a href="jsp/admin/plugins/newsletter/GetManageNewsletterTopics.jsp?newsletter_id=${newsletter.id}">#i18n{newsletter.modify_newsletter.manageTopics}</a>
-				</li>
-				<li>
-					<a href="jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}">#i18n{newsletter.compose_newsletter.boxTitle}</a>
-				</li>
-				<#if 0 < newsletter_template_id>
+			<legend>
+			#i18n{newsletter.modify_newsletter.manageTopics}
+			<#if 0 < newsletter_template_id>
 					<div class="pull-right">
 						<form class="form-inline spaced" action="jsp/admin/plugins/newsletter/DoAddNewsletterTopic.jsp">
 							<input type="hidden" name="newsletter_id" id="newsletter_id" value="${newsletter.id}">
@@ -32,7 +35,8 @@
 						</form>
 					</div>
 				</#if>
-			</ul>
+			</legend>
+			<br />
 			<div class="span7">
 				<#if 0 < newsletter_template_id>
 					<@dataTable dataTableManager=table_manager actionMacro="getActionColumn" />
