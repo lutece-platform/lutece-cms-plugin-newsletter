@@ -129,7 +129,6 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
      */
     private static final long serialVersionUID = 5581671308419705321L;
 
-    private static final String REGEX_ID = "^[\\d]+$";
     private static final String CONSTANT_CSV_FILE_EXTENSION = ".csv";
     private static final String CONSTANT_EMAIL_COLUMN_INDEX = "newsletter.csv.import.columnindex";
     private static final String PROPERTY_LIMIT_MAX_SUSCRIBER = "newsletter.limit.max";
@@ -583,32 +582,23 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         // Fills the template with specific values
         String strGenerate = request.getParameter( PARAMETER_GENERATE );
 
-        int nTemplateNewsLetterId = 0;
+        int nTemplateNewsLetterId = newsletter.getNewsLetterTemplateId( );
         String strHtmlContent;
+
+        if ( nTemplateNewsLetterId == 0 )
+        {
+            nTemplateNewsLetterId = ( newsletterTemplatesList.size( ) > 0 ) ? newsletterTemplatesList.iterator( )
+                    .next( ).getId( ) : 0;
+        }
 
         if ( ( strGenerate == null ) )
         {
-            nTemplateNewsLetterId = newsletter.getNewsLetterTemplateId( );
-
-            if ( nTemplateNewsLetterId == 0 )
-            {
-                nTemplateNewsLetterId = ( newsletterTemplatesList.size( ) > 0 ) ? newsletterTemplatesList.iterator( )
-                        .next( ).getId( ) : 0;
-            }
 
             strHtmlContent = ( newsletter.getHtml( ) == null ) ? NewsLetterConstants.CONSTANT_EMPTY_STRING : newsletter
                     .getHtml( );
         }
         else
         {
-            String strNewsletterTemplateId = request
-                    .getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID );
-
-            if ( ( strNewsletterTemplateId != null ) && ( strNewsletterTemplateId.matches( REGEX_ID ) ) )
-            {
-                nTemplateNewsLetterId = Integer.parseInt( strNewsletterTemplateId );
-            }
-
             strHtmlContent = _newsletterService.generateNewsletterHtmlCode( newsletter, nTemplateNewsLetterId,
                     strBaseUrl, user, getLocale( ) );
 
@@ -1643,9 +1633,6 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         if ( !strAction.equals( I18nService.getLocalizedString( PROPERTY_CANCEL_ACTION, getLocale( ) ) ) )
         {
-            newsletter.setNewsLetterTemplateId( Integer.parseInt( request
-                    .getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID ) ) );
-
             String strBaseUrl = AppPathService.getBaseUrl( request );
 
             newsletter.setHtml( doClean( request.getParameter( PARAMETER_HTML_CONTENT ), strBaseUrl ) );

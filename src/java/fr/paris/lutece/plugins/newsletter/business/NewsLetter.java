@@ -33,6 +33,7 @@
  */
 package fr.paris.lutece.plugins.newsletter.business;
 
+import fr.paris.lutece.plugins.newsletter.service.NewsletterTemplateRemovalService;
 import fr.paris.lutece.portal.service.rbac.RBACResource;
 import fr.paris.lutece.portal.service.workgroup.AdminWorkgroupResource;
 import fr.paris.lutece.portal.service.workgroup.WorkgroupRemovalListenerService;
@@ -82,6 +83,7 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
             _listenerWorkgroup = new NewsletterWorkgroupRemovalListener( );
             WorkgroupRemovalListenerService.getService( ).registerListener( _listenerWorkgroup );
         }
+        NewsletterTemplateRemovalService.getService( ).registerListener( new NewsletterTemplateRemovalListener( ) );
     }
 
     /**

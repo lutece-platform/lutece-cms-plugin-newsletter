@@ -18,6 +18,6 @@
 	
 	<!-- Free Html Section -->
 	<bean id="newsletter.freeHtmlSectionService" class="fr.paris.lutece.plugins.newsletter.service.section.FreeHtmlSectionService" />
-
+	<bean id="newsletter.newsletterTemplateRemovalService" class="fr.paris.lutece.portal.service.util.RemovalListenerService" ></bean>
 
 </beans>

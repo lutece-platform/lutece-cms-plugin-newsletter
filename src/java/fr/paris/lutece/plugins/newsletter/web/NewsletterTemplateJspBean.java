@@ -1,9 +1,9 @@
 package fr.paris.lutece.plugins.newsletter.web;
 
-import fr.paris.lutece.plugins.newsletter.business.NewsLetterHome;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterTemplate;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterTemplateHome;
 import fr.paris.lutece.plugins.newsletter.service.NewsletterPlugin;
+import fr.paris.lutece.plugins.newsletter.service.NewsletterTemplateRemovalService;
 import fr.paris.lutece.plugins.newsletter.service.NewsletterTemplateResourceIdService;
 import fr.paris.lutece.plugins.newsletter.service.section.NewsletterSectionService;
 import fr.paris.lutece.plugins.newsletter.util.NewsLetterConstants;
@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -661,8 +662,8 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
      */
     public String getRemoveNewsLetterTemplate( HttpServletRequest request )
     {
-        int nNewsletterTemplateId = Integer.parseInt( request
-                .getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID ) );
+        String strNewsletterTemplateId = request.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID );
+        int nNewsletterTemplateId = Integer.parseInt( strNewsletterTemplateId );
         NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome.findByPrimaryKey( nNewsletterTemplateId,
                 getPlugin( ) );
 
@@ -674,11 +675,14 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
-
-        if ( NewsLetterHome.findTemplate( nNewsletterTemplateId, getPlugin( ) ) )
+        List<String> listMessages = new ArrayList<String>( );
+        if ( !NewsletterTemplateRemovalService.getService( ).checkForRemoval( strNewsletterTemplateId, listMessages,
+                AdminUserService.getLocale( request ) ) )
         {
-            return AdminMessageService.getMessageUrl( request, MESSAGE_USED_TEMPLATE, AdminMessage.TYPE_STOP );
+            Object[] args = { listMessages.get( 0 ) };
+            return AdminMessageService.getMessageUrl( request, MESSAGE_USED_TEMPLATE, args, AdminMessage.TYPE_STOP );
         }
+
         UrlItem url = new UrlItem( JSP_DO_REMOVE_NEWSLETTER_TEMPLATE );
         url.addParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID,
                 Integer.parseInt( request.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID ) ) );

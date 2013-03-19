@@ -17,6 +17,7 @@ CREATE TABLE newsletter_section_free_html (
 );
 
 ALTER TABLE newsletter_description ADD COLUMN nb_categories INT DEFAULT '1';
+ALTER TABLE newsletter_description DROP COLUMN id_document_template;
 
 ALTER TABLE newsletter_template ADD COLUMN section_type VARCHAR(100) NOT NULL;
 ALTER TABLE newsletter_template ADD COLUMN categories INT DEFAULT '1' NOT NULL;

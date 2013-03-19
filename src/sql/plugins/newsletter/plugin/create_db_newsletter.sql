@@ -10,7 +10,6 @@ CREATE TABLE newsletter_description (
   description LONG VARCHAR DEFAULT NULL,
   html LONG VARCHAR,
   id_newsletter_template INT DEFAULT '0',
-  id_document_template INT DEFAULT '0',
   workgroup_key VARCHAR(50) DEFAULT NULL,
   unsubscribe VARCHAR(6) DEFAULT NULL,
   test_recipients VARCHAR(255) DEFAULT NULL,

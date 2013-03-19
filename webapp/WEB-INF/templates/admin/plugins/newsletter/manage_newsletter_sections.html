@@ -63,7 +63,9 @@
 			<div class="span4">
 				<#if html_content?? && html_content?has_content>
 					<h5>#i18n{newsletter.manage_sections.labelPreview} : </h5>
- 					${html_content!}
+					<div style="border: 1px solid black;">
+ 						${html_content!}
+ 					</div>
  				</#if>
 			</div>
 		</fieldset>
