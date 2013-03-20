@@ -72,7 +72,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * The class responsible for the subscription and unsubscription process
  */
-public class NewsLetterRegistrationService
+public final class NewsLetterRegistrationService
 {
     private static final String PARAMETER_TOS = "tos";
     private static final String TEMPLATE_CONFIRM_MAIL = "admin/plugins/newsletter/confirm_mail.html";

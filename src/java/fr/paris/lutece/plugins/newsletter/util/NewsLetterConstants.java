@@ -43,7 +43,6 @@ public final class NewsLetterConstants
 {
     public static final String CONSTANT_EMPTY_STRING = "";
     public static final String CONSTANT_SLASH = "/";
-    public static final String CONSTANT_IMG_FILE_TYPE = "image";
     public static final String CONSTANT_PDF_FILE_TYPE = "pdf";
 
     ///////////////////////////////////////////////////////////////////////
