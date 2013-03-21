@@ -142,33 +142,40 @@ public class NewsletterTopic implements Comparable<NewsletterTopic>
     @Override
     public int compareTo( NewsletterTopic o )
     {
+        int nRes = 0;
         if ( getIdNewsletter( ) > o.getIdNewsletter( ) )
         {
-            return 1;
+            nRes = 1;
         }
-        if ( getIdNewsletter( ) < o.getIdNewsletter( ) )
+        else
         {
-            return -1;
-        }
-        if ( getSection( ) > o.getSection( ) )
-        {
-            return 1;
-        }
-        if ( getSection( ) < o.getSection( ) )
-        {
-            return -1;
-        }
-        if ( getOrder( ) > o.getOrder( ) )
-        {
-            return 1;
-        }
-        if ( getOrder( ) < o.getOrder( ) )
-        {
-            return -1;
+            if ( nRes == 0 && getIdNewsletter( ) < o.getIdNewsletter( ) )
+            {
+                nRes = -1;
+            }
+            else
+            {
+                if ( nRes == 0 && getSection( ) > o.getSection( ) )
+                {
+                    nRes = 1;
+                }
+                if ( nRes == 0 && getSection( ) < o.getSection( ) )
+                {
+                    nRes = -1;
+                }
+                if ( nRes == 0 && getOrder( ) > o.getOrder( ) )
+                {
+                    nRes = 1;
+                }
+                if ( nRes == 0 && getOrder( ) < o.getOrder( ) )
+                {
+                    nRes = -1;
+                }
+            }
         }
 
         // If they have the same section and order, then it has to be the same object, so they should be equal
-        return 0;
+        return nRes;
     }
 
     /**

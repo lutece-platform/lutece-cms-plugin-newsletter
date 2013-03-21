@@ -231,16 +231,19 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 String strWorkgroup = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_WORKGROUP );
 
                 FileItem imageItem = multi.getFile( PARAMETER_TEMPLATE_PICTURE );
+
+                String strImageFileName = imageItem == null ? null : UploadUtil.cleanFileName( imageItem.getName( ) );
+
+                FileItem modelItem = multi.getFile( PARAMETER_TEMPLATE_FILE );
+                String strTemplateFileName = modelItem == null ? null : UploadUtil.cleanFileName( modelItem.getName( ) );
+                String strSectionNumber = request.getParameter( PARAMETER_TEMPLATE_SECTION );
+
                 if ( StringUtils.isEmpty( strWorkgroup ) || StringUtils.isEmpty( strTopicType )
-                        || StringUtils.isEmpty( strDescription ) || imageItem == null )
-                {
-                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
-                            AdminMessage.TYPE_STOP );
-                }
-
-                String strImageFileName = UploadUtil.cleanFileName( imageItem.getName( ) );
-
-                if ( StringUtils.isEmpty( strImageFileName ) || !FileUtil.hasImageExtension( strImageFileName ) )
+                        || StringUtils.isEmpty( strDescription ) || imageItem == null
+                        || StringUtils.isEmpty( strImageFileName ) || !FileUtil.hasImageExtension( strImageFileName )
+                        || modelItem == null || StringUtils.isEmpty( strTemplateFileName )
+                        || FileUtil.hasHtmlExtension( strTemplateFileName )
+                        || !StringUtils.isNumeric( strSectionNumber ) )
                 {
                     return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
                             AdminMessage.TYPE_STOP );
@@ -264,25 +267,9 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                             AdminMessage.TYPE_STOP );
                 }
 
-                FileItem modelItem = multi.getFile( PARAMETER_TEMPLATE_FILE );
-                if ( modelItem == null )
-                {
-                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
-                            AdminMessage.TYPE_STOP );
-                }
-                String strTemplateFileName = UploadUtil.cleanFileName( modelItem.getName( ) );
-                String strSectionNumber = request.getParameter( PARAMETER_TEMPLATE_SECTION );
-
-                if ( StringUtils.isEmpty( strTemplateFileName ) || FileUtil.hasHtmlExtension( strTemplateFileName )
-                        || !StringUtils.isNumeric( strSectionNumber ) )
-                {
-                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
-                            AdminMessage.TYPE_STOP );
-                }
                 int nSections = Integer.parseInt( strSectionNumber );
 
                 File fileTemplate = new File( strPathFileNewsletterTemplate + File.separator + strTemplateFileName );
-
                 if ( fileTemplate.exists( ) )
                 {
                     return AdminMessageService.getMessageUrl( request, MESSAGE_FILE_ALREADY_EXISTS,
