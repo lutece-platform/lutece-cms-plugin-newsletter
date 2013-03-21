@@ -29,3 +29,6 @@ ALTER TABLE newsletter_document_category DROP PRIMARY KEY;
 ALTER TABLE newsletter_document_category CHANGE COLUMN id_category_list id_category INT NOT NULL;
 ALTER TABLE newsletter_document_category CHANGE COLUMN id_newsletter id_topic INT NOT NULL;
 ALTER TABLE newsletter_document_category ADD PRIMARY KEY (id_topic, id_category);
+
+DELETE FROM core_admin_right WHERE id_right = 'NEWSLETTER_PROPERTIES_MANAGEMENT';
+DELETE FROM core_user_right WHERE id_right = 'NEWSLETTER_PROPERTIES_MANAGEMENT';

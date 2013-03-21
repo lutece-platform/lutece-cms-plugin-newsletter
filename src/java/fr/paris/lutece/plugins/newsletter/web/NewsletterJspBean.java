@@ -55,6 +55,7 @@ import fr.paris.lutece.plugins.newsletter.util.NewsletterUtils;
 import fr.paris.lutece.portal.business.rbac.RBAC;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.business.workgroup.AdminWorkgroupHome;
+import fr.paris.lutece.portal.service.admin.AccessDeniedException;
 import fr.paris.lutece.portal.service.admin.AdminUserService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.message.AdminMessage;
@@ -118,11 +119,6 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
      * The right used for managing newsletters
      */
     public static final String RIGHT_NEWSLETTER_MANAGEMENT = "NEWSLETTER_MANAGEMENT";
-
-    /**
-     * The right used for managing newsletters properties
-     */
-    public static final String RIGHT_NEWSLETTER_PROPERTIES_MANAGEMENT = "NEWSLETTER_PROPERTIES_MANAGEMENT";
 
     /**
      * Serial version UID
@@ -295,6 +291,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String MESSAGE_PAGE_TITLE_MANAGE_TOPICS = "newsletter.manage_topics.pageTitle";
     private static final String MESSAGE_CONFIRM_REMOVE_TOPIC = "newsletter.manage_topics.confirmRemoveTopic";
     private static final String MESSAGE_FRAGMENT_NO_CHANGE = "newsletter.message.fragment_no_change";
+    private static final String MESSAGE_USER_NOT_ALLOWED_NEWSLETTER_PROPERTIES = "Newsletter properties : user not allowed to access this feature : ";
 
     private static final String PROPERTY_PAGE_TITLE_IMPORT = "newsletter.import_subscribers.pageTitle";
     private static final String PROPERTY_PAGE_TITLE_NEWSLETTERS = "newsletter.manage_newsletters.pageTitle";
@@ -453,9 +450,18 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
      * Returns the newsletters properties
      * @param request the HTTP request
      * @return the html code for display the newsletters list
+     * @throws AccessDeniedException If the user is not allowed to acces the
+     *             feature
      */
-    public String getManageNewsLettersProperties( HttpServletRequest request )
+    public String getManageNewsLettersProperties( HttpServletRequest request ) throws AccessDeniedException
     {
+        if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, RBAC.WILDCARD_RESOURCES_ID,
+                NewsletterResourceIdService.PERMISSION_NEWSLETTER_ADVANCED_SETTINGS, getUser( ) ) )
+        {
+            throw new AccessDeniedException( MESSAGE_USER_NOT_ALLOWED_NEWSLETTER_PROPERTIES
+                    + AdminUserService.getAdminUser( request ).getAccessCode( ) );
+        }
+
         setPageTitleProperty( PROPERTY_PAGE_TITLE_NEWSLETTERS_PROPERTIES );
 
         Map<String, Object> model = new HashMap<String, Object>( );
@@ -479,9 +485,17 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
      * Processes the update form of the newsletter properties
      * @param request The Http request
      * @return The jsp URL which displays the view of all newsletter
+     * @throws AccessDeniedException If the user is not allowed to acces the
+     *             feature
      */
-    public String doManageNewsLetterProperties( HttpServletRequest request )
+    public String doManageNewsLetterProperties( HttpServletRequest request ) throws AccessDeniedException
     {
+        if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, RBAC.WILDCARD_RESOURCES_ID,
+                NewsletterResourceIdService.PERMISSION_NEWSLETTER_ADVANCED_SETTINGS, getUser( ) ) )
+        {
+            throw new AccessDeniedException( MESSAGE_USER_NOT_ALLOWED_NEWSLETTER_PROPERTIES
+                    + AdminUserService.getAdminUser( request ).getAccessCode( ) );
+        }
         String strBaseUrl = AppPathService.getBaseUrl( request );
         String strActiveCaptcha = request.getParameter( PARAMETER_ACTIVE_CAPTCHA );
         String strActiveValidation = request.getParameter( PARAMETER_ACTIVE_VALIDATION );
@@ -1883,8 +1897,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         }
         setPageTitleProperty( MESSAGE_PAGE_TITLE_MANAGE_TOPICS );
 
-        List<NewsletterTopic> listTopics = NewsletterTopicHome
-                .findAllByIdNewsletter( nNewsletterId, getPlugin( ) );
+        List<NewsletterTopic> listTopics = NewsletterTopicHome.findAllByIdNewsletter( nNewsletterId, getPlugin( ) );
 
         // We check if we must update the template
         if ( Boolean.parseBoolean( request.getParameter( PARAMETER_UPDATE_TEMPLATE ) ) )
@@ -1898,8 +1911,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                 newsletter.setNbSections( newsletterTemplate.getSectionNumber( ) );
                 newsletter.setNewsLetterTemplateId( nTemplateId );
                 NewsLetterHome.update( newsletter, getPlugin( ) );
-                int nNewOrder = NewsletterTopicHome.getNewOrder( nNewsletterId,
-                        newsletterTemplate.getSectionNumber( ), getPlugin( ) );
+                int nNewOrder = NewsletterTopicHome.getNewOrder( nNewsletterId, newsletterTemplate.getSectionNumber( ),
+                        getPlugin( ) );
                 for ( NewsletterTopic topic : listTopics )
                 {
                     if ( topic.getSection( ) > newsletterTemplate.getSectionNumber( ) )

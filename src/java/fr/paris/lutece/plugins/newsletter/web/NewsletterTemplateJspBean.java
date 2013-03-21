@@ -31,6 +31,7 @@ import fr.paris.lutece.portal.web.constants.Messages;
 import fr.paris.lutece.portal.web.upload.MultipartHttpServletRequest;
 import fr.paris.lutece.util.ReferenceItem;
 import fr.paris.lutece.util.ReferenceList;
+import fr.paris.lutece.util.file.FileUtil;
 import fr.paris.lutece.util.filesystem.UploadUtil;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.url.UrlItem;
@@ -89,6 +90,8 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
     private static final String MESSAGE_FILE_ALREADY_EXISTS = "newsletter.message.fileAlreadyExists";
     private static final String MESSAGE_USED_TEMPLATE = "newsletter.message.usedTemplate";
     private static final String MESSAGE_CONFIRM_REMOVE_NEWSLETTER_TEMPLATE = "newsletter.message.confirmRemoveNewsletterTemplate";
+    private static final String MESSAGE_WRONG_IMAGE_EXTENSION = "portal.util.message.wrongImageExtention";
+    private static final String MESSAGE_WRONG_HTML_EXTENSION = "portal.util.message.wrongHtmlExtention";
 
     // PARAMETERS
     private static final String PARAMETER_TEMPLATE_PICTURE = "newsletter_template_picture";
@@ -230,33 +233,17 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 String strDescription = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_NAME );
                 String strWorkgroup = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_WORKGROUP );
 
-                if ( StringUtils.isEmpty( strWorkgroup ) )
-                {
-                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
-                            AdminMessage.TYPE_STOP );
-                }
-
-                if ( StringUtils.isEmpty( strTopicType ) )
-                {
-                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
-                            AdminMessage.TYPE_STOP );
-                }
-
-                if ( StringUtils.isEmpty( strDescription ) )
-                {
-                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
-                            AdminMessage.TYPE_STOP );
-                }
-
                 FileItem imageItem = multi.getFile( PARAMETER_TEMPLATE_PICTURE );
-                if ( imageItem == null )
+                if ( StringUtils.isEmpty( strWorkgroup ) || StringUtils.isEmpty( strTopicType )
+                        || StringUtils.isEmpty( strDescription ) || imageItem == null )
                 {
                     return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
                             AdminMessage.TYPE_STOP );
                 }
+
                 String strImageFileName = UploadUtil.cleanFileName( imageItem.getName( ) );
 
-                if ( StringUtils.isEmpty( strImageFileName ) )
+                if ( StringUtils.isEmpty( strImageFileName ) || !FileUtil.hasImageExtension( strImageFileName ) )
                 {
                     return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
                             AdminMessage.TYPE_STOP );
@@ -289,7 +276,8 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 String strTemplateFileName = UploadUtil.cleanFileName( modelItem.getName( ) );
                 String strSectionNumber = request.getParameter( PARAMETER_TEMPLATE_SECTION );
 
-                if ( StringUtils.isEmpty( strTemplateFileName ) || !StringUtils.isNumeric( strSectionNumber ) )
+                if ( StringUtils.isEmpty( strTemplateFileName ) || FileUtil.hasHtmlExtension( strTemplateFileName )
+                        || !StringUtils.isNumeric( strSectionNumber ) )
                 {
                     return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
                             AdminMessage.TYPE_STOP );
@@ -424,6 +412,11 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 if ( ( imageItem != null ) && ( imageItem.getSize( ) != 0 ) )
                 {
                     strImageFileName = UploadUtil.cleanFileName( imageItem.getName( ) );
+                    String strError = null;
+                    if ( !FileUtil.hasImageExtension( strImageFileName ) )
+                    {
+                        strError = MESSAGE_WRONG_IMAGE_EXTENSION;
+                    }
 
                     String strFullPathNewImageFileName = strPathImageNewsletterTemplate + File.separator
                             + strImageFileName;
@@ -433,8 +426,11 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
 
                     if ( fileImage.exists( ) && !( strFullPathNewImageFileName ).equals( strFullPathOldImageFileName ) )
                     {
-                        return AdminMessageService.getMessageUrl( request, MESSAGE_IMAGE_FILE_ALREADY_EXISTS,
-                                AdminMessage.TYPE_STOP );
+                        strError = MESSAGE_IMAGE_FILE_ALREADY_EXISTS;
+                    }
+                    if ( strError != null )
+                    {
+                        return AdminMessageService.getMessageUrl( request, strError, AdminMessage.TYPE_STOP );
                     }
 
                     // we delete the old picture
@@ -450,11 +446,18 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                     String strFullPathNewFileName = strPathFileNewsletterTemplate + File.separator + strFileName;
                     String strFullPathOldFileName = strPathFileNewsletterTemplate + File.separator + strOldFileName;
                     File fileTemplate = new File( strFullPathNewFileName );
-
+                    String strError = null;
                     if ( fileTemplate.exists( ) && !( strFullPathNewFileName ).equals( strFullPathOldFileName ) )
                     {
-                        return AdminMessageService.getMessageUrl( request, MESSAGE_FILE_ALREADY_EXISTS,
-                                AdminMessage.TYPE_STOP );
+                        strError = MESSAGE_FILE_ALREADY_EXISTS;
+                    }
+                    if ( !FileUtil.hasHtmlExtension( strFileName ) )
+                    {
+                        strError = MESSAGE_WRONG_HTML_EXTENSION;
+                    }
+                    if ( strError != null )
+                    {
+                        return AdminMessageService.getMessageUrl( request, strError, AdminMessage.TYPE_STOP );
                     }
 
                     // we delete the old file
