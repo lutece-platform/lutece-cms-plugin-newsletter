@@ -62,7 +62,7 @@
 				<div class="control-group">
 					<label class="control-label" for="newsletter_test_subject" >#i18n{newsletter.modify_newsletter.labelSubject} </label> 
 					<div class="controls">
-						<input type="text" id="newsletter_test_subject" name="newsletter_test_subject" class="input-large" maxlength="255" value="<#if newsletter.testSubject ?? >${newsletter.testSubject} </#if>" />
+						<input type="text" id="newsletter_test_subject" name="newsletter_test_subject" class="input-large" maxlength="255" value="${newsletter.testSubject!}" />
 					</div>
 				</div>
 				<div class="control-group">

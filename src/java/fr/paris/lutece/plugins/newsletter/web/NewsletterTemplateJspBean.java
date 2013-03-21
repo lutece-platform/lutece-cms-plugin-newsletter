@@ -1,12 +1,9 @@
 package fr.paris.lutece.plugins.newsletter.web;
 
-import fr.paris.lutece.plugins.newsletter.business.NewsLetter;
-import fr.paris.lutece.plugins.newsletter.business.NewsLetterHome;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterTemplate;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterTemplateHome;
-import fr.paris.lutece.plugins.newsletter.business.topic.NewsletterTopic;
-import fr.paris.lutece.plugins.newsletter.business.topic.NewsletterTopicHome;
 import fr.paris.lutece.plugins.newsletter.service.NewsletterPlugin;
+import fr.paris.lutece.plugins.newsletter.service.NewsletterService;
 import fr.paris.lutece.plugins.newsletter.service.NewsletterTemplateRemovalService;
 import fr.paris.lutece.plugins.newsletter.service.NewsletterTemplateResourceIdService;
 import fr.paris.lutece.plugins.newsletter.service.topic.NewsletterTopicService;
@@ -303,6 +300,10 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 newsletterTemplate.setDescription( strDescription );
                 newsletterTemplate.setTopicType( strTopicType );
                 newsletterTemplate.setWorkgroup( strWorkgroup );
+                if ( nSections <= 0 )
+                {
+                    nSections = 1;
+                }
                 newsletterTemplate.setSectionNumber( nSections );
                 NewsLetterTemplateHome.create( newsletterTemplate, getPlugin( ) );
             }
@@ -481,38 +482,13 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 newsletterTemplate.setWorkgroup( strWorkgroup );
 
                 int nOldSectionNumber = newsletterTemplate.getSectionNumber( );
-
-                newsletterTemplate.setSectionNumber( nSections );
-                NewsLetterTemplateHome.update( newsletterTemplate, getPlugin( ) );
-
-                // If we removed sections we reorganize newsletter's topics
-                if ( nOldSectionNumber != nSections )
+                NewsletterService.getService( ).modifySectionNumber( nOldSectionNumber, nSections,
+                        newsletterTemplate.getId( ) );
+                if ( nSections > 0 )
                 {
-                    Collection<NewsLetter> listNewsletters = NewsLetterHome.findAllByTemplateId(
-                            newsletterTemplate.getId( ), getPlugin( ) );
-                    for ( NewsLetter newsletter : listNewsletters )
-                    {
-                        if ( nOldSectionNumber > nSections )
-                        {
-                            List<NewsletterTopic> listTopics = NewsletterTopicHome.findAllByIdNewsletter(
-                                    newsletter.getId( ), getPlugin( ) );
-                            int nNewOrder = NewsletterTopicHome.getNewOrder( newsletter.getId( ),
-                                    newsletterTemplate.getSectionNumber( ), getPlugin( ) );
-                            for ( NewsletterTopic topic : listTopics )
-                            {
-                                if ( topic.getSection( ) > newsletterTemplate.getSectionNumber( ) )
-                                {
-                                    topic.setSection( newsletterTemplate.getSectionNumber( ) );
-                                    topic.setOrder( nNewOrder );
-                                    nNewOrder++;
-                                    NewsletterTopicHome.updateNewsletterTopic( topic, getPlugin( ) );
-                                }
-                            }
-                        }
-                        newsletter.setNbSections( nSections );
-                        NewsLetterHome.update( newsletter, getPlugin( ) );
-                    }
+                    newsletterTemplate.setSectionNumber( nSections );
                 }
+                NewsLetterTemplateHome.update( newsletterTemplate, getPlugin( ) );
             }
         }
         catch ( Exception e )
@@ -669,10 +645,17 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 fileWriter.write( fileContent );
                 fileWriter.close( );
 
+                int nOldSectionNumber = newsletterTemplate.getSectionNumber( );
+                NewsletterService.getService( ).modifySectionNumber( nOldSectionNumber, nSections,
+                        newsletterTemplate.getId( ) );
+
                 // Complete the newsLetterTemplate
                 newsletterTemplate.setDescription( strDescription );
                 newsletterTemplate.setTopicType( strType );
-                newsletterTemplate.setSectionNumber( nSections );
+                if ( nSections > 0 )
+                {
+                    newsletterTemplate.setSectionNumber( nSections );
+                }
                 NewsLetterTemplateHome.update( newsletterTemplate, getPlugin( ) );
             }
         }

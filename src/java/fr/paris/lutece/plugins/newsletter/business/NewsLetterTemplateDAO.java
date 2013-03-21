@@ -48,7 +48,7 @@ import java.util.List;
 public final class NewsLetterTemplateDAO implements INewsLetterTemplateDAO
 {
     // Constants
-    private static final String SQL_QUERY_SELECT_ALL = "SELECT id_template, description, file_name, picture, workgroup_key, topic_type, sections FROM newsletter_template";
+    private static final String SQL_QUERY_SELECT_ALL = "SELECT id_template, description, file_name, picture, workgroup_key, topic_type, sections FROM newsletter_template ORDER BY id_template asc ";
     private static final String SQL_QUERY_SELECT_ALL_BY_WORKGOUP_KEY = "SELECT id_template, description, file_name, picture, workgroup_key, topic_type, sections FROM newsletter_template WHERE workgroup_key = ?";
     private static final String SQL_QUERY_SELECT_ALL_REFERENCE = " SELECT id_template, description FROM newsletter_template ";
     private static final String SQL_QUERY_SELECT = "SELECT id_template, description, file_name, picture, workgroup_key, topic_type, sections FROM newsletter_template WHERE id_template = ? ";

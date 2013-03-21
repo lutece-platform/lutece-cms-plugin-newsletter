@@ -415,6 +415,44 @@ public class NewsletterService implements Serializable
     }
 
     /**
+     * Modify the number of sections of a newsletter template
+     * @param nOldSectionNumber The old number of sections
+     * @param nNewSectionNumber The new number of sections
+     * @param nTemplateId The id of the template
+     */
+    public void modifySectionNumber( int nOldSectionNumber, int nNewSectionNumber, int nTemplateId )
+    {
+        // If the number of sections changed and is valid
+        if ( nOldSectionNumber != nNewSectionNumber && nNewSectionNumber > 0 )
+        {
+            Collection<NewsLetter> listNewsletters = NewsLetterHome.findAllByTemplateId( nTemplateId, getPlugin( ) );
+            for ( NewsLetter newsletter : listNewsletters )
+            {
+                // If we removed sections we reorganize newsletter's topics
+                if ( nOldSectionNumber > nNewSectionNumber )
+                {
+                    List<NewsletterTopic> listTopics = NewsletterTopicHome.findAllByIdNewsletter( newsletter.getId( ),
+                            getPlugin( ) );
+                    int nNewOrder = NewsletterTopicHome.getNewOrder( newsletter.getId( ), nNewSectionNumber,
+                            getPlugin( ) );
+                    for ( NewsletterTopic topic : listTopics )
+                    {
+                        if ( topic.getSection( ) > nNewSectionNumber )
+                        {
+                            topic.setSection( nNewSectionNumber );
+                            topic.setOrder( nNewOrder );
+                            nNewOrder++;
+                            NewsletterTopicHome.updateNewsletterTopic( topic, getPlugin( ) );
+                        }
+                    }
+                }
+                newsletter.setNbSections( nNewSectionNumber );
+                NewsLetterHome.update( newsletter, getPlugin( ) );
+            }
+        }
+    }
+
+    /**
      * Get the instance of the newsletter plugin
      * @return the instance of the newsletter plugin
      */
