@@ -1,15 +1,26 @@
 <div class="row-fluid">
 	<div class="span12">
 	<fieldset>
-    <legend>#i18n{newsletter.import_subscribers.boxTitle}</legend>
+	<#if import_delete?has_content && import_delete>
+        <legend>#i18n{newsletter.import_delete_subscribers.boxTitle}</legend>
+	<#else>
+        <legend>#i18n{newsletter.import_subscribers.boxTitle}</legend>
+	</#if>
 		<form class="form-horizontal" method="post" enctype="multipart/form-data" action="jsp/admin/plugins/newsletter/DoImportSubscribers.jsp">
 			<input type="hidden" name="newsletter_id" value="${newsletter_id}" />
+			<input type="hidden" name="import_delete" value="${import_delete?string}" />
 			<div class="control-group">
 			<label class="control-label" for="newsletter_import_path">#i18n{newsletter.import_subscribers.label}</label>
 				<div class="controls">
-					<label>#i18n{newsletter.import_subscribers.importLabel} *:</label>
+				    <#if import_delete?has_content && !import_delete>
+                        <label>#i18n{newsletter.import_subscribers.importLabel} *:</label>
+				    </#if>
 					<input size="30" type="file" id="newsletter_import_path" name="newsletter_import_path" value="" />
-					<p class="help-block">#i18n{newsletter.import_subscribers.notice1}</p>
+                    <#if import_delete?has_content && import_delete>
+                        <p class="help-block">#i18n{newsletter.import_delete_subscribers.notice1}</p>
+                    <#else>
+                        <p class="help-block">#i18n{newsletter.import_subscribers.notice1}</p>
+                    </#if>
 					<span class="label label-warning"><i class="icon-exclamation-sign icon-white"></i> #i18n{newsletter.import_subscribers.notice2}</span>
 				</div>
 			</div>

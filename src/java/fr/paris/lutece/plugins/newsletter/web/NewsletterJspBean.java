@@ -173,6 +173,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String MARK_NEWSLETTER_WORKGROUP_DESCRIPTION = "newsletter_workgroup_description";
     private static final String MARK_NEWSLETTER_COUNT_SUBSCRIBERS = "newsletter_count_subscribers";
     private static final String MARK_NEWSLETTER_ID = "newsletter_id";
+    private static final String MARK_IMPORT_DELETE = "import_delete";
     private static final String MARK_NEWSLETTER_CONTENT = "newsletter_content";
     private static final String MARK_HTML_CONTENT = "html_content";
     private static final String MARK_WEBAPP_URL = "webapp_url";
@@ -294,6 +295,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String MESSAGE_USER_NOT_ALLOWED_NEWSLETTER_PROPERTIES = "Newsletter properties : user not allowed to access this feature : ";
 
     private static final String PROPERTY_PAGE_TITLE_IMPORT = "newsletter.import_subscribers.pageTitle";
+    private static final String PROPERTY_PAGE_TITLE_IMPORT_DELETE = "newsletter.import_delete_subscribers.pageTitle";
     private static final String PROPERTY_PAGE_TITLE_NEWSLETTERS = "newsletter.manage_newsletters.pageTitle";
     private static final String PROPERTY_PAGE_TITLE_ARCHIVE = "newsletter.manage_archive.pageTitle";
     private static final String PROPERTY_PAGE_TITLE_NEWSLETTERS_PROPERTIES = "newsletter.manage_newsletters_properties.pageTitle";
@@ -1721,6 +1723,37 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_NEWSLETTER_ID, nNewsletterId );
+        model.put( MARK_IMPORT_DELETE, false );
+
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_IMPORT_SUBSCRIBERS, getLocale( ), model );
+
+        return getAdminPage( template.getHtml( ) );
+    }
+
+    /**
+     * Builds the subscribers import page
+     * @param request The HTTP request
+     * @return the html code for subscribers import page
+     */
+    public String getImportDeleteSubscribers( HttpServletRequest request )
+    {
+        String strNewsletterId = request.getParameter( PARAMETER_NEWSLETTER_ID );
+        int nNewsletterId = Integer.parseInt( strNewsletterId );
+        NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
+
+        //Workgroup & RBAC permissions
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
+                        NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, getUser( ) ) )
+        {
+            return getManageNewsLetters( request );
+        }
+
+        setPageTitleProperty( PROPERTY_PAGE_TITLE_IMPORT_DELETE );
+
+        Map<String, Object> model = new HashMap<String, Object>( );
+        model.put( MARK_NEWSLETTER_ID, nNewsletterId );
+        model.put( MARK_IMPORT_DELETE, true );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_IMPORT_SUBSCRIBERS, getLocale( ), model );
 
@@ -1738,6 +1771,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         String strNewsletterId = request.getParameter( PARAMETER_NEWSLETTER_ID );
         int nNewsletterId = Integer.parseInt( strNewsletterId );
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
+        String strImportDelete = request.getParameter( MARK_IMPORT_DELETE );
+        Boolean bImportDelete = Boolean.valueOf( strImportDelete );
 
         // Workgroup & RBAC permissions
         if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
@@ -1807,16 +1842,26 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                         // Checks if a subscriber with the same email address doesn't exist yet
                         Subscriber subscriber = SubscriberHome.findByEmail( strEmail, getPlugin( ) );
 
-                        if ( subscriber == null )
+                        if ( !bImportDelete )
                         {
-                            // The email doesn't exist, so create a new subcriber
-                            subscriber = new Subscriber( );
-                            subscriber.setEmail( strEmail );
-                            SubscriberHome.create( subscriber, getPlugin( ) );
-                        }
+                            if ( subscriber == null )
+                            {
+                                // The email doesn't exist, so create a new subcriber
+                                subscriber = new Subscriber( );
+                                subscriber.setEmail( strEmail );
+                                SubscriberHome.create( subscriber, getPlugin( ) );
+                            }
 
-                        // adds a subscriber to the current newsletter
-                        NewsLetterHome.addSubscriber( nNewsletterId, subscriber.getId( ), tToday, getPlugin( ) );
+                            // adds a subscriber to the current newsletter
+                            NewsLetterHome.addSubscriber( nNewsletterId, subscriber.getId( ), tToday, getPlugin( ) );
+                        }
+                        else
+                        {
+                            if ( subscriber != null )
+                            {
+                                NewsLetterHome.removeSubscriber( nNewsletterId, subscriber.getId( ), getPlugin( ) );
+                            }
+                        }
                     }
                 }
             }
