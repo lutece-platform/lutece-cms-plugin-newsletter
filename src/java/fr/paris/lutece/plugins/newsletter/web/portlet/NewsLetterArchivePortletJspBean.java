@@ -160,7 +160,7 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
         // Get the plugin for the portlet
         Plugin plugin = PluginService.getPlugin( portlet.getPluginName( ) );
 
-        ArrayList<Integer> selectedSendings = NewsLetterArchivePortletHome.findSendingsInPortlet( nPortletId );
+        ArrayList<Integer> selectedSendings = NewsLetterArchivePortletHome.findSendingsInPortlet( nPortletId, plugin );
         List<SendingNewsLetter> sendingNewsletterList = SendingNewsLetterHome.findAllSendings( plugin );
         model.put( MARK_SENDING_NEWSLETTER_LIST, sendingNewsletterList );
         model.put( MARK_SELECTED_SENDING_LIST, selectedSendings );
@@ -253,14 +253,16 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
             }
         }
 
-        ArrayList<Integer> previousSendings = NewsLetterArchivePortletHome.findSendingsInPortlet( portlet.getId( ) );
+        ArrayList<Integer> previousSendings = NewsLetterArchivePortletHome.findSendingsInPortlet( portlet.getId( ),
+                PluginService.getPlugin( portlet.getPluginName( ) ) );
 
         // Add the sendings that are checked now but were not present before
         for ( Integer newSending : checkedSendings )
         {
             if ( !previousSendings.contains( newSending ) )
             {
-                NewsLetterArchivePortletHome.insertSending( portlet.getId( ), newSending.intValue( ) );
+                NewsLetterArchivePortletHome.insertSending( portlet.getId( ), newSending.intValue( ),
+                        PluginService.getPlugin( portlet.getPluginName( ) ) );
             }
         }
 
@@ -269,7 +271,8 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
         {
             if ( !checkedSendings.contains( oldSending ) )
             {
-                NewsLetterArchivePortletHome.removeSending( portlet.getId( ), oldSending.intValue( ) );
+                NewsLetterArchivePortletHome.removeSending( portlet.getId( ), oldSending.intValue( ),
+                        PluginService.getPlugin( portlet.getPluginName( ) ) );
             }
         }
     }

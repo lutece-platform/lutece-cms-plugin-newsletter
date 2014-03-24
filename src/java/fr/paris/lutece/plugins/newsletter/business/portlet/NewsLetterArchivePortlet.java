@@ -61,36 +61,36 @@ public class NewsLetterArchivePortlet extends Portlet
 
     /**
      * Returns the Xml code of the Archive portlet with XML heading
-     *
+     * 
      * @param request The HTTP servlet request
      * @return the Xml code of the Archive portlet
      */
     public String getXmlDocument( HttpServletRequest request )
     {
-        return XmlUtil.getXmlHeader(  ) + getXml( request );
+        return XmlUtil.getXmlHeader( ) + getXml( request );
     }
 
     /**
      * Returns the Xml code of the Archive portlet
-     *
+     * 
      * @param request The HTTP servlet request
      * @return the Xml code of the Archive portlet content
      */
     public String getXml( HttpServletRequest request )
     {
-        StringBuffer sbXml = new StringBuffer(  );
+        StringBuffer sbXml = new StringBuffer( );
         Plugin plugin = PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME );
         XmlUtil.beginElement( sbXml, TAG_NEWSLETTER_SENDING_LIST );
 
-        ArrayList<Integer> listSendingIds = NewsLetterArchivePortletHome.findSendingsInPortlet( this.getId(  ) );
+        ArrayList<Integer> listSendingIds = NewsLetterArchivePortletHome.findSendingsInPortlet( this.getId( ), plugin );
         ArrayList<SendingNewsLetter> listSendings = SendingNewsLetterHome.findSendingsByIds( listSendingIds, plugin );
 
         for ( SendingNewsLetter sending : listSendings )
         {
             XmlUtil.beginElement( sbXml, TAG_NEWSLETTER_SENDING );
-            XmlUtil.addElement( sbXml, TAG_NEWSLETTER_SENDING_ID, sending.getId(  ) );
-            XmlUtil.addElement( sbXml, TAG_NEWSLETTER_SENDING_DATE, DateUtil.getDateString( sending.getDate(  ) ) );
-            XmlUtil.addElementHtml( sbXml, TAG_NEWSLETTER_SENDING_SUBJECT, sending.getEmailSubject(  ) );
+            XmlUtil.addElement( sbXml, TAG_NEWSLETTER_SENDING_ID, sending.getId( ) );
+            XmlUtil.addElement( sbXml, TAG_NEWSLETTER_SENDING_DATE, DateUtil.getDateString( sending.getDate( ) ) );
+            XmlUtil.addElementHtml( sbXml, TAG_NEWSLETTER_SENDING_SUBJECT, sending.getEmailSubject( ) );
             XmlUtil.endElement( sbXml, TAG_NEWSLETTER_SENDING );
         }
 
@@ -102,16 +102,16 @@ public class NewsLetterArchivePortlet extends Portlet
     /**
      * Updates the current instance of the HtmlPortlet object
      */
-    public void update(  )
+    public void update( )
     {
-        NewsLetterArchivePortletHome.getInstance(  ).update( this );
+        NewsLetterArchivePortletHome.getInstance( ).update( this );
     }
 
     /**
      * Removes the current instance of the HtmlPortlet object
      */
-    public void remove(  )
+    public void remove( )
     {
-        NewsLetterArchivePortletHome.getInstance(  ).remove( this );
+        NewsLetterArchivePortletHome.getInstance( ).remove( this );
     }
 }

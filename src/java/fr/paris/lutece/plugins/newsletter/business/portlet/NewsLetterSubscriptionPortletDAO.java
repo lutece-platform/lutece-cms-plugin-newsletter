@@ -33,7 +33,9 @@
  */
 package fr.paris.lutece.plugins.newsletter.business.portlet;
 
+import fr.paris.lutece.plugins.newsletter.service.NewsletterPlugin;
 import fr.paris.lutece.portal.business.portlet.Portlet;
+import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.util.sql.DAOUtil;
 
 import java.util.HashSet;
@@ -75,7 +77,7 @@ public final class NewsLetterSubscriptionPortletDAO implements INewsLetterSubscr
      */
     public void delete( int nPortletId )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
         daoUtil.setInt( 1, nPortletId );
         daoUtil.executeUpdate( );
         daoUtil.free( );
@@ -128,7 +130,8 @@ public final class NewsLetterSubscriptionPortletDAO implements INewsLetterSubscr
      */
     public void insertSubscription( int nPortletId, int nNewsletterId )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_NEWSLETTER );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_NEWSLETTER,
+                PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
         daoUtil.setInt( 1, nPortletId );
         daoUtil.setInt( 2, nNewsletterId );
 
@@ -146,7 +149,8 @@ public final class NewsLetterSubscriptionPortletDAO implements INewsLetterSubscr
      */
     public void removeSubscription( int nPortletId, int nNewsletterId )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_NEWSLETTER );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_NEWSLETTER,
+                PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
         daoUtil.setInt( 1, nPortletId );
         daoUtil.setInt( 2, nNewsletterId );
 
@@ -166,7 +170,8 @@ public final class NewsLetterSubscriptionPortletDAO implements INewsLetterSubscr
     {
         HashSet<Integer> results = new HashSet<Integer>( );
 
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_SUBSCRIPTION_BY_PORTLET );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_SUBSCRIPTION_BY_PORTLET,
+                PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
         daoUtil.setInt( 1, nPortletId );
         daoUtil.executeQuery( );
 

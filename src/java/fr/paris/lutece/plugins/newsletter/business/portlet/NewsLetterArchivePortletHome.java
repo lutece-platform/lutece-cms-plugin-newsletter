@@ -36,6 +36,7 @@ package fr.paris.lutece.plugins.newsletter.business.portlet;
 import fr.paris.lutece.portal.business.portlet.IPortletInterfaceDAO;
 import fr.paris.lutece.portal.business.portlet.PortletHome;
 import fr.paris.lutece.portal.business.portlet.PortletTypeHome;
+import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 import java.util.ArrayList;
@@ -105,9 +106,9 @@ public class NewsLetterArchivePortletHome extends PortletHome
      * @param nSendingId
      *            the identifier of the sending.
      */
-    public static void insertSending( int nPortletId, int nSendingId )
+    public static void insertSending( int nPortletId, int nSendingId, Plugin plugin )
     {
-        _dao.insertSending( nPortletId, nSendingId );
+        _dao.insertSending( nPortletId, nSendingId, plugin );
     }
 
     /**
@@ -118,9 +119,9 @@ public class NewsLetterArchivePortletHome extends PortletHome
      * @param nSendingId
      *            the identifier of the sending.
      */
-    public static void removeSending( int nPortletId, int nSendingId )
+    public static void removeSending( int nPortletId, int nSendingId, Plugin plugin )
     {
-        _dao.removeSending( nPortletId, nSendingId );
+        _dao.removeSending( nPortletId, nSendingId, plugin );
     }
 
     /**
@@ -129,8 +130,8 @@ public class NewsLetterArchivePortletHome extends PortletHome
      * @param nPortletId the identifier of the portlet.
      * @return a Set of Integer containing the identifiers.
      */
-    public static ArrayList<Integer> findSendingsInPortlet( int nPortletId )
+    public static ArrayList<Integer> findSendingsInPortlet( int nPortletId, Plugin plugin )
     {
-        return _dao.findSendingsInPortlet( nPortletId );
+        return _dao.findSendingsInPortlet( nPortletId, plugin );
     }
 }

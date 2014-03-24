@@ -33,7 +33,10 @@
  */
 package fr.paris.lutece.plugins.newsletter.business.portlet;
 
+import fr.paris.lutece.plugins.newsletter.service.NewsletterPlugin;
 import fr.paris.lutece.portal.business.portlet.Portlet;
+import fr.paris.lutece.portal.service.plugin.Plugin;
+import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.util.sql.DAOUtil;
 
 import java.util.ArrayList;
@@ -73,7 +76,7 @@ public final class NewsLetterArchivePortletDAO implements INewsLetterArchivePort
      */
     public void delete( int nPortletId )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
         daoUtil.setInt( 1, nPortletId );
         daoUtil.executeUpdate( );
         daoUtil.free( );
@@ -124,9 +127,9 @@ public final class NewsLetterArchivePortletDAO implements INewsLetterArchivePort
      * @param nSendingId
      *            the identifier of the sending.
      */
-    public void insertSending( int nPortletId, int nSendingId )
+    public void insertSending( int nPortletId, int nSendingId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_SENDING );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_SENDING, plugin );
         daoUtil.setInt( 1, nPortletId );
         daoUtil.setInt( 2, nSendingId );
 
@@ -142,9 +145,9 @@ public final class NewsLetterArchivePortletDAO implements INewsLetterArchivePort
      * @param nSendingId
      *            the identifier of the sending.
      */
-    public void removeSending( int nPortletId, int nSendingId )
+    public void removeSending( int nPortletId, int nSendingId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_SENDING );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_SENDING, plugin );
         daoUtil.setInt( 1, nPortletId );
         daoUtil.setInt( 2, nSendingId );
 
@@ -160,11 +163,11 @@ public final class NewsLetterArchivePortletDAO implements INewsLetterArchivePort
      * @return a Set of Integer objects containing the identifers of the
      *         sendings.
      */
-    public ArrayList<Integer> findSendingsInPortlet( int nPortletId )
+    public ArrayList<Integer> findSendingsInPortlet( int nPortletId, Plugin plugin )
     {
         ArrayList<Integer> results = new ArrayList<Integer>( );
 
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_SENDINGS_BY_PORTLET );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_SENDINGS_BY_PORTLET, plugin );
         daoUtil.setInt( 1, nPortletId );
         daoUtil.executeQuery( );
 

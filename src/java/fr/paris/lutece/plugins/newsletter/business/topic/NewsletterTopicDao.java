@@ -24,14 +24,14 @@ public class NewsletterTopicDao implements INewsletterTopicDAO
     private static final String SQL_QUERY_FIND_LAST_ORDER = " SELECT MAX(topic_order) FROM newsletter_topic WHERE id_newsletter = ? AND section = ? ";
     private static final String SQL_QUERY_FILL_ORDER_BLANK = " UPDATE newsletter_topic SET topic_order = topic_order - 1 WHERE id_newsletter = ? AND section = ? and topic_order > ? ";
     private static final String SQL_QUERY_REMOVE_ALL_BY_ID_NEWSLETTER = " DELETE FROM newsletter_topic WHERE id_newsletter = ? ";
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
     public NewsletterTopic findByPrimaryKey( int nId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
         NewsletterTopic topic = null;
         daoUtil.setInt( 1, nId );
         daoUtil.executeQuery( );
@@ -57,7 +57,7 @@ public class NewsletterTopicDao implements INewsletterTopicDAO
     public void insert( NewsletterTopic newsletterTopic, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
-        newsletterTopic.setId( newPrimaryKey( ) );
+        newsletterTopic.setId( newPrimaryKey( plugin ) );
         daoUtil.setInt( 1, newsletterTopic.getId( ) );
         daoUtil.setInt( 2, newsletterTopic.getIdNewsletter( ) );
         daoUtil.setString( 3, newsletterTopic.getTopicTypeCode( ) );
@@ -103,7 +103,7 @@ public class NewsletterTopicDao implements INewsletterTopicDAO
     @Override
     public List<NewsletterTopic> findAllByIdNewsletter( int nIdNewsletter, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL_BY_ID_NEWSLETTER );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL_BY_ID_NEWSLETTER, plugin );
         List<NewsletterTopic> listNewsletterTopics = new ArrayList<NewsletterTopic>( );
         daoUtil.setInt( 1, nIdNewsletter );
         daoUtil.executeQuery( );
@@ -140,10 +140,9 @@ public class NewsletterTopicDao implements INewsletterTopicDAO
      * {@inheritDoc}
      */
     @Override
-    public List<NewsletterTopic> findByNewsletterIdAndOrder( int nIdNewsletter, int nOrder, int nSection,
-            Plugin plugin )
+    public List<NewsletterTopic> findByNewsletterIdAndOrder( int nIdNewsletter, int nOrder, int nSection, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL_BY_ID_NEWSLETTER_AND_ORDER );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL_BY_ID_NEWSLETTER_AND_ORDER, plugin );
         List<NewsletterTopic> listNewsletterTopics = new ArrayList<NewsletterTopic>( );
         daoUtil.setInt( 1, nIdNewsletter );
         daoUtil.setInt( 2, nOrder );
@@ -234,9 +233,9 @@ public class NewsletterTopicDao implements INewsletterTopicDAO
      * Get a new primary key
      * @return A new primary key
      */
-    private int newPrimaryKey( )
+    private int newPrimaryKey( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PRIMARY_KEY );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PRIMARY_KEY, plugin );
         daoUtil.executeQuery( );
         int nId = 1;
         if ( daoUtil.next( ) )

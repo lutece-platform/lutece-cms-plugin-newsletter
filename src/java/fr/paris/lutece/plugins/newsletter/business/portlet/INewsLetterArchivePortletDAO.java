@@ -34,6 +34,7 @@
 package fr.paris.lutece.plugins.newsletter.business.portlet;
 
 import fr.paris.lutece.portal.business.portlet.IPortletInterfaceDAO;
+import fr.paris.lutece.portal.service.plugin.Plugin;
 
 import java.util.ArrayList;
 
@@ -45,31 +46,34 @@ public interface INewsLetterArchivePortletDAO extends IPortletInterfaceDAO
 {
     /**
      * Associates a new sending to a given portlet.
-     *
+     * 
      * @param nPortletId
      *            the identifier of the portlet.
      * @param nSendingId
      *            the identifier of the sending.
+     * @param plugin the plugin
      */
-    void insertSending( int nPortletId, int nSendingId );
+    void insertSending( int nPortletId, int nSendingId, Plugin plugin );
 
     /**
      * De-associate a sending from a given portlet.
-     *
+     * 
      * @param nPortletId
      *            the identifier of the portlet.
+     * @param plugin the plugin
      * @param nSendingId
      *            the identifier of the sending.
      */
-    void removeSending( int nPortletId, int nSendingId );
+    void removeSending( int nPortletId, int nSendingId, Plugin plugin );
 
     /**
      * Returns all the sendings associated with a given portlet.
-     *
+     * 
      * @param nPortletId
      *            the identifier of the portlet.
+     * @param plugin the plugin
      * @return a Set of Integer objects containing the identifers of the
      *         sendings.
      */
-    ArrayList<Integer> findSendingsInPortlet( int nPortletId );
+    ArrayList<Integer> findSendingsInPortlet( int nPortletId, Plugin plugin );
 }

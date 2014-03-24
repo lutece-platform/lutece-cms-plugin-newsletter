@@ -33,7 +33,9 @@
  */
 package fr.paris.lutece.plugins.newsletter.business;
 
+import fr.paris.lutece.plugins.newsletter.service.NewsletterPlugin;
 import fr.paris.lutece.portal.service.plugin.Plugin;
+import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.sql.DAOUtil;
 
@@ -205,7 +207,8 @@ public final class NewsLetterDAO implements INewsLetterDAO
     @Override
     public boolean checkLinkedPortlet( int nIdNewsletter )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_LINKED_PORTLET );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_LINKED_PORTLET,
+                PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
         daoUtil.setInt( 1, nIdNewsletter );
         daoUtil.executeQuery( );
 
