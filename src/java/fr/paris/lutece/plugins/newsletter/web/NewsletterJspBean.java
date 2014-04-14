@@ -33,6 +33,31 @@
  */
 package fr.paris.lutece.plugins.newsletter.web;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+
+import au.com.bytecode.opencsv.CSVReader;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetter;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterHome;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterProperties;
@@ -84,31 +109,6 @@ import fr.paris.lutece.util.sort.AttributeComparator;
 import fr.paris.lutece.util.string.StringUtil;
 import fr.paris.lutece.util.url.UrlItem;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-
-import au.com.bytecode.opencsv.CSVReader;
-
 
 /**
  * This class provides the user interface to manage NewsLetters features
@@ -135,6 +135,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String PROPERTY_CANCEL_ACTION = "newsletter.compose_newsletter.buttonCancel";
     private static final String PROPERTY_TEST_SENDING_ACTION = "newsletter.compose_newsletter.buttonTestSending";
     private static final String PROPERTY_LIMIT_CONFIRM_DAYS = "newsletter.confirm.limit";
+    private static final String PROPERTY_SELECT_MANDATORY = "newsletter.manage_archive.multiSelectError";
 
     //Css inclusion
     private static final String PROPERTY_CSS_FILES = "newsletter.css.files";
@@ -245,6 +246,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String PARAMETER_MOVE_UP = "move_up";
     private static final String PARAMETER_TITLE = "title";
     private static final String PARAMETER_UPDATE_TEMPLATE = "update_template";
+    private static final String PARAMETER_NEWSLETTER_SELECTION = "newsletter_selection";
 
     // URL
     private static final String JSP_URL_DO_COMPOSE_NEWSLETTER = "ComposeNewsLetter.jsp";
@@ -252,6 +254,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String JSP_URL_CONFIRM_TEST_NEWSLETTER = "ConfirmTestNewsLetter.jsp";
     private static final String JSP_URL_DO_REMOVE_NEWSLETTER = "jsp/admin/plugins/newsletter/DoRemoveNewsLetter.jsp";
     private static final String JSP_URL_DO_REMOVE_SENDING_NEWSLETTER = "jsp/admin/plugins/newsletter/DoRemoveSendingNewsLetter.jsp";
+    private static final String JSP_URL_DO_REMOVE_MULTI_NEWSLETTER = "jsp/admin/plugins/newsletter/DoRemoveMultiNewsLetter.jsp";
     private static final String JSP_URL_DO_REMOVE_SUBSCRIBER = "jsp/admin/plugins/newsletter/DoUnsubscribeNewsLetterAdmin.jsp";
     private static final String JSP_URL_DO_REMOVE_SELECTION = "jsp/admin/plugins/newsletter/DoRemoveSelection.jsp";
     private static final String JSP_URL_MANAGE_NEWSLETTER = "ManageNewsLetter.jsp";
@@ -272,6 +275,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String MESSAGE_CONFIRM_CANCEL_COMPOSE = "newsletter.message.confirmCancelComposeNewsletter";
     private static final String MESSAGE_CONFIRM_REMOVE_NEWSLETTER = "newsletter.message.confirmRemoveNewsletter";
     private static final String MESSAGE_CONFIRM_REMOVE_SENDING_NEWSLETTER = "newsletter.message.confirmRemoveSendingNewsletter";
+    private static final String MESSAGE_CONFIRM_REMOVE_MULTI_SENDING_NEWSLETTER = "newsletter.message.confirmRemoveMultiSendingNewsletter";
     private static final String MESSAGE_CONFIRM_REMOVE_SUBSCRIBER = "newsletter.message.confirmRemoveSubscriber";
     private static final String MESSAGE_CONFIRM_REMOVE_SELECTION = "newsletter.message.confirmRemoveSelection";
     private static final String MESSAGE_CONFIRM_SEND_NEWSLETTER = "newsletter.message.confirmSendNewsletter";
@@ -1118,6 +1122,53 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     }
 
     /**
+     * Manages the removal form of a newsletter archive whose identifier is in
+     * the http request
+     * @param request The Http request
+     * @return the html code to confirm
+     */
+    public String getRemoveMultiNewsLetter( HttpServletRequest request )
+    {
+        /* parameters */
+        String strNewsletterId = request.getParameter( PARAMETER_NEWSLETTER_ID );
+        int nNewsletterId = Integer.parseInt( strNewsletterId );
+
+        String[] strSendingNewsletterId = request.getParameterValues( PARAMETER_NEWSLETTER_SELECTION );
+
+        // RBAC permission
+        if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, Integer.toString( nNewsletterId ),
+                NewsletterResourceIdService.PERMISSION_ARCHIVE, getUser( ) ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
+        }
+        else if ( ArrayUtils.isEmpty( strSendingNewsletterId ) )
+        {
+            return AdminMessageService.getMessageUrl( request, PROPERTY_SELECT_MANDATORY, AdminMessage.TYPE_ERROR );
+        }
+
+        StringBuilder sb = new StringBuilder( );
+        int count = 1;
+
+        for ( String s : strSendingNewsletterId )
+        {
+            sb.append( s );
+
+            if ( count != strSendingNewsletterId.length )
+            {
+                count++;
+                sb.append( "_" );
+            }
+        }
+
+        UrlItem urlItem = new UrlItem( JSP_URL_DO_REMOVE_MULTI_NEWSLETTER );
+        urlItem.addParameter( PARAMETER_NEWSLETTER_ID, nNewsletterId );
+        urlItem.addParameter( PARAMETER_SENDING_NEWSLETTER_ID, sb.toString( ) );
+
+        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_MULTI_SENDING_NEWSLETTER,
+                urlItem.getUrl( ), AdminMessage.TYPE_CONFIRMATION );
+    }
+
+    /**
      * Processes the removal form of a newsletter
      * @param request The Http request
      * @return the jsp URL to display the form to manage newsletters
@@ -1171,6 +1222,35 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         }
 
         SendingNewsLetterHome.remove( nSendingNewsletterId, getPlugin( ) );
+
+        UrlItem url = new UrlItem( JSP_URL_MANAGE_ARCHIVE );
+        url.addParameter( PARAMETER_NEWSLETTER_ID, nNewsletterId );
+
+        return url.getUrl( );
+    }
+
+    /**
+     * Processes the removal form of a sending newsletter
+     * @param request The Http request
+     * @return the jsp URL to display the form to manage newsletters
+     */
+    public String doRemoveMultiNewsLetter( HttpServletRequest request )
+    {
+        int nNewsletterId = Integer.parseInt( request.getParameter( PARAMETER_NEWSLETTER_ID ) );
+        String strSendingNewsletterId = request.getParameter( PARAMETER_SENDING_NEWSLETTER_ID );
+
+        if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, Integer.toString( nNewsletterId ),
+                NewsletterResourceIdService.PERMISSION_ARCHIVE, getUser( ) ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
+        }
+
+        String[] ids = strSendingNewsletterId.split( "_" );
+
+        for ( String id : ids )
+        {
+            SendingNewsLetterHome.remove( Integer.parseInt( id ), getPlugin( ) );
+        }
 
         UrlItem url = new UrlItem( JSP_URL_MANAGE_ARCHIVE );
         url.addParameter( PARAMETER_NEWSLETTER_ID, nNewsletterId );

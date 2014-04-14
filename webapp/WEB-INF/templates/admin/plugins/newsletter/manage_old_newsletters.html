@@ -1,13 +1,18 @@
 <div class="row-fluid">
 	<div class="span12">
 		<fieldset>
-		<legend>#i18n{newsletter.manage_archive.boxTitle}</legend>    
-		<form class="form-horizontal" method="post" action="jsp/admin/plugins/newsletter/ManageArchive.jsp">
-		<input type="hidden" name="newsletter_id" value="${newsletter_id}" />      
+		<legend>#i18n{newsletter.manage_archive.boxTitle}</legend>   
+		<#if newsletters_list?has_content>
 		<@paginationAdmin paginator=paginator combo=1 />
+		<form class="form-horizontal" method="post" action="jsp/admin/plugins/newsletter/RemoveMultiNewsLetter.jsp">
+			<input type="hidden" name="newsletter_id" value="${newsletter_id}" id="newsletter_id"/>
+			<button class="btn btn-danger btn-small" href=""  title="#i18n{portal.util.labelDelete}" >
+				<i class="icon-trash icon-white"></i>&nbsp;#i18n{portal.util.labelDelete}
+			</button>   
 			<table class="table table-striped table-condensed">
 				<thead>
 					<tr>
+						<th>&nbsp;</th>	
 						<th>#i18n{newsletter.manage_archive.columnTitleList}</th>	
 						<th>#i18n{newsletter.manage_archive.columnTitleDate}</th>           
 						<th>#i18n{newsletter.manage_archive.columnTitleDelete}</th>
@@ -16,10 +21,11 @@
 				<tbody>
 				<#list newsletters_list as newsletter>
 				<tr>	        	
+					<td><input id="newsletter_selection_${newsletter.id}" name="newsletter_selection" type="checkbox" value="${newsletter.id}" /></td>
 					<td><a target="_blank" href="jsp/site/plugins/newsletter/ViewNewsletterArchive.jsp?sending_id=${newsletter.id}">${newsletter.emailSubject}</a></td>
 					<td>${newsletter.date}</td>
 					<td>
-					<a class="btn btn-danger btn-small" href="jsp/admin/plugins/newsletter/RemoveSendingNewsLetter.jsp?newsletter_id=${newsletter_id}&sending_newsletter_id=${newsletter.id}"  title="#i18n{portal.util.labelRemove}" >
+					<a class="btn btn-danger btn-small" href="jsp/admin/plugins/newsletter/RemoveSendingNewsLetter.jsp?newsletter_id=${newsletter_id}&sending_newsletter_id=${newsletter.id}"  title="#i18n{portal.util.labelDelete}" >
 						<i class="icon-trash icon-white"></i>
 					</a>
 					</td>
@@ -27,7 +33,11 @@
 				</#list>
 				</tbody>
 			</table>
-		</form>       
+			<button class="btn btn-danger btn-small" href=""  title="#i18n{portal.util.labelDelete}" >
+				<i class="icon-trash icon-white"></i>&nbsp;#i18n{portal.util.labelDelete}
+			</button>    
+		</form>
+		</#if>
 		</fieldset>
 	</div>
 </div>
