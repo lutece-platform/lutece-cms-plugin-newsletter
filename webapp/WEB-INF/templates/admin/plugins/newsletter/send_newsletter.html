@@ -1,18 +1,19 @@
 <html>
-    <head>
-        <style>
-	 ${newsletter_css}
-       	</style>
-       	<base href="${base_url}" />
-    </head>
-    <body>
-        ${newsletter_content}
-        <#if unsubscribe?exists>
-            <#if unsubscribe = "TRUE">
-            <hr />
-               #i18n{newsletter.send_newsletter.labelToUnsubscribe}<a href="${base_url}jsp/site/Portal.jsp?page=newsletter&action=confirm_unsubscribe&subscriber_email=${subscriber_email}&newsletter_id=${newsletter_id}&unsubscribe_key=${unsubscribe_key!}&plugin_name=newsletter" class="newsletter">#i18n{newsletter.send_newsletter.labelClickHere}</a>
-            </#if>
-        </#if>
-    </body>
+<head>
+<base href="${base_url}" />
+</head>
+<body  style="font-family:Arial, Helvetica, sans-serif;font-size:12px;margin:0;padding:0" >
+${newsletter_content}
+<#if unsubscribe?exists>
+<#if unsubscribe = "TRUE">
+<p align="center" style="font-size: small;">
+#i18n{newsletter.send_newsletter.labelToUnsubscribe}
+<a href="${base_url}jsp/site/Portal.jsp?page=newsletter&action=confirm_unsubscribe&subscriber_email=${subscriber_email}&newsletter_id=${newsletter_id}" class="newsletter">
+#i18n{newsletter.send_newsletter.labelClickHere}
+</a>
+</p>
+</#if>
+</#if>  
+</body>
 </html>
 

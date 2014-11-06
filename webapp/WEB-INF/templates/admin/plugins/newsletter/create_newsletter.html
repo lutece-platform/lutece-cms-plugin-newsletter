@@ -1,74 +1,80 @@
-<div class="row-fluid">
-	<div class="span12">
-	<fieldset>
-    <legend>#i18n{newsletter.create_newsletter.boxTitle}</legend>
-		<form class="form-horizontal" method="post" id="create_newsletter" name="create_newsletter" action="jsp/admin/plugins/newsletter/DoCreateNewsLetter.jsp">
-			<div class="control-group">
-			<label class="control-label" for="newsletter_name">#i18n{newsletter.create_newsletter.label} *</label>
-				<div class="controls">
-					<input type="text" id="newsletter_name" name="newsletter_name"  class="input-large"  maxlength="50" />
-				</div>
-			</div>
-			<div class="control-group">
-			<label class="control-label" for="newsletter_description">#i18n{newsletter.create_newsletter.description} *</label>
-				<div class="controls">
-					<textarea class="richtext" id="newsletter_description" name="newsletter_description" class="span5" rows="4" ></textarea>
-				</div>
-			</div>
-			<div class="control-group">
-			<label class="control-label" for="date_first_send">#i18n{newsletter.create_newsletter.initialDate} *</label>
-				<div class="controls">
-					<div class="input-prepend">
-						<span class="add-on"><i class="icon-calendar"></i></span>
-						<input type="text" name="date_first_send" id="date_first_send"  class="input-small" maxlength="10" value="${newsletter_last_sent}" />
+<div class="row">
+	<div class="col-xs-12 col-sm-12 col-md-12">
+		<div class="box box-primary">
+			<div class="box-header">
+				<h3 class="box-title">#i18n{newsletter.create_newsletter.boxTitle}</h3>
+			</div>	
+			<div class="box-body">
+				<form class="form-horizontal" method="post" id="create_newsletter" name="create_newsletter" action="jsp/admin/plugins/newsletter/DoCreateNewsLetter.jsp">
+					<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 col-md-3" for="newsletter_name">#i18n{newsletter.create_newsletter.label} *</label>
+						<div class=" col-xs-12 col-sm-7 col-md-7">
+							<input type="text" id="newsletter_name" name="newsletter_name"  class="form-control"  maxlength="50">
+						</div>
 					</div>
-				</div>
+					<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 col-md-3" for="newsletter_description">#i18n{newsletter.create_newsletter.description} *</label>
+						<div class=" col-xs-12 col-sm-7 col-md-7">
+							<textarea class="richtext" id="newsletter_description" name="newsletter_description" class="form-control" rows="4" ></textarea>
+						</div>
+					</div>
+					<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 col-md-3" for="date_first_send">#i18n{newsletter.create_newsletter.initialDate} *</label>
+						<div class="col-xs-12 col-sm-2 col-md-2">
+							<div class="input-group">
+								<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+								<input type="text" name="date_first_send" id="date_first_send"  class="form-control" maxlength="10" value="${newsletter_last_sent}">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-3 col-md-3" for="newsletter_workgroup" >#i18n{newsletter.create_newsletter.labelWorkgroup} *</label>
+						<div class="col-xs-12 col-sm-3 col-md-3">
+							<@comboWithParams name="newsletter_workgroup" default_value=""  additionalParameters="class=\"form-control\"" items=workgroup_list />
+						</div>
+					</div>
+					<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 col-md-3" for="newsletter_unsubscribe" >#i18n{newsletter.create_newsletter.labelUnsubscribe}  </label>
+						<div class="col-xs-12 col-sm-1 col-md-1">
+							<@comboWithParams name="newsletter_unsubscribe" default_value="" additionalParameters="class=\"form-control\"" items=unsubscribe_list />
+						</div>
+					</div>
+					<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 col-md-3" for="newsletter_sender_name" >#i18n{newsletter.create_newsletter.labelSenderName} *</label>  
+						<div class=" col-xs-12 col-sm-7 col-md-7">
+							<input type="text" id="newsletter_sender_name" name="newsletter_sender_name"  class="form-control"  maxlength="255">
+						</div>
+					</div>
+					<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 col-md-3" for="newsletter_sender_mail" >#i18n{newsletter.create_newsletter.labelSenderMail} *</label>  
+						<div class=" col-xs-12 col-sm-7 col-md-7">
+							<input type="text" id="newsletter_sender_mail" name="newsletter_sender_mail"  class="form-control"  maxlength="255">
+						</div>
+					</div>
+					<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 col-md-3" for="newsletter_test_subject" >#i18n{newsletter.modify_newsletter.labelSubject} </label>  
+						<div class=" col-xs-12 col-sm-7 col-md-7">
+							<input type="text" id="newsletter_test_subject" name="newsletter_test_subject"  class="form-control"  maxlength="255" value="">
+						</div>
+					</div>
+					<div class="form-group">
+					<label class="control-label col-xs-12 col-sm-3 col-md-3" for="newsletter_test_recipients" >#i18n{newsletter.create_newsletter.labelTestRecipients} *</label>  
+						<div class=" col-xs-12 col-sm-7 col-md-7">
+							<input type="text" id="newsletter_test_recipients" name="newsletter_test_recipients"  class="form-control"  maxlength="255">
+							<p class="help-block">#i18n{newsletter.modify_newsletter.noticeDelimiter}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-xs-12 col-sm-offset-3 col-sm-9 col-md-offset-3 col-md-9">
+						<button class="btn btn-primary btn-flat" type="submit" ><i class="fa fa-check"></i>&nbsp;#i18n{newsletter.create_newsletter.buttonValidate}</button>
+						<a class="btn btn-default btn-flat" href="jsp/admin/plugins/newsletter/ManageNewsLetter.jsp" >
+							<i class="fa fa-close"></i>&nbsp;#i18n{newsletter.create_newsletter.buttonCancel}
+						</a>
+						</div>
+					</div>
+				</form>
 			</div>
-			<div class="control-group">
-				<label class="control-label" for="newsletter_workgroup" >#i18n{newsletter.create_newsletter.labelWorkgroup} *</label>
-				<div class="controls">
-					<@combo name="newsletter_workgroup" default_value="" items=workgroup_list />
-				</div>
-			</div>
-			<div class="control-group">
-			<label class="control-label" for="newsletter_unsubscribe" >#i18n{newsletter.create_newsletter.labelUnsubscribe}  </label>
-				<div class="controls">
-					<@combo name="newsletter_unsubscribe" default_value="" items=unsubscribe_list />
-				</div>
-			</div>
-			<div class="control-group">
-			<label class="control-label" for="newsletter_sender_name" >#i18n{newsletter.create_newsletter.labelSenderName} *</label>  
-				<div class="controls">
-					<input type="text" id="newsletter_sender_name" name="newsletter_sender_name"  class="input-large"  maxlength="255"  />
-				</div>
-			</div>
-			<div class="control-group">
-			<label class="control-label" for="newsletter_sender_mail" >#i18n{newsletter.create_newsletter.labelSenderMail} *</label>  
-				<div class="controls">
-					<input type="text" id="newsletter_sender_mail" name="newsletter_sender_mail"  class="input-large"  maxlength="255"  />
-				</div>
-			</div>
-			<div class="control-group">
-			<label class="control-label" for="newsletter_test_subject" >#i18n{newsletter.modify_newsletter.labelSubject} </label>  
-				<div class="controls">
-					<input type="text" id="newsletter_test_subject" name="newsletter_test_subject"  class="input-large"  maxlength="255" value="" />
-				</div>
-			</div>
-			<div class="control-group">
-			<label class="control-label" for="newsletter_test_recipients" >#i18n{newsletter.create_newsletter.labelTestRecipients} *</label>  
-				<div class="controls">
-					<input type="text" id="newsletter_test_recipients" name="newsletter_test_recipients"  class="input-large"  maxlength="255"  />
-					<p class="help-block">#i18n{newsletter.modify_newsletter.noticeDelimiter}</p>
-				</div>
-			</div>
-			<div class="form-actions">
-				<button class="btn btn-primary btn-small" type="submit" ><i class="icon-ok icon-white"></i>&nbsp;#i18n{newsletter.create_newsletter.buttonValidate}</button>
-				<a class="btn btn-small" href="jsp/admin/plugins/newsletter/ManageNewsLetter.jsp" >
-					<i class="icon-remove-circle"></i>&nbsp;#i18n{newsletter.create_newsletter.buttonCancel}
-				</a>
-			</div>
-        </form>
-		</fieldset>
+		</div>
 	</div>
 </div>
 <#include "/admin/util/editor/editor.html" />
