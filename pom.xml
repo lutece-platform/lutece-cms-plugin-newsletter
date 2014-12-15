@@ -53,8 +53,8 @@
         <jiraComponentId>10160</jiraComponentId>
     </properties>
     <scm>
-        <connection>scm:svn:http://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/cms/plugin-newsletter</connection>
-        <developerConnection>scm:svn:https://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/cms/plugin-newsletter</developerConnection>
-        <url>http://dev.lutece.paris.fr/viewvc/lutece/portal/trunk/plugins/cms/plugin-newsletter</url>
+        <connection>scm:git:https://github.com/lutece-platform/lutece-cms-plugin-newsletter.git</connection>
+        <developerConnection>scm:git:https://github.com/lutece-platform/lutece-cms-plugin-newsletter.git</developerConnection>
+        <url>https://github.com/lutece-platform/lutece-cms-plugin-newsletter.git</url>
     </scm>
 </project>
