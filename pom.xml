@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     
-	<parent>
+    <parent>
         <artifactId>lutece-global-pom</artifactId>
         <groupId>fr.paris.lutece.tools</groupId>
         <version>3.0</version>
-	</parent>
+    </parent>
     
     <modelVersion>4.0.0</modelVersion>
     <groupId>fr.paris.lutece.plugins</groupId>
@@ -14,24 +14,24 @@
     <name>Lutece newsletter plugin</name>
     
     <repositories>
-		<repository>
-			<id>lutece</id>
-			<name>luteceRepository</name>
-			<url>http://dev.lutece.paris.fr/maven_repository</url>
-			<layout>default</layout>
-		</repository>
-		<repository>
-          <id>luteceSnapshot</id>
-          <name>luteceSnapshot</name>
-          <url>http://dev.lutece.paris.fr/snapshot_repository</url>
-          <snapshots>
-              <enabled>true</enabled>
-          </snapshots>
-		  <releases>
-			  <enabled>false</enabled>
-		  </releases>
+        <repository>
+            <id>lutece</id>
+            <name>luteceRepository</name>
+            <url>http://dev.lutece.paris.fr/maven_repository</url>
+            <layout>default</layout>
         </repository>
-	</repositories>
+        <repository>
+            <id>luteceSnapshot</id>
+            <name>luteceSnapshot</name>
+            <url>http://dev.lutece.paris.fr/snapshot_repository</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
     
     <dependencies>
         <dependency>
@@ -49,12 +49,14 @@
     
     <properties>
         <componentName>newsletter</componentName>
-		<jiraProjectName>NEWSLETTER</jiraProjectName>
+        <jiraProjectName>NEWSLETTER</jiraProjectName>
         <jiraComponentId>10160</jiraComponentId>
     </properties>
+    
     <scm>
         <connection>scm:git:https://github.com/lutece-platform/lutece-cms-plugin-newsletter.git</connection>
         <developerConnection>scm:git:https://github.com/lutece-platform/lutece-cms-plugin-newsletter.git</developerConnection>
         <url>https://github.com/lutece-platform/lutece-cms-plugin-newsletter.git</url>
     </scm>
+    
 </project>

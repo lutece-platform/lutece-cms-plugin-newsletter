@@ -8,12 +8,12 @@
     <body>
         <section name="Plugin Newsletter">
             <p>
-                Ce plugin permet de construire une newsletter à partir des derniers documents
-                publiés sur le site.
+                This plugin allows to build a newsletter from the latest documents
+                published on the site.
             </p>
             <p>
-                Il gère également les procedures d'abonnement et de désabonnement ainsi que la liste 
-                des abonnées.
+                It also manages the subscription and unsubscribe procedures and the list
+                of subscribers.
             </p>
         </section>
     </body>
