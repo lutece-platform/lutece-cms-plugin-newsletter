@@ -7,14 +7,16 @@
     </properties>
     <body>
         <section name="Plugin Newsletter">
-            <p>
-                Ce plugin permet de construire une newsletter à partir des derniers documents
-                publiés sur le site.
-            </p>
-            <p>
-                Il gère également les procedures d'abonnement et de désabonnement ainsi que la liste 
-                des abonnées.
-            </p>
+            <subsection name="Introduction"> 
+                <p>
+                    Ce plugin permet de construire une newsletter à partir des derniers documents
+                    publiés sur le site.
+                </p>
+                <p>
+                    Il gère également les procedures d'abonnement et de désabonnement ainsi que la liste 
+                    des abonnées.
+                </p>
+            </subsection>
         </section>
     </body>
 </document>
