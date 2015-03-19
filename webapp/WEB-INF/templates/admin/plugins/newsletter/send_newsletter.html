@@ -8,7 +8,7 @@ ${newsletter_content}
 <#if unsubscribe = "TRUE">
 <p align="center" style="font-size: small;">
 #i18n{newsletter.send_newsletter.labelToUnsubscribe}
-<a href="${base_url}jsp/site/Portal.jsp?page=newsletter&action=confirm_unsubscribe&subscriber_email=${subscriber_email}&newsletter_id=${newsletter_id}" class="newsletter">
+<a href="${base_url}jsp/site/Portal.jsp?page=newsletter&action=confirm_unsubscribe&subscriber_email=${subscriber_email}&newsletter_id=${newsletter_id}&unsubscribe_key=${unsubscribe_key}" class="newsletter">
 #i18n{newsletter.send_newsletter.labelClickHere}
 </a>
 </p>
