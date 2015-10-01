@@ -4,29 +4,38 @@
 			<div class="box-header">
 				<h3 class="box-title"><#if import_delete?has_content && import_delete>#i18n{newsletter.import_delete_subscribers.boxTitle}<#else>#i18n{newsletter.import_subscribers.boxTitle}</#if></h3>
 			</div>
-			<div class="box-body">				
+			<div class="box-body">
 				<form class="form-horizontal" method="post" enctype="multipart/form-data" action="jsp/admin/plugins/newsletter/DoImportSubscribers.jsp">
 					<input type="hidden" name="newsletter_id" value="${newsletter_id}">
 					<input type="hidden" name="import_delete" value="${import_delete?string}">
 					<div class="form-group">
 						<label class="control-label col-xs-12 col-sm-2 col-md-2" for="newsletter_import_path">#i18n{newsletter.import_subscribers.label} *</label>
-						<div class="col-xs-12 col-sm-5 col-md-5">
+						<div class="col-xs-12 col-sm-8 col-md-8">
 							<input class="form-control" type="file" id="newsletter_import_path" name="newsletter_import_path" value="" >
-							<p class="help-block">
-							<#if import_delete?has_content && import_delete>#i18n{newsletter.import_delete_subscribers.notice1}<#else>#i18n{newsletter.import_subscribers.notice1}
-							</#if>
-							</p>
-							<div class="alert alert-warning">
-								<i class="fa fa-warning"></i> 
-								<b>#i18n{newsletter.import_subscribers.notice2}</b>
 						</div>
 					</div>
 					<div class="form-group">
-					<div class="col-xs-12 col-sm-offset-2 col-sm-5 col-md-offset-2 col-md-5">
-						<button class="btn btn-primary btn-flat" type="submit" >
-							<i class="fa fa-upload"></i>&nbsp;#i18n{newsletter.import_subscribers.buttonImport}</button>
+						<div class="col-xs-12 col-sm-offset-2 col-sm-5 col-md-offset-2 col-md-5">
+							<button class="btn btn-primary btn-flat" type="submit" >
+								<i class="fa fa-upload"></i>&nbsp;#i18n{newsletter.import_subscribers.buttonImport}
+							</button>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-2 col-md-8">
+							<div class="callout callout-info">
+								<i class="fa fa-info-circle"></i>
+								<#if import_delete?has_content && import_delete>#i18n{newsletter.import_delete_subscribers.notice1}<#else>#i18n{newsletter.import_subscribers.notice1}</#if>
+							</div>
+							<div class="callout callout-warning">
+								<i class="fa fa-warning"></i>
+								<b>#i18n{newsletter.import_subscribers.notice2}</b>
+							</div>
+						</div>
 					</div>
 				</form>
-	</fieldset>
+			</div>
+		</div>
 	</div>
 </div>
