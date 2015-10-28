@@ -10,7 +10,7 @@
     <groupId>fr.paris.lutece.plugins</groupId>
     <artifactId>plugin-newsletter</artifactId>
     <packaging>lutece-plugin</packaging>
-    <version>4.0.1-SNAPSHOT</version>
+    <version>4.0.1</version>
     <name>Lutece newsletter plugin</name>
     
     <repositories>
@@ -57,7 +57,7 @@
         <connection>scm:git:https://github.com/lutece-platform/lutece-cms-plugin-newsletter.git</connection>
         <developerConnection>scm:git:https://github.com/lutece-platform/lutece-cms-plugin-newsletter.git</developerConnection>
         <url>https://github.com/lutece-platform/lutece-cms-plugin-newsletter.git</url>
-      <tag>HEAD</tag>
+      <tag>lutece-cms-plugin-newsletter-4.0.1</tag>
   </scm>
     
 </project>
