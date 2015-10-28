@@ -3,7 +3,7 @@
     <!-- Plugin Informations -->
     <name>newsletter</name>
     <class>fr.paris.lutece.plugins.newsletter.service.NewsletterPlugin</class>
-    <version>4.0.1</version>
+    <version>4.0.2-SNAPSHOT</version>
     <description>newsletter.plugin.description</description>
     <documentation/>
     <installation/>
