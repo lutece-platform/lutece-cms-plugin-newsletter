@@ -77,4 +77,13 @@ public interface INewsletterTopicService
      * @return The html content describing the topic to add to the newsletter.
      */
     String getHtmlContent( NewsletterTopic newsletterTopic, AdminUser user, Locale locale );
+    
+    /**
+     * Copy a topic for a newsletter.
+     * @param id of the old newsletterTopic
+     * @param newsletterTopic The details of the topic to create
+     * @param user The current user
+     * @param locale The locale
+     */
+    void copyNewsletterTopic( int oldTopicId, NewsletterTopic newsletterTopic, AdminUser user, Locale locale );
 }

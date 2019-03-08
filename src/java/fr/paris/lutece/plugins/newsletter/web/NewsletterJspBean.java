@@ -311,7 +311,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String LABEL_NEWSLETTER_TOPIC_ORDER = "newsletter.manage_topics.labelTopicOrder";
     private static final String LABEL_NEWSLETTER_TOPIC_SECTION = "newsletter.manage_topics.labelTopicSection";
     private static final String LABEL_NEWSLETTER_ACTION = "newsletter.manage_topics.labelActions";
-
+    private static final String LABLE_COPY_NEWSLETTER_TITLE = "newsletter.manage_newsletters.copy.title";
+    
     private static final String PROPERTY_PAGE_TITLE_COMPOSE = "newsletter.compose_newsletter.pageTitle";
     private static final String PROPERTY_PAGE_TITLE_MODIFY = "newsletter.modify_newsletter.pageTitle";
     private static final String PROPERTY_PAGE_TITLE_MANAGE_SUBSCRIBERS = "newsletter.manage_subscribers.pageTitle";
@@ -2531,5 +2532,41 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         templateNewsLetter.substitute( NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE, strBaseUrl );
 
         return templateNewsLetter;
+    }
+    
+    /**
+     * Processes the copy of a newsletter
+     * @param request The Http request
+     * @return the jsp URL to display the form to manage newsletters
+     */
+    public String doCopyNewsLetter( HttpServletRequest request )
+    {
+    	AdminUser user = AdminUserService.getAdminUser( request );
+        Locale locale = AdminUserService.getLocale( request );
+    	int nNewsletterId = Integer.parseInt( request.getParameter( PARAMETER_NEWSLETTER_ID ) );
+
+        NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
+
+        // Workgroup & RBAC permissions
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, Integer.toString( newsletter.getId( ) ),
+                        NewsletterResourceIdService.PERMISSION_CREATE, getUser( ) ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
+        }
+        
+        Object[] tabNewsLetterTileCopy = { newsletter.getName() };
+        String strTitleCopySuggest = I18nService.getLocalizedString( LABLE_COPY_NEWSLETTER_TITLE, tabNewsLetterTileCopy,
+                getLocale(  ) );
+
+        if ( strTitleCopySuggest != null )
+        {
+        	newsletter.setName( strTitleCopySuggest );
+        }
+
+        
+        // Copy of newsletter
+        _newsletterService.copyExistingNewsletter(newsletter, user, locale);
+        return getHomeUrl( request );
     }
 }
