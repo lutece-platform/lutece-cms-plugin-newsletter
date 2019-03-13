@@ -68,6 +68,13 @@
 									<i class="fa fa-group"></i>
 								</a>
 							</#if>
+							<#if creation_allowed>
+								<a class="btn btn-xs btn-flat btn-primary" href="jsp/admin/plugins/newsletter/DoCopyNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleCopy}" >
+									<i class="fa fa-copy"></i>
+								</a>
+							<#else>
+								&nbsp;
+							</#if>
 							<#if newsletterDisplay.newsletter_allow_export_subscribers>
 								<a class="btn btn-xs btn-flat btn-primary" href="jsp/admin/plugins/newsletter/DoExportCsv.jsp?newsletter_id=${newsletterDisplay.newsletter.id}"  title="#i18n{newsletter.manage_newsletters.columnTitleExportCsv}" >
 									<i class="fa fa-download"></i>

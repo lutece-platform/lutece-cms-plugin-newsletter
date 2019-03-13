@@ -39,6 +39,7 @@ import fr.paris.lutece.plugins.newsletter.business.Subscriber;
 import fr.paris.lutece.plugins.newsletter.business.SubscriberHome;
 import fr.paris.lutece.plugins.newsletter.business.topic.NewsletterTopic;
 import fr.paris.lutece.plugins.newsletter.business.topic.NewsletterTopicHome;
+import fr.paris.lutece.plugins.newsletter.service.topic.INewsletterTopicService;
 import fr.paris.lutece.plugins.newsletter.service.topic.NewsletterTopicService;
 import fr.paris.lutece.plugins.newsletter.util.NewsLetterConstants;
 import fr.paris.lutece.plugins.newsletter.util.NewsletterUtils;
@@ -69,6 +70,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
 
 import au.com.bytecode.opencsv.CSVWriter;
 
@@ -472,5 +475,31 @@ public class NewsletterService implements Serializable
             _newsletterTopicService = NewsletterTopicService.getService( );
         }
         return _newsletterTopicService;
+    }
+    
+    /**
+     * Copy existing newsletter without its subscribers.
+     * @param newsletter newsletter to copy
+     * @param user the current user
+     * @param locale The locale
+     */
+    public void copyExistingNewsletter(NewsLetter newsletter, AdminUser user, Locale locale ) {
+    	int oldNewsLetterId = newsletter.getId();
+    	NewsLetterHome.create(newsletter, getPlugin());
+    	
+    	 // Copy of topics
+        List<NewsletterTopic> topicList = NewsletterTopicHome.findAllByIdNewsletter(oldNewsLetterId, getPlugin());
+        topicList.stream().forEach((NewsletterTopic nt) -> {
+        	int oldTopicId = nt.getId();
+        	nt.setIdNewsletter(newsletter.getId());
+        	 for ( INewsletterTopicService service : SpringContextService.getBeansOfType( INewsletterTopicService.class ) )
+             {
+                 if ( StringUtils.equals( service.getNewsletterTopicTypeCode( ), nt.getTopicTypeCode( ) ) )
+                 {
+                	 NewsletterTopicHome.insertNewsletterTopic(nt, getPlugin());
+                	 service.copyNewsletterTopic(oldTopicId, nt, user, locale);
+                 }
+             }
+        });
     }
 }

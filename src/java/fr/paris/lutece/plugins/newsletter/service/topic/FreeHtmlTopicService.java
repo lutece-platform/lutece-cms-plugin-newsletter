@@ -152,4 +152,17 @@ public class FreeHtmlTopicService implements INewsletterTopicService
         return _plugin;
     }
 
+    @Override
+    public void copyNewsletterTopic(int oldTopicId, NewsletterTopic newsletterTopic, AdminUser user, Locale locale) {
+    	FreeHtmlTopic oldFreeHtmlTopic = FreeHtmlTopicHome.findByPrimaryKey(oldTopicId, getPlugin());
+    	
+    	FreeHtmlTopic freeHtmlTopic = new FreeHtmlTopic( );
+        freeHtmlTopic.setId( newsletterTopic.getId( ) );
+        if (oldFreeHtmlTopic != null) {
+        	freeHtmlTopic.setHtmlContent(oldFreeHtmlTopic.getHtmlContent());
+        } else {
+        	freeHtmlTopic.setHtmlContent( StringUtils.EMPTY );
+        }
+        FreeHtmlTopicHome.insertFreeHtmlTopic( freeHtmlTopic, getPlugin( ) );
+    }
 }
