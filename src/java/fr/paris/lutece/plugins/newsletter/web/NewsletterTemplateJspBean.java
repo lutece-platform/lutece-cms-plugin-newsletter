@@ -242,7 +242,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                         || StringUtils.isEmpty( strDescription ) || imageItem == null
                         || StringUtils.isEmpty( strImageFileName ) || !FileUtil.hasImageExtension( strImageFileName )
                         || modelItem == null || StringUtils.isEmpty( strTemplateFileName )
-                        || FileUtil.hasHtmlExtension( strTemplateFileName )
+                        || !FileUtil.hasHtmlExtension( strTemplateFileName )
                         || !StringUtils.isNumeric( strSectionNumber ) )
                 {
                     return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
