@@ -36,15 +36,15 @@ package fr.paris.lutece.plugins.newsletter.business.portlet;
 import fr.paris.lutece.plugins.newsletter.business.SendingNewsLetter;
 import fr.paris.lutece.plugins.newsletter.business.SendingNewsLetterHome;
 import fr.paris.lutece.plugins.newsletter.service.NewsletterPlugin;
+import fr.paris.lutece.plugins.newsletter.util.NewsletterUtils;
 import fr.paris.lutece.portal.business.portlet.Portlet;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.util.date.DateUtil;
 import fr.paris.lutece.util.xml.XmlUtil;
 
-import java.util.ArrayList;
-
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 
 
 /**
@@ -89,7 +89,7 @@ public class NewsLetterArchivePortlet extends Portlet
         {
             XmlUtil.beginElement( sbXml, TAG_NEWSLETTER_SENDING );
             XmlUtil.addElement( sbXml, TAG_NEWSLETTER_SENDING_ID, sending.getId( ) );
-            XmlUtil.addElement( sbXml, TAG_NEWSLETTER_SENDING_DATE, DateUtil.getDateString( sending.getDate( ) ) );
+            XmlUtil.addElement( sbXml, TAG_NEWSLETTER_SENDING_DATE, DateUtil.getDateString( sending.getDate( ), NewsletterUtils.getLocale(request)) );
             XmlUtil.addElementHtml( sbXml, TAG_NEWSLETTER_SENDING_SUBJECT, sending.getEmailSubject( ) );
             XmlUtil.endElement( sbXml, TAG_NEWSLETTER_SENDING );
         }
