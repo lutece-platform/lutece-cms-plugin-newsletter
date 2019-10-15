@@ -37,6 +37,7 @@ import fr.paris.lutece.plugins.newsletter.business.NewsLetter;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterHome;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterProperties;
 import fr.paris.lutece.plugins.newsletter.business.NewsletterPropertiesHome;
+import fr.paris.lutece.plugins.newsletter.util.NewsletterUtils;
 import fr.paris.lutece.portal.business.portlet.Portlet;
 import fr.paris.lutece.portal.service.captcha.CaptchaSecurityService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
@@ -44,17 +45,10 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.util.date.DateUtil;
 import fr.paris.lutece.util.xml.XmlUtil;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.StringUtils;
+import java.util.*;
 
 
 /**
@@ -202,7 +196,7 @@ public class NewsLetterSubscriptionPortlet extends Portlet
             XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_ID, sending.getId( ) );
             XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_DESC, sending.getName( ) );
             XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_DATE,
-                    DateUtil.getDateString( sending.getDateLastSending( ) ) );
+                    DateUtil.getDateString( sending.getDateLastSending( ), NewsletterUtils.getLocale(request)) );
             XmlUtil.endElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION );
         }
 

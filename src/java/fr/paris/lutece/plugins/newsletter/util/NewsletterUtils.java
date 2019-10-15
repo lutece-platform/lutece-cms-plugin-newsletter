@@ -36,15 +36,20 @@ package fr.paris.lutece.plugins.newsletter.util;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterTemplate;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterTemplateHome;
 import fr.paris.lutece.portal.service.html.EncodingService;
+import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.string.StringUtil;
 import fr.paris.lutece.util.url.UrlItem;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+
+import java.util.Locale;
+import java.util.Optional;
 
 
 /**
@@ -203,6 +208,10 @@ public final class NewsletterUtils
         doc.convertAllRelativesUrls( HtmlDomDocNewsletter.ELEMENT_JAVASCRIPT );
 
         return doc.getContent( );
+    }
+
+    public static Locale getLocale(ServletRequest request) {
+        return Optional.ofNullable(request).map(ServletRequest::getLocale).orElse(I18nService.getDefaultLocale( ));
     }
 
 }
