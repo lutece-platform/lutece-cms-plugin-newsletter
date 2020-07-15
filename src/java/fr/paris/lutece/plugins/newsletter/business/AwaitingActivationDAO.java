@@ -43,63 +43,69 @@ import fr.paris.lutece.util.sql.DAOUtil;
  */
 public class AwaitingActivationDAO implements IAwaitingActivationDAO
 {
-    private static final String SQL_QUERY_INSERT = "INSERT INTO newsletter_awaiting_confirmation(id_user, generated_key) VALUES (?, ?)";
-    private static final String SQL_QUERY_EXISTS = "SELECT id_user, generated_key FROM newsletter_awaiting_confirmation WHERE id_user = ? AND generated_key = ?";
-    private static final String SQL_QUERY_DELETE = "DELETE FROM newsletter_awaiting_confirmation WHERE id_user = ? AND generated_key = ?";
+	private static final String SQL_QUERY_INSERT = "INSERT INTO newsletter_awaiting_confirmation(id_user, generated_key) VALUES (?, ?)";
+	private static final String SQL_QUERY_EXISTS = "SELECT id_user, generated_key FROM newsletter_awaiting_confirmation WHERE id_user = ? AND generated_key = ?";
+	private static final String SQL_QUERY_DELETE = "DELETE FROM newsletter_awaiting_confirmation WHERE id_user = ? AND generated_key = ?";
 
-    /**
-     * Removes the entry
-     * @param nIdUser the user id
-     * @param nKey the key
-     * @param plugin the plugin
-     */
-    public void delete( int nIdUser, int nKey, Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1, nIdUser );
-        daoUtil.setInt( 2, nKey );
+	/**
+	 * Removes the entry
+	 * @param nIdUser the user id
+	 * @param nKey the key
+	 * @param plugin the plugin
+	 */
+	public void delete( int nIdUser, int nKey, Plugin plugin )
+	{
+		try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+		{
+			daoUtil.setInt( 1, nIdUser );
+			daoUtil.setInt( 2, nKey );
 
-        daoUtil.executeUpdate(  );
+			daoUtil.executeUpdate(  );
 
-        daoUtil.free(  );
-    }
+			daoUtil.free(  );
+		}
+	}
 
-    /**
-     * Checks if the pair user/key already exists.
-     * @param nIdUser the user id
-     * @param nKey the generated key
-     * @param plugin the plugin
-     * @return <b>true</b> if the pair already exists, <b>false</b> otherwise.
-     */
-    public boolean exists( int nIdUser, int nKey, Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_EXISTS, plugin );
-        daoUtil.setInt( 1, nIdUser );
-        daoUtil.setInt( 2, nKey );
+	/**
+	 * Checks if the pair user/key already exists.
+	 * @param nIdUser the user id
+	 * @param nKey the generated key
+	 * @param plugin the plugin
+	 * @return <b>true</b> if the pair already exists, <b>false</b> otherwise.
+	 */
+	public boolean exists( int nIdUser, int nKey, Plugin plugin )
+	{
+		try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_EXISTS, plugin ) )
+		{
+			daoUtil.setInt( 1, nIdUser );
+			daoUtil.setInt( 2, nKey );
 
-        daoUtil.executeQuery(  );
+			daoUtil.executeQuery(  );
 
-        boolean bExists = daoUtil.next(  );
+			boolean bExists = daoUtil.next(  );
 
-        daoUtil.free(  );
+			daoUtil.free(  );
 
-        return bExists;
-    }
+			return bExists;
+		}
+	}
 
-    /**
-     * Adds a new pair user/key entry
-     * @param nIdUser the user id
-     * @param nKey the generated key
-     * @param plugin the plugin
-     */
-    public void insert( int nIdUser, int nKey, Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
-        daoUtil.setInt( 1, nIdUser );
-        daoUtil.setInt( 2, nKey );
+	/**
+	 * Adds a new pair user/key entry
+	 * @param nIdUser the user id
+	 * @param nKey the generated key
+	 * @param plugin the plugin
+	 */
+	public void insert( int nIdUser, int nKey, Plugin plugin )
+	{
+		try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
+		{
+			daoUtil.setInt( 1, nIdUser );
+			daoUtil.setInt( 2, nKey );
 
-        daoUtil.executeUpdate(  );
+			daoUtil.executeUpdate(  );
 
-        daoUtil.free(  );
-    }
+			daoUtil.free(  );
+		}
+	}
 }

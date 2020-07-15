@@ -350,18 +350,19 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
      * @param request the HTTP request
      * @return the html code for display the newsletters list
      */
-    public String getManageNewsLetters( HttpServletRequest request )
+    @SuppressWarnings("deprecation")
+	public String getManageNewsLetters( HttpServletRequest request )
     {
         setPageTitleProperty( PROPERTY_PAGE_TITLE_NEWSLETTERS );
         _strCurrentPageIndex = Paginator.getPageIndex( request, Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
         _nItemsPerPage = Paginator.getItemsPerPage( request, Paginator.PARAMETER_ITEMS_PER_PAGE, _nItemsPerPage,
                 _nDefaultItemsPerPage );
 
-        Map<String, Object> model = new HashMap<String, Object>( );
+        Map<String, Object> model = new HashMap<>( );
         Collection<NewsLetter> listNewsletter = NewsLetterHome.findAll( getPlugin( ) );
         listNewsletter = AdminWorkgroupService.getAuthorizedCollection( listNewsletter, getUser( ) );
 
-        Collection<Map<String, Object>> listNewsletterDisplay = new ArrayList<Map<String, Object>>( );
+        Collection<Map<String, Object>> listNewsletterDisplay = new ArrayList<>( );
 
         for ( NewsLetter newsletter : listNewsletter )
         {
@@ -401,7 +402,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             listNewsletterDisplay.add( newsletterDisplay );
         }
 
-        IPaginator<Map<String, Object>> paginator = new Paginator<Map<String, Object>>(
+        IPaginator<Map<String, Object>> paginator = new Paginator<>(
                 (List<Map<String, Object>>) listNewsletterDisplay, _nItemsPerPage, getHomeUrl( request ),
                 PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
 
@@ -432,14 +433,14 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                 _nDefaultItemsPerPage );
 
         int nIdNewsletter = Integer.parseInt( request.getParameter( PARAMETER_NEWSLETTER_ID ) );
-        Map<String, Object> model = new HashMap<String, Object>( );
+        Map<String, Object> model = new HashMap<>( );
         List<SendingNewsLetter> listNewsletter = SendingNewsLetterHome.findAllLastSendingForNewsletterId(
                 nIdNewsletter, getPlugin( ) );
 
         UrlItem url = new UrlItem( request.getRequestURI( ) );
         url.addParameter( PARAMETER_NEWSLETTER_ID, nIdNewsletter );
 
-        IPaginator<SendingNewsLetter> paginator = new Paginator<SendingNewsLetter>( listNewsletter, _nItemsPerPage,
+        IPaginator<SendingNewsLetter> paginator = new Paginator<>( listNewsletter, _nItemsPerPage,
                 url.getUrl( ), PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
 
         model.put( MARK_NEWSLETTER_LIST, paginator.getPageItems( ) );
@@ -471,7 +472,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         setPageTitleProperty( PROPERTY_PAGE_TITLE_NEWSLETTERS_PROPERTIES );
 
-        Map<String, Object> model = new HashMap<String, Object>( );
+        Map<String, Object> model = new HashMap<>( );
 
         NewsLetterProperties properties = NewsletterPropertiesHome.find( getPlugin( ) );
 
@@ -551,7 +552,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         setPageTitleProperty( PROPERTY_PAGE_TITLE_CREATE );
 
-        Map<String, Object> model = new HashMap<String, Object>( );
+        Map<String, Object> model = new HashMap<>( );
 
         // get the list of document lists
         ReferenceList listUnsubscribe = new ReferenceList( );
@@ -599,7 +600,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         String strPathImageTemplate = _newsletterService.getImageFolderPath( AppPathService.getBaseUrl( request ) );
 
-        Map<String, Object> model = new HashMap<String, Object>( );
+        Map<String, Object> model = new HashMap<>( );
 
         // Fills the template with specific values
         String strGenerate = request.getParameter( PARAMETER_GENERATE );
@@ -686,7 +687,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                 NewsLetterTemplate.RESOURCE_TYPE, getPlugin( ) );
 
         // composition not possible if not at least one template for newsletter
-        if ( ( newsletterTemplatesList.size( ) == 0 ) )
+        if ( newsletterTemplatesList.isEmpty( ) )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_NO_TEMPLATE, AdminMessage.TYPE_STOP );
         }
@@ -811,7 +812,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     {
         setPageTitleProperty( PROPERTY_PAGE_TITLE_MODIFY );
 
-        Map<String, Object> model = new HashMap<String, Object>( );
+        Map<String, Object> model = new HashMap<>( );
         String strNewsletterId = request.getParameter( PARAMETER_NEWSLETTER_ID );
         int nNewsletterId = Integer.parseInt( strNewsletterId );
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
@@ -1315,10 +1316,10 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             Collections.sort( refListSubscribers, new AttributeComparator( strSortedAttributeName, bIsAscSort ) );
         }
 
-        IPaginator<Subscriber> paginator = new LocalizedPaginator<Subscriber>( refListSubscribers, _nItemsPerPage,
+        IPaginator<Subscriber> paginator = new LocalizedPaginator<>( refListSubscribers, _nItemsPerPage,
                 url.getUrl( ), Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex, getLocale( ) );
 
-        Map<String, Object> model = new HashMap<String, Object>( );
+        Map<String, Object> model = new HashMap<>( );
         model.put( MARK_NEWSLETTER, newsletter );
         model.put( MARK_NB_ITEMS_PER_PAGE, Integer.toString( _nItemsPerPage ) );
         model.put( MARK_SEARCH_STRING, strSearchString );
@@ -1416,7 +1417,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         setPageTitleProperty( PROPERTY_PAGE_TITLE_PREPARE );
 
         String strBaseUrl = AppPathService.getBaseUrl( request );
-        Map<String, Object> model = new HashMap<String, Object>( );
+        Map<String, Object> model = new HashMap<>( );
         String strObject = request.getParameter( PARAMETER_NEWSLETTER_OBJECT );
 
         if ( strObject != null )
@@ -1551,7 +1552,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         }
 
         UrlItem urlItem = new UrlItem( JSP_URL_SEND_NEWSLETTER );
-        HashMap<String, String> requestedParameters = new HashMap<String, String>( );
+        HashMap<String, String> requestedParameters = new HashMap<>( );
         requestedParameters.put( PARAMETER_NEWSLETTER_OBJECT, strObject );
         requestedParameters.put( PARAMETER_NEWSLETTER_ID, strNewsletterId );
 
@@ -1802,7 +1803,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         setPageTitleProperty( PROPERTY_PAGE_TITLE_IMPORT );
 
-        Map<String, Object> model = new HashMap<String, Object>( );
+        Map<String, Object> model = new HashMap<>( );
         model.put( MARK_NEWSLETTER_ID, nNewsletterId );
         model.put( MARK_IMPORT_DELETE, false );
 
@@ -1832,7 +1833,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         setPageTitleProperty( PROPERTY_PAGE_TITLE_IMPORT_DELETE );
 
-        Map<String, Object> model = new HashMap<String, Object>( );
+        Map<String, Object> model = new HashMap<>( );
         model.put( MARK_NEWSLETTER_ID, nNewsletterId );
         model.put( MARK_IMPORT_DELETE, true );
 
@@ -1897,7 +1898,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                 List<String[]> tabUsers = csvReader.readAll( );
 
                 // the file is empty
-                if ( ( tabUsers == null ) || ( tabUsers.size( ) == 0 ) )
+                if ( ( tabUsers == null ) || ( tabUsers.isEmpty( ) ) )
                 {
                     return AdminMessageService.getMessageUrl( request, MESSAGE_CSV_FILE_EMPTY_OR_NOT_VALID_EMAILS,
                             AdminMessage.TYPE_STOP );
@@ -2052,7 +2053,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             }
         }
 
-        Map<String, Object> model = new HashMap<String, Object>( );
+        Map<String, Object> model = new HashMap<>( );
 
         // We create an array with the number of topics in every section
         Integer[] tblSectionSize = new Integer[newsletter.getNbSections( )];
@@ -2080,7 +2081,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         }
         if ( tableManager == null )
         {
-            tableManager = new DataTableManager<NewsletterTopic>( url.getUrl( ), url.getUrl( ),
+            tableManager = new DataTableManager<>( url.getUrl( ), url.getUrl( ),
                     AppPropertiesService.getPropertyInt( PROPERTY_ITEMS_PER_PAGE, CONSTANT_DEFAULT_ITEM_PER_PAGE ),
                     true );
             tableManager.addFreeColumn( LABEL_NEWSLETTER_TOPIC_SECTION, CONSTANT_FREEMARKER_MACRO_COLUMN_SECTION );
@@ -2262,7 +2263,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         String strContent = _newsletterTopicService.getConfigurationPage( newsletterTopic,
                 AppPathService.getBaseUrl( request ), AdminUserService.getAdminUser( request ), locale );
 
-        Map<String, Object> model = new HashMap<String, Object>( );
+        Map<String, Object> model = new HashMap<>( );
         model.put( MARK_CONTENT, strContent );
         model.put( MARK_TOPIC, newsletterTopic );
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_TOPIC_CONFIG, locale, model );
@@ -2421,7 +2422,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
      */
     private Collection<Subscriber> convertToList( String strRecipients )
     {
-        Collection<Subscriber> listRecipients = new ArrayList<Subscriber>( );
+        Collection<Subscriber> listRecipients = new ArrayList<>( );
 
         if ( StringUtils.isNotEmpty( strRecipients ) )
         {
@@ -2517,7 +2518,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
      */
     private HtmlTemplate setHtmlTemplateEmail( NewsLetter newsletter, String strBaseUrl, String strUnsubscribe )
     {
-        Map<String, Object> sendingModel = new HashMap<String, Object>( );
+        Map<String, Object> sendingModel = new HashMap<>( );
         sendingModel.put( MARK_CSS, getCssContent( ) );
         sendingModel.put( MARK_UNSUBSCRIBE, strUnsubscribe );
         sendingModel.put( MARK_NEWSLETTER_ID, newsletter.getId( ) );

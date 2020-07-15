@@ -41,7 +41,6 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -214,12 +213,6 @@ public class HtmlDomDocNewsletter
             transformer = tf.newTransformer( );
             transformer.transform( domSource, result );
         }
-        catch ( TransformerConfigurationException e )
-        {
-            AppLogService.error( e.getMessage( ) );
-
-            return null;
-        }
         catch ( TransformerException e )
         {
             AppLogService.error( e.getMessage( ) );
@@ -227,9 +220,7 @@ public class HtmlDomDocNewsletter
             return null;
         }
 
-        String stringResult = writer.toString( );
-
-        return stringResult;
+        return writer.toString( );
     }
 
     /**
