@@ -46,6 +46,7 @@ import fr.paris.lutece.portal.service.message.SiteMessageException;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.portal.web.l10n.LocaleService;
 import fr.paris.lutece.portal.web.xpages.XPage;
 import fr.paris.lutece.portal.web.xpages.XPageApplication;
 import fr.paris.lutece.util.html.HtmlTemplate;
@@ -63,7 +64,11 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class NewsLetterApp implements XPageApplication
 {
-    // Templates used to generate the HTML code
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3944877194624481667L;
+	// Templates used to generate the HTML code
     private static final String TEMPLATE_XPAGE_NEWSLETTER = "skin/plugins/newsletter/page_newsletter.html";
     private static final String TEMPLATE_XPAGE_TOS = "skin/plugins/newsletter/tos.html";
 
@@ -154,16 +159,16 @@ public class NewsLetterApp implements XPageApplication
         if ( request.getParameter( PARAMETER_VIEW_REQUIREMENT ) != null )
         {
             //See conditional use
-            page.setTitle( I18nService.getLocalizedString( PROPERTY_PATHLABEL, request.getLocale( ) ) );
-            page.setPathLabel( I18nService.getLocalizedString( PROPERTY_PAGETITLE, request.getLocale( ) ) );
+            page.setTitle( I18nService.getLocalizedString( PROPERTY_PATHLABEL, getLocale( request ) ) );
+            page.setPathLabel( I18nService.getLocalizedString( PROPERTY_PAGETITLE, getLocale( request ) ) );
             page.setContent( getRequirement( request, plugin ) );
         }
         else
         {
-            page.setPathLabel( I18nService.getLocalizedString( PROPERTY_PATHLABEL, request.getLocale( ) ) );
-            page.setTitle( I18nService.getLocalizedString( PROPERTY_PAGETITLE, request.getLocale( ) ) );
+            page.setPathLabel( I18nService.getLocalizedString( PROPERTY_PATHLABEL, getLocale( request ) ) );
+            page.setTitle( I18nService.getLocalizedString( PROPERTY_PAGETITLE, getLocale( request ) ) );
 
-            HashMap<String, Object> model = new HashMap<String, Object>( );
+            HashMap<String, Object> model = new HashMap<>( );
             Collection<NewsLetter> list = NewsLetterHome.findAll( plugin );
             NewsLetterProperties properties = NewsletterPropertiesHome.find( plugin );
             model.put( MARK_PROPERTIES, properties );
@@ -180,7 +185,7 @@ public class NewsLetterApp implements XPageApplication
                 _captchaService = new CaptchaSecurityService( );
                 model.put( MARK_CAPTCHA, _captchaService.getHtmlCode( ) );
             }
-            HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_XPAGE_NEWSLETTER, request.getLocale( ),
+            HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_XPAGE_NEWSLETTER, getLocale( request ),
                     model );
             page.setContent( template.getHtml( ) );
         }
@@ -240,8 +245,8 @@ public class NewsLetterApp implements XPageApplication
      **/
     private String getRequirement( HttpServletRequest request, Plugin plugin )
     {
-        Map<String, Object> model = new HashMap<String, Object>( );
-        Locale locale = request.getLocale( );
+        Map<String, Object> model = new HashMap<>( );
+        Locale locale = getLocale( request );
 
         NewsLetterProperties properties = NewsletterPropertiesHome.find( plugin );
         model.put( MARK_TOS, properties.getTOS( ) );
@@ -249,6 +254,18 @@ public class NewsLetterApp implements XPageApplication
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_XPAGE_TOS, locale, model );
 
         return template.getHtml( );
+    }
+    
+    /**
+     * Default getLocale() implementation. Could be overriden
+     * 
+     * @param request
+     *            The HTTP request
+     * @return The Locale
+     */
+    protected Locale getLocale( HttpServletRequest request )
+    {
+        return LocaleService.getContextUserLocale( request );
     }
 
 }
