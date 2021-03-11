@@ -1,99 +1,66 @@
-<div class="row">
-	<div class="col-xs-12 col-sm-12 col-md-12">
-		<div class="nav-tabs-custom">
-			<ul class="nav nav-tabs">
-				<li class="active">
-					<a href="jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletter.id}">
-						#i18n{newsletter.modify_newsletter.manageAttributes}
-					</a>
-				</li>
-				<li>
-					<a href="jsp/admin/plugins/newsletter/GetManageNewsletterTopics.jsp?newsletter_id=${newsletter.id}">#i18n{newsletter.modify_newsletter.manageTopics}</a>
-				</li>
-				<li>
-					<a href="jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}">#i18n{newsletter.compose_newsletter.boxTitle}</a>
-				</li>
-				<li class="pull-right">
-					<strong>${newsletter.name}</strong>
-					<span class="label label-info spaced">#i18n{newsletter.modify_newsletter.dateLastSend} <strong>${newsletter.dateLastSending?date}</strong></span>
-				</li>
-			</ul>
-			<div class="tab-content">
-				<form class="form-horizontal" method="post" name="modify_newsletter" action="jsp/admin/plugins/newsletter/DoModifyNewsLetter.jsp">
-				<input type="hidden" name="newsletter_id" value="${newsletter.id}" />
-				<div class="form-group">
-					<label class="control-label col-xs-12 col-sm-3 col-md-3" for="newsletter_name">#i18n{newsletter.modify_newsletter.label} *</label>
-						<div class=" col-xs-12 col-sm-7 col-md-7">
-							<input type="text" id="newsletter_name" name="newsletter_name" class="form-control" maxlength="50" value="${newsletter.name}" />
-						</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label col-xs-12 col-sm-3 col-md-3" for="newsletter_description">#i18n{newsletter.create_newsletter.description} *</label>
-					<div class=" col-xs-12 col-sm-7 col-md-7">
-						<textarea id="newsletter_description" name="newsletter_description" class="form-control richtext" rows="5" >${newsletter_description}</textarea>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label col-xs-12 col-sm-3 col-md-3" for="date_last_send">#i18n{newsletter.modify_newsletter.dateLastSend} *</label>
-						<div class="col-xs-12 col-sm-2 col-md-2">
-						<div class="input-group">
-							<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-							<input type="text" id="date_last_send" name="date_last_send" value="${date_last_sending}" class="form-control" maxlength="10" onBlur="VerifyDate(date_last_send)" />
-							</div>
-					</div>
-				</div>
-					<div class="form-group">
-						<label class="control-label col-xs-12 col-sm-3 col-md-3" for="newsletter_workgroup" >#i18n{newsletter.modify_newsletter.labelWorkgroup} *</label>
-						<div class="col-xs-12 col-sm-4 col-md-4">
-							<@comboWithParams name="newsletter_workgroup" default_value="${newsletter.workgroup}"  additionalParameters="class=\"form-control\"" items=workgroup_list />
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="control-label col-xs-12 col-sm-3 col-md-3" for="newsletter_unsubscribe" >#i18n{newsletter.modify_newsletter.labelUnsubscribe} *</label>
-							<div class="col-xs-12 col-sm-1 col-md-1">
-							<@comboWithParams name="newsletter_unsubscribe" default_value="${newsletter.unsubscribe}"  additionalParameters="class=\"form-control\"" items=unsubscribe_list />
-						</div>
-					</div>
-					 <div class="form-group">
-						<label class="control-label col-xs-12 col-sm-3 col-md-3" for="newsletter_sender_name" >#i18n{newsletter.create_newsletter.labelSenderName} *</label>
-						<div class=" col-xs-12 col-sm-7 col-md-7">
-							<input type="text" id="newsletter_sender_name" name="newsletter_sender_name" class="form-control" maxlength="255" value="${newsletter.newsletterSenderName}"  />
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="control-label col-xs-12 col-sm-3 col-md-3" for="newsletter_sender_mail" >#i18n{newsletter.modify_newsletter.labelSenderMail} *</label>
-						<div class=" col-xs-12 col-sm-7 col-md-7">
-							<input type="text" id="newsletter_sender_mail" name="newsletter_sender_mail" class="form-control" maxlength="255" value="${newsletter.newsletterSenderMail}" />
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="control-label col-xs-12 col-sm-3 col-md-3" for="newsletter_test_subject" >#i18n{newsletter.modify_newsletter.labelSubject} </label>
-						<div class=" col-xs-12 col-sm-7 col-md-7">
-							<input type="text" id="newsletter_test_subject" name="newsletter_test_subject" class="form-control" maxlength="255" value="${newsletter.testSubject!}" />
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="control-label col-xs-12 col-sm-3 col-md-3" for="newsletter_test_recipients" >#i18n{newsletter.modify_newsletter.labelTestRecipients} *</label>
-						<div class=" col-xs-12 col-sm-7 col-md-7">
-							<input type="text" id="newsletter_test_recipients" name="newsletter_test_recipients" class="form-control" maxlength="255" value="${newsletter.testRecipients}" />
-							<p class="help-block">#i18n{newsletter.modify_newsletter.noticeDelimiter}</p>
-						</div>
-					</div>
-					<div class="form-group">
-					<div class=" col-xs-12 col-sm-offset-3 col-sm-9 col-md-offset-3 col-md-9">
-						<button class="btn btn-primary btn-flat" type="submit" >
-							<i class="fa fa-check"></i> #i18n{newsletter.modify_newsletter.buttonValidate}
-						</button>
-						<a class="btn btn-default btn-flat" href="jsp/admin/plugins/newsletter/ManageNewsLetter.jsp" >
-							<i class="fa fa-close"></i> #i18n{newsletter.create_newsletter.buttonCancel}
-						</a>
-					</div>
-				</div>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
+<@row>
+	<@columns>
+		<@tabs>
+			<@tabList>
+				<@tabLink active=true href='jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletter.id}' title='#i18n{newsletter.modify_newsletter.manageAttributes}' />
+				<@tabLink href='jsp/admin/plugins/newsletter/GetManageNewsletterTopics.jsp?newsletter_id=${newsletter.id}' title='#i18n{newsletter.modify_newsletter.manageTopics}' />
+				<@tabLink href='jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}' title='#i18n{newsletter.compose_newsletter.boxTitle}' />
+			</@tabList>
+			<@tabContent>
+				<@alert color='info' title='${newsletter.name}'>
+					<span>#i18n{newsletter.modify_newsletter.dateLastSend}: <strong>${newsletter.dateLastSending?date}</strong></span>
+				</@alert>
+				
+				<@tform method='post' name='modify_newsletter' action='jsp/admin/plugins/newsletter/DoModifyNewsLetter.jsp'>
+					<@input type='hidden' name='newsletter_id' value='${newsletter.id}' />
+					
+					<@formGroup labelFor='newsletter_name' labelKey='#i18n{newsletter.modify_newsletter.label}' mandatory=true>
+						<@input type='text' id='newsletter_name' name='newsletter_name' maxlength=50 value='${newsletter.name}' />
+					</@formGroup>
+					
+					<@formGroup labelFor='newsletter_description' labelKey='#i18n{newsletter.create_newsletter.description}' mandatory=true>
+						<@input type='textarea' id='newsletter_description' name='newsletter_description' rows=5 richtext=true>${newsletter_description}</@input>
+					</@formGroup>
+					
+					<@formGroup labelFor='date_last_send' labelKey='#i18n{newsletter.modify_newsletter.dateLastSend}' mandatory=true>
+						<@inputGroup>
+							<@inputGroupItem type='text'><@icon style='calendar' /></@inputGroupItem>
+							<@input type='date' id='date_last_send' name='date_last_send' value='${date_last_sending}' maxlength=10 params='onBlur="VerifyDate(date_last_send)"' />
+						</@inputGroup>
+					</@formGroup>
+					
+					<@formGroup labelFor='newsletter_workgroup' labelKey='#i18n{newsletter.modify_newsletter.labelWorkgroup}' mandatory=true>
+						<@select name='newsletter_workgroup' default_value='${newsletter.workgroup}' items=workgroup_list />
+					</@formGroup>
+					
+					<@formGroup labelFor='newsletter_unsubscribe' labelKey='#i18n{newsletter.modify_newsletter.labelUnsubscribe}' mandatory=true>
+						<@select name='newsletter_unsubscribe' default_value='${newsletter.unsubscribe}' items=unsubscribe_list />
+					</@formGroup>
+					
+					<@formGroup labelFor='newsletter_sender_name' labelKey='#i18n{newsletter.create_newsletter.labelSenderName}' mandatory=true>
+						<@input type='text' id='newsletter_sender_name' name='newsletter_sender_name' maxlength=255 value='${newsletter.newsletterSenderName}' />
+					</@formGroup>
+										
+					<@formGroup labelFor='newsletter_sender_mail' labelKey='#i18n{newsletter.modify_newsletter.labelSenderMail}' mandatory=true>
+						<@input type='text' id='newsletter_sender_mail' name='newsletter_sender_mail' maxlength=255 value='${newsletter.newsletterSenderMail}' />
+					</@formGroup>
+					
+					<@formGroup labelFor='newsletter_test_subject' labelKey='#i18n{newsletter.modify_newsletter.labelSubject}'>
+						<@input type='text' id='newsletter_test_subject' name='newsletter_test_subject' maxlength=255 value='${newsletter.testSubject!}' />
+					</@formGroup>
+					
+					<@formGroup labelFor='newsletter_test_recipients' labelKey='#i18n{newsletter.modify_newsletter.labelTestRecipients}' helpKey='#i18n{newsletter.modify_newsletter.noticeDelimiter}' mandatory=true>
+						<@input type='text' id='newsletter_test_recipients' name='newsletter_test_recipients' maxlength=255 value='${newsletter.testRecipients}' />
+					</@formGroup>
+					
+					<@formGroup>
+						<@button type='submit' buttonIcon='check' title='#i18n{newsletter.modify_newsletter.buttonValidate}' />
+						<@aButton href='jsp/admin/plugins/newsletter/ManageNewsLetter.jsp' buttonIcon='times' title='#i18n{newsletter.create_newsletter.buttonCancel}' color='default' />
+					</@formGroup>
+				</@tform>
+			</@tabContent>
+		</@tabs>
+	</@columns>
+</@row>
 <#include "/admin/util/editor/editor.html" />
 <@initEditor />
-<@getDatePickerBootstrap idField="date_last_send" language=locale.language />

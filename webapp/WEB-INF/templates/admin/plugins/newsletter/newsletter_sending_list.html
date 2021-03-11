@@ -1,20 +1,20 @@
-<table class="table table-striped table-hover">
-    <tr>
-        <th>&nbsp;</th>
-        <th>#i18n{newsletter.newsletter_sending_list.labelDateSent}</th>
-        <th>#i18n{newsletter.newsletter_sending_list.labelSubject}</th>
-    </tr>
+<@table>
+    <@tr>
+        <@th>&nbsp;</@th>
+        <@th>#i18n{newsletter.newsletter_sending_list.labelDateSent}</@th>
+        <@th>#i18n{newsletter.newsletter_sending_list.labelSubject}</@th>
+    </@tr>
     <#list sending_newsletter_list as sending>
-    <tr>
-        <td>
-        	<input type="checkbox" name="cbx_snd_${sending.id}" class="checkbox"  ${selected_sendings_list?seq_contains(sending.id)?string("checked=\"checked\"", "")} />
-		</td>
-        <td>
+    <@tr>
+        <@td>
+        	<@checkBox name='cbx_snd_${sending.id}' checked=${selected_sendings_list?seq_contains(sending.id) />
+		</@td>
+        <@td>
             ${sending.date}
-        </td>
-        <td>
+        </@td>
+        <@td>
 			<strong>${sending.emailSubject}</strong>
-        </td>
-    </tr>
+        </@td>
+    </@tr>
     </#list>
-</table>
+</@table>

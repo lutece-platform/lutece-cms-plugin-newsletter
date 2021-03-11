@@ -1,99 +1,111 @@
-<div class="row">
-	<div class="col-xs-12 col-sm-12 col-md-12">
-		<div class="box box-primary">
-			<div class="box-header">
-				<h3 class="box-title">#i18n{newsletter.manage_subscribers.boxTitle}</h3>
-				<div class="box-tools">
-					<#if is_export_subscriber_right>
-						<form class="form-inline spaced pull-right" method="post" action="jsp/admin/plugins/newsletter/DoExportCsv.jsp">
-							<input type="hidden" name="newsletter_id" value="${newsletter.id}">
-							<button class="btn btn-xs btn-primary btn-flat" href=""  title="#i18n{newsletter.manage_newsletters.columnTitleExportCsv}" >
-								<i class="fa fa-download"></i>&nbsp;#i18n{newsletter.manage_newsletters.columnTitleExportCsv}
-							</button>
-						</form>
-					</#if>
-					<#if is_import_subscriber_right>
-						<form class="form-inline spaced pull-right" method="post" action="jsp/admin/plugins/newsletter/ImportDeleteSubscribers.jsp">
-							<input type="hidden" name="newsletter_id" value="${newsletter.id}">
-							<button class="btn btn-xs btn-danger btn-flat" type="submit" ><i class="fa fa-trash"></i>&nbsp;#i18n{newsletter.manage_subscribers.buttonImportDelete}</button>
-						</form>
-						<form class="form-inline spaced pull-right" method="post" action="jsp/admin/plugins/newsletter/ImportSubscribers.jsp">
-							<input type="hidden" name="newsletter_id" value="${newsletter.id}">
-							<button class="btn btn-xs btn-primary btn-flat" type="submit" ><i class="fa fa-upload"></i>&nbsp;#i18n{newsletter.manage_subscribers.buttonImport}</button>
-						</form>
-					</#if>
+<@row>
+	<@columns>
+		<@box>
+			<@boxHeader title='#i18n{newsletter.manage_subscribers.boxTitle}'>
+				<#if is_export_subscriber_right>
+					<@tform method='post' action='jsp/admin/plugins/newsletter/DoExportCsv.jsp'>
+						<@input type='hidden' name='newsletter_id' value='${newsletter.id}' />
+						<@button type='submit' title='#i18n{newsletter.manage_newsletters.columnTitleExportCsv}' buttonIcon='download' size='sm' hideTitle=['xs','sm'] />
+					</@tform>
+				</#if>
+				<#if is_import_subscriber_right>
+					<@tform method='post' action='jsp/admin/plugins/newsletter/ImportSubscribers.jsp'>
+						<@input type='hidden' name='newsletter_id' value='${newsletter.id}' />
+						<@button type='submit' buttonIcon='upload' title='#i18n{newsletter.manage_subscribers.buttonImport}' size='sm' hideTitle=['xs','sm'] />
+					</@tform>
+					<@tform method='post' action='jsp/admin/plugins/newsletter/ImportDeleteSubscribers.jsp'>
+						<@input type='hidden' name='newsletter_id' value='${newsletter.id}' />
+						<@button type='submit' buttonIcon='trash' title='#i18n{newsletter.manage_subscribers.buttonImportDelete}' color='danger' size='sm' hideTitle=['xs','sm'] />
+					</@tform>
+				</#if>
+			</@boxHeader>
+			<@boxBody>	
+				<@tform method='post' action='jsp/admin/plugins/newsletter/ManageSubscribers.jsp'>
+					<@paginationAdmin paginator=paginator combo=1 form=0 />
+					<@input type='hidden' name='subscriber_search' value='${search_string!}' />
+					<@input type='hidden' name='newsletter_id' value='${newsletter.id}' />
+				</@tform>
+				
+				<@div params='style="display:flex; "'>
 					<#if is_add_subscriber_right>
-						<form class="form-inline spaced pull-right" method="post" action="jsp/admin/plugins/newsletter/DoAddSubscriber.jsp">
-							<input type="hidden" name="newsletter_id" value="${newsletter.id}">
-							<div class="form-group">
-								<input class="input-xs form-control" type="text" name="email" value="" placeholder="#i18n{newsletter.manage_subscribers.enterEmail}" />
-							</div>
-							<button class="btn btn-xs btn-primary btn-flat" type="submit" ><i class="icon-plus icon-white"></i>&nbsp;#i18n{newsletter.manage_subscribers.buttonAdd}</button>
-						</form>
+						<@tform type='inline' method='post' action='jsp/admin/plugins/newsletter/DoAddSubscriber.jsp'>
+							<@input type='hidden' name='newsletter_id' value='${newsletter.id}' />
+							<@formGroup formStyle='inline'>
+								<@inputGroup>
+									<@input type='text' name='email' value='' placeHolder='#i18n{newsletter.manage_subscribers.enterEmail}' />
+									<@inputGroupItem>
+										<@button type='submit' buttonIcon='plus' title='#i18n{newsletter.manage_subscribers.buttonAdd}' size='sm' hideTitle=['all'] />
+									</@inputGroupItem>
+								</@inputGroup>
+							</@formGroup>
+						</@tform>
 					</#if>
-					<form class="form-inline" method="post" action="jsp/admin/plugins/newsletter/ManageSubscribers.jsp">
-							<input type="hidden" name="newsletter_id" value="${newsletter.id}" />
-							<div class="form-group">
-								<label class="sr-only" for="subscriber_search">#i18n{newsletter.manage_subscribers.searchTitle}</label>
-								<input class="input-xs form-control" size="50" placeholder="#i18n{newsletter.manage_subscribers.searchTitle}" type="text" name="subscriber_search" value="${search_string!}">
-							</div>	
-							<button class="btn btn-xs btn-primary btn-flat" type="submit" ><i class="fa fa-filter"></i>&nbsp;#i18n{newsletter.manage_subscribers.buttonSearch}</button>
-					</form>
-				</div>
-			</div>
-			<div class="box-body">	
-				<form class="form-inline pull-right" method="post" action="jsp/admin/plugins/newsletter/ManageSubscribers.jsp">
-					<@paginationAdmin paginator=paginator combo=1 form=0/>
-					<input type="hidden" name="subscriber_search" value="${search_string!}">
-					<input type="hidden" name="newsletter_id" value="${newsletter.id}">
-				</form>
-				<form class="form-horizontal" id="subscribers_form" name="subscribers_form" action="jsp/admin/plugins/newsletter/DoActionSelection.jsp">
-					<input type="hidden" name="newsletter_id" value="${newsletter.id}" />
-					<button class="btn btn-danger btn-xs btn-flat" type="submit" ><i class="fa fa-trash"></i>&nbsp;#i18n{newsletter.manage_subscribers.buttonDelete}</button>
-					<table class="table table-striped table-hover">
-					<thead>
-						<tr>
-						<th>
-							<input id="select_all" name="select_all" type="checkbox">
-						
-						</th>
-						<th>#i18n{newsletter.manage_subscribers.columnTitleEmail}&nbsp;<@sort jsp_url="jsp/admin/plugins/newsletter/ManageSubscribers.jsp" attribute="email&amp;newsletter_id=${newsletter.id!}&amp;subscriber_search=${search_string!}" /></th>
-						<th>#i18n{newsletter.manage_subscribers.columnTitleSubscriptionDate}&nbsp;<@sort jsp_url="jsp/admin/plugins/newsletter/ManageSubscribers.jsp" attribute="dateSubscription&amp;newsletter_id=${newsletter.id!}&amp;subscriber_search=${search_string!}" />
-						</th>
-						<#if display_status><th>#i18n{newsletter.manage_subscribers.columnTitleStatus}</th></#if>
-						<th>#i18n{newsletter.manage_subscribers.columnTitleDelete}</th>
-					</tr>
-					</thead>
-					<tbody>
-					<#list subscribers_list as subscriber>
-					<tr>
-						<td><input id="subscriber_selection" name="subscriber_selection" type="checkbox" value="${subscriber.id}" /></td>
-						<td>${subscriber.email}</td>
-						<td>${subscriber.dateSubscription}</td>
-						<#if display_status>
-						<td>
-						<#if subscriber.confirmed> 
-							<span class="label label-success"><i class="icon-ok-sign icon-white"></i>&nbsp;#i18n{portal.util.labelEnabled}</span>
-						<#else>
-							<span class="label label-important"><i class="icon-remove-sign icon-white"></i>&nbsp;#i18n{portal.util.labelDisabled}</span>
-						</#if>
-						</td>
-						</#if>
-						<td>
-						<a class="btn btn-danger btn-xs btn-flat" href="jsp/admin/plugins/newsletter/UnsubscribeNewsLetter.jsp?subscriber_id=${subscriber.id}&newsletter_id=${newsletter.id}"  title="null" >
-						<i class="fa fa-trash"></i>
-						</a>
-						</td>
-						</tr>
+					<@tform type='inline' method='post' action='jsp/admin/plugins/newsletter/ManageSubscribers.jsp'>
+						<@input type='hidden' name='newsletter_id' value='${newsletter.id}' />
+						<@formGroup labelFor='subscriber_search' labelKey='#i18n{newsletter.manage_subscribers.searchTitle}' hideLabel=['all'] formStyle='inline'>
+							<@inputGroup>
+								<@input type='text' inputSize=50 placeHolder='#i18n{newsletter.manage_subscribers.searchTitle}' name='subscriber_search' value='${search_string!}' />
+								<@inputGroupItem>
+									<@button type='submit' buttonIcon='filter' title='#i18n{newsletter.manage_subscribers.buttonSearch}' size='sm' hideTitle=['all'] />
+								</@inputGroupItem>
+							</@inputGroup>
+						</@formGroup>
+					</@tform>
+				</@div>
+				
+				<@tform id='subscribers_form' name='subscribers_form' action='jsp/admin/plugins/newsletter/DoActionSelection.jsp'>
+					<@input type='hidden' name='newsletter_id' value='${newsletter.id}' />
+					
+					<@table>
+						<thead>
+							<@tr>
+								<@th>
+									<@div params='style="display:flex;"'>
+										<@checkBox id='select_all' name='select_all' />
+										<@button type='submit' style='btn-link' buttonIcon='trash' title='#i18n{newsletter.manage_subscribers.buttonDelete}' color='danger' size='xs' hideTitle=['all'] />
+									</@div>
+								</@th>
+								<@th>
+									#i18n{newsletter.manage_subscribers.columnTitleEmail}&nbsp;<@sort jsp_url="jsp/admin/plugins/newsletter/ManageSubscribers.jsp" attribute="email&amp;newsletter_id=${newsletter.id!}&amp;subscriber_search=${search_string!}" />
+								</@th>
+								<@th>
+									#i18n{newsletter.manage_subscribers.columnTitleSubscriptionDate}&nbsp;<@sort jsp_url="jsp/admin/plugins/newsletter/ManageSubscribers.jsp" attribute="dateSubscription&amp;newsletter_id=${newsletter.id!}&amp;subscriber_search=${search_string!}" />
+								</@th>
+								<#if display_status><@th>#i18n{newsletter.manage_subscribers.columnTitleStatus}</@th></#if>
+								<@th>#i18n{newsletter.manage_subscribers.columnTitleDelete}</@th>
+							</@tr>
+						</thead>
+						<tbody>
+						<#list subscribers_list as subscriber>
+						<@tr>
+							<@td>
+								<@checkBox id='subscriber_selection' name='subscriber_selection' value='${subscriber.id}' />
+							</@td>
+							<@td>${subscriber.email}</@td>
+							<@td>${subscriber.dateSubscription}</@td>
+							<#if display_status>
+								<@td>
+									<#if subscriber.confirmed> 
+										<@tag color='success' title='#i18n{portal.util.labelEnabled}' tagIcon='check' />
+									<#else>
+										<@tag color='danger' title='#i18n{portal.util.labelDisabled}' tagIcon='times' />
+									</#if>
+								</@td>
+							</#if>
+							<@td>
+								<@aButton href='jsp/admin/plugins/newsletter/UnsubscribeNewsLetter.jsp?subscriber_id=${subscriber.id}&newsletter_id=${newsletter.id}' title='' buttonIcon='trash' size='sm' color='danger' />
+							</@td>
+						</@tr>
 						</#list>
-					</tbody>
-					</table>
-				</form>
+						</tbody>
+					</@table>
+				</@tform>
 				<@paginationAdmin paginator=paginator combo=1 form=0/>
-			</div>
-		</div>
-    </div>
-</div>
+			</@boxBody>
+		</@box>
+	</@columns>
+</@row>
+
 <script type="text/javascript">
   $("#select_all").click( function(){                    
     $("input[type='checkbox']").attr('checked',  this.checked);

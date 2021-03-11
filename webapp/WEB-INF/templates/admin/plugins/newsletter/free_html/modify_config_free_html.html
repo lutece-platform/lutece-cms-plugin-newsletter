@@ -1,8 +1,5 @@
-<div class="form-group">
-	<label class="control-label col-xs-12 col-sm-2 col-md-2" for="html_content">#i18n{newsletter.free_html_config.topicContent} :</label>
-	<div class="col-xs-12 col-sm-10 col-md-10">
-		<textarea id="html_content" name="html_content" rows="20" class="form-control">${htmlTopic.htmlContent!}</textarea>
-	</div>
-</div>
+<@formGroup labelFor='html_content' labelKey='#i18n{newsletter.free_html_config.topicContent}'>
+	<@input type='textarea' id='html_content' name='html_content' rows=20>${htmlTopic.htmlContent!}</@input>
+</@formGroup>
 <#include "/admin/util/editor/editor.html" />
 <@initEditor />

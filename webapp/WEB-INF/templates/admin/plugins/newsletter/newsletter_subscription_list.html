@@ -1,16 +1,16 @@
-<table class="table table-condensed table-hover">
-    <tr>
-        <th>&nbsp;</th>
-        <th>#i18n{newsletter.newsletter_subscription_list.labelDateSent}</th>
-        <th>#i18n{newsletter.newsletter_subscription_list.labelSubject}</th>
-    </tr>
+<@table>
+    <@tr>
+        <@th>&nbsp;</@th>
+        <@th>#i18n{newsletter.newsletter_subscription_list.labelDateSent}</@th>
+        <@th>#i18n{newsletter.newsletter_subscription_list.labelSubject}</@th>
+    </@tr>
     <#list subscribed_newsletter_list as subscribed>
-    <tr>
-        <td>
-			<input type="checkbox" name="cbx_snd_${subscribed.id}" class="checkbox"  ${selected_newsletter_list?seq_contains(subscribed.id)?string("checked=\"checked\"", "")}/>
-		</td>
-        <td>${subscribed.dateLastSending}</td>
-        <td><strong>${subscribed.name}</strong></td>
-    </tr>
+    <@tr>
+        <@td>
+			<@checkBox name='cbx_snd_${subscribed.id}' checked=selected_newsletter_list?seq_contains(subscribed.id) />
+		</@td>
+        <@td>${subscribed.dateLastSending}</@td>
+        <@td><strong>${subscribed.name}</strong></@td>
+    </@tr>
     </#list>
-</table>
+</@table>

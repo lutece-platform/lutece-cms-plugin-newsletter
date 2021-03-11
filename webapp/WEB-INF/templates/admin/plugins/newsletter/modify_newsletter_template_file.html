@@ -1,63 +1,36 @@
-<div class="row">
-	<div class="col-xs-12 col-sm-12 col-md-12">
-		<div class="box box-primary">
-			<div class="box-header">
-				<h3 class="box-title">#i18n{newsletter.modify_newsletter_template_file.boxTitle}</h3>
-			</div>
-			<div class="box-body">
+<@row>
+	<@columns>
+		<@box>
+			<@boxHeader title='#i18n{newsletter.modify_newsletter_template_file.boxTitle}' />
+			<@boxBody>
 			<#if template?exists>
-				<form class="form-horizontal" method="post" enctype="multipart/form-data" action="jsp/admin/plugins/newsletter/DoModifyNewsLetterTemplateFile.jsp" method="post">
-					<input type="hidden" name="newsletter_template_id" value="${template.id}" />
-					<div class="form-group">
-						<label class="control-label col-xs-12 col-sm-2 col-md-2" for="newsletter_template_name">#i18n{newsletter.add_newsletter_template.name} *</label>
-						<div class="col-xs-12  col-sm-3 col-md-3">
-							<input type="text" id="newsletter_template_name" name="newsletter_template_name"  class="form-control" maxlength="50" value="${template.description}">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="control-label col-xs-12 col-sm-2 col-md-2" for="newsletter_template_type">#i18n{newsletter.add_newsletter_template.templateType} *</label>
-						<div class="col-xs-12  col-sm-3 col-md-3">
-							<@comboWithParams items=template_type default_value=template.topicType additionalParameters="class=\"form-control\""  name="newsletter_template_type" />
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="control-label col-xs-12 col-sm-2 col-md-2" for="newsletter_template_new_picture">#i18n{newsletter.add_newsletter_template.imageFileName} :</label>
-						<div class="col-xs-12  col-sm-3 col-md-3">
-							<input type="file" id="newsletter_template_new_picture" name="newsletter_template_new_picture" class="form-control" value="">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="control-label col-xs-12 col-sm-2 col-md-2" for="newsletter_template_section">#i18n{newsletter.add_newsletter_template.sectionNumber} :</label>
-						<div class="col-xs-12  col-sm-1 col-md-1">
-							<input type="number" id="newsletter_template_section" name="newsletter_template_section" class="form-control" value="${template.sectionNumber}" min="1" max="10">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="control-label col-xs-12 col-sm-2 col-md-2" for="newsletter_template_new_file">#i18n{newsletter.modify_newsletter_template.fileContent} : </label>
-							<div class="col-xs-12  col-sm-3 col-md-3">
-							<input type="text" readonly="readonly" name="newsletter_template_new_file" class="form-control" value="${template.fileName}" >
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="control-label col-xs-12 col-sm-2 col-md-2" for="newsletter_template_source">#i18n{newsletter.modify_newsletter_template.fileContent} : </label>
-						<div class="col-xs-12  col-sm-10 col-md-10">
-							<textarea class="form-control" rows="20" id="newsletter_template_source" name="newsletter_template_source">${template_source}</textarea>
-							<p class="help-text">#i18n{newsletter.modify_newsletter_template.contentHelp}</p>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-xs-12 col-sm-offset-2 col-sm-10 col-md-offset-2 col-md-10">
-							<button class="btn btn-primary btn-flat" type="submit" >
-								<i class="fa fa-check"></i>&nbsp;#i18n{newsletter.modify_newsletter_template.buttonModify}
-							</button>
-							<a class="btn btn-default btn-flat" href="jsp/admin/plugins/newsletter/ManageTemplates.jsp" >
-								<i class="fa fa-close"></i>&nbsp;#i18n{newsletter.create_newsletter.buttonCancel}
-							</a>
-						</div>
-					</div>
-				</form>
+				<@tform method='post' enctype='multipart/form-data' action='jsp/admin/plugins/newsletter/DoModifyNewsLetterTemplateFile.jsp'>
+					<@input type='hidden' name='newsletter_template_id' value='${template.id}' />
+					<@formGroup labelFor='newsletter_template_name' labelKey='#i18n{newsletter.add_newsletter_template.name}' mandatory=true>
+						<@input type='text' id='newsletter_template_name' name='newsletter_template_name' maxlength=50 value='${template.description}' />
+					</@formGroup>
+					<@formGroup labelFor='newsletter_template_type' labelKey='#i18n{newsletter.add_newsletter_template.templateType}' mandatory=true>
+						<@select name='newsletter_template_type' items=template_type default_value=template.topicType />
+					</@formGroup>
+					<@formGroup labelFor='newsletter_template_new_picture' labelKey='#i18n{newsletter.add_newsletter_template.imageFileName}'>
+						<@input type='file' id='newsletter_template_new_picture' name='newsletter_template_new_picture' value='' />
+					</@formGroup>
+					<@formGroup labelFor='newsletter_template_section' labelKey='#i18n{newsletter.add_newsletter_template.sectionNumber}'>
+						<@input type='number' id='newsletter_template_section' name='newsletter_template_section' value='${template.sectionNumber}' min=1 max=10 />
+					</@formGroup>
+					<@formGroup labelFor='newsletter_template_new_file' labelKey='#i18n{newsletter.modify_newsletter_template.fileContent}'>
+						<@input type='text' readonly=true name='newsletter_template_new_file' value='${template.fileName}' />
+					</@formGroup>
+					<@formGroup labelFor='newsletter_template_source' labelKey='#i18n{newsletter.modify_newsletter_template.fileContent}' helpKey='#i18n{newsletter.modify_newsletter_template.contentHelp}'>
+						<@input type='textarea' rows=20 id='newsletter_template_source' name='newsletter_template_source'>${template_source}</@input>
+					</@formGroup>
+					<@formGroup>
+						<@button type='submit' buttonIcon='check' title='#i18n{newsletter.modify_newsletter_template.buttonModify}' />
+						<@aButton href='jsp/admin/plugins/newsletter/ManageTemplates.jsp' buttonIcon='times' title='#i18n{newsletter.create_newsletter.buttonCancel}' color='default' />
+					</@formGroup>
+				</@tform>
 			</#if>
-			</div>
-		</div>
-  </div>
-</div>
+			</@boxBody>
+		</@box>
+	</@columns>
+</@row>

@@ -1,58 +1,36 @@
-<div class="row">
-	<div class="col-xs-12 col-sm-12 col-md-12">
-		<div class="box box-primary">
-			<div class="box-header">
-				<h3 class="box-title">#i18n{newsletter.manage_newsletters_properties.boxTitle}</h3>
-				<div class="box-tools pull-right">
-					<#if is_clean_subscriber_right>
-						<form class="form-inline" method="post" action="jsp/admin/plugins/newsletter/DoCleanSubscribers.jsp">
-							<button class="btn btn-danger btn-xs btn-flat" type="submit" ><i class="fa fa-trash"></i>&nbsp;#i18n{newsletter.manage_newsletters_properties.buttonAddNewsletter}</button>
-						</form>
-					</#if>
-				</div>	
-			</div>	
-			<div class="box-body">
-			<form class="form-horizontal" method="post" name="manage_newsletter_properties" action="jsp/admin/plugins/newsletter/DoManageNewsLetterProperties.jsp">
-				<div class="form-group">
-					<label class="control-label col-xs-12 col-sm-2 col-md-2" for="active_validation">#i18n{newsletter.manage_newsletters_properties.labelActiveValidation}</label>
-						<div class=" col-xs-12 col-sm-9 col-md-9">
-							 <div class="checkbox">
-								<label>
-									<input type="checkbox" name="active_validation" value="1" <#if properties.validationActive >checked="checked"</#if>>									#i18n{newsletter.manage_newsletters_properties.labelActiveValidationComment}
-								</label>
-							</div>
-						</div>
-					</div>
+<@row>
+	<@columns>
+		<@box>
+			<@boxHeader title='#i18n{newsletter.manage_newsletters_properties.boxTitle}'>
+				<#if is_clean_subscriber_right>
+					<@tform method='post' action='jsp/admin/plugins/newsletter/DoCleanSubscribers.jsp'>
+						<@button type='submit' buttonIcon='trash' title='#i18n{newsletter.manage_newsletters_properties.buttonAddNewsletter}' size='sm' hideTitle=['xs','sm','md'] color='danger' />
+					</@tform>
+				</#if>
+			</@boxHeader>
+			<@boxBody>
+				<@tform method='post' name='manage_newsletter_properties' action='jsp/admin/plugins/newsletter/DoManageNewsLetterProperties.jsp'>
+					<@formGroup labelKey='#i18n{newsletter.manage_newsletters_properties.labelActiveValidation}'>
+						<@checkBox labelFor='active_validation' labelKey='#i18n{newsletter.manage_newsletters_properties.labelActiveValidationComment}' name='active_validation' value='1' checked=properties.validationActive />
+					</@formGroup>
+					
 					<#if is_active_captcha>
-					<div class="form-group">
-					<label class="control-label col-xs-12 col-sm-2 col-md-2" for="active_captcha">#i18n{newsletter.manage_newsletters_properties.labelActiveCaptcha}</label>
-						<div class=" col-xs-12 col-sm-9 col-md-9">
-							 <div class="checkbox">
-								<label>
-									<input type="checkbox" name="active_captcha" value="1" <#if properties.captchaActive >checked="checked"</#if>>
-									#i18n{newsletter.manage_newsletters_properties.labelActiveCaptchaComment}
-								</label>
-							</div>
-						</div>
-					</div>
+					<@formGroup labelKey='#i18n{newsletter.manage_newsletters_properties.labelActiveCaptcha}'>
+						<@checkBox labelFor='active_captcha' labelKey='#i18n{newsletter.manage_newsletters_properties.labelActiveCaptchaComment}' name='active_captcha' value='1' checked=properties.captchaActive />
+					</@formGroup>
 					</#if>
-					<div class="form-group">
-					<label class="control-label col-xs-12 col-sm-2 col-md-2" for="tos" >#i18n{newsletter.manage_newsletters_properties.termOfService}</label>
-						<div class=" col-xs-12 col-sm-9 col-md-9">	  
-							<textarea id="tos" name="tos" class="form-control richtext" rows="10"><#if properties.TOS??>${properties.TOS}</#if></textarea>			
-						</div>
-					</div>
-					<div class="form-group">
-						<div class=" col-xs-12 col-sm-offset-2 col-sm-9 col-md-offset-2 col-md-9">
-							<button class="btn btn-primary btn-flat" type="submit" >
-								<i class="fa fa-check"></i>&nbsp;#i18n{newsletter.manage_newsletters_properties.buttonValidate}
-							</button>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
+					
+					<@formGroup labelFor='tos' labelKey='#i18n{newsletter.manage_newsletters_properties.termOfService}'>
+						<@input type='textarea' name='tos' id='tos' rows=10 richtext=true><#if properties.TOS??>${properties.TOS}</#if></@input>
+					</@formGroup>
+					
+					<@formGroup>
+						<@button type='submit' buttonIcon='check' title='#i18n{newsletter.manage_newsletters_properties.buttonValidate}' />
+					</@formGroup>
+				</@tform>
+			</@boxBody>
+		</@box>
+	</@columns>
+</@row>
 <#include "/admin/util/editor/editor.html" />
 <@initEditor />

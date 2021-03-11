@@ -1,50 +1,47 @@
-<div class="row">
-	<div class="col-xs-12 col-sm-12 col-md-12">
-		<div class="box box-info">
-			<div class="box-header">
-				<h3 class="box-title"> #i18n{newsletter.manage_templates.boxTitle}</h3>
-				<div class="box-tools pull-right">
-					<#if creation_allowed>
-						<form class="form-inline" method="post" action="jsp/admin/plugins/newsletter/AddNewsLetterTemplate.jsp">
-							<button class="btn btn-primary btn-xs btn-flat" type="submit"><i class="fa fa-plus"></i>&nbsp;#i18n{newsletter.manage_templates.buttonAddTemplate}</button>
-						</form>
-					</#if>
-				</div>
-			</div>
-			<div class="box-body table-responsive">
-				<table class="table table-condensed table-hover">
+<@row>
+	<@columns>
+		<@box>
+			<@boxHeader title='#i18n{newsletter.manage_templates.boxTitle}'>
+				<#if creation_allowed>
+					<@tform method='post' action='jsp/admin/plugins/newsletter/AddNewsLetterTemplate.jsp'>
+						<@button type='submit' buttonIcon='plus-square' title='#i18n{newsletter.manage_templates.buttonAddTemplate}' size='sm' />
+					</@tform>
+				</#if>
+			</@boxHeader>
+			<@boxBody>
+				<@table>
 					<thead>
-						<tr>
-							<th>#i18n{newsletter.manage_templates.columnTitleLabel}</th>
-							<th>#i18n{newsletter.manage_templates.columnTitleType}</th>
-							<th>#i18n{newsletter.manage_templates.columnTitleFile}</th>
-							<th>#i18n{newsletter.manage_templates.columnTitleWorkgroup}</th>
-							<th>#i18n{newsletter.manage_templates.columnTitleDelete}</th>
-						</tr>
+						<@tr>
+							<@th>#i18n{newsletter.manage_templates.columnTitleLabel}</@th>
+							<@th>#i18n{newsletter.manage_templates.columnTitleType}</@th>
+							<@th>#i18n{newsletter.manage_templates.columnTitleFile}</@th>
+							<@th>#i18n{newsletter.manage_templates.columnTitleWorkgroup}</@th>
+							<@th>#i18n{newsletter.manage_templates.columnTitleDelete}</@th>
+						</@tr>
 					</thead>
 					<tbody>
 						<#list template_list as templateDisplay>
-							<tr>
-								<td>${templateDisplay.template.description}</td>
-								<td>${templateDisplay.template.topicType}</td>
-								<td>
+							<@tr>
+								<@td>${templateDisplay.template.description}</@td>
+								<@td>${templateDisplay.template.topicType}</@td>
+								<@td>
 									<img src="images/admin/skin/plugins/newsletter/newsletter_templates/${templateDisplay.template.picture}" alt="#i18n{newsletter.manage_templates.columnTitleImage} ${templateDisplay.template.description}" title="#i18n{newsletter.manage_templates.columnTitleImage} ${templateDisplay.template.description}"
 									class="image-thumbnail"> ${templateDisplay.template.fileName}
-								</td>
-								<td>${templateDisplay.newsletter_template_workgroup_description}</td>
-								<td>
+								</@td>
+								<@td>${templateDisplay.newsletter_template_workgroup_description}</@td>
+								<@td>
 									<#if templateDisplay.newsletter_template_allow_modification>
-										<a class="btn btn-primary btn-xs btn-flat" href="jsp/admin/plugins/newsletter/ModifyNewsLetterTemplate.jsp?newsletter_template_id=${templateDisplay.template.id}" title=""><i class="fa fa-pencil"></i></a>
+										<@aButton href='jsp/admin/plugins/newsletter/ModifyNewsLetterTemplate.jsp?newsletter_template_id=${templateDisplay.template.id}' buttonIcon='edit' title='' size='sm' />
 									</#if>
 									<#if templateDisplay.newsletter_template_allow_deletion>
-										<a class="btn btn-danger btn-xs btn-flat" href="jsp/admin/plugins/newsletter/RemoveNewsLetterTemplate.jsp?newsletter_template_id=${templateDisplay.template.id}" title=""><i class="fa fa-trash"></i></a>
+										<@aButton href='jsp/admin/plugins/newsletter/RemoveNewsLetterTemplate.jsp?newsletter_template_id=${templateDisplay.template.id}' title='' buttonIcon='trash' size='sm' />
 									</#if>
-								</td>
-							</tr>
+								</@td>
+							</@tr>
 						</#list>
 					</tbody>
-				</table>
-				</div>
-			</div>
-		</div>
-	</div>
+				</@table>
+			</@boxBody>
+		</@box>
+	</@columns>
+</@row>

@@ -1,51 +1,41 @@
-<div class="row">
-	<div class="col-xs-12 col-sm-12 col-md-12">
-		<div class="nav-tabs-custom">
-			<ul class="nav nav-tabs">
-				<li>
-					<a href="jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletter.id}">#i18n{newsletter.modify_newsletter.manageAttributes}</a>
-				</li>
-				<li>
-					<a href="jsp/admin/plugins/newsletter/GetManageNewsletterTopics.jsp?newsletter_id=${newsletter.id}">#i18n{newsletter.modify_newsletter.manageTopics}</a>
-				</li>
-				<li class="active">
-					<a href="jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}">#i18n{newsletter.compose_newsletter.boxTitle}</a>
-				</li>
-				<li class="pull-right">
-					<strong> ${newsletter.name}</strong>
-					<span class="label label-info">#i18n{newsletter.modify_newsletter.dateLastSend} <strong>${newsletter.dateLastSending?date}</strong></span>
-					<form class="form-inline pull-right spaced" method="post" action="jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp" method="post">
-						<input type="hidden" name="newsletter_id" value="${newsletter.id}">
-						<input type="hidden" name="generate" value="">
-						<button class="btn btn-primary btn-xs btn-flat" type="submit" title="#i18n{newsletter.compose_newsletter.automaticGeneration}">
-							<i class="fa fa-cog"></i> #i18n{newsletter.compose_newsletter.generate}
-						</button>
-					</form>
-				</li>
-			</ul>
-			<div class="tab-content">
-				<form class="form" method="post" action="jsp/admin/plugins/newsletter/DoRegisterNewsLetter.jsp" method="post">
-				<input type="hidden" name="newsletter_id" value="${newsletter.id}">
-				<input type="hidden" name="newsletter_template_id" value="${newsletter_template_id}">
-				<div class="box-header">
-					<div class="box-tools pull-right">
-						<button class="btn btn-primary btn-xs btn-flat" name="action" value="#i18n{newsletter.compose_newsletter.buttonRegister}" type="submit" >
-							<i class="fa fa-check"></i> #i18n{newsletter.compose_newsletter.buttonRegister}</button>
-						<button class="btn btn-primary btn-xs btn-flat" name="action" value="#i18n{newsletter.compose_newsletter.buttonTestSending}" type="submit" >
-							<i class="fa fa-share"></i> #i18n{newsletter.compose_newsletter.buttonTestSending}</button>
-						<button class="btn btn-primary btn-xs btn-flat" name="action" value="#i18n{newsletter.compose_newsletter.buttonPrepareSending}" type="submit" >
-							<i class="fa fa-envelope"></i> #i18n{newsletter.compose_newsletter.buttonPrepareSending}</button>
-						<button class="btn btn-default btn-xs btn-flat" name="action" type="submit" value="#i18n{newsletter.compose_newsletter.buttonCancel}" >
-							<i class="fa fa-remove"></i> #i18n{newsletter.compose_newsletter.buttonCancel}</button>
-					</div>
-				</div>
-				<div class="box-body">
-					<textarea id="html_content" name="html_content" rows="20" class="form-control richtext">${html_content}</textarea>
-				</div>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
+<@row>
+	<@columns>
+		<@tabs>
+			<@tabList>
+				<@tabLink href='jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletter.id}' title='#i18n{newsletter.modify_newsletter.manageAttributes}' />
+				<@tabLink href='jsp/admin/plugins/newsletter/GetManageNewsletterTopics.jsp?newsletter_id=${newsletter.id}' title='#i18n{newsletter.modify_newsletter.manageTopics}' />
+				<@tabLink active=true href='jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}' title='#i18n{newsletter.compose_newsletter.boxTitle}' />
+			</@tabList>
+			<@tabContent>
+				<@alert color='info'>
+					<p><strong>${newsletter.name}</strong></p>
+					<p>#i18n{newsletter.modify_newsletter.dateLastSend} <strong>${newsletter.dateLastSending?date}</strong></p>
+					<@tform style='inline' method='post' action='jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp'>
+						<@input type='hidden' name='newsletter_id' value='${newsletter.id}' />
+						<@input type='hidden' name='generate' value='' />
+						<@button type='submit' title='#i18n{newsletter.compose_newsletter.automaticGeneration}' buttonIcon='cog' color='primary' title='#i18n{newsletter.compose_newsletter.generate}' />
+					</@tform>
+				</@alert>
+				
+				<@tform method='post' action='jsp/admin/plugins/newsletter/DoRegisterNewsLetter.jsp' method='post'>
+					<@input type='hidden' name='newsletter_id' value='${newsletter.id}' />
+					<@input type='hidden' name='newsletter_template_id' value='${newsletter_template_id}' />
+					
+					<@btnGroup>
+						<@button name='action' value='#i18n{newsletter.compose_newsletter.buttonRegister}' type='submit' buttonIcon='check' title='#i18n{newsletter.compose_newsletter.buttonRegister}' />
+						<@button name='action' value='#i18n{newsletter.compose_newsletter.buttonTestSending}' type='submit' buttonIcon='share' title='#i18n{newsletter.compose_newsletter.buttonTestSending}' />
+						<@button name='action' value='#i18n{newsletter.compose_newsletter.buttonPrepareSending}' type='submit' buttonIcon='envelope' title='#i18n{newsletter.compose_newsletter.buttonPrepareSending}' />
+						<@button name='action' type='submit' value='#i18n{newsletter.compose_newsletter.buttonCancel}' buttonIcon='times' title='#i18n{newsletter.compose_newsletter.buttonCancel}' />
+					</@btnGroup>
+					
+					<@formGroup>
+						<@input type='textarea' id='html_content' name='html_content' rows=20 richtext=true>${html_content}</@input>
+					</@formGroup>
+				</@tform>
+			</@tabContent>
+		</@tabs>
+	</@columns>
+</@row>
+
 <#include "/admin/util/editor/editor.html" />
 <@initEditor cssFiles="newsletter.css" />

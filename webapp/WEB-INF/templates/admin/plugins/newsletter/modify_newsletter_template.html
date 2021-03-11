@@ -1,68 +1,45 @@
-<div class="row">
-	<div class="col-xs-12 col-sm-12 col-md-12">
-		<div class="box box-primary">
-			<div class="box-header">
-				<h3 class="box-title">#i18n{newsletter.modify_newsletter_template.boxTitle}</h3>
-			</div>
-			<div class="box-body">
-				<form class="form-horizontal" method="post" enctype="multipart/form-data" action="jsp/admin/plugins/newsletter/DoModifyNewsLetterTemplate.jsp" method="post">
-				<input type="hidden" name="newsletter_template_id" value="${template.id}">
-				<div class="form-group">
-					<label class="control-label col-xs-12 col-sm-2 col-md-2" for="newsletter_template_name">#i18n{newsletter.add_newsletter_template.name} *</label>
-					<div class="col-xs-12 col-sm-3 col-md-3">
-						<input type="text" id="newsletter_template_name" name="newsletter_template_name" class="form-control" maxlength="50" value="${template.description}">
-					</div>
-				</div>
-				<div class="form-group">
-				<label class="control-label col-xs-12 col-sm-2 col-md-2" for="newsletter_template_type">#i18n{newsletter.add_newsletter_template.templateType} *</label>
-					<div class="col-xs-12 col-sm-3 col-md-3">
-						<@comboWithParams items=template_type default_value=template.topicType additionalParameters="class=\"form-control\""  name="newsletter_template_type" />
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label col-xs-12 col-sm-2 col-md-2" for="newsletter_template_new_file">#i18n{newsletter.add_newsletter_template.fileName}</label>
-					<div class="col-xs-12 col-sm-3 col-md-3">
-						<input type="file" id="newsletter_template_new_file" name="newsletter_template_new_file" class="form-control" value="">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label col-xs-12 col-sm-2 col-md-2 sr-only" for=""></label>
-					<div class="col-xs-12 col-sm-3 col-md-3">
-						<a class="btn btn-default btn-flat" href="jsp/admin/plugins/newsletter/ModifyNewsLetterTemplateFile.jsp?newsletter_template_id=${template.id}">
-							<i class="fa fa-pencil"></i>&nbsp;#i18n{newsletter.modify_newsletter_template.modifyTemplateCode}
-						</a>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label col-xs-12 col-sm-2 col-md-2" for="newsletter_template_new_picture">#i18n{newsletter.add_newsletter_template.imageFileName}</label>
-					<div class="col-xs-12 col-sm-3 col-md-3">
-						<input type="file" id="newsletter_template_new_picture" name="newsletter_template_new_picture" class="form-control" value="">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label col-xs-12 col-sm-2 col-md-2" for="newsletter_template_section">#i18n{newsletter.add_newsletter_template.sectionNumber}</label>
-					<div class="col-xs-12 col-sm-1 col-md-1">
-						<input type="number" id="newsletter_template_section" name="newsletter_template_section" class="form-control" value="${template.sectionNumber}" min="1" max="10">
-					</div>
-				</div>
-				<div class="form-group">
-				<label class="control-label col-xs-12 col-sm-2 col-md-2" for="newsletter_template_workgroup" >#i18n{newsletter.add_newsletter_template.labelWorkgroup}</label>
-					<div class="col-xs-12 col-sm-3 col-md-3">
-					<@comboWithParams name="newsletter_template_workgroup" default_value="${template.workgroup}" additionalParameters="class=\"form-control\"" items=workgroup_list />
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-xs-12 col-sm-offset-2 col-sm-10 col-md-offset-2 col-md-10">
-						<button class="btn btn-primary btn-flat" type="submit" >
-							<i class="fa fa-check"></i>&nbsp;#i18n{newsletter.modify_newsletter_template.buttonModify}
-						</button>
-						<a class="btn btn-default btn-flat" href="jsp/admin/plugins/newsletter/ManageTemplates.jsp" >
-							<i class="fa fa-remove"></i>&nbsp;#i18n{newsletter.create_newsletter.buttonCancel}
-						</a>
-					</div>
-				</div>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
+<@row>
+	<@columns>
+		<@box>
+			<@boxHeader title='#i18n{newsletter.modify_newsletter_template.boxTitle}' />
+			<@boxBody>
+				<@tform method='post' enctype='multipart/form-data' action='jsp/admin/plugins/newsletter/DoModifyNewsLetterTemplate.jsp'>
+					<@input type='hidden' name='newsletter_template_id' value='${template.id}' />
+					
+					<@formGroup labelFor='newsletter_template_name' labelKey='#i18n{newsletter.add_newsletter_template.name}' mandatory=true>
+						<@input type='text' id='newsletter_template_name' name='newsletter_template_name' maxlength=50 value='${template.description}' />
+					</@formGroup>
+					
+					<@formGroup labelFor='newsletter_template_type' labelKey='#i18n{newsletter.add_newsletter_template.templateType}' mandatory=true>
+						<@select name='newsletter_template_type' items=template_type default_value=template.topicType />
+					</@formGroup>
+					
+					<@formGroup labelFor='newsletter_template_new_file' labelKey='#i18n{newsletter.add_newsletter_template.fileName}'>
+						<@input type='file' id='newsletter_template_new_file' name='newsletter_template_new_file' value='' />
+					</@formGroup>
+					
+					<@formGroup>
+						<@aButton href='jsp/admin/plugins/newsletter/ModifyNewsLetterTemplateFile.jsp?newsletter_template_id=${template.id}' buttonIcon='edit' title='#i18n{newsletter.modify_newsletter_template.modifyTemplateCode}' />
+					</@formGroup>
+					
+					<@formGroup labelFor='newsletter_template_new_picture' labelKey='#i18n{newsletter.add_newsletter_template.imageFileName}'>
+						<@input type='file' id='newsletter_template_new_picture' name='newsletter_template_new_picture' value='' />
+					</@formGroup>
+					
+					<@formGroup labelFor='newsletter_template_section' labelKey='#i18n{newsletter.add_newsletter_template.sectionNumber}'>
+						<@input type='number' id='newsletter_template_section' name='newsletter_template_section' value='${template.sectionNumber}' min=1 max=10 />
+					</@formGroup>
+					
+					<@formGroup labelFor='newsletter_template_workgroup' labelKey='#i18n{newsletter.add_newsletter_template.labelWorkgroup}'>
+						<@select name='newsletter_template_workgroup' default_value='${template.workgroup}' items=workgroup_list />
+					</@formGroup>
+					
+					<@formGroup>
+						<@button type='submit' buttonIcon='check' title='#i18n{newsletter.modify_newsletter_template.buttonModify}' />
+						<@aButton href='jsp/admin/plugins/newsletter/ManageTemplates.jsp' title='#i18n{newsletter.create_newsletter.buttonCancel}' buttonIcon='times' color='default' />
+					</@formGroup>
+				</@tform>
+			</@boxBody>
+		</@box>
+	</@columns>
+</@row>

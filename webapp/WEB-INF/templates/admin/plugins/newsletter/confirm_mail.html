@@ -1,14 +1,13 @@
 <html>
 <head></head>
 <body>
-<div class="row-fluid">
-	<div class="span12">
-	<fieldset>
-	<legend>#i18n{newsletter.confirm_mail.boxTitle}</legend>
-		<p>#i18n{newsletter.confirm_mail.message}</p>
-		<a href="${confirm_url}" title="#i18n{newsletter.confirm_mail.link}">#i18n{newsletter.confirm_mail.link}</a>
-	</fieldset>
-	</div>
-</div>
+<@row>
+	<@columns>
+		<@fieldSet legend='#i18n{newsletter.confirm_mail.boxTitle}'>
+			<p>#i18n{newsletter.confirm_mail.message}</p>
+			<@link href='${confirm_url}' title='#i18n{newsletter.confirm_mail.link}' />
+		</@fieldSet>
+	</@columns>
+</@row>
 </body>
 </html>
