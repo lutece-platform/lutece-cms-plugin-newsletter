@@ -62,7 +62,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -161,7 +160,7 @@ public class NewsletterService implements Serializable
 
             String strNewsLetterCode = t.getHtml( );
 
-            if ( ( urlAttachments == null ) || ( urlAttachments.size( ) == 0 ) )
+            if ( ( urlAttachments == null ) || ( urlAttachments.isEmpty( ) ) )
             {
                 MailService.sendMailHtml( subscriber.getEmail( ), newsletter.getNewsletterSenderName( ),
                         newsletter.getNewsletterSenderMail( ), strObject, strNewsLetterCode );
@@ -199,7 +198,7 @@ public class NewsletterService implements Serializable
     public boolean isMhtmlActivated( )
     {
         String strProperty = AppPropertiesService.getProperty( NewsLetterConstants.PROPERTY_MAIL_MULTIPART );
-        return ( strProperty != null ) && Boolean.valueOf( strProperty ).booleanValue( );
+        return ( strProperty != null ) && Boolean.parseBoolean( strProperty );
     }
 
     /**
@@ -228,10 +227,6 @@ public class NewsletterService implements Serializable
 
             writer.close( );
             byteSubscribersList = byteArrayStream.toByteArray( );
-        }
-        catch ( UnsupportedEncodingException e )
-        {
-            AppLogService.error( e );
         }
         catch ( IOException e )
         {
@@ -298,7 +293,7 @@ public class NewsletterService implements Serializable
             return null;
         }
 
-        Map<String, Object> model = new HashMap<String, Object>( );
+        Map<String, Object> model = new HashMap<>( );
         List<NewsletterTopic> listTopics = NewsletterTopicHome
                 .findAllByIdNewsletter( newsletter.getId( ), getPlugin( ) );
 
@@ -307,7 +302,7 @@ public class NewsletterService implements Serializable
 
         int nCurrentSection = 0;
         String[] strContentBySection = new String[newsletter.getNbSections( )];
-        List<NewsletterTopic> listSelectedTopics = new ArrayList<NewsletterTopic>( );
+        List<NewsletterTopic> listSelectedTopics = new ArrayList<>( );
         for ( int i = 0; i < listTopics.size( ) + 1; i++ )
         {
             NewsletterTopic newsletterTopic = null;
@@ -336,7 +331,7 @@ public class NewsletterService implements Serializable
                 if ( newsletterTopic != null )
                 {
                     nCurrentSection = newsletterTopic.getSection( );
-                    listSelectedTopics = new ArrayList<NewsletterTopic>( );
+                    listSelectedTopics = new ArrayList<>( );
                     listSelectedTopics.add( newsletterTopic );
                 }
             }

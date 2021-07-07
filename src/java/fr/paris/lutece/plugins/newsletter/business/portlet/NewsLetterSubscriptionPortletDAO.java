@@ -48,140 +48,150 @@ import java.util.Set;
  */
 public final class NewsLetterSubscriptionPortletDAO implements INewsLetterSubscriptionPortletDAO
 {
-    // Constants
-    private static final String SQL_QUERY_SELECT = "SELECT id_portlet FROM core_portlet WHERE id_portlet = ?";
-    private static final String SQL_QUERY_SELECT_SUBSCRIPTION_BY_PORTLET = "SELECT id_newsletter FROM newsletter_portlet_subscribe WHERE id_portlet = ?";
-    private static final String SQL_QUERY_INSERT_NEWSLETTER = "INSERT INTO newsletter_portlet_subscribe( id_portlet, id_newsletter ) VALUES ( ?, ? )";
-    private static final String SQL_QUERY_DELETE_NEWSLETTER = "DELETE FROM newsletter_portlet_subscribe WHERE id_portlet = ? AND id_newsletter = ?";
-    private static final String SQL_QUERY_DELETE = "DELETE FROM newsletter_portlet_subscribe WHERE id_portlet=? ";
+	// Constants
+	private static final String SQL_QUERY_SELECT = "SELECT id_portlet FROM core_portlet WHERE id_portlet = ?";
+	private static final String SQL_QUERY_SELECT_SUBSCRIPTION_BY_PORTLET = "SELECT id_newsletter FROM newsletter_portlet_subscribe WHERE id_portlet = ?";
+	private static final String SQL_QUERY_INSERT_NEWSLETTER = "INSERT INTO newsletter_portlet_subscribe( id_portlet, id_newsletter ) VALUES ( ?, ? )";
+	private static final String SQL_QUERY_DELETE_NEWSLETTER = "DELETE FROM newsletter_portlet_subscribe WHERE id_portlet = ? AND id_newsletter = ?";
+	private static final String SQL_QUERY_DELETE = "DELETE FROM newsletter_portlet_subscribe WHERE id_portlet=? ";
 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    //Access methods to data
+	///////////////////////////////////////////////////////////////////////////////////////
+	//Access methods to data
 
-    /**
-     * Inserts a new record in the table. Not implemented.
-     * 
-     * @param portlet
-     *            the object to be inserted
-     */
-    public void insert( Portlet portlet )
-    {
-        // Not implemented.
-    }
+	/**
+	 * Inserts a new record in the table. Not implemented.
+	 * 
+	 * @param portlet
+	 *            the object to be inserted
+	 */
+	public void insert( Portlet portlet )
+	{
+		// Not implemented.
+	}
 
-    /**
-     * Deletes a record from the table.
-     * 
-     * @param nPortletId the portlet id
-     * 
-     */
-    public void delete( int nPortletId )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
-    }
+	/**
+	 * Deletes a record from the table.
+	 * 
+	 * @param nPortletId the portlet id
+	 * 
+	 */
+	public void delete( int nPortletId )
+	{
+		try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) ) )
+		{
+			daoUtil.setInt( 1, nPortletId );
+			daoUtil.executeUpdate( );
+			daoUtil.free( );
+		}
+	}
 
-    /**
-     * Loads the data of the portlet from the table.
-     * 
-     * @param nPortletId the portlet id
-     * @return the Portlet object
-     */
-    public Portlet load( int nPortletId )
-    {
-        NewsLetterSubscriptionPortlet portlet = new NewsLetterSubscriptionPortlet( );
+	/**
+	 * Loads the data of the portlet from the table.
+	 * 
+	 * @param nPortletId the portlet id
+	 * @return the Portlet object
+	 */
+	public Portlet load( int nPortletId )
+	{
+		NewsLetterSubscriptionPortlet portlet = new NewsLetterSubscriptionPortlet( );
 
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT );
+		try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT ) )
+		{
 
-        daoUtil.setInt( 1, nPortletId );
+			daoUtil.setInt( 1, nPortletId );
 
-        daoUtil.executeQuery( );
+			daoUtil.executeQuery( );
 
-        if ( daoUtil.next( ) )
-        {
-            portlet.setId( nPortletId );
-        }
+			if ( daoUtil.next( ) )
+			{
+				portlet.setId( nPortletId );
+			}
 
-        daoUtil.free( );
+			daoUtil.free( );
+		}
 
-        return portlet;
-    }
+		return portlet;
+	}
 
-    /**
-     * Updates the record in the table. Not implemented.
-     * 
-     * @param portlet
-     *            the instance of Portlet class to be updated
-     */
-    public void store( Portlet portlet )
-    {
-        // Not implemented.
-    }
+	/**
+	 * Updates the record in the table. Not implemented.
+	 * 
+	 * @param portlet
+	 *            the instance of Portlet class to be updated
+	 */
+	public void store( Portlet portlet )
+	{
+		// Not implemented.
+	}
 
-    /**
-     * Associates a new subscription to a given portlet.
-     * 
-     * @param nPortletId
-     *            the identifier of the portlet.
-     * @param nNewsletterId
-     *            the identifier of the subscription.
-     */
-    public void insertSubscription( int nPortletId, int nNewsletterId )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_NEWSLETTER,
-                PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.setInt( 2, nNewsletterId );
+	/**
+	 * Associates a new subscription to a given portlet.
+	 * 
+	 * @param nPortletId
+	 *            the identifier of the portlet.
+	 * @param nNewsletterId
+	 *            the identifier of the subscription.
+	 */
+	public void insertSubscription( int nPortletId, int nNewsletterId )
+	{
+		try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_NEWSLETTER,
+				PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) ) )
+		{
+			daoUtil.setInt( 1, nPortletId );
+			daoUtil.setInt( 2, nNewsletterId );
 
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
-    }
+			daoUtil.executeUpdate( );
+			daoUtil.free( );
+		}
+	}
 
-    /**
-     * De-associate a subscription from a given portlet.
-     * 
-     * @param nPortletId
-     *            the identifier of the portlet.
-     * @param nNewsletterId
-     *            the identifier of the subscription.
-     */
-    public void removeSubscription( int nPortletId, int nNewsletterId )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_NEWSLETTER,
-                PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.setInt( 2, nNewsletterId );
+	/**
+	 * De-associate a subscription from a given portlet.
+	 * 
+	 * @param nPortletId
+	 *            the identifier of the portlet.
+	 * @param nNewsletterId
+	 *            the identifier of the subscription.
+	 */
+	public void removeSubscription( int nPortletId, int nNewsletterId )
+	{
+		try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_NEWSLETTER,
+				PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) ) )
+		{
+			daoUtil.setInt( 1, nPortletId );
+			daoUtil.setInt( 2, nNewsletterId );
 
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
-    }
+			daoUtil.executeUpdate( );
+			daoUtil.free( );
+		}
+	}
 
-    /**
-     * Returns all the newsletters associated to a given portlet.
-     * 
-     * @param nPortletId
-     *            the identifier of the portlet.
-     * @return a Set of Integer objects containing the identifers of the
-     *         susbscriptions.
-     */
-    public Set<Integer> findSelectedNewsletters( int nPortletId )
-    {
-        HashSet<Integer> results = new HashSet<Integer>( );
+	/**
+	 * Returns all the newsletters associated to a given portlet.
+	 * 
+	 * @param nPortletId
+	 *            the identifier of the portlet.
+	 * @return a Set of Integer objects containing the identifers of the
+	 *         susbscriptions.
+	 */
+	public Set<Integer> findSelectedNewsletters( int nPortletId )
+	{
+		HashSet<Integer> results = new HashSet<>( );
 
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_SUBSCRIPTION_BY_PORTLET,
-                PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.executeQuery( );
+		try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_SUBSCRIPTION_BY_PORTLET,
+				PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) ) )
+		{
+			daoUtil.setInt( 1, nPortletId );
+			daoUtil.executeQuery( );
 
-        while ( daoUtil.next( ) )
-        {
-            results.add( Integer.valueOf( daoUtil.getInt( 1 ) ) );
-        }
+			while ( daoUtil.next( ) )
+			{
+				results.add( Integer.valueOf( daoUtil.getInt( 1 ) ) );
+			}
 
-        daoUtil.free( );
+			daoUtil.free( );
+		}
 
-        return results;
-    }
+		return results;
+	}
 }

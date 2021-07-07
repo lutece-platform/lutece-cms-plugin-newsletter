@@ -19,6 +19,7 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.rbac.RBACService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.portal.service.util.AppException;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
@@ -35,6 +36,9 @@ import fr.paris.lutece.util.url.UrlItem;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -422,8 +426,8 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                     }
 
                     // we delete the old picture
-                    File oldImageFile = new File( strFullPathOldImageFileName );
-                    oldImageFile.delete( );
+                    removeFile( strFullPathOldImageFileName );
+                    
                 }
 
                 FileItem modelItem = multi.getFile( PARAMETER_NEWSLETTER_TEMPLATE_NEW_FILE );
@@ -449,8 +453,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                     }
 
                     // we delete the old file
-                    File oldFile = new File( strFullPathOldFileName );
-                    oldFile.delete( );
+                    removeFile( strFullPathOldFileName );
 
                     modelItem.write( fileTemplate );
                     newsletterTemplate.setFileName( strFileName );
@@ -497,7 +500,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
     {
         setPageTitleProperty( MESSAGE_PAGE_TITLE_MODIFY_TEMPLATE_FILE );
 
-        Map<String, Object> model = new HashMap<String, Object>( );
+        Map<String, Object> model = new HashMap<>( );
 
         BufferedReader fileReader = null;
         try
@@ -621,8 +624,8 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                     newsletterTemplate.setPicture( strFileName );
 
                     // we delete the old picture
-                    File oldImageFile = new File( strPathImageNewsletterTemplate + File.separator + strOldImageName );
-                    oldImageFile.delete( );
+                    removeFile( strPathImageNewsletterTemplate + File.separator + strOldImageName );
+                    
                 }
 
                 // Writes the new content of the file.
@@ -669,7 +672,8 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
      * @param request The Http request
      * @return the html code to confirm
      */
-    public String getRemoveNewsLetterTemplate( HttpServletRequest request )
+    @SuppressWarnings("deprecation")
+	public String getRemoveNewsLetterTemplate( HttpServletRequest request )
     {
         String strNewsletterTemplateId = request.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID );
         int nNewsletterTemplateId = Integer.parseInt( strNewsletterTemplateId );
@@ -684,7 +688,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
-        List<String> listMessages = new ArrayList<String>( );
+        List<String> listMessages = new ArrayList<>( );
         if ( !NewsletterTemplateRemovalService.getService( ).checkForRemoval( strNewsletterTemplateId, listMessages,
                 AdminUserService.getLocale( request ) ) )
         {
@@ -706,7 +710,8 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
      * @param request The Http request
      * @return the jsp URL to display the form to manage newsletter templates
      */
-    public String doRemoveNewsLetterTemplate( HttpServletRequest request )
+    @SuppressWarnings("deprecation")
+	public String doRemoveNewsLetterTemplate( HttpServletRequest request )
     {
         int nNewsletterTemplateId = Integer.parseInt( request
                 .getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID ) );
@@ -733,7 +738,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
 
         if ( file.exists( ) )
         {
-            file.delete( );
+            removeFile( file.getAbsolutePath( ) );
         }
 
         // removes the picture
@@ -742,7 +747,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
 
         if ( picture.exists( ) )
         {
-            picture.delete( );
+            removeFile( picture.getAbsolutePath( ) );
         }
 
         // removes the newsletter template from the database
@@ -785,7 +790,8 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
      * @param request The {@link HttpServletRequest}
      * @return true if creation is authorized, false otherwise
      */
-    private boolean isNewsletterTemplateCreationAllowed( HttpServletRequest request )
+    @SuppressWarnings("deprecation")
+	private boolean isNewsletterTemplateCreationAllowed( HttpServletRequest request )
     {
         //RBAC permission
         AdminUser user = AdminUserService.getAdminUser( request );
@@ -808,6 +814,18 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
         }
 
         return false;
+    }
+    
+    private void removeFile( String strFilePath )
+    {
+        Path file = Paths.get( strFilePath );
+        try {
+			Files.delete( file );
+		}
+        catch (IOException e)
+        {
+			throw new AppException("Removal failed", e);
+		}
     }
 
 }

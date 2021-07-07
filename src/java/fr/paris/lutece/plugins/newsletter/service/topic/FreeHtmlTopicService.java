@@ -80,7 +80,7 @@ public class FreeHtmlTopicService implements INewsletterTopicService
             Locale locale )
     {
         FreeHtmlTopic htmlTopic = FreeHtmlTopicHome.findByPrimaryKey( newsletterTopic.getId( ), getPlugin( ) );
-        Map<String, Object> model = new HashMap<String, Object>( );
+        Map<String, Object> model = new HashMap<>( );
 
         model.put( MARK_HTML_TOPIC, htmlTopic );
         model.put( MARK_WEBAPP_URL, strBaseUrl );
