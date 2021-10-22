@@ -2,7 +2,7 @@ package fr.paris.lutece.plugins.newsletter.business.topic;
 
 import fr.paris.lutece.plugins.newsletter.service.topic.NewsletterTopicService;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**

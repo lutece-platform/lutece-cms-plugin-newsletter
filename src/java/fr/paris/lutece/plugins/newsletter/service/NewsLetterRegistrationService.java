@@ -41,7 +41,7 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import fr.paris.lutece.plugins.newsletter.business.AwaitingActivationHome;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetter;
