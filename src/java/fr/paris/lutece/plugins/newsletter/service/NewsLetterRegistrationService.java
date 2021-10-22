@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,7 +68,6 @@ import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.string.StringUtil;
 import fr.paris.lutece.util.url.UrlItem;
 
-
 /**
  * The class responsible for the subscription and unsubscription process
  */
@@ -78,13 +77,13 @@ public final class NewsLetterRegistrationService
     private static final String TEMPLATE_CONFIRM_MAIL = "admin/plugins/newsletter/confirm_mail.html";
     private static final String JSP_PORTAL = "/jsp/site/Portal.jsp";
 
-    //properties
+    // properties
     private static final String PROPERTY_MESSAGE_CONFIRM_MAIL_TITLE = "newsletter.confirm_mail.title";
     private static final String PROPERTY_LIMIT_CONFIRM_DAYS = "newsletter.confirm.limit";
     private static final String REGEX_ID = "^[\\d]+$";
     private static final String JCAPTCHA_PLUGIN = "jcaptcha";
 
-    //default values
+    // default values
     private static final int DEFAULT_LIMIT = 7;
 
     /**
@@ -92,7 +91,7 @@ public final class NewsLetterRegistrationService
      */
     private static NewsLetterRegistrationService _singleton = new NewsLetterRegistrationService( );
 
-    //Captcha
+    // Captcha
     private CaptchaSecurityService _captchaService;
 
     private Plugin _plugin;
@@ -110,6 +109,7 @@ public final class NewsLetterRegistrationService
 
     /**
      * Fetches the singleton instance
+     * 
      * @return The singleton instance
      */
     public static NewsLetterRegistrationService getInstance( )
@@ -118,16 +118,17 @@ public final class NewsLetterRegistrationService
     }
 
     /**
-     * Performs the subscription process
-     * Throw a SiteMessage
-     * @param request The Http request
-     * @throws fr.paris.lutece.portal.service.message.SiteMessageException The
-     *             error message thrown to the user
+     * Performs the subscription process Throw a SiteMessage
+     * 
+     * @param request
+     *            The Http request
+     * @throws fr.paris.lutece.portal.service.message.SiteMessageException
+     *             The error message thrown to the user
      */
     public void doSubscription( HttpServletRequest request ) throws SiteMessageException
     {
         String strEmail = request.getParameter( NewsLetterConstants.PARAMETER_EMAIL );
-        String[] arrayNewsletters = request.getParameterValues( NewsLetterConstants.PARAMETER_NEWSLETTER_ID );
+        String [ ] arrayNewsletters = request.getParameterValues( NewsLetterConstants.PARAMETER_NEWSLETTER_ID );
         String strTOS = request.getParameter( PARAMETER_TOS );
 
         if ( ( strEmail == null ) || !StringUtil.checkEmail( strEmail ) )
@@ -145,17 +146,17 @@ public final class NewsLetterRegistrationService
         {
             NewsLetterProperties properties = NewsletterPropertiesHome.find( getPlugin( ) );
 
-            //test the requirement
+            // test the requirement
             if ( properties.getTOS( ) != null )
             {
                 if ( strTOS == null )
                 {
-                    SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_NO_TOS_MESSAGE,
-                            NewsLetterConstants.PROPERTY_NO_TOS_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
+                    SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_NO_TOS_MESSAGE, NewsLetterConstants.PROPERTY_NO_TOS_TITLE_MESSAGE,
+                            SiteMessage.TYPE_STOP );
                 }
             }
 
-            //test the captcha
+            // test the captcha
             if ( PluginService.isPluginEnable( JCAPTCHA_PLUGIN ) && properties.isCaptchaActive( ) )
             {
                 _captchaService = new CaptchaSecurityService( );
@@ -167,7 +168,7 @@ public final class NewsLetterRegistrationService
                 }
             }
 
-            //Checks if a subscriber with the same email address doesn't exist yet
+            // Checks if a subscriber with the same email address doesn't exist yet
             Subscriber subscriber = SubscriberHome.findByEmail( strEmail, getPlugin( ) );
 
             if ( subscriber == null )
@@ -180,8 +181,8 @@ public final class NewsLetterRegistrationService
 
             for ( String strId : arrayNewsletters )
             {
-                NewsLetterHome.addSubscriber( Integer.parseInt( strId ), subscriber.getId( ),
-                        !properties.isValidationActive( ), new Timestamp( new Date( ).getTime( ) ), getPlugin( ) );
+                NewsLetterHome.addSubscriber( Integer.parseInt( strId ), subscriber.getId( ), !properties.isValidationActive( ),
+                        new Timestamp( new Date( ).getTime( ) ), getPlugin( ) );
             }
 
             if ( properties.isValidationActive( ) )
@@ -197,8 +198,7 @@ public final class NewsLetterRegistrationService
 
                 UrlItem urlItem = new UrlItem( sbUrl.toString( ) );
                 urlItem.addParameter( NewsLetterConstants.PARAMETER_PAGE, NewsletterPlugin.PLUGIN_NAME );
-                urlItem.addParameter( NewsLetterConstants.PARAMETER_ACTION,
-                        NewsLetterConstants.ACTION_CONFIRM_SUBSCRIBE );
+                urlItem.addParameter( NewsLetterConstants.PARAMETER_ACTION, NewsLetterConstants.ACTION_CONFIRM_SUBSCRIBE );
                 urlItem.addParameter( NewsLetterConstants.PARAMETER_KEY, nAlea );
                 urlItem.addParameter( NewsLetterConstants.PARAMETER_EMAIL, strEmail );
                 urlItem.addParameter( NewsLetterConstants.PARAMETER_USER_ID, subscriber.getId( ) );
@@ -208,14 +208,11 @@ public final class NewsLetterRegistrationService
                 Map<Object, String> model = new HashMap<Object, String>( );
                 model.put( NewsLetterConstants.MARK_CONFIRM_URL, urlItem.getUrl( ) );
 
-                HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CONFIRM_MAIL, request.getLocale( ),
-                        model );
+                HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CONFIRM_MAIL, request.getLocale( ), model );
 
-                MailService.sendMailHtml( subscriber.getEmail( ),
-                        NewsLetterConstants.PROPERTY_CONFIRM_MAIL_SENDER_NAME,
+                MailService.sendMailHtml( subscriber.getEmail( ), NewsLetterConstants.PROPERTY_CONFIRM_MAIL_SENDER_NAME,
                         NewsLetterConstants.PROPERTY_CONFIRM_MAIL_SENDER_ADDRESS,
-                        I18nService.getLocalizedString( PROPERTY_MESSAGE_CONFIRM_MAIL_TITLE, request.getLocale( ) ),
-                        template.getHtml( ) );
+                        I18nService.getLocalizedString( PROPERTY_MESSAGE_CONFIRM_MAIL_TITLE, request.getLocale( ) ), template.getHtml( ) );
             }
 
             String strMessage;
@@ -229,19 +226,21 @@ public final class NewsLetterRegistrationService
                 strMessage = NewsLetterConstants.PROPERTY_SUBSCRIPTION_OK_ALERT_MESSAGE;
             }
 
-            SiteMessageService.setMessage( request, strMessage,
-                    NewsLetterConstants.PROPERTY_SUBSCRIPTION_OK_TITLE_MESSAGE, SiteMessage.TYPE_INFO );
+            SiteMessageService.setMessage( request, strMessage, NewsLetterConstants.PROPERTY_SUBSCRIPTION_OK_TITLE_MESSAGE, SiteMessage.TYPE_INFO );
         }
     }
 
     /**
      * Get the confirmation page to suscribe a user
-     * @param request The request
-     * @throws SiteMessageException Site message exception
+     * 
+     * @param request
+     *            The request
+     * @throws SiteMessageException
+     *             Site message exception
      */
     public void doConfirmSubscribe( HttpServletRequest request ) throws SiteMessageException
     {
-        String[] arrayNewsletters = request.getParameterValues( NewsLetterConstants.PARAMETER_NEWSLETTER_ID );
+        String [ ] arrayNewsletters = request.getParameterValues( NewsLetterConstants.PARAMETER_NEWSLETTER_ID );
 
         String strEmail = request.getParameter( NewsLetterConstants.PARAMETER_EMAIL );
 
@@ -258,10 +257,9 @@ public final class NewsLetterRegistrationService
         {
             nIdUser = Integer.parseInt( strIdUser );
         }
-        catch ( NumberFormatException nfe )
+        catch( NumberFormatException nfe )
         {
-            SiteMessageService.setMessage( request,
-                    NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_USER_ERROR_MESSAGE,
+            SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_USER_ERROR_MESSAGE,
                     NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_USER_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
         }
 
@@ -272,10 +270,9 @@ public final class NewsLetterRegistrationService
         {
             nKey = Integer.parseInt( strKey );
         }
-        catch ( NumberFormatException nfe )
+        catch( NumberFormatException nfe )
         {
-            SiteMessageService.setMessage( request,
-                    NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_KEY_ERROR_MESSAGE,
+            SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_KEY_ERROR_MESSAGE,
                     NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_KEY_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
         }
 
@@ -286,13 +283,12 @@ public final class NewsLetterRegistrationService
         }
         else
         {
-            //Checks if a subscriber with the same email address doesn't exist yet
+            // Checks if a subscriber with the same email address doesn't exist yet
             Subscriber subscriber = SubscriberHome.findByEmail( strEmail, getPlugin( ) );
 
             if ( subscriber == null )
             {
-                SiteMessageService.setMessage( request,
-                        NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_USER_ERROR_MESSAGE,
+                SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_USER_ERROR_MESSAGE,
                         NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_USER_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
                 return;
             }
@@ -301,8 +297,7 @@ public final class NewsLetterRegistrationService
 
             if ( !bValidKey )
             {
-                SiteMessageService.setMessage( request,
-                        NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_KEY_ERROR_MESSAGE,
+                SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_KEY_ERROR_MESSAGE,
                         NewsLetterConstants.PROPERTY_SUBSCRIPTION_INVALID_KEY_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
             }
 
@@ -310,10 +305,9 @@ public final class NewsLetterRegistrationService
             {
                 try
                 {
-                    NewsLetterHome.validateSubscriber( Integer.parseInt( strIdNewsLetter ), subscriber.getId( ),
-                            getPlugin( ) );
+                    NewsLetterHome.validateSubscriber( Integer.parseInt( strIdNewsLetter ), subscriber.getId( ), getPlugin( ) );
                 }
-                catch ( NumberFormatException nfe )
+                catch( NumberFormatException nfe )
                 {
                     AppLogService.error( "NewsLetterRegistrationService.doConfirmSubscribe() " + nfe );
                 }
@@ -323,17 +317,17 @@ public final class NewsLetterRegistrationService
             AwaitingActivationHome.remove( nIdUser, nKey, getPlugin( ) );
         }
 
-        SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_SUBSCRIPTION_CONFIRM_ALERT_MESSAGE,
-                SiteMessage.TYPE_INFO, request.getRequestURI( ),
-                NewsLetterConstants.PROPERTY_SUBSCRIPTION_CONFIRM_TITLE_MESSAGE, null );
+        SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_SUBSCRIPTION_CONFIRM_ALERT_MESSAGE, SiteMessage.TYPE_INFO,
+                request.getRequestURI( ), NewsLetterConstants.PROPERTY_SUBSCRIPTION_CONFIRM_TITLE_MESSAGE, null );
     }
 
     /**
-     * Performs unsubscription process
-     * Throw a SiteMessage
-     * @param request The http request
-     * @throws fr.paris.lutece.portal.service.message.SiteMessageException The
-     *             error message handled by the front office
+     * Performs unsubscription process Throw a SiteMessage
+     * 
+     * @param request
+     *            The http request
+     * @throws fr.paris.lutece.portal.service.message.SiteMessageException
+     *             The error message handled by the front office
      */
     public void doUnSubscribe( HttpServletRequest request ) throws SiteMessageException
     {
@@ -343,16 +337,14 @@ public final class NewsLetterRegistrationService
         if ( ( strEmail == null ) || !StringUtil.checkEmail( strEmail )
                 || !StringUtils.equals( strKey, NewsletterService.getService( ).getUnsubscriptionKey( strEmail ) ) )
         {
-            SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_INVALID_MAIL_ERROR_MESSAGE,
-                    SiteMessage.TYPE_ERROR );
+            SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_INVALID_MAIL_ERROR_MESSAGE, SiteMessage.TYPE_ERROR );
         }
 
         String strNewsletterId = request.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_ID );
 
         if ( ( strNewsletterId == null ) || !strNewsletterId.matches( REGEX_ID ) )
         {
-            SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_NO_NEWSLETTER_CHOSEN_ERROR_MESSAGE,
-                    SiteMessage.TYPE_ERROR );
+            SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_NO_NEWSLETTER_CHOSEN_ERROR_MESSAGE, SiteMessage.TYPE_ERROR );
             return;
         }
 
@@ -379,34 +371,32 @@ public final class NewsLetterRegistrationService
 
         UrlItem urlItem = new UrlItem( request.getRequestURI( ) );
         SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_UNSUBSCRIPTION_OK_ALERT_MESSAGE, null,
-                NewsLetterConstants.PROPERTY_UNSUBSCRIPTION_OK_TITLE_MESSAGE, urlItem.getUrl( ), null,
-                SiteMessage.TYPE_INFO );
+                NewsLetterConstants.PROPERTY_UNSUBSCRIPTION_OK_TITLE_MESSAGE, urlItem.getUrl( ), null, SiteMessage.TYPE_INFO );
     }
 
     /**
      * Performs confirm unsubscription process
-     * @param request The http request
-     * @throws SiteMessageException The error message handled by the front
-     *             office
+     * 
+     * @param request
+     *            The http request
+     * @throws SiteMessageException
+     *             The error message handled by the front office
      */
     public void doConfirmUnSubscribe( HttpServletRequest request ) throws SiteMessageException
     {
         UrlItem urlItem = new UrlItem( request.getRequestURI( ) );
         urlItem.addParameter( NewsLetterConstants.PARAMETER_PAGE, NewsletterPlugin.PLUGIN_NAME );
         urlItem.addParameter( NewsLetterConstants.PARAMETER_ACTION, NewsLetterConstants.ACTION_UNSUBSCRIBE );
-        urlItem.addParameter( NewsLetterConstants.PARAMETER_EMAIL,
-                request.getParameter( NewsLetterConstants.MARK_SUBSCRIBER_EMAIL ) );
-        urlItem.addParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_ID,
-                request.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_ID ) );
-        urlItem.addParameter( NewsLetterConstants.MARK_UNSUBSCRIBE_KEY,
-                request.getParameter( NewsLetterConstants.MARK_UNSUBSCRIBE_KEY ) );
-        SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_CONFIRM_UNSUBSCRIPTION_ALERT_MESSAGE,
-                null, NewsLetterConstants.PROPERTY_CONFIRM_UNSUBSCRIPTION_TITLE_MESSAGE, urlItem.getUrl( ), null,
-                SiteMessage.TYPE_INFO );
+        urlItem.addParameter( NewsLetterConstants.PARAMETER_EMAIL, request.getParameter( NewsLetterConstants.MARK_SUBSCRIBER_EMAIL ) );
+        urlItem.addParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_ID, request.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_ID ) );
+        urlItem.addParameter( NewsLetterConstants.MARK_UNSUBSCRIBE_KEY, request.getParameter( NewsLetterConstants.MARK_UNSUBSCRIBE_KEY ) );
+        SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_CONFIRM_UNSUBSCRIPTION_ALERT_MESSAGE, null,
+                NewsLetterConstants.PROPERTY_CONFIRM_UNSUBSCRIPTION_TITLE_MESSAGE, urlItem.getUrl( ), null, SiteMessage.TYPE_INFO );
     }
 
     /**
      * Performs confirm unsubscription process
+     * 
      * @return logs the logs
      */
     public String doRemoveOldUnconfirmed( )
@@ -425,6 +415,7 @@ public final class NewsLetterRegistrationService
 
     /**
      * Get the newsletter plugin
+     * 
      * @return the newsletter plugin
      */
     private Plugin getPlugin( )

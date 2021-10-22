@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,6 @@ import fr.paris.lutece.util.ReferenceList;
 import java.util.Collection;
 import java.util.List;
 
-
 /**
  * @author gduge
  * 
@@ -48,42 +47,52 @@ public interface INewsLetterTemplateDAO
 {
     /**
      * Returns the list of all templates
-     * @param plugin The plugin
+     * 
+     * @param plugin
+     *            The plugin
      * @return the collection of all templates
      */
     Collection<NewsLetterTemplate> selectTemplatesList( Plugin plugin );
 
     /**
      * Returns the list of all templates
-     * @param strTopicType the topic type of templates
-     * @param plugin The plugin
-     * @return the reference list of the templates corresponding to the given
-     *         type
+     * 
+     * @param strTopicType
+     *            the topic type of templates
+     * @param plugin
+     *            The plugin
+     * @return the reference list of the templates corresponding to the given type
      */
     ReferenceList selectTemplatesListByType( String strTopicType, Plugin plugin );
 
     /**
      * Returns a list of templates depending on the given type
-     * @param strTopicType the topic type of templates to get
-     * @param plugin The plugin
-     * @return the collection of the templates corresponding to the given
-     *         topic type
+     * 
+     * @param strTopicType
+     *            the topic type of templates to get
+     * @param plugin
+     *            The plugin
+     * @return the collection of the templates corresponding to the given topic type
      */
     List<NewsLetterTemplate> selectTemplatesCollectionByType( String strTopicType, Plugin plugin );
 
     /**
      * Insert a new record in the table.
      * 
-     * @param newsletter The Instance of the object NewsLetterTemplate
-     * @param plugin the plugin
+     * @param newsletter
+     *            The Instance of the object NewsLetterTemplate
+     * @param plugin
+     *            the plugin
      */
     void insert( NewsLetterTemplate newsletter, Plugin plugin );
 
     /**
      * loads the data of the newsletter's template from the table
      * 
-     * @param nTemplateId the template identifier
-     * @param plugin the plugin
+     * @param nTemplateId
+     *            the template identifier
+     * @param plugin
+     *            the plugin
      * @return the object inserted
      */
     NewsLetterTemplate load( int nTemplateId, Plugin plugin );
@@ -91,30 +100,39 @@ public interface INewsLetterTemplateDAO
     /**
      * Update a given record in the table.
      * 
-     * @param newsLetterTemplate The Instance of the object NewsLetterTemplate
-     * @param plugin the plugin
+     * @param newsLetterTemplate
+     *            The Instance of the object NewsLetterTemplate
+     * @param plugin
+     *            the plugin
      */
     void store( NewsLetterTemplate newsLetterTemplate, Plugin plugin );
 
     /**
      * Remove a record from the table
      * 
-     * @param nNewsLetterTemplateId the template identifier
-     * @param plugin the Plugin
+     * @param nNewsLetterTemplateId
+     *            the template identifier
+     * @param plugin
+     *            the Plugin
      */
     void delete( int nNewsLetterTemplateId, Plugin plugin );
 
     /**
      * Returns the list of all templates
-     * @param plugin The plugin
+     * 
+     * @param plugin
+     *            The plugin
      * @return the reference list of the templates
      */
     ReferenceList selectTemplatesByRef( Plugin plugin );
-    
+
     /**
      * Get the list of temmplates associated with a given workgroup
-     * @param strWorkgroupKey The key of the workgroup
-     * @param plugin The plugin
+     * 
+     * @param strWorkgroupKey
+     *            The key of the workgroup
+     * @param plugin
+     *            The plugin
      * @return The list of temmplates associated with a given workgroup
      */
     Collection<NewsLetterTemplate> selectTemplatesListByWorkgoup( String strWorkgroupKey, Plugin plugin );

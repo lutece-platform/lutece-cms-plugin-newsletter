@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,10 +41,8 @@ import fr.paris.lutece.util.sql.DAOUtil;
 import java.util.HashSet;
 import java.util.Set;
 
-
 /**
- * This class provides Data Access methods for NewsLetterSubscriptionPortlet
- * objects
+ * This class provides Data Access methods for NewsLetterSubscriptionPortlet objects
  */
 public final class NewsLetterSubscriptionPortletDAO implements INewsLetterSubscriptionPortletDAO
 {
@@ -56,7 +54,7 @@ public final class NewsLetterSubscriptionPortletDAO implements INewsLetterSubscr
     private static final String SQL_QUERY_DELETE = "DELETE FROM newsletter_portlet_subscribe WHERE id_portlet=? ";
 
     ///////////////////////////////////////////////////////////////////////////////////////
-    //Access methods to data
+    // Access methods to data
 
     /**
      * Inserts a new record in the table. Not implemented.
@@ -72,7 +70,8 @@ public final class NewsLetterSubscriptionPortletDAO implements INewsLetterSubscr
     /**
      * Deletes a record from the table.
      * 
-     * @param nPortletId the portlet id
+     * @param nPortletId
+     *            the portlet id
      * 
      */
     public void delete( int nPortletId )
@@ -86,7 +85,8 @@ public final class NewsLetterSubscriptionPortletDAO implements INewsLetterSubscr
     /**
      * Loads the data of the portlet from the table.
      * 
-     * @param nPortletId the portlet id
+     * @param nPortletId
+     *            the portlet id
      * @return the Portlet object
      */
     public Portlet load( int nPortletId )
@@ -130,8 +130,7 @@ public final class NewsLetterSubscriptionPortletDAO implements INewsLetterSubscr
      */
     public void insertSubscription( int nPortletId, int nNewsletterId )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_NEWSLETTER,
-                PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_NEWSLETTER, PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
         daoUtil.setInt( 1, nPortletId );
         daoUtil.setInt( 2, nNewsletterId );
 
@@ -149,8 +148,7 @@ public final class NewsLetterSubscriptionPortletDAO implements INewsLetterSubscr
      */
     public void removeSubscription( int nPortletId, int nNewsletterId )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_NEWSLETTER,
-                PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_NEWSLETTER, PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
         daoUtil.setInt( 1, nPortletId );
         daoUtil.setInt( 2, nNewsletterId );
 
@@ -163,15 +161,13 @@ public final class NewsLetterSubscriptionPortletDAO implements INewsLetterSubscr
      * 
      * @param nPortletId
      *            the identifier of the portlet.
-     * @return a Set of Integer objects containing the identifers of the
-     *         susbscriptions.
+     * @return a Set of Integer objects containing the identifers of the susbscriptions.
      */
     public Set<Integer> findSelectedNewsletters( int nPortletId )
     {
         HashSet<Integer> results = new HashSet<Integer>( );
 
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_SUBSCRIPTION_BY_PORTLET,
-                PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_SUBSCRIPTION_BY_PORTLET, PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
         daoUtil.setInt( 1, nPortletId );
         daoUtil.executeQuery( );
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,7 +75,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import au.com.bytecode.opencsv.CSVWriter;
 
-
 /**
  * The newsletter service
  * 
@@ -115,15 +114,19 @@ public class NewsletterService implements Serializable
 
     /**
      * Send the newsletter to a list of subscribers
-     * @param newsletter The newsletter to send
-     * @param strObject The email object
-     * @param strBaseUrl The baseUrl (can be prod url)
-     * @param templateNewsletter The generated template
-     * @param listSubscribers The list of subscribers (date and id can be null,
-     *            only email is used)
+     * 
+     * @param newsletter
+     *            The newsletter to send
+     * @param strObject
+     *            The email object
+     * @param strBaseUrl
+     *            The baseUrl (can be prod url)
+     * @param templateNewsletter
+     *            The generated template
+     * @param listSubscribers
+     *            The list of subscribers (date and id can be null, only email is used)
      */
-    public void sendMail( NewsLetter newsletter, String strObject, String strBaseUrl, HtmlTemplate templateNewsletter,
-            Collection<Subscriber> listSubscribers )
+    public void sendMail( NewsLetter newsletter, String strObject, String strBaseUrl, HtmlTemplate templateNewsletter, Collection<Subscriber> listSubscribers )
     {
         List<UrlAttachment> urlAttachments = null;
         HtmlTemplate templateNewsletterToUse = templateNewsletter;
@@ -132,8 +135,7 @@ public class NewsletterService implements Serializable
             // we use absolute urls if there is no preproduction process
             boolean useAbsoluteUrl = isAbsoluteUrl( );
             String strTemplate = templateNewsletterToUse.getHtml( );
-            strTemplate = StringUtil.substitute( strTemplate, strBaseUrl,
-                    NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE );
+            strTemplate = StringUtil.substitute( strTemplate, strBaseUrl, NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE );
             urlAttachments = MailService.getUrlAttachmentList( strTemplate, strBaseUrl, useAbsoluteUrl );
 
             // all images, css urls are relative
@@ -163,20 +165,20 @@ public class NewsletterService implements Serializable
 
             if ( ( urlAttachments == null ) || ( urlAttachments.size( ) == 0 ) )
             {
-                MailService.sendMailHtml( subscriber.getEmail( ), newsletter.getNewsletterSenderName( ),
-                        newsletter.getNewsletterSenderMail( ), strObject, strNewsLetterCode );
+                MailService.sendMailHtml( subscriber.getEmail( ), newsletter.getNewsletterSenderName( ), newsletter.getNewsletterSenderMail( ), strObject,
+                        strNewsLetterCode );
             }
             else
             {
-                MailService.sendMailMultipartHtml( subscriber.getEmail( ), newsletter.getNewsletterSenderName( ),
-                        newsletter.getNewsletterSenderMail( ), strObject, strNewsLetterCode, urlAttachments );
+                MailService.sendMailMultipartHtml( subscriber.getEmail( ), newsletter.getNewsletterSenderName( ), newsletter.getNewsletterSenderMail( ),
+                        strObject, strNewsLetterCode, urlAttachments );
             }
         }
     }
 
     /**
-     * Check the property in property file to know if url must be absolutes or
-     * relatives
+     * Check the property in property file to know if url must be absolutes or relatives
+     * 
      * @return true if absolute or false else
      */
     public boolean isAbsoluteUrl( )
@@ -194,6 +196,7 @@ public class NewsletterService implements Serializable
 
     /**
      * Determine if mails must be sent in MHTML
+     * 
      * @return true whether MHTML is needed
      */
     public boolean isMhtmlActivated( )
@@ -204,12 +207,14 @@ public class NewsletterService implements Serializable
 
     /**
      * Fetches the list of subscribers on a specific newsletter
-     * @param nNewsletterId The id of the newsletter
+     * 
+     * @param nNewsletterId
+     *            The id of the newsletter
      * @return The byte representation of the list of subscribers
      */
-    public byte[] getSubscribersCsvExport( int nNewsletterId )
+    public byte [ ] getSubscribersCsvExport( int nNewsletterId )
     {
-        byte[] byteSubscribersList = null;
+        byte [ ] byteSubscribersList = null;
 
         try
         {
@@ -219,21 +224,21 @@ public class NewsletterService implements Serializable
 
             for ( Subscriber subscriber : listSubscriber )
             {
-                String[] arraySubscriber = new String[3];
-                arraySubscriber[0] = Integer.toString( subscriber.getId( ) );
-                arraySubscriber[1] = subscriber.getEmail( );
-                arraySubscriber[2] = subscriber.getDateSubscription( ).toString( );
+                String [ ] arraySubscriber = new String [ 3];
+                arraySubscriber [0] = Integer.toString( subscriber.getId( ) );
+                arraySubscriber [1] = subscriber.getEmail( );
+                arraySubscriber [2] = subscriber.getDateSubscription( ).toString( );
                 writer.writeNext( arraySubscriber );
             }
 
             writer.close( );
             byteSubscribersList = byteArrayStream.toByteArray( );
         }
-        catch ( UnsupportedEncodingException e )
+        catch( UnsupportedEncodingException e )
         {
             AppLogService.error( e );
         }
-        catch ( IOException e )
+        catch( IOException e )
         {
             AppLogService.error( e );
         }
@@ -243,10 +248,13 @@ public class NewsletterService implements Serializable
 
     /**
      * Remove a known suscriber from a newsletter
-     * @param subscriber the subscriber to remove
-     * @param nNewsletterId the newsletter id from which to remove the
-     *            subscriber
-     * @param plugin The plugin object
+     * 
+     * @param subscriber
+     *            the subscriber to remove
+     * @param nNewsletterId
+     *            the newsletter id from which to remove the subscriber
+     * @param plugin
+     *            The plugin object
      */
     public void removeSubscriberFromNewsletter( Subscriber subscriber, int nNewsletterId, Plugin plugin )
     {
@@ -265,8 +273,7 @@ public class NewsletterService implements Serializable
             }
 
             /*
-             * if the subscriber is not registered to an other newsletter, his
-             * account is deleted
+             * if the subscriber is not registered to an other newsletter, his account is deleted
              */
             if ( SubscriberHome.findNewsLetters( nSubscriberId, plugin ) == 0 )
             {
@@ -276,22 +283,24 @@ public class NewsletterService implements Serializable
     }
 
     /**
-     * Generate the html code of the newsletter according to the document and
-     * newsletter templates
+     * Generate the html code of the newsletter according to the document and newsletter templates
      * 
-     * @param newsletter the newsletter to generate the HTML of
-     * @param nTemplateNewsLetterId the newsletter template id
-     * @param strBaseUrl The base url of the portal
-     * @param user the current user
-     * @param locale The locale
-     * @return the html code for the newsletter content of null if no template
-     *         available
+     * @param newsletter
+     *            the newsletter to generate the HTML of
+     * @param nTemplateNewsLetterId
+     *            the newsletter template id
+     * @param strBaseUrl
+     *            The base url of the portal
+     * @param user
+     *            the current user
+     * @param locale
+     *            The locale
+     * @return the html code for the newsletter content of null if no template available
      */
-    public String generateNewsletterHtmlCode( NewsLetter newsletter, int nTemplateNewsLetterId, String strBaseUrl,
-            AdminUser user, Locale locale )
+    public String generateNewsletterHtmlCode( NewsLetter newsletter, int nTemplateNewsLetterId, String strBaseUrl, AdminUser user, Locale locale )
     {
         String strTemplatePath = NewsletterUtils.getHtmlTemplatePath( nTemplateNewsLetterId, getPlugin( ) );
-        //        String strDocumentPath = generateDocumentsList( nNewsLetterId, nTemplateDocumentId, strBaseUrl );
+        // String strDocumentPath = generateDocumentsList( nNewsLetterId, nTemplateDocumentId, strBaseUrl );
 
         if ( strTemplatePath == null )
         {
@@ -299,14 +308,13 @@ public class NewsletterService implements Serializable
         }
 
         Map<String, Object> model = new HashMap<String, Object>( );
-        List<NewsletterTopic> listTopics = NewsletterTopicHome
-                .findAllByIdNewsletter( newsletter.getId( ), getPlugin( ) );
+        List<NewsletterTopic> listTopics = NewsletterTopicHome.findAllByIdNewsletter( newsletter.getId( ), getPlugin( ) );
 
         // We sort the elements so that they are ordered by section and order.
         Collections.sort( listTopics );
 
         int nCurrentSection = 0;
-        String[] strContentBySection = new String[newsletter.getNbSections( )];
+        String [ ] strContentBySection = new String [ newsletter.getNbSections( )];
         List<NewsletterTopic> listSelectedTopics = new ArrayList<NewsletterTopic>( );
         for ( int i = 0; i < listTopics.size( ) + 1; i++ )
         {
@@ -330,7 +338,7 @@ public class NewsletterService implements Serializable
                     }
                     if ( nCurrentSection - 1 < strContentBySection.length )
                     {
-                        strContentBySection[nCurrentSection - 1] = sbSectionContent.toString( );
+                        strContentBySection [nCurrentSection - 1] = sbSectionContent.toString( );
                     }
                 }
                 if ( newsletterTopic != null )
@@ -342,10 +350,10 @@ public class NewsletterService implements Serializable
             }
         }
 
-        model.put( NewsLetterConstants.MARK_CONTENT, strContentBySection[0] );
+        model.put( NewsLetterConstants.MARK_CONTENT, strContentBySection [0] );
         for ( int i = 0; i < strContentBySection.length; i++ )
         {
-            model.put( NewsLetterConstants.MARK_CONTENT_SECTION + Integer.toString( i + 1 ), strContentBySection[i] );
+            model.put( NewsLetterConstants.MARK_CONTENT_SECTION + Integer.toString( i + 1 ), strContentBySection [i] );
         }
         model.put( NewsLetterConstants.MARK_BASE_URL, strBaseUrl );
 
@@ -356,7 +364,9 @@ public class NewsletterService implements Serializable
 
     /**
      * Get the url of the image folder used by templates
-     * @param strBaseUrl The base url
+     * 
+     * @param strBaseUrl
+     *            The base url
      * @return The absolute url of the folder containing images of templates.
      */
     public String getImageFolderPath( String strBaseUrl )
@@ -365,10 +375,9 @@ public class NewsletterService implements Serializable
     }
 
     /**
-     * Check if images of the newsletter should be transfered on an unsecured
-     * webapp or not
-     * @return True if images of the newsletter should be transfered on an
-     *         unsecured webapp, false otherwise
+     * Check if images of the newsletter should be transfered on an unsecured webapp or not
+     * 
+     * @return True if images of the newsletter should be transfered on an unsecured webapp, false otherwise
      */
     public boolean useUnsecuredImages( )
     {
@@ -377,6 +386,7 @@ public class NewsletterService implements Serializable
 
     /**
      * Get the unsecured image folder inside the unsecured folder
+     * 
      * @return The unsecured image folder inside the unsecured folder
      */
     public String getUnsecuredImagefolder( )
@@ -385,21 +395,19 @@ public class NewsletterService implements Serializable
     }
 
     /**
-     * Get the absolute path to the unsecured folder where files should be
-     * saved
-     * @return The absolute path to the unsecured folder where files should be
-     *         saved, or the webapp path if none is defined
+     * Get the absolute path to the unsecured folder where files should be saved
+     * 
+     * @return The absolute path to the unsecured folder where files should be saved, or the webapp path if none is defined
      */
     public String getUnsecuredFolderPath( )
     {
-        return AppPropertiesService.getProperty( PROPERTY_WEBAPP_PATH, AppPathService.getWebAppPath( )
-                + NewsLetterConstants.CONSTANT_SLASH );
+        return AppPropertiesService.getProperty( PROPERTY_WEBAPP_PATH, AppPathService.getWebAppPath( ) + NewsLetterConstants.CONSTANT_SLASH );
     }
 
     /**
      * Get the absolute url to the unsecured webapp.
-     * @return The absolute url to the unsecured webapp, or the base url of this
-     *         webapp if none is defined
+     * 
+     * @return The absolute url to the unsecured webapp, or the base url of this webapp if none is defined
      */
     public String getUnsecuredWebappUrl( )
     {
@@ -408,7 +416,9 @@ public class NewsletterService implements Serializable
 
     /**
      * Get the unsubscription key associated with the given email address.
-     * @param strEmail The email to get the unsubscription key of.
+     * 
+     * @param strEmail
+     *            The email to get the unsubscription key of.
      * @return The unsubscription key of the email
      */
     public String getUnsubscriptionKey( String strEmail )
@@ -419,9 +429,13 @@ public class NewsletterService implements Serializable
 
     /**
      * Modify the number of sections of a newsletter template
-     * @param nOldSectionNumber The old number of sections
-     * @param nNewSectionNumber The new number of sections
-     * @param nTemplateId The id of the template
+     * 
+     * @param nOldSectionNumber
+     *            The old number of sections
+     * @param nNewSectionNumber
+     *            The new number of sections
+     * @param nTemplateId
+     *            The id of the template
      */
     public void modifySectionNumber( int nOldSectionNumber, int nNewSectionNumber, int nTemplateId )
     {
@@ -434,10 +448,8 @@ public class NewsletterService implements Serializable
                 // If we removed sections we reorganize newsletter's topics
                 if ( nOldSectionNumber > nNewSectionNumber )
                 {
-                    List<NewsletterTopic> listTopics = NewsletterTopicHome.findAllByIdNewsletter( newsletter.getId( ),
-                            getPlugin( ) );
-                    int nNewOrder = NewsletterTopicHome.getNewOrder( newsletter.getId( ), nNewSectionNumber,
-                            getPlugin( ) );
+                    List<NewsletterTopic> listTopics = NewsletterTopicHome.findAllByIdNewsletter( newsletter.getId( ), getPlugin( ) );
+                    int nNewOrder = NewsletterTopicHome.getNewOrder( newsletter.getId( ), nNewSectionNumber, getPlugin( ) );
                     for ( NewsletterTopic topic : listTopics )
                     {
                         if ( topic.getSection( ) > nNewSectionNumber )
@@ -457,6 +469,7 @@ public class NewsletterService implements Serializable
 
     /**
      * Get the instance of the newsletter plugin
+     * 
      * @return the instance of the newsletter plugin
      */
     private Plugin getPlugin( )
@@ -466,6 +479,7 @@ public class NewsletterService implements Serializable
 
     /**
      * Get the NewsletterTopicService instance of this service
+     * 
      * @return The NewsletterTopicService instance of this service
      */
     private NewsletterTopicService getNewsletterTopicService( )
@@ -476,30 +490,35 @@ public class NewsletterService implements Serializable
         }
         return _newsletterTopicService;
     }
-    
+
     /**
      * Copy existing newsletter without its subscribers.
-     * @param newsletter newsletter to copy
-     * @param user the current user
-     * @param locale The locale
+     * 
+     * @param newsletter
+     *            newsletter to copy
+     * @param user
+     *            the current user
+     * @param locale
+     *            The locale
      */
-    public void copyExistingNewsletter(NewsLetter newsletter, AdminUser user, Locale locale ) {
-    	int oldNewsLetterId = newsletter.getId();
-    	NewsLetterHome.create(newsletter, getPlugin());
-    	
-    	 // Copy of topics
-        List<NewsletterTopic> topicList = NewsletterTopicHome.findAllByIdNewsletter(oldNewsLetterId, getPlugin());
-        topicList.stream().forEach((NewsletterTopic nt) -> {
-        	int oldTopicId = nt.getId();
-        	nt.setIdNewsletter(newsletter.getId());
-        	 for ( INewsletterTopicService service : SpringContextService.getBeansOfType( INewsletterTopicService.class ) )
-             {
-                 if ( StringUtils.equals( service.getNewsletterTopicTypeCode( ), nt.getTopicTypeCode( ) ) )
-                 {
-                	 NewsletterTopicHome.insertNewsletterTopic(nt, getPlugin());
-                	 service.copyNewsletterTopic(oldTopicId, nt, user, locale);
-                 }
-             }
-        });
+    public void copyExistingNewsletter( NewsLetter newsletter, AdminUser user, Locale locale )
+    {
+        int oldNewsLetterId = newsletter.getId( );
+        NewsLetterHome.create( newsletter, getPlugin( ) );
+
+        // Copy of topics
+        List<NewsletterTopic> topicList = NewsletterTopicHome.findAllByIdNewsletter( oldNewsLetterId, getPlugin( ) );
+        topicList.stream( ).forEach( ( NewsletterTopic nt ) -> {
+            int oldTopicId = nt.getId( );
+            nt.setIdNewsletter( newsletter.getId( ) );
+            for ( INewsletterTopicService service : SpringContextService.getBeansOfType( INewsletterTopicService.class ) )
+            {
+                if ( StringUtils.equals( service.getNewsletterTopicTypeCode( ), nt.getTopicTypeCode( ) ) )
+                {
+                    NewsletterTopicHome.insertNewsletterTopic( nt, getPlugin( ) );
+                    service.copyNewsletterTopic( oldTopicId, nt, user, locale );
+                }
+            }
+        } );
     }
 }

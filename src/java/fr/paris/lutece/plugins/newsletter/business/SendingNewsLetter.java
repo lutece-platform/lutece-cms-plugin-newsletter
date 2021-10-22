@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,6 @@ package fr.paris.lutece.plugins.newsletter.business;
 
 import java.sql.Timestamp;
 
-
 /**
  * This class represents business objects SendingNewsLetter
  */
@@ -53,7 +52,8 @@ public class SendingNewsLetter
     /**
      * Sets the identifier of the sending
      *
-     * @param nId the sending identifier
+     * @param nId
+     *            the sending identifier
      */
     public void setId( int nId )
     {
@@ -65,7 +65,7 @@ public class SendingNewsLetter
      *
      * @return the sending identifier
      */
-    public int getId(  )
+    public int getId( )
     {
         return _nId;
     }
@@ -73,7 +73,8 @@ public class SendingNewsLetter
     /**
      * Sets the identifier of the newsletter
      *
-     * @param nNewsLetterId the newsletter identifier
+     * @param nNewsLetterId
+     *            the newsletter identifier
      */
     public void setNewsLetterId( int nNewsLetterId )
     {
@@ -85,7 +86,7 @@ public class SendingNewsLetter
      *
      * @return the newsletter identifier
      */
-    public int getNewsLetterId(  )
+    public int getNewsLetterId( )
     {
         return _nNewsLetterId;
     }
@@ -93,7 +94,8 @@ public class SendingNewsLetter
     /**
      * Sets the html content of the sending newsletter
      *
-     * @param strHtml the newsletter html content
+     * @param strHtml
+     *            the newsletter html content
      */
     public void setHtml( String strHtml )
     {
@@ -105,7 +107,7 @@ public class SendingNewsLetter
      *
      * @return the newsletter html content
      */
-    public String getHtml(  )
+    public String getHtml( )
     {
         return _strHtml;
     }
@@ -113,7 +115,8 @@ public class SendingNewsLetter
     /**
      * Sets the number of subscribers
      *
-     * @param nCountSubscribers the number of subscribers
+     * @param nCountSubscribers
+     *            the number of subscribers
      */
     public void setCountSubscribers( int nCountSubscribers )
     {
@@ -125,7 +128,7 @@ public class SendingNewsLetter
      *
      * @return the number of subscribers
      */
-    public int getCountSubscribers(  )
+    public int getCountSubscribers( )
     {
         return _nCountSubscribers;
     }
@@ -133,7 +136,8 @@ public class SendingNewsLetter
     /**
      * Sets the date of the newsletter sending
      *
-     * @param date the date of the sending
+     * @param date
+     *            the date of the sending
      */
     public void setDate( Timestamp date )
     {
@@ -145,23 +149,26 @@ public class SendingNewsLetter
      *
      * @return the date of sending
      */
-    public Timestamp getDate(  )
+    public Timestamp getDate( )
     {
         return _date;
     }
 
     /**
      * Returns the subject of the email
+     * 
      * @return the subject of the email
      */
-    public String getEmailSubject(  )
+    public String getEmailSubject( )
     {
         return _emailSubject;
     }
 
     /**
      * Sets the subject of the email
-     * @param subject the new subject
+     * 
+     * @param subject
+     *            the new subject
      */
     public void setEmailSubject( String subject )
     {

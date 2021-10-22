@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -46,7 +46,6 @@ import fr.paris.lutece.util.xml.XmlUtil;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 
-
 /**
  * This class represents a NewsLetterArchivePortlet.
  */
@@ -62,7 +61,8 @@ public class NewsLetterArchivePortlet extends Portlet
     /**
      * Returns the Xml code of the Archive portlet with XML heading
      * 
-     * @param request The HTTP servlet request
+     * @param request
+     *            The HTTP servlet request
      * @return the Xml code of the Archive portlet
      */
     public String getXmlDocument( HttpServletRequest request )
@@ -73,7 +73,8 @@ public class NewsLetterArchivePortlet extends Portlet
     /**
      * Returns the Xml code of the Archive portlet
      * 
-     * @param request The HTTP servlet request
+     * @param request
+     *            The HTTP servlet request
      * @return the Xml code of the Archive portlet content
      */
     public String getXml( HttpServletRequest request )
@@ -89,7 +90,7 @@ public class NewsLetterArchivePortlet extends Portlet
         {
             XmlUtil.beginElement( sbXml, TAG_NEWSLETTER_SENDING );
             XmlUtil.addElement( sbXml, TAG_NEWSLETTER_SENDING_ID, sending.getId( ) );
-            XmlUtil.addElement( sbXml, TAG_NEWSLETTER_SENDING_DATE, DateUtil.getDateString( sending.getDate( ), NewsletterUtils.getLocale(request)) );
+            XmlUtil.addElement( sbXml, TAG_NEWSLETTER_SENDING_DATE, DateUtil.getDateString( sending.getDate( ), NewsletterUtils.getLocale( request ) ) );
             XmlUtil.addElementHtml( sbXml, TAG_NEWSLETTER_SENDING_SUBJECT, sending.getEmailSubject( ) );
             XmlUtil.endElement( sbXml, TAG_NEWSLETTER_SENDING );
         }

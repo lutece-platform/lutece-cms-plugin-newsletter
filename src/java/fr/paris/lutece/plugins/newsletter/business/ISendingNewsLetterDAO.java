@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,6 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * The skeleton data access methods for SendingNewsletter
  *
@@ -48,23 +47,30 @@ public interface ISendingNewsLetterDAO
     /**
      * Insert a new record in the table.
      *
-     * @param sending the object to be inserted
-     * @param plugin the Plugin
+     * @param sending
+     *            the object to be inserted
+     * @param plugin
+     *            the Plugin
      */
     void insert( SendingNewsLetter sending, Plugin plugin );
 
     /**
      * Delete the record in the database
-     * @param nSendingId the sending Identifier
-     * @param plugin the Plugin
+     * 
+     * @param nSendingId
+     *            the sending Identifier
+     * @param plugin
+     *            the Plugin
      */
     void delete( int nSendingId, Plugin plugin );
 
     /**
      * Loads the data from the database
      *
-     * @param nSendingId the sending identifier
-     * @param plugin the Plugin
+     * @param nSendingId
+     *            the sending identifier
+     * @param plugin
+     *            the Plugin
      * @return an object SendingNewsLetter
      */
     SendingNewsLetter load( int nSendingId, Plugin plugin );
@@ -72,15 +78,20 @@ public interface ISendingNewsLetterDAO
     /**
      * Update the record in the table
      *
-     * @param sending an instance of the class SendingNewsLetter
-     * @param plugin the Plugin
+     * @param sending
+     *            an instance of the class SendingNewsLetter
+     * @param plugin
+     *            the Plugin
      */
     void store( SendingNewsLetter sending, Plugin plugin );
 
     /**
      * Returns the last sending performed for the newsletter of given id
-     * @param newsletterId the newsletter id for wich we need the last sending
-     * @param plugin the plugin
+     * 
+     * @param newsletterId
+     *            the newsletter id for wich we need the last sending
+     * @param plugin
+     *            the plugin
      * @return the last sending for the given newsletter id - null if no sending found
      */
     SendingNewsLetter selectLastSendingForNewsletterId( int newsletterId, Plugin plugin );
@@ -88,23 +99,30 @@ public interface ISendingNewsLetterDAO
     /**
      * Returns all the sendings in the database.
      *
-     * @param plugin the plugin
+     * @param plugin
+     *            the plugin
      * @return a list of SendingNewsLetter objects.
      */
     List<SendingNewsLetter> findAllSendings( Plugin plugin );
 
     /**
      * Returns the sendings corresponding to a list of ids.
+     * 
      * @return a list of SendingNewsLetter objects.
-     * @param listId A list of id corresponding to sent newsletters
-     * @param plugin the plugin
+     * @param listId
+     *            A list of id corresponding to sent newsletters
+     * @param plugin
+     *            the plugin
      */
     ArrayList<SendingNewsLetter> findSendingsByIds( ArrayList<Integer> listId, Plugin plugin );
 
     /**
      * Returns all the last sending performed for the newsletter of given id
-     * @param newsletterId the newsletter id for wich we need the last sending
-     * @param plugin the plugin
+     * 
+     * @param newsletterId
+     *            the newsletter id for wich we need the last sending
+     * @param plugin
+     *            the plugin
      * @return the last sending for the given newsletter id - null if no sending found
      */
     List<SendingNewsLetter> selectAllLastSendingForNewsletterId( int newsletterId, Plugin plugin );

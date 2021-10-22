@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,38 +40,36 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 import java.util.Set;
 
-
 /**
  * This class provides instances management methods for NewsLetterSubscriptionPortlet objects
  */
 public class NewsLetterSubscriptionPortletHome extends PortletHome
 {
     // This class implements the Singleton design pattern.
-    private static NewsLetterSubscriptionPortletHome _singleton = new NewsLetterSubscriptionPortletHome(  );
+    private static NewsLetterSubscriptionPortletHome _singleton = new NewsLetterSubscriptionPortletHome( );
 
     // Static variable pointed at the DAO instance
-    private static INewsLetterSubscriptionPortletDAO _dao = SpringContextService
-            .getBean( "newsletter.newsLetterSubscriptionPortletDAO" );
+    private static INewsLetterSubscriptionPortletDAO _dao = SpringContextService.getBean( "newsletter.newsLetterSubscriptionPortletDAO" );
 
     /**
      * Returns the identifier of the portlet type
      *
      * @return the portlet type identifier
      */
-    public String getPortletTypeId(  )
+    public String getPortletTypeId( )
     {
-        String strCurrentClassName = this.getClass(  ).getName(  );
+        String strCurrentClassName = this.getClass( ).getName( );
         String strPortletTypeId = PortletTypeHome.getPortletTypeId( strCurrentClassName );
 
         return strPortletTypeId;
     }
 
     /**
-     * Returns the instance of  NewsLetterSubscription Portlet
+     * Returns the instance of NewsLetterSubscription Portlet
      *
      * @return the NewsLetterSubscription Portlet instance
      */
-    public static PortletHome getInstance(  )
+    public static PortletHome getInstance( )
     {
         return _singleton;
     }
@@ -81,7 +79,7 @@ public class NewsLetterSubscriptionPortletHome extends PortletHome
      *
      * @return the instance of the DAO singleton
      */
-    public IPortletInterfaceDAO getDAO(  )
+    public IPortletInterfaceDAO getDAO( )
     {
         return _dao;
     }
@@ -89,8 +87,10 @@ public class NewsLetterSubscriptionPortletHome extends PortletHome
     /**
      * Associates a new subscription to a given portlet.
      *
-     * @param nPortletId         the identifier of the portlet.
-     * @param nSubscriptionId   the identifier of the subscription.
+     * @param nPortletId
+     *            the identifier of the portlet.
+     * @param nSubscriptionId
+     *            the identifier of the subscription.
      */
     public static void insertSubscription( int nPortletId, int nSubscriptionId )
     {
@@ -100,8 +100,10 @@ public class NewsLetterSubscriptionPortletHome extends PortletHome
     /**
      * De-associate a subscription from a given portlet.
      *
-     * @param nPortletId       the identifier of the portlet.
-     * @param nIdNewsletter    the identifier of the subscription.
+     * @param nPortletId
+     *            the identifier of the portlet.
+     * @param nIdNewsletter
+     *            the identifier of the subscription.
      */
     public static void removeNewsletter( int nPortletId, int nIdNewsletter )
     {
@@ -111,7 +113,8 @@ public class NewsLetterSubscriptionPortletHome extends PortletHome
     /**
      * Returns all the newsletters chosen associated with a given portlet.
      *
-     * @param nPortletId the identifier of the portlet.
+     * @param nPortletId
+     *            the identifier of the portlet.
      * @return a Set of Integer containing the identifiers.
      */
     public static Set<Integer> findSelectedNewsletters( int nPortletId )

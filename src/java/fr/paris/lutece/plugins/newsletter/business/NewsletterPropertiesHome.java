@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,6 @@ package fr.paris.lutece.plugins.newsletter.business;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 
-
 /**
  * This class provides instacnes management methods (find, ...) for NewsLetterProperties objects
  */
@@ -48,16 +47,18 @@ public final class NewsletterPropertiesHome
     /**
      * Private constructor - this class need not be instantiated
      */
-    private NewsletterPropertiesHome(  )
+    private NewsletterPropertiesHome( )
     {
     }
 
     /**
      * Update of the newsletterproperties data specified in paramater
      *
-     * @param properties the instance of class which contains the data to store
-     * @param plugin the plugin
-     * @return the instance  of the properties updated
+     * @param properties
+     *            the instance of class which contains the data to store
+     * @param plugin
+     *            the plugin
+     * @return the instance of the properties updated
      */
     public static NewsLetterProperties update( NewsLetterProperties properties, Plugin plugin )
     {
@@ -69,7 +70,8 @@ public final class NewsletterPropertiesHome
     /**
      * Returns an object NewsLetterProperties from its identifier
      *
-     * @param plugin the plugin
+     * @param plugin
+     *            the plugin
      * @return an instance of the class
      */
     public static NewsLetterProperties find( Plugin plugin )

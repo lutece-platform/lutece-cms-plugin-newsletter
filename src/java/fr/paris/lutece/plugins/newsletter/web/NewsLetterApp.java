@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,7 +57,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
  * This XPage handles the newsletter subscription, and the newsletter archives.
  */
@@ -79,30 +78,35 @@ public class NewsLetterApp implements XPageApplication
     private static final String MARK_IS_ACTIVE_CAPTCHA = "is_active_captcha";
     private static final String MARK_PROPERTIES = "properties";
 
-    //parameters
+    // parameters
     private static final String PARAMETER_VIEW_REQUIREMENT = "view_requirement";
 
     // Constants
     private static final String JCAPTCHA_PLUGIN = "jcaptcha";
 
-    //Captcha
+    // Captcha
     private CaptchaSecurityService _captchaService;
 
     /**
      * 
-     * @param request The HTTP request
-     * @param plugin The plugin
+     * @param request
+     *            The HTTP request
+     * @param plugin
+     *            The plugin
      */
     public void init( HttpServletRequest request, Plugin plugin )
     {
     }
 
     /**
-     * Returns the Newsletter XPage content depending on the request
-     * parameters and the current mode.
-     * @param request The HTTP request.
-     * @param nMode The current mode.
-     * @param plugin The Plugin
+     * Returns the Newsletter XPage content depending on the request parameters and the current mode.
+     * 
+     * @param request
+     *            The HTTP request.
+     * @param nMode
+     *            The current mode.
+     * @param plugin
+     *            The Plugin
      * @return The page content.
      * @throws fr.paris.lutece.portal.service.message.SiteMessageException
      *             Throws a message interpreted by the front office
@@ -123,18 +127,21 @@ public class NewsLetterApp implements XPageApplication
         {
             NewsLetterRegistrationService.getInstance( ).doSubscription( request );
         }
-        else if ( strAction.equals( NewsLetterConstants.ACTION_CONFIRM_UNSUBSCRIBE ) )
-        {
-            NewsLetterRegistrationService.getInstance( ).doConfirmUnSubscribe( request );
-        }
-        else if ( strAction.equals( NewsLetterConstants.ACTION_UNSUBSCRIBE ) )
-        {
-            NewsLetterRegistrationService.getInstance( ).doUnSubscribe( request );
-        }
-        else if ( strAction.equals( NewsLetterConstants.ACTION_CONFIRM_SUBSCRIBE ) )
-        {
-            NewsLetterRegistrationService.getInstance( ).doConfirmSubscribe( request );
-        }
+        else
+            if ( strAction.equals( NewsLetterConstants.ACTION_CONFIRM_UNSUBSCRIBE ) )
+            {
+                NewsLetterRegistrationService.getInstance( ).doConfirmUnSubscribe( request );
+            }
+            else
+                if ( strAction.equals( NewsLetterConstants.ACTION_UNSUBSCRIBE ) )
+                {
+                    NewsLetterRegistrationService.getInstance( ).doUnSubscribe( request );
+                }
+                else
+                    if ( strAction.equals( NewsLetterConstants.ACTION_CONFIRM_SUBSCRIBE ) )
+                    {
+                        NewsLetterRegistrationService.getInstance( ).doConfirmSubscribe( request );
+                    }
 
         resultPage = getPage( request, plugin );
 
@@ -143,8 +150,11 @@ public class NewsLetterApp implements XPageApplication
 
     /**
      * Get the main page of this app.
-     * @param request The request
-     * @param plugin The newsletter plugin
+     * 
+     * @param request
+     *            The request
+     * @param plugin
+     *            The newsletter plugin
      * @return The Html content to display
      */
     private XPage getPage( HttpServletRequest request, Plugin plugin )
@@ -153,7 +163,7 @@ public class NewsLetterApp implements XPageApplication
 
         if ( request.getParameter( PARAMETER_VIEW_REQUIREMENT ) != null )
         {
-            //See conditional use
+            // See conditional use
             page.setTitle( I18nService.getLocalizedString( PROPERTY_PATHLABEL, request.getLocale( ) ) );
             page.setPathLabel( I18nService.getLocalizedString( PROPERTY_PAGETITLE, request.getLocale( ) ) );
             page.setContent( getRequirement( request, plugin ) );
@@ -180,8 +190,7 @@ public class NewsLetterApp implements XPageApplication
                 _captchaService = new CaptchaSecurityService( );
                 model.put( MARK_CAPTCHA, _captchaService.getHtmlCode( ) );
             }
-            HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_XPAGE_NEWSLETTER, request.getLocale( ),
-                    model );
+            HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_XPAGE_NEWSLETTER, request.getLocale( ), model );
             page.setContent( template.getHtml( ) );
         }
 
@@ -189,11 +198,13 @@ public class NewsLetterApp implements XPageApplication
     }
 
     /**
-     * Returns the Newsletter archive XPage content depending on the request
-     * parameters and the current mode.
+     * Returns the Newsletter archive XPage content depending on the request parameters and the current mode.
+     * 
      * @return The page content.
-     * @param request The HTTP request.
-     * @throws SiteMessageException A site message exception
+     * @param request
+     *            The HTTP request.
+     * @throws SiteMessageException
+     *             A site message exception
      */
     public String getShowArchivePage( HttpServletRequest request ) throws SiteMessageException
     {
@@ -202,9 +213,11 @@ public class NewsLetterApp implements XPageApplication
 
     /**
      * Performs the subscription process
-     * @param request The Http request
-     * @throws fr.paris.lutece.portal.service.message.SiteMessageException The
-     *             error message thrown to the user
+     * 
+     * @param request
+     *            The Http request
+     * @throws fr.paris.lutece.portal.service.message.SiteMessageException
+     *             The error message thrown to the user
      */
     public void doSubscription( HttpServletRequest request ) throws SiteMessageException
     {
@@ -213,9 +226,11 @@ public class NewsLetterApp implements XPageApplication
 
     /**
      * Performs unsubscription process
-     * @param request The http request
-     * @throws fr.paris.lutece.portal.service.message.SiteMessageException The
-     *             error message handled by the front office
+     * 
+     * @param request
+     *            The http request
+     * @throws fr.paris.lutece.portal.service.message.SiteMessageException
+     *             The error message handled by the front office
      */
     public void doUnSubscribe( HttpServletRequest request ) throws SiteMessageException
     {
@@ -224,8 +239,11 @@ public class NewsLetterApp implements XPageApplication
 
     /**
      * Confirm a subscribtion
-     * @param request The request
-     * @throws SiteMessageException A site message exception
+     * 
+     * @param request
+     *            The request
+     * @throws SiteMessageException
+     *             A site message exception
      */
     public void doConfirmSubscribe( HttpServletRequest request ) throws SiteMessageException
     {
@@ -234,8 +252,11 @@ public class NewsLetterApp implements XPageApplication
 
     /**
      * Return the newsletter requirement
-     * @param request The HTTP request
-     * @param plugin The Plugin
+     * 
+     * @param request
+     *            The HTTP request
+     * @param plugin
+     *            The Plugin
      * @return the form recap
      **/
     private String getRequirement( HttpServletRequest request, Plugin plugin )

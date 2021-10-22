@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,6 @@ package fr.paris.lutece.plugins.newsletter.business;
 
 import java.sql.Timestamp;
 
-
 /**
  * This class represents business objects Subscriber
  */
@@ -53,7 +52,7 @@ public class Subscriber
      *
      * @return the subscriber's identifier
      */
-    public int getId(  )
+    public int getId( )
     {
         return _nId;
     }
@@ -61,7 +60,8 @@ public class Subscriber
     /**
      * Sets the subscriber's identifier
      *
-     * @param nId the subscriber's identifier
+     * @param nId
+     *            the subscriber's identifier
      */
     public void setId( int nId )
     {
@@ -73,7 +73,7 @@ public class Subscriber
      *
      * @return the subscriber's email
      */
-    public String getEmail(  )
+    public String getEmail( )
     {
         return _strEmail;
     }
@@ -81,11 +81,12 @@ public class Subscriber
     /**
      * Sets the subscriber's email (in lower case )
      *
-     * @param strEmail the subscriber's email
+     * @param strEmail
+     *            the subscriber's email
      */
     public void setEmail( String strEmail )
     {
-        _strEmail = strEmail.toLowerCase(  );
+        _strEmail = strEmail.toLowerCase( );
     }
 
     /**
@@ -93,7 +94,7 @@ public class Subscriber
      *
      * @return the subscription's date
      */
-    public Timestamp getDateSubscription(  )
+    public Timestamp getDateSubscription( )
     {
         return _dDateSubscription;
     }
@@ -101,7 +102,8 @@ public class Subscriber
     /**
      * Sets the subscription's date
      *
-     * @param dDateSubscription the subscription's date
+     * @param dDateSubscription
+     *            the subscription's date
      */
     public void setDateSubscription( Timestamp dDateSubscription )
     {
@@ -110,16 +112,19 @@ public class Subscriber
 
     /**
      * Return <b>true</b> if user confirmed his subscription.
+     * 
      * @return <b>true</b> if user confirmed his subscription, <b>false</b> otherwise
      */
-    public boolean getConfirmed(  )
+    public boolean getConfirmed( )
     {
         return _bConfirmed;
     }
 
     /**
      * Set to <b>true</b> if user confirmed his subscription
-     * @param bConfirmed the new confirmed value.
+     * 
+     * @param bConfirmed
+     *            the new confirmed value.
      */
     public void setConfirmed( boolean bConfirmed )
     {

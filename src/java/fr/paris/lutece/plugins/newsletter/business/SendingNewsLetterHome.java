@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,6 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * This class provides instances management methods (create, find, ...) for SendingNewsLetter objects
  */
@@ -49,17 +48,19 @@ public final class SendingNewsLetterHome
     private static ISendingNewsLetterDAO _dao = SpringContextService.getBean( "newsletter.sendingNewsLetterDAO" );
 
     /**
-    * Private constructor - this class need not be instantiated
-    */
-    private SendingNewsLetterHome(  )
+     * Private constructor - this class need not be instantiated
+     */
+    private SendingNewsLetterHome( )
     {
     }
 
     /**
      * Create an instance of a newsletter sending
      *
-     * @param sending The object to insert in the database
-     * @param plugin the plugin
+     * @param sending
+     *            The object to insert in the database
+     * @param plugin
+     *            the plugin
      * @return the instance created
      */
     public static SendingNewsLetter create( SendingNewsLetter sending, Plugin plugin )
@@ -72,8 +73,10 @@ public final class SendingNewsLetterHome
     /**
      * remove an entry of a newsletter sending
      * 
-     * @param nId the primary key of the sending newsletter
-     * @param plugin the plugin
+     * @param nId
+     *            the primary key of the sending newsletter
+     * @param plugin
+     *            the plugin
      */
     public static void remove( int nId, Plugin plugin )
     {
@@ -83,8 +86,10 @@ public final class SendingNewsLetterHome
     /**
      * Update of the sendingNewsLetter which is specified in parameter
      *
-     * @param sending the object which contains the data to store
-     * @param plugin the plugin
+     * @param sending
+     *            the object which contains the data to store
+     * @param plugin
+     *            the plugin
      * @return the new instance updated
      */
     public static SendingNewsLetter update( SendingNewsLetter sending, Plugin plugin )
@@ -100,8 +105,10 @@ public final class SendingNewsLetterHome
     /**
      * Returns an object SendingNewsLetter from its identifier
      *
-     * @param nKey the primary key of the sending newsletter
-     * @param plugin the plugin
+     * @param nKey
+     *            the primary key of the sending newsletter
+     * @param plugin
+     *            the plugin
      * @return an instance of the class
      */
     public static SendingNewsLetter findByPrimaryKey( int nKey, Plugin plugin )
@@ -111,8 +118,11 @@ public final class SendingNewsLetterHome
 
     /**
      * Returns the last sending performed for the newsletter of given id
-     * @param newsletterId the newsletter id for wich we need the last sending
-     * @param plugin the plugin
+     * 
+     * @param newsletterId
+     *            the newsletter id for wich we need the last sending
+     * @param plugin
+     *            the plugin
      * @return the last sending for the given newsletter id - null if no sending found
      */
     public static SendingNewsLetter findLastSendingForNewsletterId( int newsletterId, Plugin plugin )
@@ -122,8 +132,11 @@ public final class SendingNewsLetterHome
 
     /**
      * Returns all the last sending performed for the newsletter of given id
-     * @param newsletterId the newsletter id for wich we need the last sending
-     * @param plugin the plugin
+     * 
+     * @param newsletterId
+     *            the newsletter id for wich we need the last sending
+     * @param plugin
+     *            the plugin
      * @return the last sending for the given newsletter id - null if no sending found
      */
     public static List<SendingNewsLetter> findAllLastSendingForNewsletterId( int newsletterId, Plugin plugin )
@@ -134,7 +147,8 @@ public final class SendingNewsLetterHome
     /**
      * Returns all the sendings in the database.
      *
-     * @param plugin the plugin
+     * @param plugin
+     *            the plugin
      * @return a list of SendingNewsLetter objects.
      */
     public static List<SendingNewsLetter> findAllSendings( Plugin plugin )
@@ -144,9 +158,12 @@ public final class SendingNewsLetterHome
 
     /**
      * Returns all the sendings in the database.
+     * 
      * @return a list of SendingNewsLetter objects.
-     * @param listId A list of sent newsletters
-     * @param plugin the plugin
+     * @param listId
+     *            A list of sent newsletters
+     * @param plugin
+     *            the plugin
      */
     public static ArrayList<SendingNewsLetter> findSendingsByIds( ArrayList<Integer> listId, Plugin plugin )
     {

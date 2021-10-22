@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,7 +41,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-
 /**
  * This class provides Data Access methods for NewsLetter's templates objects
  */
@@ -60,7 +59,7 @@ public final class NewsLetterTemplateDAO implements INewsLetterTemplateDAO
     private static final String SQL_QUERY_DELETE = "DELETE FROM newsletter_template WHERE id_template = ? ";
 
     ///////////////////////////////////////////////////////////////////////////////////////
-    //Access methods to data
+    // Access methods to data
 
     /**
      * {@inheritDoc}
@@ -94,7 +93,7 @@ public final class NewsLetterTemplateDAO implements INewsLetterTemplateDAO
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////
-    //Access methods to data
+    // Access methods to data
 
     /**
      * {@inheritDoc}
@@ -297,7 +296,8 @@ public final class NewsLetterTemplateDAO implements INewsLetterTemplateDAO
     /**
      * Calculate a new primary key to add a new NewsletterTemplate
      * 
-     * @param plugin the plugin
+     * @param plugin
+     *            the plugin
      * @return The new key.
      */
     private int newPrimaryKey( Plugin plugin )

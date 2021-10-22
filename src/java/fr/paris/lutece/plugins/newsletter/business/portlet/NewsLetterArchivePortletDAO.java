@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,7 +41,6 @@ import fr.paris.lutece.util.sql.DAOUtil;
 
 import java.util.ArrayList;
 
-
 /**
  * This class provides Data Access methods for NewsLetterArchivePortlet objects
  */
@@ -55,7 +54,7 @@ public final class NewsLetterArchivePortletDAO implements INewsLetterArchivePort
     private static final String SQL_QUERY_DELETE = "DELETE FROM newsletter_portlet_archive  WHERE id_portlet=? ";
 
     ///////////////////////////////////////////////////////////////////////////////////////
-    //Access methods to data
+    // Access methods to data
 
     /**
      * Inserts a new record in the table. Not implemented.
@@ -71,7 +70,8 @@ public final class NewsLetterArchivePortletDAO implements INewsLetterArchivePort
     /**
      * Deletes a record from the table.
      * 
-     * @param nPortletId the portlet id
+     * @param nPortletId
+     *            the portlet id
      * 
      */
     public void delete( int nPortletId )
@@ -85,7 +85,8 @@ public final class NewsLetterArchivePortletDAO implements INewsLetterArchivePort
     /**
      * Loads the data of the portlet from the table.
      * 
-     * @param nPortletId the portlet id
+     * @param nPortletId
+     *            the portlet id
      * @return the Portlet object
      */
     public Portlet load( int nPortletId )
@@ -160,8 +161,7 @@ public final class NewsLetterArchivePortletDAO implements INewsLetterArchivePort
      * 
      * @param nPortletId
      *            the identifier of the portlet.
-     * @return a Set of Integer objects containing the identifers of the
-     *         sendings.
+     * @return a Set of Integer objects containing the identifers of the sendings.
      */
     public ArrayList<Integer> findSendingsInPortlet( int nPortletId, Plugin plugin )
     {

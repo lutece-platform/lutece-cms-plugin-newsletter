@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,6 @@ package fr.paris.lutece.plugins.newsletter.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 
-
 /**
  * The interface representing the business methods of the newsletterproperties
  */
@@ -44,7 +43,8 @@ public interface INewsletterPropertiesDAO
     /**
      * loads data from a subscriber's identifier
      *
-     * @param plugin the Plugin
+     * @param plugin
+     *            the Plugin
      * @return an object NewsLetterProperties
      */
     NewsLetterProperties load( Plugin plugin );
@@ -52,8 +52,10 @@ public interface INewsletterPropertiesDAO
     /**
      * Update the record in the table
      *
-     * @param properties the instance of NewsLetterProperties class to be updated
-     * @param plugin the Plugin
+     * @param properties
+     *            the instance of NewsLetterProperties class to be updated
+     * @param plugin
+     *            the Plugin
      */
     void store( NewsLetterProperties properties, Plugin plugin );
 }

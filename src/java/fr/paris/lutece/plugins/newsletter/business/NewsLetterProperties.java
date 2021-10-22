@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,6 @@
  */
 package fr.paris.lutece.plugins.newsletter.business;
 
-
 /**
  * This class represents business NewsLetterProperties Object
  */
@@ -46,7 +45,9 @@ public class NewsLetterProperties
     /**
      *
      * Set if the user must validate by mail
-     * @param bIsValidationActive the boolean
+     * 
+     * @param bIsValidationActive
+     *            the boolean
      */
     public void setValidationActive( boolean bIsValidationActive )
     {
@@ -55,9 +56,10 @@ public class NewsLetterProperties
 
     /**
      * return if the validation by mail is active
+     * 
      * @return _bIsValidationActive the boolean
      */
-    public boolean isValidationActive(  )
+    public boolean isValidationActive( )
     {
         return _bIsValidationActive;
     }
@@ -65,7 +67,9 @@ public class NewsLetterProperties
     /**
      *
      * Set if the user must enter a captcha to subscribe
-     * @param bIsCaptchaActive the boolean
+     * 
+     * @param bIsCaptchaActive
+     *            the boolean
      */
     public void setCaptchaActive( boolean bIsCaptchaActive )
     {
@@ -74,9 +78,10 @@ public class NewsLetterProperties
 
     /**
      * return if the user must enter a captcha to subscribe
+     * 
      * @return bIsCaptchaActive the boolean
      */
-    public boolean isCaptchaActive(  )
+    public boolean isCaptchaActive( )
     {
         return _bIsCaptchaActive;
     }
@@ -86,7 +91,7 @@ public class NewsLetterProperties
      *
      * @return the tos content of the newsletter
      */
-    public String getTOS(  )
+    public String getTOS( )
     {
         return _strTermOfService;
     }
@@ -94,7 +99,8 @@ public class NewsLetterProperties
     /**
      * Sets the tos content of the newsletter
      *
-     * @param strTermOfService the tos content of the newsletter
+     * @param strTermOfService
+     *            the tos content of the newsletter
      */
     public void setTOS( String strTermOfService )
     {

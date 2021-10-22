@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -109,7 +109,6 @@ import fr.paris.lutece.util.sort.AttributeComparator;
 import fr.paris.lutece.util.string.StringUtil;
 import fr.paris.lutece.util.url.UrlItem;
 
-
 /**
  * This class provides the user interface to manage NewsLetters features
  */
@@ -137,7 +136,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String PROPERTY_LIMIT_CONFIRM_DAYS = "newsletter.confirm.limit";
     private static final String PROPERTY_SELECT_MANDATORY = "newsletter.manage_archive.multiSelectError";
 
-    //Css inclusion
+    // Css inclusion
     private static final String PROPERTY_CSS_FILES = "newsletter.css.files";
     private static final String SEPARATOR_PROPERTY_CSS_FILES = ";";
     private static final String SEPARATOR_CSS_FILES_CONTENT = "\n";
@@ -159,7 +158,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String TEMPLATE_MANAGE_NEWSLETTER_TOPICS = "admin/plugins/newsletter/manage_newsletter_topics.html";
     private static final String TEMPLATE_MODIFY_TOPIC_CONFIG = "admin/plugins/newsletter/modify_topic_config.html";
 
-    //marks
+    // marks
     private static final String MARK_LIST_NEWSLETTER_TEMPLATES = "newsletter_templates";
     private static final String MARK_NEWSLETTER = "newsletter";
     private static final String MARK_NEWSLETTER_DESCRIPTION = "newsletter_description";
@@ -312,7 +311,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String LABEL_NEWSLETTER_TOPIC_SECTION = "newsletter.manage_topics.labelTopicSection";
     private static final String LABEL_NEWSLETTER_ACTION = "newsletter.manage_topics.labelActions";
     private static final String LABLE_COPY_NEWSLETTER_TITLE = "newsletter.manage_newsletters.copy.title";
-    
+
     private static final String PROPERTY_PAGE_TITLE_COMPOSE = "newsletter.compose_newsletter.pageTitle";
     private static final String PROPERTY_PAGE_TITLE_MODIFY = "newsletter.modify_newsletter.pageTitle";
     private static final String PROPERTY_PAGE_TITLE_MANAGE_SUBSCRIBERS = "newsletter.manage_subscribers.pageTitle";
@@ -327,13 +326,13 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final int CONSTANT_DEFAULT_ITEM_PER_PAGE = 50;
     private static final String CONSTANT_FREEMARKER_MACRO_COLUMN_SECTION = "getSectionColumn";
 
-    //constants
+    // constants
     private static final String JCAPTCHA_PLUGIN = "jcaptcha";
     private static final int DEFAULT_LIMIT = 7;
     private int _nItemsPerPage;
     private int _nDefaultItemsPerPage;
     private String _strCurrentPageIndex;
-    private String[] _multiSelectionValues;
+    private String [ ] _multiSelectionValues;
     private NewsletterService _newsletterService = NewsletterService.getService( );
     private NewsletterTopicService _newsletterTopicService = NewsletterTopicService.getService( );
 
@@ -347,15 +346,16 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Returns the list of newsletters
-     * @param request the HTTP request
+     * 
+     * @param request
+     *            the HTTP request
      * @return the html code for display the newsletters list
      */
     public String getManageNewsLetters( HttpServletRequest request )
     {
         setPageTitleProperty( PROPERTY_PAGE_TITLE_NEWSLETTERS );
         _strCurrentPageIndex = Paginator.getPageIndex( request, Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
-        _nItemsPerPage = Paginator.getItemsPerPage( request, Paginator.PARAMETER_ITEMS_PER_PAGE, _nItemsPerPage,
-                _nDefaultItemsPerPage );
+        _nItemsPerPage = Paginator.getItemsPerPage( request, Paginator.PARAMETER_ITEMS_PER_PAGE, _nItemsPerPage, _nDefaultItemsPerPage );
 
         Map<String, Object> model = new HashMap<String, Object>( );
         Collection<NewsLetter> listNewsletter = NewsLetterHome.findAll( getPlugin( ) );
@@ -375,10 +375,10 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
             newsletterDisplay.put( MARK_NEWSLETTER_ALLOW_DELETION,
                     RBACService.isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_DELETE, getUser( ) ) );
-            newsletterDisplay.put( MARK_NEWSLETTER_ALLOW_MANAGE_SUBSCRIBERS, RBACService.isAuthorized( newsletter,
-                    NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, getUser( ) ) );
-            newsletterDisplay.put( MARK_NEWSLETTER_ALLOW_EXPORT_SUBSCRIBERS, RBACService.isAuthorized( newsletter,
-                    NewsletterResourceIdService.PERMISSION_EXPORT_SUBSCRIBERS, getUser( ) ) );
+            newsletterDisplay.put( MARK_NEWSLETTER_ALLOW_MANAGE_SUBSCRIBERS,
+                    RBACService.isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, getUser( ) ) );
+            newsletterDisplay.put( MARK_NEWSLETTER_ALLOW_EXPORT_SUBSCRIBERS,
+                    RBACService.isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_EXPORT_SUBSCRIBERS, getUser( ) ) );
             newsletterDisplay.put( MARK_NEWSLETTER_ALLOW_MODIFICATION,
                     RBACService.isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) );
             newsletterDisplay.put( MARK_NEWSLETTER_ALLOW_SENDING,
@@ -396,24 +396,21 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                         AdminWorkgroupHome.findByPrimaryKey( newsletter.getWorkgroup( ) ).getDescription( ) );
             }
 
-            newsletterDisplay.put( MARK_NEWSLETTER_COUNT_SUBSCRIBERS,
-                    NewsLetterHome.findNbrSubscribers( newsletter.getId( ), getPlugin( ) ) );
+            newsletterDisplay.put( MARK_NEWSLETTER_COUNT_SUBSCRIBERS, NewsLetterHome.findNbrSubscribers( newsletter.getId( ), getPlugin( ) ) );
             listNewsletterDisplay.add( newsletterDisplay );
         }
 
-        IPaginator<Map<String, Object>> paginator = new Paginator<Map<String, Object>>(
-                (List<Map<String, Object>>) listNewsletterDisplay, _nItemsPerPage, getHomeUrl( request ),
-                PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
+        IPaginator<Map<String, Object>> paginator = new Paginator<Map<String, Object>>( (List<Map<String, Object>>) listNewsletterDisplay, _nItemsPerPage,
+                getHomeUrl( request ), PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
 
         model.put( MARK_NEWSLETTER_LIST, paginator.getPageItems( ) );
         model.put( MARK_PAGINATOR, paginator );
         model.put( MARK_ALLOW_CREATION, isNewsletterCreationAllowed( request ) );
         model.put( MARK_NB_ITEMS_PER_PAGE, StringUtils.EMPTY + _nItemsPerPage );
-        model.put( MARK_RIGHT_MANAGE_NEWSLETTER_PROPERTIES, RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE,
-                RBAC.WILDCARD_RESOURCES_ID, NewsletterResourceIdService.PERMISSION_NEWSLETTER_ADVANCED_SETTINGS,
-                getUser( ) ) );
+        model.put( MARK_RIGHT_MANAGE_NEWSLETTER_PROPERTIES, RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, RBAC.WILDCARD_RESOURCES_ID,
+                NewsletterResourceIdService.PERMISSION_NEWSLETTER_ADVANCED_SETTINGS, getUser( ) ) );
 
-        // Collection refListAllTemplates = NewsLetterTemplateHome.getTemplatesList( getPlugin(  ) );
+        // Collection refListAllTemplates = NewsLetterTemplateHome.getTemplatesList( getPlugin( ) );
         HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_MANAGE_NEWSLETTERS, getLocale( ), model );
 
         return getAdminPage( templateList.getHtml( ) );
@@ -421,52 +418,52 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Returns the list of old newsletters
-     * @param request the HTTP request
+     * 
+     * @param request
+     *            the HTTP request
      * @return the html code for display the newsletters list
      */
     public String getManageArchive( HttpServletRequest request )
     {
         setPageTitleProperty( PROPERTY_PAGE_TITLE_ARCHIVE );
         _strCurrentPageIndex = Paginator.getPageIndex( request, Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
-        _nItemsPerPage = Paginator.getItemsPerPage( request, Paginator.PARAMETER_ITEMS_PER_PAGE, _nItemsPerPage,
-                _nDefaultItemsPerPage );
+        _nItemsPerPage = Paginator.getItemsPerPage( request, Paginator.PARAMETER_ITEMS_PER_PAGE, _nItemsPerPage, _nDefaultItemsPerPage );
 
         int nIdNewsletter = Integer.parseInt( request.getParameter( PARAMETER_NEWSLETTER_ID ) );
         Map<String, Object> model = new HashMap<String, Object>( );
-        List<SendingNewsLetter> listNewsletter = SendingNewsLetterHome.findAllLastSendingForNewsletterId(
-                nIdNewsletter, getPlugin( ) );
+        List<SendingNewsLetter> listNewsletter = SendingNewsLetterHome.findAllLastSendingForNewsletterId( nIdNewsletter, getPlugin( ) );
 
         UrlItem url = new UrlItem( request.getRequestURI( ) );
         url.addParameter( PARAMETER_NEWSLETTER_ID, nIdNewsletter );
 
-        IPaginator<SendingNewsLetter> paginator = new Paginator<SendingNewsLetter>( listNewsletter, _nItemsPerPage,
-                url.getUrl( ), PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
+        IPaginator<SendingNewsLetter> paginator = new Paginator<SendingNewsLetter>( listNewsletter, _nItemsPerPage, url.getUrl( ), PARAMETER_PAGE_INDEX,
+                _strCurrentPageIndex );
 
         model.put( MARK_NEWSLETTER_LIST, paginator.getPageItems( ) );
         model.put( MARK_PAGINATOR, paginator );
         model.put( MARK_NEWSLETTER_ID, nIdNewsletter );
         model.put( MARK_NB_ITEMS_PER_PAGE, StringUtils.EMPTY + _nItemsPerPage );
 
-        HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_MANAGE_OLD_NEWSLETTERS, getLocale( ),
-                model );
+        HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_MANAGE_OLD_NEWSLETTERS, getLocale( ), model );
 
         return getAdminPage( templateList.getHtml( ) );
     }
 
     /**
      * Returns the newsletters properties
-     * @param request the HTTP request
+     * 
+     * @param request
+     *            the HTTP request
      * @return the html code for display the newsletters list
-     * @throws AccessDeniedException If the user is not allowed to acces the
-     *             feature
+     * @throws AccessDeniedException
+     *             If the user is not allowed to acces the feature
      */
     public String getManageNewsLettersProperties( HttpServletRequest request ) throws AccessDeniedException
     {
         if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, RBAC.WILDCARD_RESOURCES_ID,
                 NewsletterResourceIdService.PERMISSION_NEWSLETTER_ADVANCED_SETTINGS, getUser( ) ) )
         {
-            throw new AccessDeniedException( MESSAGE_USER_NOT_ALLOWED_NEWSLETTER_PROPERTIES
-                    + AdminUserService.getAdminUser( request ).getAccessCode( ) );
+            throw new AccessDeniedException( MESSAGE_USER_NOT_ALLOWED_NEWSLETTER_PROPERTIES + AdminUserService.getAdminUser( request ).getAccessCode( ) );
         }
 
         setPageTitleProperty( PROPERTY_PAGE_TITLE_NEWSLETTERS_PROPERTIES );
@@ -479,29 +476,29 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
         model.put( MARK_LOCALE, getLocale( ).getLanguage( ) );
         model.put( MARK_PROPERTIES, properties );
-        model.put( MARK_CLEAN_RIGHT, RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, null,
-                NewsletterResourceIdService.PERMISSION_CLEAN_SUBSCRIBERS, getUser( ) ) );
+        model.put( MARK_CLEAN_RIGHT,
+                RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, null, NewsletterResourceIdService.PERMISSION_CLEAN_SUBSCRIBERS, getUser( ) ) );
 
-        HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_MANAGE_NEWSLETTERS_PROPERTIES,
-                getLocale( ), model );
+        HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_MANAGE_NEWSLETTERS_PROPERTIES, getLocale( ), model );
 
         return getAdminPage( templateList.getHtml( ) );
     }
 
     /**
      * Processes the update form of the newsletter properties
-     * @param request The Http request
+     * 
+     * @param request
+     *            The Http request
      * @return The jsp URL which displays the view of all newsletter
-     * @throws AccessDeniedException If the user is not allowed to acces the
-     *             feature
+     * @throws AccessDeniedException
+     *             If the user is not allowed to acces the feature
      */
     public String doManageNewsLetterProperties( HttpServletRequest request ) throws AccessDeniedException
     {
         if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, RBAC.WILDCARD_RESOURCES_ID,
                 NewsletterResourceIdService.PERMISSION_NEWSLETTER_ADVANCED_SETTINGS, getUser( ) ) )
         {
-            throw new AccessDeniedException( MESSAGE_USER_NOT_ALLOWED_NEWSLETTER_PROPERTIES
-                    + AdminUserService.getAdminUser( request ).getAccessCode( ) );
+            throw new AccessDeniedException( MESSAGE_USER_NOT_ALLOWED_NEWSLETTER_PROPERTIES + AdminUserService.getAdminUser( request ).getAccessCode( ) );
         }
         String strBaseUrl = AppPathService.getBaseUrl( request );
         String strActiveCaptcha = request.getParameter( PARAMETER_ACTIVE_CAPTCHA );
@@ -538,7 +535,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Returns the newsletter form for creation
-     * @param request The Http request
+     * 
+     * @param request
+     *            The Http request
      * @return the html code of the newsletter form
      */
     public String getCreateNewsLetter( HttpServletRequest request )
@@ -575,7 +574,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Returns the newsletter form of newsletter composition
-     * @param request The Http rquest
+     * 
+     * @param request
+     *            The Http rquest
      * @return the html code of the newsletter composition form
      */
     public String getComposeNewsLetter( HttpServletRequest request )
@@ -587,8 +588,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         // RBAC permissions
         if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
         {
             return getManageNewsLetters( request );
         }
@@ -610,17 +610,15 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         if ( ( strGenerate == null ) )
         {
 
-            strHtmlContent = ( newsletter.getHtml( ) == null ) ? NewsLetterConstants.CONSTANT_EMPTY_STRING : newsletter
-                    .getHtml( );
+            strHtmlContent = ( newsletter.getHtml( ) == null ) ? NewsLetterConstants.CONSTANT_EMPTY_STRING : newsletter.getHtml( );
         }
         else
         {
             if ( nTemplateNewsLetterId == 0 )
             {
-                Collection<NewsLetterTemplate> newsletterTemplatesList = NewsLetterTemplateHome
-                        .getTemplatesCollectionByType( NewsLetterTemplate.RESOURCE_TYPE, getPlugin( ) );
-                newsletterTemplatesList = AdminWorkgroupService.getAuthorizedCollection( newsletterTemplatesList,
-                        getUser( ) );
+                Collection<NewsLetterTemplate> newsletterTemplatesList = NewsLetterTemplateHome.getTemplatesCollectionByType( NewsLetterTemplate.RESOURCE_TYPE,
+                        getPlugin( ) );
+                newsletterTemplatesList = AdminWorkgroupService.getAuthorizedCollection( newsletterTemplatesList, getUser( ) );
 
                 for ( NewsLetterTemplate template : newsletterTemplatesList )
                 {
@@ -633,12 +631,12 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             }
             if ( nTemplateNewsLetterId > 0 )
             {
-                strHtmlContent = _newsletterService.generateNewsletterHtmlCode( newsletter, nTemplateNewsLetterId,
-                        strBaseUrl, user, getLocale( ) );
+                strHtmlContent = _newsletterService.generateNewsletterHtmlCode( newsletter, nTemplateNewsLetterId, strBaseUrl, user, getLocale( ) );
             }
             if ( strHtmlContent == null )
             {
-                strHtmlContent = NewsLetterConstants.CONSTANT_EMPTY_STRING; //if no template available (newsletter and/or document), return an empty html content
+                strHtmlContent = NewsLetterConstants.CONSTANT_EMPTY_STRING; // if no template available (newsletter and/or document), return an empty html
+                                                                            // content
             }
         }
 
@@ -665,7 +663,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Returns the newsletter form of newsletter composition
-     * @param request The Http rquest
+     * 
+     * @param request
+     *            The Http rquest
      * @return the html code of the newsletter composition form
      */
     public String doComposeNewsLetter( HttpServletRequest request )
@@ -676,14 +676,13 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         // Workgroup & RBAC permissions
         if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
 
-        Collection<NewsLetterTemplate> newsletterTemplatesList = NewsLetterTemplateHome.getTemplatesCollectionByType(
-                NewsLetterTemplate.RESOURCE_TYPE, getPlugin( ) );
+        Collection<NewsLetterTemplate> newsletterTemplatesList = NewsLetterTemplateHome.getTemplatesCollectionByType( NewsLetterTemplate.RESOURCE_TYPE,
+                getPlugin( ) );
 
         // composition not possible if not at least one template for newsletter
         if ( ( newsletterTemplatesList.size( ) == 0 ) )
@@ -699,14 +698,15 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Processes subscribers cleaning
-     * @param request The Http request
+     * 
+     * @param request
+     *            The Http request
      * @return The jsp URL
      */
     public String doCleanSubscribers( HttpServletRequest request )
     {
         // RBAC permissions, the user must have the right "clean subscribers" on all newsletters
-        if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, null,
-                NewsletterResourceIdService.PERMISSION_CLEAN_SUBSCRIBERS, getUser( ) ) )
+        if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, null, NewsletterResourceIdService.PERMISSION_CLEAN_SUBSCRIBERS, getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -714,16 +714,17 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetterRegistrationService.getInstance( ).doRemoveOldUnconfirmed( );
 
         int nConfirmLimit = AppPropertiesService.getPropertyInt( PROPERTY_LIMIT_CONFIRM_DAYS, DEFAULT_LIMIT );
-        Object[] messages = new String[1];
-        messages[0] = Integer.toString( nConfirmLimit );
+        Object [ ] messages = new String [ 1];
+        messages [0] = Integer.toString( nConfirmLimit );
 
-        return AdminMessageService.getMessageUrl( request, MESSAGE_SUBSCRIBERS_CLEANED, messages,
-                AdminMessage.TYPE_INFO );
+        return AdminMessageService.getMessageUrl( request, MESSAGE_SUBSCRIBERS_CLEANED, messages, AdminMessage.TYPE_INFO );
     }
 
     /**
      * Processes the creation form of a new newsletter
-     * @param request The Http request
+     * 
+     * @param request
+     *            The Http request
      * @return The jsp URL which displays the view of the created newsletter
      */
     public String doCreateNewsLetter( HttpServletRequest request )
@@ -738,16 +739,15 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         String strTestRecipients = request.getParameter( PARAMETER_TEST_RECIPIENTS );
         String strTestSubject = request.getParameter( PARAMETER_TEST_SUBJECT );
 
-        //RBAC permission
+        // RBAC permission
         if ( !isNewsletterCreationAllowed( request ) )
         {
             return getManageNewsLetters( request );
         }
 
         // Mandatory fields
-        if ( StringUtils.isEmpty( strSenderMail ) || StringUtils.isEmpty( strTestRecipients )
-                || StringUtils.isEmpty( strNewsletterName ) || StringUtils.isEmpty( strDateFirstSend )
-                || StringUtils.isEmpty( strWorkGroup ) || StringUtils.isEmpty( strSenderName ) )
+        if ( StringUtils.isEmpty( strSenderMail ) || StringUtils.isEmpty( strTestRecipients ) || StringUtils.isEmpty( strNewsletterName )
+                || StringUtils.isEmpty( strDateFirstSend ) || StringUtils.isEmpty( strWorkGroup ) || StringUtils.isEmpty( strSenderName ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
@@ -770,7 +770,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         if ( strMessageParam != null && strMessage != null )
         {
-            Object[] messageArgs = { strMessageParam };
+            Object [ ] messageArgs = {
+                    strMessageParam
+            };
             return AdminMessageService.getMessageUrl( request, strMessage, messageArgs, AdminMessage.TYPE_STOP );
         }
 
@@ -804,7 +806,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Returns the newsletter form for modification
-     * @param request The Http request
+     * 
+     * @param request
+     *            The Http request
      * @return the html code of the newsletter form
      */
     public String getModifyNewsLetter( HttpServletRequest request )
@@ -817,17 +821,14 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
         {
             return getManageNewsLetters( request );
         }
 
         ReferenceList listUnsubscribe = new ReferenceList( );
-        listUnsubscribe
-                .addItem( "TRUE", I18nService.getLocalizedString( PROPERTY_LABEL_UNSUBSCRIBE_TRUE, getLocale( ) ) );
-        listUnsubscribe.addItem( "FALSE",
-                I18nService.getLocalizedString( PROPERTY_LABEL_UNSUBSCRIBE_FALSE, getLocale( ) ) );
+        listUnsubscribe.addItem( "TRUE", I18nService.getLocalizedString( PROPERTY_LABEL_UNSUBSCRIBE_TRUE, getLocale( ) ) );
+        listUnsubscribe.addItem( "FALSE", I18nService.getLocalizedString( PROPERTY_LABEL_UNSUBSCRIBE_FALSE, getLocale( ) ) );
 
         String strBaseUrl = AppPathService.getProdUrl( request );
 
@@ -845,9 +846,10 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     }
 
     /**
-     * Processes the update form of the newsletter whose identifier is in the
-     * http request
-     * @param request The Http request
+     * Processes the update form of the newsletter whose identifier is in the http request
+     * 
+     * @param request
+     *            The Http request
      * @return The jsp URL which displays the view of the updated newsletter
      */
     public String doModifyNewsLetter( HttpServletRequest request )
@@ -867,16 +869,14 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         // RBAC permission
         if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
 
         // Mandatory fields
-        if ( StringUtils.isEmpty( strSenderMail ) || StringUtils.isEmpty( strTestRecipients )
-                || StringUtils.isEmpty( strNewsletterName ) || StringUtils.isEmpty( strDateLastSend )
-                || StringUtils.isEmpty( strWorkGroup ) || StringUtils.isEmpty( strSenderName ) )
+        if ( StringUtils.isEmpty( strSenderMail ) || StringUtils.isEmpty( strTestRecipients ) || StringUtils.isEmpty( strNewsletterName )
+                || StringUtils.isEmpty( strDateLastSend ) || StringUtils.isEmpty( strWorkGroup ) || StringUtils.isEmpty( strSenderName ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
@@ -886,18 +886,20 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         String strWrongMail = isWrongEmail( strTestRecipients );
         if ( StringUtils.isNotEmpty( strWrongMail ) )
         {
-            Object[] messageArgs = { strWrongMail };
+            Object [ ] messageArgs = {
+                    strWrongMail
+            };
 
-            return AdminMessageService
-                    .getMessageUrl( request, MESSAGE_WRONG_EMAIL, messageArgs, AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrl( request, MESSAGE_WRONG_EMAIL, messageArgs, AdminMessage.TYPE_STOP );
         }
 
         if ( !StringUtil.checkEmail( strSenderMail ) )
         {
-            Object[] messageArgs = { strSenderMail };
+            Object [ ] messageArgs = {
+                    strSenderMail
+            };
 
-            return AdminMessageService.getMessageUrl( request, MESSAGE_WRONG_EMAIL_SENDER, messageArgs,
-                    AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrl( request, MESSAGE_WRONG_EMAIL_SENDER, messageArgs, AdminMessage.TYPE_STOP );
         }
 
         newsletter.setName( strNewsletterName );
@@ -930,7 +932,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Remove spaces from a recipient list
-     * @param strRecipientLists The recipient list
+     * 
+     * @param strRecipientLists
+     *            The recipient list
      * @return the recipient list without spaces before and after each email.
      */
     private String cleanEmails( String strRecipientLists )
@@ -938,7 +942,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         StringBuffer strCleanTestRecipients = new StringBuffer( );
         String strDelimiter = AppPropertiesService.getProperty( PROPERTY_IMPORT_DELIMITER );
 
-        String[] strEmails = strRecipientLists.split( strDelimiter );
+        String [ ] strEmails = strRecipientLists.split( strDelimiter );
 
         for ( String email : strEmails )
         {
@@ -950,9 +954,10 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     }
 
     /**
-     * Manages the removal form of a newsletter whose identifier is in the http
-     * request
-     * @param request The Http request
+     * Manages the removal form of a newsletter whose identifier is in the http request
+     * 
+     * @param request
+     *            The Http request
      * @return the html code to confirm
      */
     public String getConfirmRemoveSubscriber( HttpServletRequest request )
@@ -963,32 +968,33 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         urlItem.addParameter( PARAMETER_NEWSLETTER_ID, nNewsletterId );
         urlItem.addParameter( PARAMETER_SUBSCRIBER_ID, nSubscriberId );
 
-        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_SUBSCRIBER, urlItem.getUrl( ),
-                AdminMessage.TYPE_CONFIRMATION );
+        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_SUBSCRIBER, urlItem.getUrl( ), AdminMessage.TYPE_CONFIRMATION );
     }
 
     /**
-     * Manages the removal form of a newsletter whose identifier is in the http
-     * for selected users request
-     * @param request The Http request
+     * Manages the removal form of a newsletter whose identifier is in the http for selected users request
+     * 
+     * @param request
+     *            The Http request
      * @return the html code to confirm
      */
     public String getConfirmRemoveSelectedSubscribers( HttpServletRequest request )
     {
-        String[] strIdSubscribers = (String[]) request.getParameterMap( ).get( PARAMETER_SUBSCRIBERS_SELECTION );
+        String [ ] strIdSubscribers = (String [ ]) request.getParameterMap( ).get( PARAMETER_SUBSCRIBERS_SELECTION );
         _multiSelectionValues = strIdSubscribers;
 
         UrlItem urlItem = new UrlItem( JSP_URL_DO_REMOVE_SELECTION );
         int nNewsletterId = Integer.parseInt( request.getParameter( PARAMETER_NEWSLETTER_ID ) );
         urlItem.addParameter( PARAMETER_NEWSLETTER_ID, nNewsletterId );
 
-        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_SELECTION, urlItem.getUrl( ),
-                AdminMessage.TYPE_CONFIRMATION );
+        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_SELECTION, urlItem.getUrl( ), AdminMessage.TYPE_CONFIRMATION );
     }
 
     /**
      * Processes the unregistration of a subscriber for a newsletter
-     * @param request The Http request
+     * 
+     * @param request
+     *            The Http request
      * @return the jsp URL to display the form to manage newsletters
      */
     public String doUnregistrationAdmin( HttpServletRequest request )
@@ -1000,9 +1006,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         // RBAC permission
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
+                NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1022,7 +1027,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Processes the unregistration of selected subscribers
-     * @param request The Http request
+     * 
+     * @param request
+     *            The Http request
      * @return the jsp URL to display the form to manage newsletters
      */
     public String doRemoveSelection( HttpServletRequest request )
@@ -1033,9 +1040,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         // RBAC permission
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
+                NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1060,9 +1066,10 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     }
 
     /**
-     * Manages the removal form of a newsletter whose identifier is in the http
-     * request
-     * @param request The Http request
+     * Manages the removal form of a newsletter whose identifier is in the http request
+     * 
+     * @param request
+     *            The Http request
      * @return the html code to confirm
      */
     public String getRemoveNewsLetter( HttpServletRequest request )
@@ -1074,8 +1081,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         // RBAC permission
         if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_DELETE, getUser( ) ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_DELETE, getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1088,14 +1094,14 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         UrlItem urlItem = new UrlItem( JSP_URL_DO_REMOVE_NEWSLETTER );
         urlItem.addParameter( PARAMETER_NEWSLETTER_ID, nNewsletterId );
 
-        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_NEWSLETTER, urlItem.getUrl( ),
-                AdminMessage.TYPE_CONFIRMATION );
+        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_NEWSLETTER, urlItem.getUrl( ), AdminMessage.TYPE_CONFIRMATION );
     }
 
     /**
-     * Manages the removal form of a newsletter archive whose identifier is in
-     * the http request
-     * @param request The Http request
+     * Manages the removal form of a newsletter archive whose identifier is in the http request
+     * 
+     * @param request
+     *            The Http request
      * @return the html code to confirm
      */
     public String getRemoveSendingNewsLetter( HttpServletRequest request )
@@ -1108,8 +1114,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         int nNewsletterId = Integer.parseInt( strNewsletterId );
 
         // RBAC permission
-        if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, Integer.toString( nNewsletterId ),
-                NewsletterResourceIdService.PERMISSION_ARCHIVE, getUser( ) ) )
+        if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, Integer.toString( nNewsletterId ), NewsletterResourceIdService.PERMISSION_ARCHIVE,
+                getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1118,14 +1124,14 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         urlItem.addParameter( PARAMETER_NEWSLETTER_ID, nNewsletterId );
         urlItem.addParameter( PARAMETER_SENDING_NEWSLETTER_ID, nSendingNewsletterId );
 
-        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_SENDING_NEWSLETTER,
-                urlItem.getUrl( ), AdminMessage.TYPE_CONFIRMATION );
+        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_SENDING_NEWSLETTER, urlItem.getUrl( ), AdminMessage.TYPE_CONFIRMATION );
     }
 
     /**
-     * Manages the removal form of a newsletter archive whose identifier is in
-     * the http request
-     * @param request The Http request
+     * Manages the removal form of a newsletter archive whose identifier is in the http request
+     * 
+     * @param request
+     *            The Http request
      * @return the html code to confirm
      */
     public String getRemoveMultiNewsLetter( HttpServletRequest request )
@@ -1134,18 +1140,19 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         String strNewsletterId = request.getParameter( PARAMETER_NEWSLETTER_ID );
         int nNewsletterId = Integer.parseInt( strNewsletterId );
 
-        String[] strSendingNewsletterId = request.getParameterValues( PARAMETER_NEWSLETTER_SELECTION );
+        String [ ] strSendingNewsletterId = request.getParameterValues( PARAMETER_NEWSLETTER_SELECTION );
 
         // RBAC permission
-        if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, Integer.toString( nNewsletterId ),
-                NewsletterResourceIdService.PERMISSION_ARCHIVE, getUser( ) ) )
+        if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, Integer.toString( nNewsletterId ), NewsletterResourceIdService.PERMISSION_ARCHIVE,
+                getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
-        else if ( ArrayUtils.isEmpty( strSendingNewsletterId ) )
-        {
-            return AdminMessageService.getMessageUrl( request, PROPERTY_SELECT_MANDATORY, AdminMessage.TYPE_ERROR );
-        }
+        else
+            if ( ArrayUtils.isEmpty( strSendingNewsletterId ) )
+            {
+                return AdminMessageService.getMessageUrl( request, PROPERTY_SELECT_MANDATORY, AdminMessage.TYPE_ERROR );
+            }
 
         StringBuilder sb = new StringBuilder( );
         int count = 1;
@@ -1165,13 +1172,14 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         urlItem.addParameter( PARAMETER_NEWSLETTER_ID, nNewsletterId );
         urlItem.addParameter( PARAMETER_SENDING_NEWSLETTER_ID, sb.toString( ) );
 
-        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_MULTI_SENDING_NEWSLETTER,
-                urlItem.getUrl( ), AdminMessage.TYPE_CONFIRMATION );
+        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_MULTI_SENDING_NEWSLETTER, urlItem.getUrl( ), AdminMessage.TYPE_CONFIRMATION );
     }
 
     /**
      * Processes the removal form of a newsletter
-     * @param request The Http request
+     * 
+     * @param request
+     *            The Http request
      * @return the jsp URL to display the form to manage newsletters
      */
     public String doRemoveNewsLetter( HttpServletRequest request )
@@ -1181,16 +1189,14 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         // Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, Integer.toString( newsletter.getId( ) ),
-                        NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE,
+                Integer.toString( newsletter.getId( ) ), NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
 
         /* Looks for the list of the subscribers */
-        Collection<Subscriber> list = SubscriberHome.findSubscribers( nNewsletterId,
-                NewsLetterConstants.CONSTANT_EMPTY_STRING,
+        Collection<Subscriber> list = SubscriberHome.findSubscribers( nNewsletterId, NewsLetterConstants.CONSTANT_EMPTY_STRING,
                 Integer.parseInt( AppPropertiesService.getProperty( PROPERTY_LIMIT_MIN_SUSCRIBER ) ),
                 Integer.parseInt( AppPropertiesService.getProperty( PROPERTY_LIMIT_MAX_SUSCRIBER ) ), getPlugin( ) );
 
@@ -1208,7 +1214,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Processes the removal form of a sending newsletter
-     * @param request The Http request
+     * 
+     * @param request
+     *            The Http request
      * @return the jsp URL to display the form to manage newsletters
      */
     public String doRemoveSendingNewsLetter( HttpServletRequest request )
@@ -1216,8 +1224,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         int nNewsletterId = Integer.parseInt( request.getParameter( PARAMETER_NEWSLETTER_ID ) );
         int nSendingNewsletterId = Integer.parseInt( request.getParameter( PARAMETER_SENDING_NEWSLETTER_ID ) );
 
-        if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, Integer.toString( nNewsletterId ),
-                NewsletterResourceIdService.PERMISSION_ARCHIVE, getUser( ) ) )
+        if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, Integer.toString( nNewsletterId ), NewsletterResourceIdService.PERMISSION_ARCHIVE,
+                getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1232,7 +1240,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Processes the removal form of a sending newsletter
-     * @param request The Http request
+     * 
+     * @param request
+     *            The Http request
      * @return the jsp URL to display the form to manage newsletters
      */
     public String doRemoveMultiNewsLetter( HttpServletRequest request )
@@ -1240,13 +1250,13 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         int nNewsletterId = Integer.parseInt( request.getParameter( PARAMETER_NEWSLETTER_ID ) );
         String strSendingNewsletterId = request.getParameter( PARAMETER_SENDING_NEWSLETTER_ID );
 
-        if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, Integer.toString( nNewsletterId ),
-                NewsletterResourceIdService.PERMISSION_ARCHIVE, getUser( ) ) )
+        if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, Integer.toString( nNewsletterId ), NewsletterResourceIdService.PERMISSION_ARCHIVE,
+                getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
 
-        String[] ids = strSendingNewsletterId.split( "_" );
+        String [ ] ids = strSendingNewsletterId.split( "_" );
 
         for ( String id : ids )
         {
@@ -1261,7 +1271,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Builds the newsletter's subscribers management page
-     * @param request The HTTP request
+     * 
+     * @param request
+     *            The HTTP request
      * @return the html code for newsletter's subscribers management page
      */
     public String getManageSubscribers( HttpServletRequest request )
@@ -1272,9 +1284,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetterProperties properties = NewsletterPropertiesHome.find( getPlugin( ) );
 
         // Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
+                NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, getUser( ) ) )
         {
             return getManageNewsLetters( request );
         }
@@ -1290,12 +1301,11 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         _strCurrentPageIndex = Paginator.getPageIndex( request, Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
         _nDefaultItemsPerPage = AppPropertiesService.getPropertyInt( PROPERTY_USERS_PER_PAGE, 10 );
-        _nItemsPerPage = Paginator.getItemsPerPage( request, Paginator.PARAMETER_ITEMS_PER_PAGE, _nItemsPerPage,
-                _nDefaultItemsPerPage );
+        _nItemsPerPage = Paginator.getItemsPerPage( request, Paginator.PARAMETER_ITEMS_PER_PAGE, _nItemsPerPage, _nDefaultItemsPerPage );
 
         // get a list of subscribers
-        List<Subscriber> refListSubscribers = (List<Subscriber>) SubscriberHome.findSubscribers( nNewsLetterId,
-                strSearchString, Integer.parseInt( AppPropertiesService.getProperty( PROPERTY_LIMIT_MIN_SUSCRIBER ) ),
+        List<Subscriber> refListSubscribers = (List<Subscriber>) SubscriberHome.findSubscribers( nNewsLetterId, strSearchString,
+                Integer.parseInt( AppPropertiesService.getProperty( PROPERTY_LIMIT_MIN_SUSCRIBER ) ),
                 Integer.parseInt( AppPropertiesService.getProperty( PROPERTY_LIMIT_MAX_SUSCRIBER ) ), getPlugin( ) );
         UrlItem url = new UrlItem( request.getRequestURI( ) );
         url.addParameter( PARAMETER_NEWSLETTER_ID, nNewsLetterId );
@@ -1315,8 +1325,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             Collections.sort( refListSubscribers, new AttributeComparator( strSortedAttributeName, bIsAscSort ) );
         }
 
-        IPaginator<Subscriber> paginator = new LocalizedPaginator<Subscriber>( refListSubscribers, _nItemsPerPage,
-                url.getUrl( ), Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex, getLocale( ) );
+        IPaginator<Subscriber> paginator = new LocalizedPaginator<Subscriber>( refListSubscribers, _nItemsPerPage, url.getUrl( ),
+                Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex, getLocale( ) );
 
         Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_NEWSLETTER, newsletter );
@@ -1325,12 +1335,12 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         model.put( MARK_PAGINATOR, paginator );
         model.put( MARK_SUBSCRIBERS_LIST, paginator.getPageItems( ) );
         model.put( MARK_DISPLAY_STATUS, properties.isValidationActive( ) );
-        model.put( MARK_ADD_SUBSCRIBER_RIGHT, RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                NewsletterResourceIdService.PERMISSION_ADD_SUBSCRIBER, getUser( ) ) );
-        model.put( MARK_IMPORT_SUBSCRIBER_RIGHT, RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                NewsletterResourceIdService.PERMISSION_IMPORT_SUBSCRIBERS, getUser( ) ) );
-        model.put( MARK_EXPORT_SUBSCRIBER_RIGTH, RBACService.isAuthorized( newsletter,
-                NewsletterResourceIdService.PERMISSION_EXPORT_SUBSCRIBERS, getUser( ) ) );
+        model.put( MARK_ADD_SUBSCRIBER_RIGHT,
+                RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_ADD_SUBSCRIBER, getUser( ) ) );
+        model.put( MARK_IMPORT_SUBSCRIBER_RIGHT,
+                RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_IMPORT_SUBSCRIBERS, getUser( ) ) );
+        model.put( MARK_EXPORT_SUBSCRIBER_RIGTH,
+                RBACService.isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_EXPORT_SUBSCRIBERS, getUser( ) ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_SUBSCRIBERS, getLocale( ), model );
 
@@ -1339,7 +1349,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Processes the registration of a subscriber
-     * @param request The Http request
+     * 
+     * @param request
+     *            The Http request
      * @return The jsp URL which displays the subscribers management page
      */
     public String doAddSubscriber( HttpServletRequest request )
@@ -1350,8 +1362,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         // Workgroup & RBAC permissions
         if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_ADD_SUBSCRIBER, getUser( ) ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_ADD_SUBSCRIBER, getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1359,8 +1370,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         String strEmail = request.getParameter( NewsLetterConstants.PARAMETER_EMAIL );
 
         // Mandatory fields
-        if ( ( strEmail == null ) || strEmail.equals( NewsLetterConstants.CONSTANT_EMPTY_STRING )
-                || !StringUtil.checkEmail( strEmail.trim( ) ) )
+        if ( ( strEmail == null ) || strEmail.equals( NewsLetterConstants.CONSTANT_EMPTY_STRING ) || !StringUtil.checkEmail( strEmail.trim( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_FIELD_EMAIL_VALID, AdminMessage.TYPE_STOP );
         }
@@ -1396,7 +1406,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Builds the page of preparation before sending
-     * @param request the http request
+     * 
+     * @param request
+     *            the http request
      * @return the html code for the preparation page
      */
     public String getPrepareNewsLetter( HttpServletRequest request )
@@ -1407,8 +1419,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         // Workgroup & RBAC permissions
         if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_SEND, getUser( ) ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_SEND, getUser( ) ) )
         {
             return getManageNewsLetters( request );
         }
@@ -1441,7 +1452,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Builds the page of preparation before sending
-     * @param request the Http request
+     * 
+     * @param request
+     *            the Http request
      * @return the html code for the preparation page
      */
     public String doPrepareNewsLetter( HttpServletRequest request )
@@ -1452,8 +1465,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         // Workgroup & RBAC permissions
         if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_SEND, getUser( ) ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_SEND, getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1461,8 +1473,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         // allow to send only if the newsletter is not empty
         if ( StringUtils.isEmpty( newsletter.getHtml( ) ) )
         {
-            return AdminMessageService.getMessageUrl( request, MESSAGE_SENDING_EMPTY_NOT_ALLOWED,
-                    AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrl( request, MESSAGE_SENDING_EMPTY_NOT_ALLOWED, AdminMessage.TYPE_STOP );
         }
 
         UrlItem urlItem = new UrlItem( JSP_URL_PREPARE_NEWSLETTER );
@@ -1473,7 +1484,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Builds the page of preparation before sending
-     * @param request the http request
+     * 
+     * @param request
+     *            the http request
      * @return the html code for the preparation page
      */
     public String getPreviewNewsLetter( HttpServletRequest request )
@@ -1484,8 +1497,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         // Workgroup & RBAC permissions
         if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_SEND, getUser( ) ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_SEND, getUser( ) ) )
         {
             return getManageNewsLetters( request );
         }
@@ -1504,7 +1516,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Displays the confirmation page before sending the newsletter
-     * @param request the http request
+     * 
+     * @param request
+     *            the http request
      * @return the html code for the confirmation page
      */
     public String doConfirmSendNewsLetter( HttpServletRequest request )
@@ -1515,8 +1529,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         // Workgroup & RBAC permissions
         if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_SEND, getUser( ) ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_SEND, getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1557,21 +1570,21 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         // warn if the newletter html content is the same as the one of the last
         // sending for that newsletter
-        SendingNewsLetter lastSending = SendingNewsLetterHome.findLastSendingForNewsletterId( nNewsletterId,
-                getPlugin( ) );
+        SendingNewsLetter lastSending = SendingNewsLetterHome.findLastSendingForNewsletterId( nNewsletterId, getPlugin( ) );
 
         String strMessage = MESSAGE_CONFIRM_SEND_NEWSLETTER;
         if ( ( lastSending != null ) && lastSending.getHtml( ).equals( newsletter.getHtml( ) ) )
         {
             strMessage = MESSAGE_FRAGMENT_NO_CHANGE;
         }
-        return AdminMessageService.getMessageUrl( request, strMessage, urlItem.getUrl( ),
-                AdminMessage.TYPE_CONFIRMATION, requestedParameters );
+        return AdminMessageService.getMessageUrl( request, strMessage, urlItem.getUrl( ), AdminMessage.TYPE_CONFIRMATION, requestedParameters );
     }
 
     /**
      * Displays the confirmation page before testing the newsletter
-     * @param request the http request
+     * 
+     * @param request
+     *            the http request
      * @return the html code for the confirmation page
      */
     public String doConfirmTestNewsLetter( HttpServletRequest request )
@@ -1580,10 +1593,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         int nNewsletterId = Integer.parseInt( strNewsletterId );
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
-        //Workgroup & RBAC permissions
+        // Workgroup & RBAC permissions
         if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1591,8 +1603,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         // allow to send only if the newsletter is not empty
         if ( StringUtils.isEmpty( newsletter.getHtml( ) ) )
         {
-            return AdminMessageService.getMessageUrl( request, MESSAGE_SENDING_EMPTY_NOT_ALLOWED,
-                    AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrl( request, MESSAGE_SENDING_EMPTY_NOT_ALLOWED, AdminMessage.TYPE_STOP );
         }
 
         String strObject = request.getParameter( PARAMETER_NEWSLETTER_OBJECT );
@@ -1601,13 +1612,14 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         urlItem.addParameter( PARAMETER_NEWSLETTER_OBJECT, strObject );
         urlItem.addParameter( PARAMETER_NEWSLETTER_ID, nNewsletterId );
 
-        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_TEST_NEWSLETTER, urlItem.getUrl( ),
-                AdminMessage.TYPE_CONFIRMATION );
+        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_TEST_NEWSLETTER, urlItem.getUrl( ), AdminMessage.TYPE_CONFIRMATION );
     }
 
     /**
      * Processes the testing of a newsletter
-     * @param request the http request
+     * 
+     * @param request
+     *            the http request
      * @return the url of the confirmation page
      */
     public String doTestNewsLetter( HttpServletRequest request )
@@ -1616,47 +1628,47 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         int nNewsletterId = Integer.parseInt( strNewsletterId );
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
-        //Workgroup & RBAC permissions
+        // Workgroup & RBAC permissions
         if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
 
-        //Allow to send test if the list of test recipients is not empty
+        // Allow to send test if the list of test recipients is not empty
         String strTestRecipients = newsletter.getTestRecipients( );
 
         String strWrongEmail = isWrongEmail( strTestRecipients );
         if ( StringUtils.isNotEmpty( strWrongEmail ) )
         {
-            Object[] messageArgs = { strWrongEmail };
+            Object [ ] messageArgs = {
+                    strWrongEmail
+            };
 
-            return AdminMessageService
-                    .getMessageUrl( request, MESSAGE_WRONG_EMAIL, messageArgs, AdminMessage.TYPE_STOP );
+            return AdminMessageService.getMessageUrl( request, MESSAGE_WRONG_EMAIL, messageArgs, AdminMessage.TYPE_STOP );
         }
 
         SendingNewsLetter sending = new SendingNewsLetter( );
         sending.setNewsLetterId( nNewsletterId );
         sending.setDate( new Timestamp( new java.util.Date( ).getTime( ) ) ); // the current date
 
-        String strObject = I18nService.getLocalizedString( PROPERTY_TEST_SUBJECT, getLocale( ) ) + newsletter.getName( )
-                + "]" + newsletter.getTestSubject( );
+        String strObject = I18nService.getLocalizedString( PROPERTY_TEST_SUBJECT, getLocale( ) ) + newsletter.getName( ) + "]" + newsletter.getTestSubject( );
 
         /* lutece.properties */
         String strBaseUrl = AppPathService.getProdUrl( request );
 
         HtmlTemplate templateNewsLetter = setHtmlTemplateEmail( newsletter, strBaseUrl, newsletter.getUnsubscribe( ) );
 
-        _newsletterService.sendMail( newsletter, strObject, strBaseUrl, templateNewsLetter,
-                convertToList( newsletter.getTestRecipients( ) ) );
+        _newsletterService.sendMail( newsletter, strObject, strBaseUrl, templateNewsLetter, convertToList( newsletter.getTestRecipients( ) ) );
 
         return getHomeUrl( request );
     }
 
     /**
      * Processes the sending of a newsletter
-     * @param request the http request
+     * 
+     * @param request
+     *            the http request
      * @return the url of the confirmation page
      */
     public String doSendNewsLetter( HttpServletRequest request )
@@ -1666,10 +1678,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         int nNewsletterId = Integer.parseInt( strNewsletterId );
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
-        //Workgroup & RBAC permissions
+        // Workgroup & RBAC permissions
         if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_SEND, getUser( ) ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_SEND, getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1695,7 +1706,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                 Integer.parseInt( AppPropertiesService.getProperty( PROPERTY_LIMIT_MIN_SUSCRIBER ) ),
                 Integer.parseInt( AppPropertiesService.getProperty( PROPERTY_LIMIT_MAX_SUSCRIBER ) ), getPlugin( ) );
 
-        //Get the HtmlTemplate of email
+        // Get the HtmlTemplate of email
         HtmlTemplate templateNewsLetter = setHtmlTemplateEmail( newsletter, strBaseUrl, newsletter.getUnsubscribe( ) );
 
         _newsletterService.sendMail( newsletter, strObject, strBaseUrl, templateNewsLetter, list );
@@ -1721,9 +1732,10 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     }
 
     /**
-     * Processes the registration of a newsletter and loads the newsletter
-     * management page
-     * @param request The Http request
+     * Processes the registration of a newsletter and loads the newsletter management page
+     * 
+     * @param request
+     *            The Http request
      * @return The jsp URL which displays the newsletters management page
      */
     public String doRegisterNewsLetter( HttpServletRequest request )
@@ -1735,10 +1747,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         int nNewsletterId = Integer.parseInt( strNewsletterId );
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
-        //Workgroup & RBAC permissions
+        // Workgroup & RBAC permissions
         if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1757,25 +1768,25 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                 url.addParameter( PARAMETER_NEWSLETTER_ID, nNewsletterId );
                 strReturn = url.getUrl( );
             }
-            else if ( strAction
-                    .equals( I18nService.getLocalizedString( PROPERTY_PREPARE_SENDING_ACTION, getLocale( ) ) ) )
-            {
-                UrlItem url = new UrlItem( JSP_URL_DO_PREPARE_NEWSLETTER );
-                url.addParameter( PARAMETER_NEWSLETTER_ID, nNewsletterId );
-                strReturn = url.getUrl( );
-            }
-            else if ( strAction.equals( I18nService.getLocalizedString( PROPERTY_TEST_SENDING_ACTION, getLocale( ) ) ) )
-            {
-                UrlItem url = new UrlItem( JSP_URL_CONFIRM_TEST_NEWSLETTER );
-                url.addParameter( PARAMETER_NEWSLETTER_ID, nNewsletterId );
-                strReturn = url.getUrl( );
-            }
+            else
+                if ( strAction.equals( I18nService.getLocalizedString( PROPERTY_PREPARE_SENDING_ACTION, getLocale( ) ) ) )
+                {
+                    UrlItem url = new UrlItem( JSP_URL_DO_PREPARE_NEWSLETTER );
+                    url.addParameter( PARAMETER_NEWSLETTER_ID, nNewsletterId );
+                    strReturn = url.getUrl( );
+                }
+                else
+                    if ( strAction.equals( I18nService.getLocalizedString( PROPERTY_TEST_SENDING_ACTION, getLocale( ) ) ) )
+                    {
+                        UrlItem url = new UrlItem( JSP_URL_CONFIRM_TEST_NEWSLETTER );
+                        url.addParameter( PARAMETER_NEWSLETTER_ID, nNewsletterId );
+                        strReturn = url.getUrl( );
+                    }
         }
         else
         {
             String strUrl = getHomeUrl( request );
-            strReturn = AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_CANCEL_COMPOSE, strUrl,
-                    AdminMessage.TYPE_CONFIRMATION );
+            strReturn = AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_CANCEL_COMPOSE, strUrl, AdminMessage.TYPE_CONFIRMATION );
         }
 
         return strReturn;
@@ -1783,7 +1794,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Builds the subscribers import page
-     * @param request The HTTP request
+     * 
+     * @param request
+     *            The HTTP request
      * @return the html code for subscribers import page
      */
     public String getImportSubscribers( HttpServletRequest request )
@@ -1792,10 +1805,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         int nNewsletterId = Integer.parseInt( strNewsletterId );
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
-        //Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, getUser( ) ) )
+        // Workgroup & RBAC permissions
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
+                NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, getUser( ) ) )
         {
             return getManageNewsLetters( request );
         }
@@ -1813,7 +1825,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Builds the subscribers import page
-     * @param request The HTTP request
+     * 
+     * @param request
+     *            The HTTP request
      * @return the html code for subscribers import page
      */
     public String getImportDeleteSubscribers( HttpServletRequest request )
@@ -1822,10 +1836,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         int nNewsletterId = Integer.parseInt( strNewsletterId );
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
-        //Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, getUser( ) ) )
+        // Workgroup & RBAC permissions
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
+                NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, getUser( ) ) )
         {
             return getManageNewsLetters( request );
         }
@@ -1842,9 +1855,10 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     }
 
     /**
-     * Processes the import of subscribers due to a csv file and loads the
-     * subscribers management page
-     * @param request The Http request
+     * Processes the import of subscribers due to a csv file and loads the subscribers management page
+     * 
+     * @param request
+     *            The Http request
      * @return The jsp URL which displays the subscribers management page
      */
     public String doImportSubscribers( HttpServletRequest request )
@@ -1856,9 +1870,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         Boolean bImportDelete = Boolean.valueOf( strImportDelete );
 
         // Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_IMPORT_SUBSCRIBERS, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
+                NewsletterResourceIdService.PERMISSION_IMPORT_SUBSCRIBERS, getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1871,53 +1884,46 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                 MultipartHttpServletRequest multi = (MultipartHttpServletRequest) request;
 
                 FileItem csvItem = multi.getFile( PARAMETER_SUBSCRIBERS_FILE );
-                String strMultiFileName = csvItem == null ? StringUtils.EMPTY : UploadUtil.cleanFileName( csvItem
-                        .getName( ) );
+                String strMultiFileName = csvItem == null ? StringUtils.EMPTY : UploadUtil.cleanFileName( csvItem.getName( ) );
                 if ( csvItem == null || StringUtils.isEmpty( strMultiFileName ) )
                 {
-                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
-                            AdminMessage.TYPE_STOP );
+                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
                 }
 
                 // test the extension of the file must be 'csv'
-                String strExtension = strMultiFileName.substring( strMultiFileName.length( ) - 4,
-                        strMultiFileName.length( ) );
+                String strExtension = strMultiFileName.substring( strMultiFileName.length( ) - 4, strMultiFileName.length( ) );
 
                 if ( !strExtension.equals( CONSTANT_CSV_FILE_EXTENSION ) )
                 {
-                    return AdminMessageService.getMessageUrl( request, MESSAGE_CSV_FILE_EXTENSION,
-                            AdminMessage.TYPE_STOP );
+                    return AdminMessageService.getMessageUrl( request, MESSAGE_CSV_FILE_EXTENSION, AdminMessage.TYPE_STOP );
                 }
 
                 Reader fileReader = new InputStreamReader( csvItem.getInputStream( ) );
-                CSVReader csvReader = new CSVReader( fileReader, AppPropertiesService.getProperty(
-                        PROPERTY_IMPORT_DELIMITER ).charAt( 0 ) );
+                CSVReader csvReader = new CSVReader( fileReader, AppPropertiesService.getProperty( PROPERTY_IMPORT_DELIMITER ).charAt( 0 ) );
 
                 @SuppressWarnings( "unchecked" )
-                List<String[]> tabUsers = csvReader.readAll( );
+                List<String [ ]> tabUsers = csvReader.readAll( );
 
                 // the file is empty
                 if ( ( tabUsers == null ) || ( tabUsers.size( ) == 0 ) )
                 {
-                    return AdminMessageService.getMessageUrl( request, MESSAGE_CSV_FILE_EMPTY_OR_NOT_VALID_EMAILS,
-                            AdminMessage.TYPE_STOP );
+                    return AdminMessageService.getMessageUrl( request, MESSAGE_CSV_FILE_EMPTY_OR_NOT_VALID_EMAILS, AdminMessage.TYPE_STOP );
                 }
                 int nColumnIndex = Integer.parseInt( AppPropertiesService.getProperty( CONSTANT_EMAIL_COLUMN_INDEX ) );
                 // the current date
                 Timestamp tToday = new java.sql.Timestamp( new java.util.Date( ).getTime( ) );
 
                 // Add the new users
-                for ( String[] strEmailTemp : tabUsers )
+                for ( String [ ] strEmailTemp : tabUsers )
                 {
                     if ( strEmailTemp.length < nColumnIndex )
                     {
-                        return AdminMessageService.getMessageUrl( request, MESSAGE_COLUMN_INDEX_NOT_EXIST,
-                                AdminMessage.TYPE_ERROR );
+                        return AdminMessageService.getMessageUrl( request, MESSAGE_COLUMN_INDEX_NOT_EXIST, AdminMessage.TYPE_ERROR );
                     }
 
-                    String strEmail = strEmailTemp[nColumnIndex];
+                    String strEmail = strEmailTemp [nColumnIndex];
 
-                    //check if the email is not null and is valid
+                    // check if the email is not null and is valid
                     if ( ( strEmail != null ) && StringUtil.checkEmail( strEmail.trim( ) ) )
                     {
                         // Checks if a subscriber with the same email address doesn't exist yet
@@ -1951,7 +1957,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
             return urlItem.getUrl( );
         }
-        catch ( IOException e )
+        catch( IOException e )
         {
             throw new RuntimeException( e.getMessage( ) );
         }
@@ -1959,8 +1965,11 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Exports the list of subscribers in a csv file format
-     * @param request The Http Request
-     * @param response The Http Response
+     * 
+     * @param request
+     *            The Http Request
+     * @param response
+     *            The Http Response
      * @return The url of the management console for newsletters
      */
     public String doExportCsv( HttpServletRequest request, HttpServletResponse response )
@@ -1978,7 +1987,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         }
 
         String strFileName = newsletter.getName( ) + CONSTANT_CSV_FILE_EXTENSION;
-        byte[] byteSubscribersList = _newsletterService.getSubscribersCsvExport( nNewsletterId );
+        byte [ ] byteSubscribersList = _newsletterService.getSubscribersCsvExport( nNewsletterId );
         NewsletterUtils.addHeaderResponse( request, response, strFileName, CONSTANT_CSV_FILE_EXTENSION );
         response.setContentLength( byteSubscribersList.length );
 
@@ -1989,7 +1998,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             os.write( byteSubscribersList );
             os.close( );
         }
-        catch ( IOException e )
+        catch( IOException e )
         {
             AppLogService.error( e );
             IOUtils.closeQuietly( os );
@@ -2000,7 +2009,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Get the manage topics page
-     * @param request The request
+     * 
+     * @param request
+     *            The request
      * @return The HTML to display
      */
     @SuppressWarnings( "unchecked" )
@@ -2016,8 +2027,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
         {
             return getManageNewsLetters( request );
         }
@@ -2032,13 +2042,11 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             if ( StringUtils.isNumeric( strTemplateId ) )
             {
                 int nTemplateId = Integer.parseInt( strTemplateId );
-                NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome.findByPrimaryKey( nTemplateId,
-                        getPlugin( ) );
+                NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome.findByPrimaryKey( nTemplateId, getPlugin( ) );
                 newsletter.setNbSections( newsletterTemplate.getSectionNumber( ) );
                 newsletter.setNewsLetterTemplateId( nTemplateId );
                 NewsLetterHome.update( newsletter, getPlugin( ) );
-                int nNewOrder = NewsletterTopicHome.getNewOrder( nNewsletterId, newsletterTemplate.getSectionNumber( ),
-                        getPlugin( ) );
+                int nNewOrder = NewsletterTopicHome.getNewOrder( nNewsletterId, newsletterTemplate.getSectionNumber( ), getPlugin( ) );
                 for ( NewsletterTopic topic : listTopics )
                 {
                     if ( topic.getSection( ) > newsletterTemplate.getSectionNumber( ) )
@@ -2055,15 +2063,14 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         Map<String, Object> model = new HashMap<String, Object>( );
 
         // We create an array with the number of topics in every section
-        Integer[] tblSectionSize = new Integer[newsletter.getNbSections( )];
+        Integer [ ] tblSectionSize = new Integer [ newsletter.getNbSections( )];
         for ( int i = 0; i < newsletter.getNbSections( ); i++ )
         {
             // The first section is 1, and we start from 0 so we consider the section i + 1
-            tblSectionSize[i] = NewsletterTopicHome.getLastOrder( nNewsletterId, i + 1, getPlugin( ) );
+            tblSectionSize [i] = NewsletterTopicHome.getLastOrder( nNewsletterId, i + 1, getPlugin( ) );
         }
 
-        ReferenceList refListTopicType = _newsletterTopicService.getNewsletterTopicTypeRefList( AdminUserService
-                .getLocale( request ) );
+        ReferenceList refListTopicType = _newsletterTopicService.getNewsletterTopicTypeRefList( AdminUserService.getLocale( request ) );
 
         UrlItem url = new UrlItem( JSP_URL_MANAGE_NEWSLETTER_TOPIC );
         url.addParameter( PARAMETER_NEWSLETTER_ID, strNewsletterId );
@@ -2081,8 +2088,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         if ( tableManager == null )
         {
             tableManager = new DataTableManager<NewsletterTopic>( url.getUrl( ), url.getUrl( ),
-                    AppPropertiesService.getPropertyInt( PROPERTY_ITEMS_PER_PAGE, CONSTANT_DEFAULT_ITEM_PER_PAGE ),
-                    true );
+                    AppPropertiesService.getPropertyInt( PROPERTY_ITEMS_PER_PAGE, CONSTANT_DEFAULT_ITEM_PER_PAGE ), true );
             tableManager.addFreeColumn( LABEL_NEWSLETTER_TOPIC_SECTION, CONSTANT_FREEMARKER_MACRO_COLUMN_SECTION );
             tableManager.addColumn( LABEL_NEWSLETTER_TOPIC_ORDER, MARK_NEWSLETTER_TOPIC_ORDER, false );
             tableManager.addColumn( LABEL_NEWSLETTER_TOPIC_TITLE, MARK_NEWSLETTER_TOPIC_TITLE, false );
@@ -2096,8 +2102,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         Locale locale = AdminUserService.getLocale( request );
         String strBaseUrl = AppPathService.getBaseUrl( request );
 
-        Collection<NewsLetterTemplate> newsletterTemplatesList = NewsLetterTemplateHome.getTemplatesCollectionByType(
-                NewsLetterTemplate.RESOURCE_TYPE, getPlugin( ) );
+        Collection<NewsLetterTemplate> newsletterTemplatesList = NewsLetterTemplateHome.getTemplatesCollectionByType( NewsLetterTemplate.RESOURCE_TYPE,
+                getPlugin( ) );
         newsletterTemplatesList = AdminWorkgroupService.getAuthorizedCollection( newsletterTemplatesList, user );
 
         String strPathImageTemplate = _newsletterService.getImageFolderPath( AppPathService.getBaseUrl( request ) );
@@ -2106,16 +2112,15 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         model.put( MARK_NEWSLETTER_TABLE_MANAGER, tableManager );
         model.put( MARK_LIST_TOPIC_TYPES, refListTopicType );
         model.put( MARK_SECTION_SIZES, tblSectionSize );
-        model.put( MARK_HTML_CONTENT, _newsletterService.generateNewsletterHtmlCode( newsletter,
-                newsletter.getNewsLetterTemplateId( ), strBaseUrl, user, locale ) );
+        model.put( MARK_HTML_CONTENT,
+                _newsletterService.generateNewsletterHtmlCode( newsletter, newsletter.getNewsLetterTemplateId( ), strBaseUrl, user, locale ) );
         model.put( MARK_WEBAPP_URL, strBaseUrl );
         model.put( MARK_LOCALE, getLocale( ) );
         model.put( MARK_LIST_NEWSLETTER_TEMPLATES, newsletterTemplatesList );
         model.put( MARK_NEWSLETTER_TEMPLATE_ID, newsletter.getNewsLetterTemplateId( ) );
         model.put( MARK_IMG_PATH, strPathImageTemplate );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_NEWSLETTER_TOPICS,
-                AdminUserService.getLocale( request ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_NEWSLETTER_TOPICS, AdminUserService.getLocale( request ), model );
         String strContent = template.getHtml( );
         tableManager.clearItems( );
         request.getSession( ).setAttribute( PARAMETER_NEWSLETTER_TOPICS_TABLE_MANAGER, tableManager );
@@ -2125,7 +2130,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Create a news topic in a newsletter
-     * @param request The request
+     * 
+     * @param request
+     *            The request
      * @return The URL to redirect to.
      */
     public String doAddNewsletterTopic( HttpServletRequest request )
@@ -2146,8 +2153,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         {
             newsletterTopic.setSection( 1 );
         }
-        _newsletterTopicService.createNewsletterTopic( newsletterTopic, getUser( ),
-                AdminUserService.getLocale( request ) );
+        _newsletterTopicService.createNewsletterTopic( newsletterTopic, getUser( ), AdminUserService.getLocale( request ) );
 
         UrlItem urlItem = new UrlItem( JSP_URL_MODIFY_TOPIC_CONFIG );
         urlItem.addParameter( PARAMETER_NEWSLETTER_ID, strNewsletterId );
@@ -2157,7 +2163,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Get a confirmation page before removing a newsletter topic
-     * @param request The request
+     * 
+     * @param request
+     *            The request
      * @return The URL to redirect to.
      */
     public String confirmRemoveNewsletterTopic( HttpServletRequest request )
@@ -2171,8 +2179,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
         {
             return JSP_URL_MANAGE_NEWSLETTER;
         }
@@ -2180,13 +2187,14 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         urlItem.addParameter( PARAMETER_NEWSLETTER_ID, strNewsletterId );
         urlItem.addParameter( PARAMETER_TOPIC_ID, request.getParameter( PARAMETER_TOPIC_ID ) );
         urlItem.addParameter( PARAMETER_TOPIC_TYPE, request.getParameter( PARAMETER_TOPIC_TYPE ) );
-        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_TOPIC, urlItem.getUrl( ),
-                AdminMessage.TYPE_CONFIRMATION );
+        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_TOPIC, urlItem.getUrl( ), AdminMessage.TYPE_CONFIRMATION );
     }
 
     /**
      * Remove a newsletter topic
-     * @param request The request
+     * 
+     * @param request
+     *            The request
      * @return The URL to redirect to.
      */
     public String doRemoveNewsletterTopic( HttpServletRequest request )
@@ -2200,8 +2208,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                        NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
         {
             return JSP_URL_MANAGE_NEWSLETTER;
         }
@@ -2222,7 +2229,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Change the order of a topic, and display the manage topics page.
-     * @param request The request
+     * 
+     * @param request
+     *            The request
      * @return The HTML content to display
      */
     public String getMoveNewsletterTopic( HttpServletRequest request )
@@ -2243,7 +2252,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Get the modification page of a newsletter topic configuration
-     * @param request The request
+     * 
+     * @param request
+     *            The request
      * @return The html content to display
      */
     public String getModifyTopicConfig( HttpServletRequest request )
@@ -2259,8 +2270,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         setPageTitleProperty( PROPERTY_PAGE_TITLE_MODIFY_TOPIC_CONFIGURATION );
         NewsletterTopic newsletterTopic = NewsletterTopicHome.findByPrimaryKey( nIdTopic, getPlugin( ) );
         Locale locale = AdminUserService.getLocale( request );
-        String strContent = _newsletterTopicService.getConfigurationPage( newsletterTopic,
-                AppPathService.getBaseUrl( request ), AdminUserService.getAdminUser( request ), locale );
+        String strContent = _newsletterTopicService.getConfigurationPage( newsletterTopic, AppPathService.getBaseUrl( request ),
+                AdminUserService.getAdminUser( request ), locale );
 
         Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_CONTENT, strContent );
@@ -2271,7 +2282,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Save the configuration of a topic
-     * @param request The request
+     * 
+     * @param request
+     *            The request
      * @return The URL to redirect to
      */
     public String doModifyTopicConfig( HttpServletRequest request )
@@ -2300,16 +2313,18 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             }
 
             @SuppressWarnings( "unchecked" )
-            Map<String, String[]> mapParameters = request.getParameterMap( );
-            _newsletterTopicService.saveConfiguration( mapParameters, newsletterTopic,
-                    AdminUserService.getAdminUser( request ), AdminUserService.getLocale( request ) );
+            Map<String, String [ ]> mapParameters = request.getParameterMap( );
+            _newsletterTopicService.saveConfiguration( mapParameters, newsletterTopic, AdminUserService.getAdminUser( request ),
+                    AdminUserService.getLocale( request ) );
         }
         return AppPathService.getBaseUrl( request ) + url.getUrl( );
     }
 
     /**
      * Change the section of a newsletter topic.
-     * @param request The request
+     * 
+     * @param request
+     *            The request
      * @return The html to display
      */
     public String doChangeNewsletterTopicSection( HttpServletRequest request )
@@ -2344,26 +2359,28 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     // Private Implementation
 
     /**
-     * To translate the absolute url's in SEMI-relativre url's of the
-     * html_content ( use before insertion in db)
-     * @param strContent The html code
-     * @param strBaseUrl The base url
+     * To translate the absolute url's in SEMI-relativre url's of the html_content ( use before insertion in db)
+     * 
+     * @param strContent
+     *            The html code
+     * @param strBaseUrl
+     *            The base url
      * @return The clean code
      */
     private String doClean( String strContent, String strBaseUrl )
     {
         String strNewContent = strContent;
-        strNewContent = StringUtil.substitute( strNewContent, NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE,
-                strBaseUrl );
+        strNewContent = StringUtil.substitute( strNewContent, NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE, strBaseUrl );
 
         return strNewContent;
     }
 
     /**
      * Tests whether all the e-mails represented by a string are valid
-     * @param strRecipientLists The list of recipients
-     * @return The last wrong invalid e-mail in the list or an empty String if
-     *         all e-mails are valid
+     * 
+     * @param strRecipientLists
+     *            The list of recipients
+     * @return The last wrong invalid e-mail in the list or an empty String if all e-mails are valid
      */
     private String isWrongEmail( String strRecipientLists )
     {
@@ -2371,13 +2388,13 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         String strDelimiter = AppPropertiesService.getProperty( PROPERTY_IMPORT_DELIMITER );
 
-        String[] strEmails = strRecipientLists.split( strDelimiter );
+        String [ ] strEmails = strRecipientLists.split( strDelimiter );
 
         for ( int j = 0; j < strEmails.length; j++ )
         {
-            if ( !StringUtil.checkEmail( strEmails[j] ) )
+            if ( !StringUtil.checkEmail( strEmails [j] ) )
             {
-                strWrongEmail = strEmails[j];
+                strWrongEmail = strEmails [j];
             }
         }
 
@@ -2386,15 +2403,16 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Check if user is authozired to create a newsletter
-     * @param request The {@link HttpServletRequest}
+     * 
+     * @param request
+     *            The {@link HttpServletRequest}
      * @return true if creation is authorized, false otherwise
      */
     private boolean isNewsletterCreationAllowed( HttpServletRequest request )
     {
-        //RBAC permission
+        // RBAC permission
         AdminUser user = AdminUserService.getAdminUser( request );
-        if ( RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, RBAC.WILDCARD_RESOURCES_ID,
-                NewsletterResourceIdService.PERMISSION_CREATE, user ) )
+        if ( RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, RBAC.WILDCARD_RESOURCES_ID, NewsletterResourceIdService.PERMISSION_CREATE, user ) )
         {
             return true;
         }
@@ -2414,9 +2432,10 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     }
 
     /**
-     * Takes a list of recipients in a form of a String and converts it into a
-     * list of subscribers
-     * @param strRecipients A list of recipients as a String
+     * Takes a list of recipients in a form of a String and converts it into a list of subscribers
+     * 
+     * @param strRecipients
+     *            A list of recipients as a String
      * @return A list of subscibers
      */
     private Collection<Subscriber> convertToList( String strRecipients )
@@ -2427,14 +2446,14 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         {
             String strDelimiter = AppPropertiesService.getProperty( PROPERTY_IMPORT_DELIMITER );
 
-            String[] strEmails = strRecipients.split( strDelimiter );
+            String [ ] strEmails = strRecipients.split( strDelimiter );
 
             for ( int j = 0; j < strEmails.length; j++ )
             {
-                if ( StringUtil.checkEmail( strEmails[j] ) )
+                if ( StringUtil.checkEmail( strEmails [j] ) )
                 {
                     Subscriber subscriber = new Subscriber( );
-                    subscriber.setEmail( strEmails[j] );
+                    subscriber.setEmail( strEmails [j] );
                     listRecipients.add( subscriber );
                 }
             }
@@ -2445,6 +2464,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Get the content of a CSS file
+     * 
      * @return The content into a String
      */
     private String getCssContent( )
@@ -2466,7 +2486,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Get the content of a text file
-     * @param strFileName The full name of the file
+     * 
+     * @param strFileName
+     *            The full name of the file
      * @return The content
      */
     private String getTextFileContent( String strFileName )
@@ -2490,14 +2512,13 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
             fileReader.close( );
         }
-        catch ( FileNotFoundException e )
+        catch( FileNotFoundException e )
         {
             AppLogService.error( "plugin-newsletter - CSS '" + strFileName + "' not found ! " + e.getMessage( ) );
         }
-        catch ( IOException e )
+        catch( IOException e )
         {
-            AppLogService
-                    .error( "plugin-newsletter - error when reading CSS '" + strFileName + "' ! " + e.getMessage( ) );
+            AppLogService.error( "plugin-newsletter - error when reading CSS '" + strFileName + "' ! " + e.getMessage( ) );
         }
         finally
         {
@@ -2509,10 +2530,13 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     /**
      * Generate the final html code for email
-     * @param newsletter The newsletter to generate
-     * @param strBaseUrl The baseUrl (can be prod url)
-     * @param strUnsubscribe 'True' if a link to unsuscribe to the newsletter
-     *            should be generated, false otherwise
+     * 
+     * @param newsletter
+     *            The newsletter to generate
+     * @param strBaseUrl
+     *            The baseUrl (can be prod url)
+     * @param strUnsubscribe
+     *            'True' if a link to unsuscribe to the newsletter should be generated, false otherwise
      * @return The {@link HtmlTemplate}
      */
     private HtmlTemplate setHtmlTemplateEmail( NewsLetter newsletter, String strBaseUrl, String strUnsubscribe )
@@ -2526,47 +2550,47 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         sendingModel.put( NewsLetterConstants.MARK_SUBSCRIBER_EMAIL, NewsLetterConstants.MARK_SUBSCRIBER_EMAIL_EACH );
         sendingModel.put( NewsLetterConstants.MARK_UNSUBSCRIBE_KEY, NewsLetterConstants.MARK_UNSUBSCRIBE_KEY_EACH );
 
-        HtmlTemplate templateNewsLetter = AppTemplateService.getTemplate( TEMPLATE_SEND_NEWSLETTER, getLocale( ),
-                sendingModel );
+        HtmlTemplate templateNewsLetter = AppTemplateService.getTemplate( TEMPLATE_SEND_NEWSLETTER, getLocale( ), sendingModel );
 
         templateNewsLetter.substitute( NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE, strBaseUrl );
 
         return templateNewsLetter;
     }
-    
+
     /**
      * Processes the copy of a newsletter
-     * @param request The Http request
+     * 
+     * @param request
+     *            The Http request
      * @return the jsp URL to display the form to manage newsletters
      */
     public String doCopyNewsLetter( HttpServletRequest request )
     {
-    	AdminUser user = AdminUserService.getAdminUser( request );
+        AdminUser user = AdminUserService.getAdminUser( request );
         Locale locale = AdminUserService.getLocale( request );
-    	int nNewsletterId = Integer.parseInt( request.getParameter( PARAMETER_NEWSLETTER_ID ) );
+        int nNewsletterId = Integer.parseInt( request.getParameter( PARAMETER_NEWSLETTER_ID ) );
 
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         // Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, Integer.toString( newsletter.getId( ) ),
-                        NewsletterResourceIdService.PERMISSION_CREATE, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE,
+                Integer.toString( newsletter.getId( ) ), NewsletterResourceIdService.PERMISSION_CREATE, getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
-        
-        Object[] tabNewsLetterTileCopy = { newsletter.getName() };
-        String strTitleCopySuggest = I18nService.getLocalizedString( LABLE_COPY_NEWSLETTER_TITLE, tabNewsLetterTileCopy,
-                getLocale(  ) );
+
+        Object [ ] tabNewsLetterTileCopy = {
+                newsletter.getName( )
+        };
+        String strTitleCopySuggest = I18nService.getLocalizedString( LABLE_COPY_NEWSLETTER_TITLE, tabNewsLetterTileCopy, getLocale( ) );
 
         if ( strTitleCopySuggest != null )
         {
-        	newsletter.setName( strTitleCopySuggest );
+            newsletter.setName( strTitleCopySuggest );
         }
 
-        
         // Copy of newsletter
-        _newsletterService.copyExistingNewsletter(newsletter, user, locale);
+        _newsletterService.copyExistingNewsletter( newsletter, user, locale );
         return getHomeUrl( request );
     }
 }

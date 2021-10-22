@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,6 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 import java.util.Collection;
 
-
 /**
  * This class provides instacnes management methods (create, find, ...) for Subscriber objects
  */
@@ -51,15 +50,17 @@ public final class SubscriberHome
     /**
      * Private constructor - this class need not be instantiated
      */
-    private SubscriberHome(  )
+    private SubscriberHome( )
     {
     }
 
     /**
      * Create an instance of the Subscriber class
      *
-     * @param subscriber the object to insert into the database
-     * @param plugin the plugin
+     * @param subscriber
+     *            the object to insert into the database
+     * @param plugin
+     *            the plugin
      * @return the instance created
      */
     public static Subscriber create( Subscriber subscriber, Plugin plugin )
@@ -72,8 +73,10 @@ public final class SubscriberHome
     /**
      * Remove the subscriber whose identifier is specified in parameter
      *
-     * @param nSubscriberId the subscriber's identifier
-     * @param plugin the plugin
+     * @param nSubscriberId
+     *            the subscriber's identifier
+     * @param plugin
+     *            the plugin
      */
     public static void remove( int nSubscriberId, Plugin plugin )
     {
@@ -86,8 +89,10 @@ public final class SubscriberHome
     /**
      * Returns an object Subscriber from its identifier
      *
-     * @param nKey the primary key of the subscriber
-     * @param plugin the plugin
+     * @param nKey
+     *            the primary key of the subscriber
+     * @param plugin
+     *            the plugin
      * @return an instance of the class
      */
     public static Subscriber findByPrimaryKey( int nKey, Plugin plugin )
@@ -96,7 +101,8 @@ public final class SubscriberHome
     }
 
     /**
-     * @param plugin the plugin
+     * @param plugin
+     *            the plugin
      * @return a collection of objects Subscriber
      */
     public static Collection<Subscriber> findAll( Plugin plugin )
@@ -107,8 +113,10 @@ public final class SubscriberHome
     /**
      * Returns a subscriber object from the email
      *
-     * @param strEmail the subscriber's email
-     * @param plugin the plugin
+     * @param strEmail
+     *            the subscriber's email
+     * @param plugin
+     *            the plugin
      * @return a subscriber object if it exists, null if not
      */
     public static Subscriber findByEmail( String strEmail, Plugin plugin )
@@ -119,10 +127,14 @@ public final class SubscriberHome
     /**
      * loads the list of subscribers for a newsletter
      *
-     * @param nNewsLetterId the newsletter identifier
-     * @param nBegin the rank of the first subscriber to return
-     * @param nEnd the maximum number of suscribers to return
-     * @param plugin the plugin
+     * @param nNewsLetterId
+     *            the newsletter identifier
+     * @param nBegin
+     *            the rank of the first subscriber to return
+     * @param nEnd
+     *            the maximum number of suscribers to return
+     * @param plugin
+     *            the plugin
      * @return a collection of subscribers
      */
     public static Collection<Subscriber> findSubscribers( int nNewsLetterId, int nBegin, int nEnd, Plugin plugin )
@@ -132,32 +144,38 @@ public final class SubscriberHome
 
     /**
      * Find the collection of subscribers to send a newsletter
-     * @param nNewsLetterId The id of the newsletter
-     * @param nBegin The begin index of subscribers to get
-     * @param nEnd The end index of subscribers to get
-     * @param plugin The plugin
+     * 
+     * @param nNewsLetterId
+     *            The id of the newsletter
+     * @param nBegin
+     *            The begin index of subscribers to get
+     * @param nEnd
+     *            The end index of subscribers to get
+     * @param plugin
+     *            The plugin
      * @return The collection of subscribers found
      */
-    public static Collection<Subscriber> findSubscribersForSending( int nNewsLetterId, int nBegin, int nEnd,
-        Plugin plugin )
+    public static Collection<Subscriber> findSubscribersForSending( int nNewsLetterId, int nBegin, int nEnd, Plugin plugin )
     {
-        return _dao.selectSubscribersForSending( nNewsLetterId, NewsLetterConstants.CONSTANT_EMPTY_STRING, nBegin,
-            nEnd, plugin );
+        return _dao.selectSubscribersForSending( nNewsLetterId, NewsLetterConstants.CONSTANT_EMPTY_STRING, nBegin, nEnd, plugin );
     }
 
     /**
      * loads the list of subscribers for a newsletter
      *
-     * @param nNewsLetterId the newsletter identifier
-     * @param strSearchString gets all the subscribers if null or empty
-     *         and gets the subscribers whith an email containing this string otherwise
-     * @param nBegin the rank of the first subscriber to return
-     * @param nEnd the maximum number of suscribers to return
-     * @param plugin the plugin
+     * @param nNewsLetterId
+     *            the newsletter identifier
+     * @param strSearchString
+     *            gets all the subscribers if null or empty and gets the subscribers whith an email containing this string otherwise
+     * @param nBegin
+     *            the rank of the first subscriber to return
+     * @param nEnd
+     *            the maximum number of suscribers to return
+     * @param plugin
+     *            the plugin
      * @return a collection of subscribers
      */
-    public static Collection<Subscriber> findSubscribers( int nNewsLetterId, String strSearchString, int nBegin,
-        int nEnd, Plugin plugin )
+    public static Collection<Subscriber> findSubscribers( int nNewsLetterId, String strSearchString, int nBegin, int nEnd, Plugin plugin )
     {
         return _dao.selectSubscribers( nNewsLetterId, strSearchString, nBegin, nEnd, plugin );
     }
@@ -165,8 +183,10 @@ public final class SubscriberHome
     /**
      * loads the list of subscribers for a newsletter
      *
-     * @param nNewsLetterId the newsletter identifier
-     * @param plugin the plugin
+     * @param nNewsLetterId
+     *            the newsletter identifier
+     * @param plugin
+     *            the plugin
      * @return a collection of subscribers
      */
     public static Collection<Subscriber> findSubscribers( int nNewsLetterId, Plugin plugin )
@@ -177,8 +197,10 @@ public final class SubscriberHome
     /**
      * Returns, for a subscriber, the number of his subscriptions
      *
-     * @param nSubscriberId the subscriber's identifier
-     * @param plugin the plugin
+     * @param nSubscriberId
+     *            the subscriber's identifier
+     * @param plugin
+     *            the plugin
      * @return the number of subscriptions
      */
     public static int findNewsLetters( int nSubscriberId, Plugin plugin )
@@ -188,7 +210,9 @@ public final class SubscriberHome
 
     /**
      * loads the list of subscribers
-     * @param plugin the plugin
+     * 
+     * @param plugin
+     *            the plugin
      * @return a collection of subscribers
      */
     public static Collection<Subscriber> getSubscribersList( Plugin plugin )

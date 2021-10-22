@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,6 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 
 import java.util.Collection;
 
-
 /**
  * The interface representing the business methods of the subscriber
  */
@@ -46,24 +45,30 @@ public interface ISubscriberDAO
     /**
      * Insert a new record in the table.
      *
-     * @param subscriber the object to be inserted
-     * @param plugin the Plugin
+     * @param subscriber
+     *            the object to be inserted
+     * @param plugin
+     *            the Plugin
      */
     void insert( Subscriber subscriber, Plugin plugin );
 
     /**
      * Delete a record from the table
      *
-     * @param nId the subscriber's identifier
-     * @param plugin the Plugin
+     * @param nId
+     *            the subscriber's identifier
+     * @param plugin
+     *            the Plugin
      */
     void delete( int nId, Plugin plugin );
 
     /**
      * loads data from a subscriber's identifier
      *
-     * @param nId the subscriber's identifier
-     * @param plugin the Plugin
+     * @param nId
+     *            the subscriber's identifier
+     * @param plugin
+     *            the Plugin
      * @return an object Subscriber
      */
     Subscriber load( int nId, Plugin plugin );
@@ -71,7 +76,8 @@ public interface ISubscriberDAO
     /**
      * Loads the list of subscribers
      *
-     * @param plugin the Plugin
+     * @param plugin
+     *            the Plugin
      * @return a collection of objects Subscriber
      */
     Collection<Subscriber> selectAll( Plugin plugin );
@@ -79,8 +85,10 @@ public interface ISubscriberDAO
     /**
      * Finds a subscriber from his email
      *
-     * @param strEmail the subscriber's email
-     * @param plugin the Plugin
+     * @param strEmail
+     *            the subscriber's email
+     * @param plugin
+     *            the Plugin
      * @return a subscriber object if it exists, null if not
      */
     Subscriber selectByEmail( String strEmail, Plugin plugin );
@@ -88,8 +96,10 @@ public interface ISubscriberDAO
     /**
      * loads the list of subscribers for a newsletter
      *
-     * @param nNewsLetterId the newsletter identifier
-     * @param plugin the Plugin
+     * @param nNewsLetterId
+     *            the newsletter identifier
+     * @param plugin
+     *            the Plugin
      * @return a collection of subscribers
      */
     Collection<Subscriber> selectSubscribers( int nNewsLetterId, Plugin plugin );
@@ -97,36 +107,44 @@ public interface ISubscriberDAO
     /**
      * loads the list of subscribers for a newsletter
      *
-     * @param nNewsLetterId the newsletter identifier
-     * @param strSearchString gets all the subscribers if null or empty
-     *         and gets the subscribers whith an email containing this string otherwise
-     * @param nBegin the rank of the first subscriber to return
-     * @param nEnd the maximum number of suscribers to return
-     * @param plugin the Plugin
+     * @param nNewsLetterId
+     *            the newsletter identifier
+     * @param strSearchString
+     *            gets all the subscribers if null or empty and gets the subscribers whith an email containing this string otherwise
+     * @param nBegin
+     *            the rank of the first subscriber to return
+     * @param nEnd
+     *            the maximum number of suscribers to return
+     * @param plugin
+     *            the Plugin
      * @return a collection of subscribers
      */
-    Collection<Subscriber> selectSubscribers( int nNewsLetterId, String strSearchString, int nBegin, int nEnd,
-        Plugin plugin );
+    Collection<Subscriber> selectSubscribers( int nNewsLetterId, String strSearchString, int nBegin, int nEnd, Plugin plugin );
 
     /**
      * loads the list of subscribers for a newsletter
      *
-     * @param nNewsLetterId the newsletter identifier
-     * @param strSearchString gets all the subscribers if null or empty
-     *         and gets the subscribers whith an email containing this string otherwise
-     * @param nBegin the rank of the first subscriber to return
-     * @param nEnd the maximum number of suscribers to return
-     * @param plugin the Plugin
+     * @param nNewsLetterId
+     *            the newsletter identifier
+     * @param strSearchString
+     *            gets all the subscribers if null or empty and gets the subscribers whith an email containing this string otherwise
+     * @param nBegin
+     *            the rank of the first subscriber to return
+     * @param nEnd
+     *            the maximum number of suscribers to return
+     * @param plugin
+     *            the Plugin
      * @return a collection of subscribers
      */
-    Collection<Subscriber> selectSubscribersForSending( int nNewsLetterId, String strSearchString, int nBegin,
-        int nEnd, Plugin plugin );
+    Collection<Subscriber> selectSubscribersForSending( int nNewsLetterId, String strSearchString, int nBegin, int nEnd, Plugin plugin );
 
     /**
      * Returns, for a subscriber, the number of his subscriptions
      *
-     * @param nSubscriberId the subscriber's identifier
-     * @param plugin the Plugin
+     * @param nSubscriberId
+     *            the subscriber's identifier
+     * @param plugin
+     *            the Plugin
      * @return the number of subscriptions
      */
     int selectNewsLetters( int nSubscriberId, Plugin plugin );
@@ -134,7 +152,8 @@ public interface ISubscriberDAO
     /**
      * loads the list of subscribers
      *
-     * @param plugin the Plugin
+     * @param plugin
+     *            the Plugin
      * @return a collection of subscribers
      */
     Collection<Subscriber> selectSubscribersList( Plugin plugin );

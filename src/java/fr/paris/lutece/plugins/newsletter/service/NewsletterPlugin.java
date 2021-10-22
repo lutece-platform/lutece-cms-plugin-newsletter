@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,6 @@ import fr.paris.lutece.plugins.newsletter.business.NewsLetter;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterTemplate;
 import fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation;
 
-
 /**
  * The newsletter plugin
  */
@@ -51,7 +50,7 @@ public class NewsletterPlugin extends PluginDefaultImplementation
     /**
      * Initialize the plugin Newsletter
      */
-    public void init(  )
+    public void init( )
     {
         // Initialize the Newsletter service
         NewsLetter.init( );

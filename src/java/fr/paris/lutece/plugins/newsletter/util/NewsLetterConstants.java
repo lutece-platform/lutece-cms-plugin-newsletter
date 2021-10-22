@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,6 @@ package fr.paris.lutece.plugins.newsletter.util;
 
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
-
 /**
  * Shared constants
  */
@@ -55,14 +54,14 @@ public final class NewsLetterConstants
     public static final String MARK_TEMPLATE_PICTURE = "template_picture";
     public static final String MARK_TEMPLATE_SOURCE = "template_source";
     public static final String MARK_SUBSCRIBER_EMAIL = "subscriber_email";
-    public static final String MARK_SUBSCRIBER_EMAIL_EACH = "@email@"; //TODO remove the @
+    public static final String MARK_SUBSCRIBER_EMAIL_EACH = "@email@"; // TODO remove the @
     public static final String MARK_SUBSCRIBER_DATE = "subscriber_date";
     public static final String MARK_SUBSCRIBER_ID = "subscriber_id";
     public static final String MARK_PREVIOUS_NEXT = "previous_next";
-    public static final String MARK_BASE_URL = "base_url"; //FIXME
-    public static final String PROPERTY_UNSUBSCRIBE_TRUE = "TRUE"; //FIXME
-    public static final String PROPERTY_UNSUBSCRIBE_FALSE = "FALSE"; //FIXME
-    public static final String PROPERTY_ABSOLUTE_URL_TRUE = "TRUE"; //FIXME
+    public static final String MARK_BASE_URL = "base_url"; // FIXME
+    public static final String PROPERTY_UNSUBSCRIBE_TRUE = "TRUE"; // FIXME
+    public static final String PROPERTY_UNSUBSCRIBE_FALSE = "FALSE"; // FIXME
+    public static final String PROPERTY_ABSOLUTE_URL_TRUE = "TRUE"; // FIXME
 
     public static final String MARK_SENDING = "sending";
     public static final String WEBAPP_PATH_FOR_LINKSERVICE = "@webapp_path_for_linkservice@";
@@ -70,10 +69,8 @@ public final class NewsLetterConstants
     ///////////////////////////////////////////////////////////////////////
     // bookmark to use for mail template
     public static final String MARK_CONFIRM_URL = "confirm_url";
-    public static final String PROPERTY_CONFIRM_MAIL_SENDER_NAME = AppPropertiesService.getProperty(
-            "newsletter.confirm.senderName", "CONFIRMATION" );
-    public static final String PROPERTY_CONFIRM_MAIL_SENDER_ADDRESS = AppPropertiesService.getProperty(
-            "newsletter.confirm.sender", "noreply@paris.fr" );
+    public static final String PROPERTY_CONFIRM_MAIL_SENDER_NAME = AppPropertiesService.getProperty( "newsletter.confirm.senderName", "CONFIRMATION" );
+    public static final String PROPERTY_CONFIRM_MAIL_SENDER_ADDRESS = AppPropertiesService.getProperty( "newsletter.confirm.sender", "noreply@paris.fr" );
 
     ///////////////////////////////////////////////////////////////////////
     // properties
@@ -81,8 +78,8 @@ public final class NewsLetterConstants
     public static final String PROPERTY_BASE_URL = "lutece.prod.url";
     public static final String PROPERTY_PORTAL_JSP_PATH = "lutece.portal.path";
     public static final String PROPERTY_MAIL_MULTIPART = "newsletter.mail.multipart";
-    public static final String ALL_GROUPS = "all"; //FIXME
-    public static final String PROPERTY_LABEL_ALL_GROUPS = "portal.workgroup.labelAllGroups"; //FIXME
+    public static final String ALL_GROUPS = "all"; // FIXME
+    public static final String PROPERTY_LABEL_ALL_GROUPS = "portal.workgroup.labelAllGroups"; // FIXME
     public static final String PROPERTY_CHECKBOX_ON = "on";
 
     /////////////////////////////////////////////////////////////////
@@ -134,18 +131,18 @@ public final class NewsLetterConstants
     public static final String PROPERTY_SUBSCRIPTION_INVALID_KEY_TITLE_MESSAGE = "newsletter.siteMessage.invalid_key.title";
     public static final String PROPERTY_SUBSCRIPTION_INVALID_KEY_ERROR_MESSAGE = "newsletter.siteMessage.invalid_key.message";
 
-    // Newsletter archive 
+    // Newsletter archive
     public static final String PROPERTY_PAGE_NEWSLETTER_ARCHIVE_TITLE = "newsletter.page_newsletter_archive.pageTitle";
     public static final String PROPERTY_PAGE_NEWSLETTER_ARCHIVE_LABEL = "newsletter.page_newsletter_archive.pageLabel";
 
-    //Actions
+    // Actions
     public static final String ACTION_REGISTER = "register";
     public static final String ACTION_UNSUBSCRIBE = "unsubscribe";
     public static final String ACTION_CONFIRM_UNSUBSCRIBE = "confirm_unsubscribe";
     public static final String ACTION_CONFIRM_SUBSCRIBE = "confirm_subscribe";
     public static final String ACTION_SHOW_ARCHIVE = "show_archive";
 
-    //Jsp
+    // Jsp
     public static final String JSP_URL_PORTAL = "../../Portal.jsp";
     public static final String JSP_URL_DO_UNSUBSCRIBE = "/jsp/site/plugins/newsletter/DoUnsubscribeNewsLetter.jsp";
     public static final String MARK_CONTENT = "content";

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,6 @@ import fr.paris.lutece.portal.service.rbac.RBACResource;
 import fr.paris.lutece.portal.service.workgroup.AdminWorkgroupResource;
 import fr.paris.lutece.portal.service.workgroup.WorkgroupRemovalListenerService;
 
-
 /**
  * This class represents business objects NewsLetterTemplate
  */
@@ -71,6 +70,7 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
 
     /**
      * Returns the identifier of the template
+     * 
      * @return the template identifier
      */
     public int getId( )
@@ -80,7 +80,9 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
 
     /**
      * Sets the identifier of the template
-     * @param nId the template identifier
+     * 
+     * @param nId
+     *            the template identifier
      */
     public void setId( int nId )
     {
@@ -89,6 +91,7 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
 
     /**
      * Returns the topic type of the template
+     * 
      * @return the topic type of the template
      */
     public String getTopicType( )
@@ -98,7 +101,9 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
 
     /**
      * Sets the topic type of the template
-     * @param strTopicType the topic type of the template
+     * 
+     * @param strTopicType
+     *            the topic type of the template
      */
     public void setTopicType( String strTopicType )
     {
@@ -107,6 +112,7 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
 
     /**
      * Returns the description of the template
+     * 
      * @return the template description
      */
     public String getDescription( )
@@ -116,7 +122,9 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
 
     /**
      * Sets the description of the template
-     * @param strDescription the template description
+     * 
+     * @param strDescription
+     *            the template description
      */
     public void setDescription( String strDescription )
     {
@@ -125,6 +133,7 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
 
     /**
      * Returns the file name of the template
+     * 
      * @return the template file name
      */
     public String getFileName( )
@@ -134,7 +143,9 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
 
     /**
      * Sets the file name of the template
-     * @param strFileName the template file name
+     * 
+     * @param strFileName
+     *            the template file name
      */
     public void setFileName( String strFileName )
     {
@@ -143,6 +154,7 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
 
     /**
      * Returns the picture of the template
+     * 
      * @return the template picture
      */
     public String getPicture( )
@@ -152,7 +164,9 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
 
     /**
      * Sets the picture of the template
-     * @param strPicture the template picture
+     * 
+     * @param strPicture
+     *            the template picture
      */
     public void setPicture( String strPicture )
     {
@@ -161,6 +175,7 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
 
     /**
      * Return the workgroup
+     * 
      * @return The workgroup
      */
     public String getWorkgroup( )
@@ -170,7 +185,9 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
 
     /**
      * Set the workgroup
-     * @param strWorkgroup The workgroup
+     * 
+     * @param strWorkgroup
+     *            The workgroup
      */
     public void setWorkgroup( String strWorkgroup )
     {
@@ -179,6 +196,7 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
 
     /**
      * Returns the Resource Type Code that identify the resource type
+     * 
      * @return The Resource Type Code
      */
     public String getResourceId( )
@@ -188,6 +206,7 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
 
     /**
      * Returns the resource Id of the current object
+     * 
      * @return The resource Id of the current object
      */
     public String getResourceTypeCode( )
@@ -197,6 +216,7 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
 
     /**
      * Get the number of sections of this template
+     * 
      * @return The number of sections of this template
      */
     public int getSectionNumber( )
@@ -206,7 +226,9 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
 
     /**
      * Set the number of sections of this template
-     * @param nSectionNumber The number of sections of this template
+     * 
+     * @param nSectionNumber
+     *            The number of sections of this template
      */
     public void setSectionNumber( int nSectionNumber )
     {

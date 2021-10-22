@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,6 @@ import fr.paris.lutece.util.sql.DAOUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * This class provides Data Access methods for SendingNewsLetter objects
  */
@@ -56,13 +55,15 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
     private static final String SQL_QUERY_NEW_PRIMARY_KEY = "SELECT max(id_sending) FROM newsletter_sending ";
 
     ///////////////////////////////////////////////////////////////////////////////////////
-    //Access methods to data
+    // Access methods to data
 
     /**
      * Insert a new record in the table.
      * 
-     * @param sending the object to be inserted
-     * @param plugin the Plugin
+     * @param sending
+     *            the object to be inserted
+     * @param plugin
+     *            the Plugin
      */
     public void insert( SendingNewsLetter sending, Plugin plugin )
     {
@@ -84,8 +85,10 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
     /**
      * Delete the record in the database
      * 
-     * @param nSendingId the sending Identifier
-     * @param plugin the Plugin
+     * @param nSendingId
+     *            the sending Identifier
+     * @param plugin
+     *            the Plugin
      */
     public void delete( int nSendingId, Plugin plugin )
     {
@@ -98,8 +101,10 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
     /**
      * Loads the data from the database
      * 
-     * @param nSendingId the sending identifier
-     * @param plugin the Plugin
+     * @param nSendingId
+     *            the sending identifier
+     * @param plugin
+     *            the Plugin
      * @return an object SendingNewsLetter
      */
     public SendingNewsLetter load( int nSendingId, Plugin plugin )
@@ -130,8 +135,10 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
     /**
      * Update the record in the table
      * 
-     * @param sending an instance of the class SendingNewsLetter
-     * @param plugin the Plugin
+     * @param sending
+     *            an instance of the class SendingNewsLetter
+     * @param plugin
+     *            the Plugin
      */
     public void store( SendingNewsLetter sending, Plugin plugin )
     {
@@ -145,8 +152,10 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
     /**
      * Check the unicity of a primary key
      * 
-     * @param nKey the identifier to check
-     * @param plugin the Plugin
+     * @param nKey
+     *            the identifier to check
+     * @param plugin
+     *            the Plugin
      * @return true if the identifier exist and false if not
      */
     boolean checkPrimaryKey( int nKey, Plugin plugin )
@@ -170,7 +179,8 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
     /**
      * Generate a new primary key to add a new sending
      * 
-     * @param plugin the Plugin
+     * @param plugin
+     *            the Plugin
      * @return the primary key
      */
     int newPrimaryKey( Plugin plugin )
@@ -195,10 +205,12 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
 
     /**
      * Returns the last sending performed for the newsletter of given id
-     * @param newsletterId the newsletter id for wich we need the last sending
-     * @param plugin the plugin
-     * @return the last sending for the given newsletter id - null if no sending
-     *         found
+     * 
+     * @param newsletterId
+     *            the newsletter id for wich we need the last sending
+     * @param plugin
+     *            the plugin
+     * @return the last sending for the given newsletter id - null if no sending found
      */
     public SendingNewsLetter selectLastSendingForNewsletterId( int newsletterId, Plugin plugin )
     {
@@ -226,10 +238,12 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
 
     /**
      * Returns all the last sending performed for the newsletter of given id
-     * @param newsletterId the newsletter id for wich we need the last sending
-     * @param plugin the plugin
-     * @return the last sending for the given newsletter id - null if no sending
-     *         found
+     * 
+     * @param newsletterId
+     *            the newsletter id for wich we need the last sending
+     * @param plugin
+     *            the plugin
+     * @return the last sending for the given newsletter id - null if no sending found
      */
     public List<SendingNewsLetter> selectAllLastSendingForNewsletterId( int newsletterId, Plugin plugin )
     {
@@ -260,7 +274,8 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
     /**
      * Returns all the sendings in the database.
      * 
-     * @param plugin the plugin
+     * @param plugin
+     *            the plugin
      * @return a list of SendingNewsLetter objects.
      */
     public List<SendingNewsLetter> findAllSendings( Plugin plugin )
@@ -290,9 +305,12 @@ public final class SendingNewsLetterDAO implements ISendingNewsLetterDAO
 
     /**
      * Returns all the sendings in the database.
+     * 
      * @return a list of SendingNewsLetter objects.
-     * @param listId A list of newsletter id
-     * @param plugin the plugin
+     * @param listId
+     *            A list of newsletter id
+     * @param plugin
+     *            the plugin
      */
     public ArrayList<SendingNewsLetter> findSendingsByIds( ArrayList<Integer> listId, Plugin plugin )
     {

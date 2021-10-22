@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -43,7 +43,6 @@ import fr.paris.lutece.portal.service.rbac.ResourceTypeManager;
 import fr.paris.lutece.util.ReferenceList;
 
 import java.util.Locale;
-
 
 /**
  * Resource Id service for RBAC features to control access to newsletters
@@ -107,7 +106,7 @@ public class NewsletterResourceIdService extends ResourceIdService
 
     private static final String REGEX_ID = "^[\\d]+$";
 
-    //i18n properties
+    // i18n properties
     private static final String PROPERTY_LABEL_RESOURCE_TYPE = "newsletter.newsletter.resourceType";
     private static final String PROPERTY_LABEL_CREATE = "newsletter.permission.newsletter.label.create";
     private static final String PROPERTY_LABEL_DELETE = "newsletter.permission.newsletter.label.delete";
@@ -198,7 +197,9 @@ public class NewsletterResourceIdService extends ResourceIdService
 
     /**
      * Returns a list of resource ids
-     * @param locale The current locale
+     * 
+     * @param locale
+     *            The current locale
      * @return A list of resource ids
      */
     public ReferenceList getResourceIdList( Locale locale )
@@ -208,8 +209,11 @@ public class NewsletterResourceIdService extends ResourceIdService
 
     /**
      * Returns the Title of a given resource
-     * @param strId The Id of the resource
-     * @param locale The current locale
+     * 
+     * @param strId
+     *            The Id of the resource
+     * @param locale
+     *            The current locale
      * @return The Title of a given resource
      */
     public String getTitle( String strId, Locale locale )
@@ -219,8 +223,7 @@ public class NewsletterResourceIdService extends ResourceIdService
             return null;
         }
 
-        NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( Integer.parseInt( strId ),
-                PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
+        NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( Integer.parseInt( strId ), PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
 
         return ( newsletter != null ) ? newsletter.getName( ) : null;
     }

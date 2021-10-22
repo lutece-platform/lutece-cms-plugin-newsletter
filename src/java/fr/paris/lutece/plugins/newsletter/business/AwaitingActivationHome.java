@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,10 +36,9 @@ package fr.paris.lutece.plugins.newsletter.business;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 
-
 /**
  *
- *  This class provides instances management methods (create, find, ...) for awaiting activations
+ * This class provides instances management methods (create, find, ...) for awaiting activations
  */
 public final class AwaitingActivationHome
 {
@@ -49,15 +48,19 @@ public final class AwaitingActivationHome
     /**
      * Private constructor - this class need not be instantiated
      */
-    private AwaitingActivationHome(  )
+    private AwaitingActivationHome( )
     {
     }
 
     /**
      * Registers a new entry
-     * @param nIdUser the user id
-     * @param nKey the key
-     * @param plugin the plugin
+     * 
+     * @param nIdUser
+     *            the user id
+     * @param nKey
+     *            the key
+     * @param plugin
+     *            the plugin
      */
     public static void create( int nIdUser, int nKey, Plugin plugin )
     {
@@ -66,9 +69,13 @@ public final class AwaitingActivationHome
 
     /**
      * Removes the entry
-     * @param nIdUser the user id
-     * @param nKey the key
-     * @param plugin the plugin
+     * 
+     * @param nIdUser
+     *            the user id
+     * @param nKey
+     *            the key
+     * @param plugin
+     *            the plugin
      */
     public static void remove( int nIdUser, int nKey, Plugin plugin )
     {
@@ -77,9 +84,13 @@ public final class AwaitingActivationHome
 
     /**
      * Checks if the key is correct for the user id
-     * @param nIdUser the user id
-     * @param nKey the key
-     * @param plugin the plugin
+     * 
+     * @param nIdUser
+     *            the user id
+     * @param nKey
+     *            the key
+     * @param plugin
+     *            the plugin
      * @return <b>true</b> if the key is correct for the user id, <b>false</b> otherwise
      */
     public static boolean checkKey( int nIdUser, int nKey, Plugin plugin )

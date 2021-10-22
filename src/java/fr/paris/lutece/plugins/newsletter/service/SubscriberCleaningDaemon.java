@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,6 @@ package fr.paris.lutece.plugins.newsletter.service;
 
 import fr.paris.lutece.portal.service.daemon.Daemon;
 
-
 /**
  * SubscriberCleaningDaemon
  */
@@ -44,8 +43,8 @@ public class SubscriberCleaningDaemon extends Daemon
     /**
      * Init cleaning
      */
-    public void run(  )
+    public void run( )
     {
-        setLastRunLogs( NewsLetterRegistrationService.getInstance(  ).doRemoveOldUnconfirmed(  ) );
+        setLastRunLogs( NewsLetterRegistrationService.getInstance( ).doRemoveOldUnconfirmed( ) );
     }
 }

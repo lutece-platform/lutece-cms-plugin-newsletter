@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,10 +40,8 @@ import fr.paris.lutece.util.ReferenceList;
 import java.util.Collection;
 import java.util.List;
 
-
 /**
- * This class provides instances management methods (create, find, ...) for
- * NewsLetterTemplate objects
+ * This class provides instances management methods (create, find, ...) for NewsLetterTemplate objects
  */
 public final class NewsLetterTemplateHome
 {
@@ -61,7 +59,9 @@ public final class NewsLetterTemplateHome
 
     /**
      * Returns the list of every templates
-     * @param plugin The Plugin
+     * 
+     * @param plugin
+     *            The Plugin
      * @return a collection object
      */
     public static Collection<NewsLetterTemplate> getTemplatesList( Plugin plugin )
@@ -71,8 +71,11 @@ public final class NewsLetterTemplateHome
 
     /**
      * Returns a list of templates depending on the given type
-     * @param strTopicType the topic type of templates to retrieve
-     * @param plugin The Plugin
+     * 
+     * @param strTopicType
+     *            the topic type of templates to retrieve
+     * @param plugin
+     *            The Plugin
      * @return a Referencelist object
      */
     public static ReferenceList getTemplatesListByType( String strTopicType, Plugin plugin )
@@ -82,8 +85,11 @@ public final class NewsLetterTemplateHome
 
     /**
      * Returns a list of templates depending on the given topic type
-     * @param strTopicType the topic type of templates to retrieve
-     * @param plugin The Plugin
+     * 
+     * @param strTopicType
+     *            the topic type of templates to retrieve
+     * @param plugin
+     *            The Plugin
      * @return a Collection object
      */
     public static List<NewsLetterTemplate> getTemplatesCollectionByType( String strTopicType, Plugin plugin )
@@ -94,11 +100,11 @@ public final class NewsLetterTemplateHome
     /**
      * Creation of an instance of a newsletter template
      * 
-     * @param newsletterTemplate template An instance of a newsletter template
-     *            which contains the informations to store
-     * @param plugin The Plugin
-     * @return The instance of a newsletter template which has been created with
-     *         its primary key.
+     * @param newsletterTemplate
+     *            template An instance of a newsletter template which contains the informations to store
+     * @param plugin
+     *            The Plugin
+     * @return The instance of a newsletter template which has been created with its primary key.
      */
     public static NewsLetterTemplate create( NewsLetterTemplate newsletterTemplate, Plugin plugin )
     {
@@ -110,8 +116,10 @@ public final class NewsLetterTemplateHome
     /**
      * Returns an object NewsLetter's template from its identifier
      * 
-     * @param nKey the primary key of the newsletter's template
-     * @param plugin The Plugin
+     * @param nKey
+     *            the primary key of the newsletter's template
+     * @param plugin
+     *            The Plugin
      * @return an instance of the class
      */
     public static NewsLetterTemplate findByPrimaryKey( int nKey, Plugin plugin )
@@ -122,11 +130,11 @@ public final class NewsLetterTemplateHome
     /**
      * Update of an instance of a newsletter template
      * 
-     * @param newsletterTemplate template An instance of a newsletter template
-     *            which contains the informations to store
-     * @param plugin The Plugin
-     * @return The instance of a newsletter template which has been updated with
-     *         its primary key.
+     * @param newsletterTemplate
+     *            template An instance of a newsletter template which contains the informations to store
+     * @param plugin
+     *            The Plugin
+     * @return The instance of a newsletter template which has been updated with its primary key.
      */
     public static NewsLetterTemplate update( NewsLetterTemplate newsletterTemplate, Plugin plugin )
     {
@@ -138,8 +146,10 @@ public final class NewsLetterTemplateHome
     /**
      * Remove the record from the template identifier
      * 
-     * @param nNewsLetterTemplateId the template identifier
-     * @param plugin the Plugin
+     * @param nNewsLetterTemplateId
+     *            the template identifier
+     * @param plugin
+     *            the Plugin
      */
     public static void remove( int nNewsLetterTemplateId, Plugin plugin )
     {
@@ -148,7 +158,9 @@ public final class NewsLetterTemplateHome
 
     /**
      * Fetches a template list
-     * @param plugin The plugin
+     * 
+     * @param plugin
+     *            The plugin
      * @return A reference list
      */
     public static ReferenceList getTemplateListByRef( Plugin plugin )
@@ -158,8 +170,11 @@ public final class NewsLetterTemplateHome
 
     /**
      * Returns the list of templates associated with a given workgroup
-     * @param strWorkgroupKey The workgoup key
-     * @param plugin The Plugin
+     * 
+     * @param strWorkgroupKey
+     *            The workgoup key
+     * @param plugin
+     *            The Plugin
      * @return a collection object
      */
     public static Collection<NewsLetterTemplate> getTemplatesListByWorkgoup( String strWorkgroupKey, Plugin plugin )

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,6 @@ import fr.paris.lutece.portal.business.portlet.IPortletInterfaceDAO;
 
 import java.util.Set;
 
-
 /**
  * This class provides Data Access methods for NewsLetterSubscriptionPortlet objects
  */
@@ -46,7 +45,8 @@ public interface INewsLetterSubscriptionPortletDAO extends IPortletInterfaceDAO
     /**
      * Associates a new subscription to a given portlet.
      *
-     * @param nPortletId the identifier of the portlet.
+     * @param nPortletId
+     *            the identifier of the portlet.
      * @param nNewsletterId
      *            the identifier of the newsletter
      */
@@ -55,15 +55,18 @@ public interface INewsLetterSubscriptionPortletDAO extends IPortletInterfaceDAO
     /**
      * De-associate a subscription from a given portlet.
      *
-     * @param nPortletId            the identifier of the portlet.
-     * @param nSubscriptionId       the identifier of the subscription.
+     * @param nPortletId
+     *            the identifier of the portlet.
+     * @param nSubscriptionId
+     *            the identifier of the subscription.
      */
     void removeSubscription( int nPortletId, int nSubscriptionId );
 
     /**
      * Returns all the newsletters associated to a given portlet.
      *
-     * @param nPortletId    the identifier of the portlet.
+     * @param nPortletId
+     *            the identifier of the portlet.
      * @return a Set of Integer objects containing the identifers of the subscriptions.
      */
     Set<Integer> findSelectedNewsletters( int nPortletId );

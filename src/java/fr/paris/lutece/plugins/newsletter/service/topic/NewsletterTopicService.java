@@ -1,3 +1,36 @@
+/*
+ * Copyright (c) 2002-2021, City of Paris
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright notice
+ *     and the following disclaimer.
+ *
+ *  2. Redistributions in binary form must reproduce the above copyright notice
+ *     and the following disclaimer in the documentation and/or other materials
+ *     provided with the distribution.
+ *
+ *  3. Neither the name of 'Mairie de Paris' nor 'Lutece' nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * License 1.0
+ */
 package fr.paris.lutece.plugins.newsletter.service.topic;
 
 import fr.paris.lutece.plugins.newsletter.business.topic.NewsletterTopic;
@@ -16,7 +49,6 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-
 /**
  * Service to manage newsletter content types
  */
@@ -34,6 +66,7 @@ public class NewsletterTopicService implements Serializable
 
     /**
      * Get the service from Spring context
+     * 
      * @return An instance of the service
      */
     public static NewsletterTopicService getService( )
@@ -43,9 +76,10 @@ public class NewsletterTopicService implements Serializable
 
     /**
      * Get a reference list with every newsletter topic types
-     * @param locale The locale to get the topic types name in.
-     * @return A reference list containing an item for each newsletter topic
-     *         type.
+     * 
+     * @param locale
+     *            The locale to get the topic types name in.
+     * @return A reference list containing an item for each newsletter topic type.
      */
     public ReferenceList getNewsletterTopicTypeRefList( Locale locale )
     {
@@ -62,9 +96,13 @@ public class NewsletterTopicService implements Serializable
 
     /**
      * Creates a new newsletter topic
-     * @param newsletterTopic The newsletter topic to create
-     * @param user The current admin user
-     * @param locale The current locale
+     * 
+     * @param newsletterTopic
+     *            The newsletter topic to create
+     * @param user
+     *            The current admin user
+     * @param locale
+     *            The current locale
      */
     public void createNewsletterTopic( NewsletterTopic newsletterTopic, AdminUser user, Locale locale )
     {
@@ -82,8 +120,11 @@ public class NewsletterTopicService implements Serializable
 
     /**
      * Removes a newsletter topic.
-     * @param newsletterTopic The topic to remove
-     * @param user The current admin user
+     * 
+     * @param newsletterTopic
+     *            The topic to remove
+     * @param user
+     *            The current admin user
      */
     public void removeNewsletterTopic( NewsletterTopic newsletterTopic, AdminUser user )
     {
@@ -96,20 +137,23 @@ public class NewsletterTopicService implements Serializable
             }
         }
         NewsletterTopicHome.removeNewsletterTopic( newsletterTopic.getId( ), plugin );
-        NewsletterTopicHome.fillBlankInOrder( newsletterTopic.getIdNewsletter( ), newsletterTopic.getOrder( ),
-                newsletterTopic.getSection( ), plugin );
+        NewsletterTopicHome.fillBlankInOrder( newsletterTopic.getIdNewsletter( ), newsletterTopic.getOrder( ), newsletterTopic.getSection( ), plugin );
     }
 
     /**
      * Get the configuration page of a topic
-     * @param newsletterTopic The topic to get the configuration page of.
-     * @param strBaseUrl the base url
-     * @param user The current user
-     * @param locale The locale to use
+     * 
+     * @param newsletterTopic
+     *            The topic to get the configuration page of.
+     * @param strBaseUrl
+     *            the base url
+     * @param user
+     *            The current user
+     * @param locale
+     *            The locale to use
      * @return The HTML content of the configuration page of the topic
      */
-    public String getConfigurationPage( NewsletterTopic newsletterTopic, String strBaseUrl, AdminUser user,
-            Locale locale )
+    public String getConfigurationPage( NewsletterTopic newsletterTopic, String strBaseUrl, AdminUser user, Locale locale )
     {
         for ( INewsletterTopicService service : SpringContextService.getBeansOfType( INewsletterTopicService.class ) )
         {
@@ -123,14 +167,17 @@ public class NewsletterTopicService implements Serializable
 
     /**
      * Save the configuration of a topic
-     * @param mapParameters The map of parameters of the the configuration. The
-     *            map contains request parameter if it is a request context.
-     * @param newsletterTopic The topic to save the configuration of
-     * @param user The current user, or null if there is no current user
-     * @param locale The locale to use
+     * 
+     * @param mapParameters
+     *            The map of parameters of the the configuration. The map contains request parameter if it is a request context.
+     * @param newsletterTopic
+     *            The topic to save the configuration of
+     * @param user
+     *            The current user, or null if there is no current user
+     * @param locale
+     *            The locale to use
      */
-    public void saveConfiguration( Map<String, String[]> mapParameters, NewsletterTopic newsletterTopic,
-            AdminUser user, Locale locale )
+    public void saveConfiguration( Map<String, String [ ]> mapParameters, NewsletterTopic newsletterTopic, AdminUser user, Locale locale )
     {
         for ( INewsletterTopicService service : SpringContextService.getBeansOfType( INewsletterTopicService.class ) )
         {
@@ -143,33 +190,32 @@ public class NewsletterTopicService implements Serializable
 
     /**
      * Move a topic up or down in its section
-     * @param newsletterTopic The topic to move
-     * @param bMoveUp True to move the topic up (ie to decrease its order),
-     *            false to move it down (ie to increase its order)
+     * 
+     * @param newsletterTopic
+     *            The topic to move
+     * @param bMoveUp
+     *            True to move the topic up (ie to decrease its order), false to move it down (ie to increase its order)
      */
     public void modifyNewsletterTopicOrder( NewsletterTopic newsletterTopic, boolean bMoveUp )
     {
         Plugin plugin = PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME );
         // If we have the first topic and we try to move it up, or if we have the last topic, and we try to move it down, we don't do anything
-        if ( bMoveUp
-                && newsletterTopic.getOrder( ) <= 1
-                || !bMoveUp
-                && newsletterTopic.getOrder( ) == NewsletterTopicHome.getLastOrder( newsletterTopic.getIdNewsletter( ),
-                        newsletterTopic.getSection( ), plugin ) )
+        if ( bMoveUp && newsletterTopic.getOrder( ) <= 1 || !bMoveUp && newsletterTopic.getOrder( ) == NewsletterTopicHome
+                .getLastOrder( newsletterTopic.getIdNewsletter( ), newsletterTopic.getSection( ), plugin ) )
         {
             return;
         }
 
-        NewsletterTopicHome.updateNewsletterTopicOrder( newsletterTopic, bMoveUp ? newsletterTopic.getOrder( ) - 1
-                : newsletterTopic.getOrder( ) + 1, plugin );
+        NewsletterTopicHome.updateNewsletterTopicOrder( newsletterTopic, bMoveUp ? newsletterTopic.getOrder( ) - 1 : newsletterTopic.getOrder( ) + 1, plugin );
     }
 
     /**
-     * Modify the section of a topic of a newsletter. The order of the
-     * topic in its new section is the last one.
-     * @param newsletterTopic The topic to update with the old values of
-     *            topic and order.
-     * @param nSection The new section
+     * Modify the section of a topic of a newsletter. The order of the topic in its new section is the last one.
+     * 
+     * @param newsletterTopic
+     *            The topic to update with the old values of topic and order.
+     * @param nSection
+     *            The new section
      */
     public void modifyNewsletterTopicSection( NewsletterTopic newsletterTopic, int nSection )
     {
@@ -184,20 +230,22 @@ public class NewsletterTopicService implements Serializable
 
         // We update the new section and order
         newsletterTopic.setSection( nSection );
-        newsletterTopic
-                .setOrder( NewsletterTopicHome.getNewOrder( newsletterTopic.getIdNewsletter( ), nSection, plugin ) );
+        newsletterTopic.setOrder( NewsletterTopicHome.getNewOrder( newsletterTopic.getIdNewsletter( ), nSection, plugin ) );
         NewsletterTopicHome.updateNewsletterTopic( newsletterTopic, plugin );
 
         // We update ordered of the old section so that there is no blank
-        NewsletterTopicHome.fillBlankInOrder( newsletterTopic.getIdNewsletter( ), nCurrentOrder, nCurrentSection,
-                plugin );
+        NewsletterTopicHome.fillBlankInOrder( newsletterTopic.getIdNewsletter( ), nCurrentOrder, nCurrentSection, plugin );
     }
 
     /**
      * Get the html content of a newsletter topic
-     * @param newsletterTopic The topic to get the content of
-     * @param user The current user
-     * @param locale The locale to display the content in.
+     * 
+     * @param newsletterTopic
+     *            The topic to get the content of
+     * @param user
+     *            The current user
+     * @param locale
+     *            The locale to display the content in.
      * @return The html content of the topic
      */
     public String getTopicContent( NewsletterTopic newsletterTopic, AdminUser user, Locale locale )
@@ -214,9 +262,10 @@ public class NewsletterTopicService implements Serializable
 
     /**
      * Get the name of the topic type from a topic type code
-     * @param strTopicTypeCode The code of the topic type to get the name of
-     * @return The name of the topic type, or an empty string if no topic type
-     *         is found.
+     * 
+     * @param strTopicTypeCode
+     *            The code of the topic type to get the name of
+     * @return The name of the topic type, or an empty string if no topic type is found.
      */
     public String getTopicTypeName( String strTopicTypeCode )
     {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,7 +41,6 @@ import fr.paris.lutece.portal.service.util.RemovalListener;
 import java.util.Collection;
 import java.util.Locale;
 
-
 /**
  * Newsletter Removal Listener
  */
@@ -50,10 +49,12 @@ public class NewsletterWorkgroupRemovalListener implements RemovalListener
     private static final String PROPERTY_WORKGROUP_CANNOT_BE_REMOVED = "newsletter.message.newsletter.workgroupCannotBeRemoved";
 
     /**
-    * Check if the object can be safely removed
-    * @param strId The object id
-    * @return true if the object can be removed otherwise false
-    */
+     * Check if the object can be safely removed
+     * 
+     * @param strId
+     *            The object id
+     * @return true if the object can be removed otherwise false
+     */
     public boolean canBeRemoved( String strId )
     {
         if ( strId == null )
@@ -61,12 +62,11 @@ public class NewsletterWorkgroupRemovalListener implements RemovalListener
             return true;
         }
 
-        Collection<NewsLetter> listNewsletters = NewsLetterHome.findAll( PluginService.getPlugin( 
-                    NewsletterPlugin.PLUGIN_NAME ) );
+        Collection<NewsLetter> listNewsletters = NewsLetterHome.findAll( PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
 
         for ( NewsLetter newsletter : listNewsletters )
         {
-            if ( ( newsletter.getWorkgroup(  ) != null ) && newsletter.getWorkgroup(  ).equals( strId ) )
+            if ( ( newsletter.getWorkgroup( ) != null ) && newsletter.getWorkgroup( ).equals( strId ) )
             {
                 return false;
             }
@@ -77,13 +77,16 @@ public class NewsletterWorkgroupRemovalListener implements RemovalListener
 
     /**
      * Gives a message explaining why the object can't be removed
-     * @param strId The object id
-     * @param locale The current locale
+     * 
+     * @param strId
+     *            The object id
+     * @param locale
+     *            The current locale
      * @return The message
      */
     public String getRemovalRefusedMessage( String strId, Locale locale )
     {
-        // Build a message 
+        // Build a message
         return I18nService.getLocalizedString( PROPERTY_WORKGROUP_CANNOT_BE_REMOVED, locale );
     }
 }

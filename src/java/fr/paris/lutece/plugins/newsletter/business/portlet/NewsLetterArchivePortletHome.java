@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,10 +41,8 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 import java.util.ArrayList;
 
-
 /**
- * This class provides instances management methods for NewsLetterArchivePortlet
- * objects
+ * This class provides instances management methods for NewsLetterArchivePortlet objects
  */
 public class NewsLetterArchivePortletHome extends PortletHome
 {
@@ -52,8 +50,7 @@ public class NewsLetterArchivePortletHome extends PortletHome
     private static NewsLetterArchivePortletHome _singleton = new NewsLetterArchivePortletHome( );
 
     // Static variable pointed at the DAO instance
-    private static INewsLetterArchivePortletDAO _dao = SpringContextService
-            .getBean( "newsletter.newsLetterArchivePortletDAO" );
+    private static INewsLetterArchivePortletDAO _dao = SpringContextService.getBean( "newsletter.newsLetterArchivePortletDAO" );
 
     /**
      * Constructor
@@ -102,7 +99,8 @@ public class NewsLetterArchivePortletHome extends PortletHome
     /**
      * Associates a new sending to a given portlet.
      * 
-     * @param nPortletId the identifier of the portlet.
+     * @param nPortletId
+     *            the identifier of the portlet.
      * @param nSendingId
      *            the identifier of the sending.
      */
@@ -127,7 +125,8 @@ public class NewsLetterArchivePortletHome extends PortletHome
     /**
      * Returns all the sendings associated with a given portlet.
      * 
-     * @param nPortletId the identifier of the portlet.
+     * @param nPortletId
+     *            the identifier of the portlet.
      * @return a Set of Integer containing the identifiers.
      */
     public static ArrayList<Integer> findSendingsInPortlet( int nPortletId, Plugin plugin )

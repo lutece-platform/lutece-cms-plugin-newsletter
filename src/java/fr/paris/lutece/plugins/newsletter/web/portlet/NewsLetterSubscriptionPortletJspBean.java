@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,10 +62,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 
-
 /**
- * This class provides the user interface to manage newsletter subscription
- * portlets.
+ * This class provides the user interface to manage newsletter subscription portlets.
  */
 public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
 {
@@ -85,8 +83,8 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
     private static final String PREFIX_CHECKBOX_NAME = "cbx_snd_";
 
     // Bookmarks
-    private static final String BOOKMARK_PAGE_ID = "@page_id@"; //Todo remove the @
-    private static final String BOOKMARK_PORTLET_ID = "@portlet_id@"; //Todo remove the @
+    private static final String BOOKMARK_PAGE_ID = "@page_id@"; // Todo remove the @
+    private static final String BOOKMARK_PORTLET_ID = "@portlet_id@"; // Todo remove the @
 
     // Templates
     private static final String MARK_NEWSLETTER_LIST = "subscribed_newsletter_list";
@@ -94,7 +92,9 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
 
     /**
      * Returns the creation form for the portlet
-     * @param request the HTML request
+     * 
+     * @param request
+     *            the HTML request
      * @return the HTML code for the page
      */
     public String getCreate( HttpServletRequest request )
@@ -109,7 +109,9 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
 
     /**
      * Processes the creation of the portlet
-     * @param request the HTML request
+     * 
+     * @param request
+     *            the HTML request
      * @return the URL to redirect to
      */
     public String doCreate( HttpServletRequest request )
@@ -142,13 +144,15 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
         // Creating portlet
         NewsLetterSubscriptionPortletHome.getInstance( ).create( portlet );
 
-        //Displays the page with the new Portlet
+        // Displays the page with the new Portlet
         return getPageUrl( nIdPage );
     }
 
     /**
      * Returns the modification form for the portlet
-     * @param request the HTML request
+     * 
+     * @param request
+     *            the HTML request
      * @return the HTML code for the page
      */
     public String getModify( HttpServletRequest request )
@@ -156,8 +160,7 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
         // Use the id in the request to load the portlet
         String strPortletId = request.getParameter( PARAMETER_PORTLET_ID );
         int nPortletId = Integer.parseInt( strPortletId );
-        NewsLetterSubscriptionPortlet portlet = (NewsLetterSubscriptionPortlet) PortletHome
-                .findByPrimaryKey( nPortletId );
+        NewsLetterSubscriptionPortlet portlet = (NewsLetterSubscriptionPortlet) PortletHome.findByPrimaryKey( nPortletId );
 
         String strIdPage = request.getParameter( PARAMETER_PAGE_ID );
 
@@ -182,7 +185,9 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
 
     /**
      * Processes the modification of the portlet
-     * @param request the HTTP request
+     * 
+     * @param request
+     *            the HTTP request
      * @return the URL to redirect to
      */
     public String doModify( HttpServletRequest request )
@@ -190,8 +195,7 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
         // Use the id in the request to load the portlet
         String strPortletId = request.getParameter( PARAMETER_PORTLET_ID );
         int nPortletId = Integer.parseInt( strPortletId );
-        NewsLetterSubscriptionPortlet portlet = (NewsLetterSubscriptionPortlet) PortletHome
-                .findByPrimaryKey( nPortletId );
+        NewsLetterSubscriptionPortlet portlet = (NewsLetterSubscriptionPortlet) PortletHome.findByPrimaryKey( nPortletId );
 
         // Standard controls on the creation form
         String strStyleId = request.getParameter( Parameters.STYLE );
@@ -223,6 +227,7 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
 
     /**
      * Returns portlet's properties prefix
+     * 
      * @return prefix
      */
     public String getPropertiesPrefix( )
@@ -231,11 +236,12 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
     }
 
     /**
-     * Helper method to determine which subscriptions were checked in the
-     * portlet
-     * modification form, and update the database accordingly.
-     * @param request the HTTP request
-     * @param portlet the portlet
+     * Helper method to determine which subscriptions were checked in the portlet modification form, and update the database accordingly.
+     * 
+     * @param request
+     *            the HTTP request
+     * @param portlet
+     *            the portlet
      */
     private static void modifySubscriptions( HttpServletRequest request, NewsLetterSubscriptionPortlet portlet )
     {
@@ -263,8 +269,7 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
 
         // Build the set of the subscriptions that were previously associated to the
         // portlet
-        Set<Integer> previousSubscriptions = NewsLetterSubscriptionPortletHome
-                .findSelectedNewsletters( portlet.getId( ) );
+        Set<Integer> previousSubscriptions = NewsLetterSubscriptionPortletHome.findSelectedNewsletters( portlet.getId( ) );
 
         // Add the subscriptions that are checked now but were not present before
         for ( Integer newSubscription : checkedSubscriptions )
@@ -287,9 +292,11 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
 
     /**
      * Performs the registration action
-     * @param request The http request
-     * @throws fr.paris.lutece.portal.service.message.SiteMessageException A
-     *             message handled by the front office
+     * 
+     * @param request
+     *            The http request
+     * @throws fr.paris.lutece.portal.service.message.SiteMessageException
+     *             A message handled by the front office
      * @return An error message
      */
     public static String doRegister( HttpServletRequest request ) throws SiteMessageException

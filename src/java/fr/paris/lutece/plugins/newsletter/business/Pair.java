@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,8 +37,11 @@ package fr.paris.lutece.plugins.newsletter.business;
  * 
  * 
  * Pair class
- * @param <A> First type of the pair
- * @param <B> Second type of the pair
+ * 
+ * @param <A>
+ *            First type of the pair
+ * @param <B>
+ *            Second type of the pair
  */
 public class Pair<A, B>
 {
@@ -47,8 +50,10 @@ public class Pair<A, B>
 
     /**
      *
-     * @param first the first element of the Pair
-     * @param second the second element of the Pair
+     * @param first
+     *            the first element of the Pair
+     * @param second
+     *            the second element of the Pair
      */
     public Pair( A first, B second )
     {
@@ -60,7 +65,7 @@ public class Pair<A, B>
      *
      * @return the first element of the Pair
      */
-    public A getFirst(  )
+    public A getFirst( )
     {
         return _first;
     }
@@ -69,7 +74,7 @@ public class Pair<A, B>
      *
      * @return the second element of the Pair
      */
-    public B getSecond(  )
+    public B getSecond( )
     {
         return _second;
     }

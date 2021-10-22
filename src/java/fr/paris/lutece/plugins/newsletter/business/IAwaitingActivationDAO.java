@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,6 @@ package fr.paris.lutece.plugins.newsletter.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 
-
 /**
  *
  * Provides methods for awaiting activations
@@ -44,25 +43,37 @@ public interface IAwaitingActivationDAO
 {
     /**
      * Adds a new pair user/key entry
-     * @param nIdUser the user id
-     * @param nKey the generated key
-     * @param plugin the plugin
+     * 
+     * @param nIdUser
+     *            the user id
+     * @param nKey
+     *            the generated key
+     * @param plugin
+     *            the plugin
      */
     void insert( int nIdUser, int nKey, Plugin plugin );
 
     /**
      * Removes the entry
-     * @param nIdUser the user id
-     * @param nKey the key
-     * @param plugin the plugin
+     * 
+     * @param nIdUser
+     *            the user id
+     * @param nKey
+     *            the key
+     * @param plugin
+     *            the plugin
      */
     void delete( int nIdUser, int nKey, Plugin plugin );
 
     /**
      * Checks if the pair user/key already exists.
-     * @param nIdUser the user id
-     * @param nKey the generated key
-     * @param plugin the plugin
+     * 
+     * @param nIdUser
+     *            the user id
+     * @param nKey
+     *            the generated key
+     * @param plugin
+     *            the plugin
      * @return <b>true</b> if the pair already exists, <b>false</b> otherwise.
      */
     boolean exists( int nIdUser, int nKey, Plugin plugin );

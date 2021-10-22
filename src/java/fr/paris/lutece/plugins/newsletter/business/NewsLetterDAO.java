@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -43,7 +43,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 
-
 /**
  * This class provides Data Access methods for NewsLetter objects
  */
@@ -73,7 +72,7 @@ public final class NewsLetterDAO implements INewsLetterDAO
     private static final String CONSTANT_PERCENT = "%";
 
     ///////////////////////////////////////////////////////////////////////////////////////
-    //Access methods to data
+    // Access methods to data
 
     /**
      * {@inheritDoc}
@@ -207,8 +206,7 @@ public final class NewsLetterDAO implements INewsLetterDAO
     @Override
     public boolean checkLinkedPortlet( int nIdNewsletter )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_LINKED_PORTLET,
-                PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_LINKED_PORTLET, PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
         daoUtil.setInt( 1, nIdNewsletter );
         daoUtil.executeQuery( );
 
@@ -353,8 +351,7 @@ public final class NewsLetterDAO implements INewsLetterDAO
      * {@inheritDoc}
      */
     @Override
-    public void insertSubscriber( int nNewsLetterId, int nSubscriberId, boolean bValidate, Timestamp tToday,
-            Plugin plugin )
+    public void insertSubscriber( int nNewsLetterId, int nSubscriberId, boolean bValidate, Timestamp tToday, Plugin plugin )
     {
         // Check if the subscriber is yet registered for the newsletter
         if ( isRegistered( nNewsLetterId, nSubscriberId, plugin ) )

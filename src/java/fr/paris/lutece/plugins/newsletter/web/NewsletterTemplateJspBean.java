@@ -1,3 +1,36 @@
+/*
+ * Copyright (c) 2002-2021, City of Paris
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright notice
+ *     and the following disclaimer.
+ *
+ *  2. Redistributions in binary form must reproduce the above copyright notice
+ *     and the following disclaimer in the documentation and/or other materials
+ *     provided with the distribution.
+ *
+ *  3. Neither the name of 'Mairie de Paris' nor 'Lutece' nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * License 1.0
+ */
 package fr.paris.lutece.plugins.newsletter.web;
 
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterTemplate;
@@ -51,7 +84,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-
 
 /**
  * JspBean to manage newsletter templates.
@@ -117,9 +149,9 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
     /**
      * Builds the newsletter's templates management page
      * 
-     * @param request The HTTP request
-     * @return the html code for newsletter's templates management page (liste
-     *         of templates + available actions)
+     * @param request
+     *            The HTTP request
+     * @return the html code for newsletter's templates management page (liste of templates + available actions)
      */
     public String getManageTemplates( HttpServletRequest request )
     {
@@ -136,13 +168,13 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
         {
             Map<String, Object> newsletterTemplateDisplay = new HashMap<String, Object>( );
             newsletterTemplateDisplay.put( NewsLetterConstants.MARK_TEMPLATE, newsletterTemplate );
-            newsletterTemplateDisplay.put( MARK_NEWSLETTER_TEMPLATE_ALLOW_CREATION, RBACService.isAuthorized(
-                    newsletterTemplate, NewsletterTemplateResourceIdService.PERMISSION_CREATE, getUser( ) ) );
+            newsletterTemplateDisplay.put( MARK_NEWSLETTER_TEMPLATE_ALLOW_CREATION,
+                    RBACService.isAuthorized( newsletterTemplate, NewsletterTemplateResourceIdService.PERMISSION_CREATE, getUser( ) ) );
 
-            newsletterTemplateDisplay.put( MARK_NEWSLETTER_TEMPLATE_ALLOW_DELETION, RBACService.isAuthorized(
-                    newsletterTemplate, NewsletterTemplateResourceIdService.PERMISSION_DELETE, getUser( ) ) );
-            newsletterTemplateDisplay.put( MARK_NEWSLETTER_TEMPLATE_ALLOW_MODIFICATION, RBACService.isAuthorized(
-                    newsletterTemplate, NewsletterTemplateResourceIdService.PERMISSION_MODIFY, getUser( ) ) );
+            newsletterTemplateDisplay.put( MARK_NEWSLETTER_TEMPLATE_ALLOW_DELETION,
+                    RBACService.isAuthorized( newsletterTemplate, NewsletterTemplateResourceIdService.PERMISSION_DELETE, getUser( ) ) );
+            newsletterTemplateDisplay.put( MARK_NEWSLETTER_TEMPLATE_ALLOW_MODIFICATION,
+                    RBACService.isAuthorized( newsletterTemplate, NewsletterTemplateResourceIdService.PERMISSION_MODIFY, getUser( ) ) );
 
             // The workgroup description is needed for coherence and not the key
             if ( newsletterTemplate.getWorkgroup( ).equals( NewsLetterConstants.ALL_GROUPS ) )
@@ -152,8 +184,8 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
             }
             else
             {
-                newsletterTemplateDisplay.put( MARK_NEWSLETTER_TEMPLATE_WORKGROUP_DESCRIPTION, AdminWorkgroupHome
-                        .findByPrimaryKey( newsletterTemplate.getWorkgroup( ) ).getDescription( ) );
+                newsletterTemplateDisplay.put( MARK_NEWSLETTER_TEMPLATE_WORKGROUP_DESCRIPTION,
+                        AdminWorkgroupHome.findByPrimaryKey( newsletterTemplate.getWorkgroup( ) ).getDescription( ) );
             }
 
             listNewsletterTemplateDisplay.add( newsletterTemplateDisplay );
@@ -163,8 +195,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
         model.put( MARK_ALLOW_CREATION, isNewsletterTemplateCreationAllowed( request ) );
 
         // get the list of all templates
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_NEWSLETTER_TEMPLATE, getLocale( ),
-                model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_NEWSLETTER_TEMPLATE, getLocale( ), model );
 
         return getAdminPage( template.getHtml( ) );
     }
@@ -172,7 +203,8 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
     /**
      * Builds the newsletter's templates creation page
      * 
-     * @param request The HTTP request
+     * @param request
+     *            The HTTP request
      * @return the html code for newsletter's templates creation page
      */
     public String getCreateNewsLetterTemplate( HttpServletRequest request )
@@ -187,21 +219,19 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
         // get the list of template types
         // nothing should be checked
         Map<String, Object> model = new HashMap<String, Object>( );
-        model.put( NewsLetterConstants.MARK_TEMPLATE_TYPE,
-                buildTemplateTypeList( AdminUserService.getLocale( request ) ) );
+        model.put( NewsLetterConstants.MARK_TEMPLATE_TYPE, buildTemplateTypeList( AdminUserService.getLocale( request ) ) );
         model.put( MARK_WORKGROUP_LIST, AdminWorkgroupService.getUserWorkgroups( getUser( ), getLocale( ) ) );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_NEWSLETTER_TEMPLATE, getLocale( ),
-                model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_NEWSLETTER_TEMPLATE, getLocale( ), model );
 
         return getAdminPage( template.getHtml( ) );
     }
 
     /**
-     * Processes the creation form of a new newsletter template by recovering
-     * the parameters in the http request
+     * Processes the creation form of a new newsletter template by recovering the parameters in the http request
      * 
-     * @param request the http request
+     * @param request
+     *            the http request
      * @return The Jsp URL of the process result
      */
     public String doCreateNewsletterTemplate( HttpServletRequest request )
@@ -238,15 +268,12 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 String strTemplateFileName = modelItem == null ? null : UploadUtil.cleanFileName( modelItem.getName( ) );
                 String strSectionNumber = request.getParameter( PARAMETER_TEMPLATE_SECTION );
 
-                if ( StringUtils.isEmpty( strWorkgroup ) || StringUtils.isEmpty( strTopicType )
-                        || StringUtils.isEmpty( strDescription ) || imageItem == null
-                        || StringUtils.isEmpty( strImageFileName ) || !FileUtil.hasImageExtension( strImageFileName )
-                        || modelItem == null || StringUtils.isEmpty( strTemplateFileName )
-                        || !FileUtil.hasHtmlExtension( strTemplateFileName )
+                if ( StringUtils.isEmpty( strWorkgroup ) || StringUtils.isEmpty( strTopicType ) || StringUtils.isEmpty( strDescription ) || imageItem == null
+                        || StringUtils.isEmpty( strImageFileName ) || !FileUtil.hasImageExtension( strImageFileName ) || modelItem == null
+                        || StringUtils.isEmpty( strTemplateFileName ) || !FileUtil.hasHtmlExtension( strTemplateFileName )
                         || !StringUtils.isNumeric( strSectionNumber ) )
                 {
-                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
-                            AdminMessage.TYPE_STOP );
+                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
                 }
 
                 // create the directory if it doesn't exist
@@ -263,8 +290,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
 
                 if ( fileImage.exists( ) )
                 {
-                    return AdminMessageService.getMessageUrl( request, MESSAGE_IMAGE_FILE_ALREADY_EXISTS,
-                            AdminMessage.TYPE_STOP );
+                    return AdminMessageService.getMessageUrl( request, MESSAGE_IMAGE_FILE_ALREADY_EXISTS, AdminMessage.TYPE_STOP );
                 }
 
                 int nSections = Integer.parseInt( strSectionNumber );
@@ -272,8 +298,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 File fileTemplate = new File( strPathFileNewsletterTemplate + File.separator + strTemplateFileName );
                 if ( fileTemplate.exists( ) )
                 {
-                    return AdminMessageService.getMessageUrl( request, MESSAGE_FILE_ALREADY_EXISTS,
-                            AdminMessage.TYPE_STOP );
+                    return AdminMessageService.getMessageUrl( request, MESSAGE_FILE_ALREADY_EXISTS, AdminMessage.TYPE_STOP );
                 }
 
                 // if files are ok, save them
@@ -295,7 +320,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 NewsLetterTemplateHome.create( newsletterTemplate, getPlugin( ) );
             }
         }
-        catch ( Exception e )
+        catch( Exception e )
         {
             AppLogService.error( e.getMessage( ), e );
         }
@@ -306,7 +331,8 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
     /**
      * Builds the newsletter's templates modification page
      * 
-     * @param request The HTTP request
+     * @param request
+     *            The HTTP request
      * @return the html code for newsletter's templates creation page
      */
     public String getModifyNewsLetterTemplate( HttpServletRequest request )
@@ -315,11 +341,9 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
         int nIdTemplate = Integer.parseInt( strIdTemplate );
         NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome.findByPrimaryKey( nIdTemplate, getPlugin( ) );
 
-        //Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletterTemplate, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetterTemplate.RESOURCE_TYPE,
-                        Integer.toString( newsletterTemplate.getId( ) ),
-                        NewsletterTemplateResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+        // Workgroup & RBAC permissions
+        if ( !AdminWorkgroupService.isAuthorized( newsletterTemplate, getUser( ) ) || !RBACService.isAuthorized( NewsLetterTemplate.RESOURCE_TYPE,
+                Integer.toString( newsletterTemplate.getId( ) ), NewsletterTemplateResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
         {
             return getManageTemplates( request );
         }
@@ -328,22 +352,20 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
 
         // get the list of template types
         Map<String, Object> model = new HashMap<String, Object>( );
-        model.put( NewsLetterConstants.MARK_TEMPLATE_TYPE,
-                buildTemplateTypeList( AdminUserService.getLocale( request ) ) );
+        model.put( NewsLetterConstants.MARK_TEMPLATE_TYPE, buildTemplateTypeList( AdminUserService.getLocale( request ) ) );
         model.put( MARK_WORKGROUP_LIST, AdminWorkgroupService.getUserWorkgroups( getUser( ), getLocale( ) ) );
         model.put( NewsLetterConstants.MARK_TEMPLATE, newsletterTemplate );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_NEWSLETTER_TEMPLATE, getLocale( ),
-                model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_NEWSLETTER_TEMPLATE, getLocale( ), model );
 
         return getAdminPage( template.getHtml( ) );
     }
 
     /**
-     * Processes the modification form of a newsletter template by recovering
-     * the parameters in the http request
+     * Processes the modification form of a newsletter template by recovering the parameters in the http request
      * 
-     * @param request the http request
+     * @param request
+     *            the http request
      * @return The Jsp URL of the process result
      */
     public String doModifyNewsletterTemplate( HttpServletRequest request )
@@ -361,18 +383,14 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 MultipartHttpServletRequest multi = (MultipartHttpServletRequest) request;
 
                 // creation of the NewsLetterTemplate
-                NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome.findByPrimaryKey(
-                        Integer.parseInt( multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID ) ),
-                        getPlugin( ) );
+                NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome
+                        .findByPrimaryKey( Integer.parseInt( multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID ) ), getPlugin( ) );
 
-                //Workgroup & RBAC permissions
-                if ( !AdminWorkgroupService.isAuthorized( newsletterTemplate, getUser( ) )
-                        || !RBACService.isAuthorized( NewsLetterTemplate.RESOURCE_TYPE,
-                                Integer.toString( newsletterTemplate.getId( ) ),
-                                NewsletterTemplateResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+                // Workgroup & RBAC permissions
+                if ( !AdminWorkgroupService.isAuthorized( newsletterTemplate, getUser( ) ) || !RBACService.isAuthorized( NewsLetterTemplate.RESOURCE_TYPE,
+                        Integer.toString( newsletterTemplate.getId( ) ), NewsletterTemplateResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
                 {
-                    return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED,
-                            AdminMessage.TYPE_ERROR );
+                    return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
                 }
 
                 // Mandatory fields
@@ -381,11 +399,9 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 String strWorkgroup = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_WORKGROUP );
                 String strSectionNumber = request.getParameter( PARAMETER_TEMPLATE_SECTION );
 
-                if ( StringUtils.isEmpty( strDescription ) || StringUtils.isEmpty( strWorkgroup )
-                        || !StringUtils.isNumeric( strSectionNumber ) )
+                if ( StringUtils.isEmpty( strDescription ) || StringUtils.isEmpty( strWorkgroup ) || !StringUtils.isNumeric( strSectionNumber ) )
                 {
-                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
-                            AdminMessage.TYPE_STOP );
+                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
                 }
                 int nSections = Integer.parseInt( strSectionNumber );
 
@@ -406,10 +422,8 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                         strError = MESSAGE_WRONG_IMAGE_EXTENSION;
                     }
 
-                    String strFullPathNewImageFileName = strPathImageNewsletterTemplate + File.separator
-                            + strImageFileName;
-                    String strFullPathOldImageFileName = strPathImageNewsletterTemplate + File.separator
-                            + strOldImageName;
+                    String strFullPathNewImageFileName = strPathImageNewsletterTemplate + File.separator + strImageFileName;
+                    String strFullPathOldImageFileName = strPathImageNewsletterTemplate + File.separator + strOldImageName;
                     fileImage = new File( strFullPathNewImageFileName );
 
                     if ( fileImage.exists( ) && !( strFullPathNewImageFileName ).equals( strFullPathOldImageFileName ) )
@@ -456,7 +470,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                     newsletterTemplate.setFileName( strFileName );
                 }
 
-                //if the two files are ok, write them
+                // if the two files are ok, write them
                 if ( imageItem != null && fileImage != null && strImageFileName != null )
                 {
                     imageItem.write( fileImage );
@@ -469,8 +483,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 newsletterTemplate.setWorkgroup( strWorkgroup );
 
                 int nOldSectionNumber = newsletterTemplate.getSectionNumber( );
-                NewsletterService.getService( ).modifySectionNumber( nOldSectionNumber, nSections,
-                        newsletterTemplate.getId( ) );
+                NewsletterService.getService( ).modifySectionNumber( nOldSectionNumber, nSections, newsletterTemplate.getId( ) );
                 if ( nSections > 0 )
                 {
                     newsletterTemplate.setSectionNumber( nSections );
@@ -478,7 +491,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 NewsLetterTemplateHome.update( newsletterTemplate, getPlugin( ) );
             }
         }
-        catch ( Exception e )
+        catch( Exception e )
         {
             AppLogService.error( e.getMessage( ), e );
         }
@@ -487,10 +500,10 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
     }
 
     /**
-     * Builds the newsletter's templates modification page (with the
-     * modification of the file content)
+     * Builds the newsletter's templates modification page (with the modification of the file content)
      * 
-     * @param request The HTTP request
+     * @param request
+     *            The HTTP request
      * @return the html code for newsletter's templates creation page
      */
     public String getModifyNewsLetterTemplateFile( HttpServletRequest request )
@@ -502,15 +515,12 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
         BufferedReader fileReader = null;
         try
         {
-            int nIdTemplate = Integer.parseInt( request
-                    .getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID ) );
+            int nIdTemplate = Integer.parseInt( request.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID ) );
             NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome.findByPrimaryKey( nIdTemplate, getPlugin( ) );
 
-            //Workgroup & RBAC permissions
-            if ( !AdminWorkgroupService.isAuthorized( newsletterTemplate, getUser( ) )
-                    || !RBACService.isAuthorized( NewsLetterTemplate.RESOURCE_TYPE,
-                            Integer.toString( newsletterTemplate.getId( ) ),
-                            NewsletterTemplateResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+            // Workgroup & RBAC permissions
+            if ( !AdminWorkgroupService.isAuthorized( newsletterTemplate, getUser( ) ) || !RBACService.isAuthorized( NewsLetterTemplate.RESOURCE_TYPE,
+                    Integer.toString( newsletterTemplate.getId( ) ), NewsletterTemplateResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
             {
                 return getManageTemplates( request );
             }
@@ -520,8 +530,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                     + AppPropertiesService.getProperty( NewsLetterConstants.PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE );
 
             String strFileName = newsletterTemplate.getFileName( );
-            fileReader = new BufferedReader( new FileReader( strPathFileNewsletterTemplate + File.separator
-                    + strFileName ) );
+            fileReader = new BufferedReader( new FileReader( strPathFileNewsletterTemplate + File.separator + strFileName ) );
 
             StringBuilder sbSource = new StringBuilder( );
             String line = fileReader.readLine( );
@@ -534,18 +543,17 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
 
             fileReader.close( );
 
-            model.put( NewsLetterConstants.MARK_TEMPLATE_TYPE,
-                    buildTemplateTypeList( AdminUserService.getLocale( request ) ) );
+            model.put( NewsLetterConstants.MARK_TEMPLATE_TYPE, buildTemplateTypeList( AdminUserService.getLocale( request ) ) );
 
             model.put( NewsLetterConstants.MARK_TEMPLATE_SOURCE, sbSource.toString( ) );
             model.put( NewsLetterConstants.MARK_TEMPLATE_FILE_NAME, strFileName );
             model.put( NewsLetterConstants.MARK_TEMPLATE, newsletterTemplate );
         }
-        catch ( FileNotFoundException f )
+        catch( FileNotFoundException f )
         {
             AppLogService.debug( f );
         }
-        catch ( IOException i )
+        catch( IOException i )
         {
             AppLogService.debug( i );
         }
@@ -553,17 +561,16 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
         {
             IOUtils.closeQuietly( fileReader );
         }
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_NEWSLETTER_TEMPLATE_FILE, getLocale( ),
-                model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_NEWSLETTER_TEMPLATE_FILE, getLocale( ), model );
 
         return getAdminPage( template.getHtml( ) );
     }
 
     /**
-     * Processes the modification form of a newsletter template modified by hand
-     * by recovering the parameters in the http request
+     * Processes the modification form of a newsletter template modified by hand by recovering the parameters in the http request
      * 
-     * @param request the http request
+     * @param request
+     *            the http request
      * @return The Jsp URL of the process result
      */
     public String doModifyNewsletterTemplateFile( HttpServletRequest request )
@@ -582,18 +589,14 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 MultipartHttpServletRequest multi = (MultipartHttpServletRequest) request;
 
                 // creation of the NewsLetterTemplate
-                NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome.findByPrimaryKey(
-                        Integer.parseInt( multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID ) ),
-                        getPlugin( ) );
+                NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome
+                        .findByPrimaryKey( Integer.parseInt( multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID ) ), getPlugin( ) );
 
-                //Workgroup & RBAC permissions
-                if ( !AdminWorkgroupService.isAuthorized( newsletterTemplate, getUser( ) )
-                        || !RBACService.isAuthorized( NewsLetterTemplate.RESOURCE_TYPE,
-                                Integer.toString( newsletterTemplate.getId( ) ),
-                                NewsletterTemplateResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+                // Workgroup & RBAC permissions
+                if ( !AdminWorkgroupService.isAuthorized( newsletterTemplate, getUser( ) ) || !RBACService.isAuthorized( NewsLetterTemplate.RESOURCE_TYPE,
+                        Integer.toString( newsletterTemplate.getId( ) ), NewsletterTemplateResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
                 {
-                    return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED,
-                            AdminMessage.TYPE_ERROR );
+                    return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
                 }
 
                 // Mandatory fields
@@ -603,8 +606,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
 
                 if ( StringUtils.isEmpty( strDescription ) || !StringUtils.isNumeric( strSectionNumber ) )
                 {
-                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS,
-                            AdminMessage.TYPE_STOP );
+                    return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
                 }
                 int nSections = Integer.parseInt( strSectionNumber );
 
@@ -633,8 +635,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 fileWriter.close( );
 
                 int nOldSectionNumber = newsletterTemplate.getSectionNumber( );
-                NewsletterService.getService( ).modifySectionNumber( nOldSectionNumber, nSections,
-                        newsletterTemplate.getId( ) );
+                NewsletterService.getService( ).modifySectionNumber( nOldSectionNumber, nSections, newsletterTemplate.getId( ) );
 
                 // Complete the newsLetterTemplate
                 newsletterTemplate.setDescription( strDescription );
@@ -646,11 +647,11 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 NewsLetterTemplateHome.update( newsletterTemplate, getPlugin( ) );
             }
         }
-        catch ( IOException io )
+        catch( IOException io )
         {
             AppLogService.error( io.getMessage( ), io );
         }
-        catch ( Exception e )
+        catch( Exception e )
         {
             AppLogService.error( e.getMessage( ), e );
         }
@@ -663,32 +664,30 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
     }
 
     /**
-     * Manages the removal form of a newsletter template whose identifier is in
-     * the http request
+     * Manages the removal form of a newsletter template whose identifier is in the http request
      * 
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return the html code to confirm
      */
     public String getRemoveNewsLetterTemplate( HttpServletRequest request )
     {
         String strNewsletterTemplateId = request.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID );
         int nNewsletterTemplateId = Integer.parseInt( strNewsletterTemplateId );
-        NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome.findByPrimaryKey( nNewsletterTemplateId,
-                getPlugin( ) );
+        NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome.findByPrimaryKey( nNewsletterTemplateId, getPlugin( ) );
 
-        //Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletterTemplate, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetterTemplate.RESOURCE_TYPE,
-                        Integer.toString( newsletterTemplate.getId( ) ),
-                        NewsletterTemplateResourceIdService.PERMISSION_DELETE, getUser( ) ) )
+        // Workgroup & RBAC permissions
+        if ( !AdminWorkgroupService.isAuthorized( newsletterTemplate, getUser( ) ) || !RBACService.isAuthorized( NewsLetterTemplate.RESOURCE_TYPE,
+                Integer.toString( newsletterTemplate.getId( ) ), NewsletterTemplateResourceIdService.PERMISSION_DELETE, getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
         List<String> listMessages = new ArrayList<String>( );
-        if ( !NewsletterTemplateRemovalService.getService( ).checkForRemoval( strNewsletterTemplateId, listMessages,
-                AdminUserService.getLocale( request ) ) )
+        if ( !NewsletterTemplateRemovalService.getService( ).checkForRemoval( strNewsletterTemplateId, listMessages, AdminUserService.getLocale( request ) ) )
         {
-            Object[] args = { listMessages.get( 0 ) };
+            Object [ ] args = {
+                    listMessages.get( 0 )
+            };
             return AdminMessageService.getMessageUrl( request, MESSAGE_USED_TEMPLATE, args, AdminMessage.TYPE_STOP );
         }
 
@@ -696,29 +695,25 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
         url.addParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID,
                 Integer.parseInt( request.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID ) ) );
 
-        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_NEWSLETTER_TEMPLATE, url.getUrl( ),
-                AdminMessage.TYPE_CONFIRMATION );
+        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_NEWSLETTER_TEMPLATE, url.getUrl( ), AdminMessage.TYPE_CONFIRMATION );
     }
 
     /**
      * Processes the removal form of a newsletter template
      * 
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return the jsp URL to display the form to manage newsletter templates
      */
     public String doRemoveNewsLetterTemplate( HttpServletRequest request )
     {
-        int nNewsletterTemplateId = Integer.parseInt( request
-                .getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID ) );
+        int nNewsletterTemplateId = Integer.parseInt( request.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID ) );
 
-        NewsLetterTemplate newsLetterTemplate = NewsLetterTemplateHome.findByPrimaryKey( nNewsletterTemplateId,
-                getPlugin( ) );
+        NewsLetterTemplate newsLetterTemplate = NewsLetterTemplateHome.findByPrimaryKey( nNewsletterTemplateId, getPlugin( ) );
 
-        //Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsLetterTemplate, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetterTemplate.RESOURCE_TYPE,
-                        Integer.toString( newsLetterTemplate.getId( ) ),
-                        NewsletterTemplateResourceIdService.PERMISSION_DELETE, getUser( ) ) )
+        // Workgroup & RBAC permissions
+        if ( !AdminWorkgroupService.isAuthorized( newsLetterTemplate, getUser( ) ) || !RBACService.isAuthorized( NewsLetterTemplate.RESOURCE_TYPE,
+                Integer.toString( newsLetterTemplate.getId( ) ), NewsletterTemplateResourceIdService.PERMISSION_DELETE, getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -766,7 +761,9 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
 
     /**
      * Build a radio buttons list of template types from properties
-     * @param locale The locale
+     * 
+     * @param locale
+     *            The locale
      * @return the html code for the radio buttons list
      */
     private ReferenceList buildTemplateTypeList( Locale locale )
@@ -782,15 +779,17 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
 
     /**
      * Check if user is authorized to create a newsletter template
-     * @param request The {@link HttpServletRequest}
+     * 
+     * @param request
+     *            The {@link HttpServletRequest}
      * @return true if creation is authorized, false otherwise
      */
     private boolean isNewsletterTemplateCreationAllowed( HttpServletRequest request )
     {
-        //RBAC permission
+        // RBAC permission
         AdminUser user = AdminUserService.getAdminUser( request );
-        if ( RBACService.isAuthorized( NewsLetterTemplate.RESOURCE_TYPE, RBAC.WILDCARD_RESOURCES_ID,
-                NewsletterTemplateResourceIdService.PERMISSION_CREATE, user ) )
+        if ( RBACService.isAuthorized( NewsLetterTemplate.RESOURCE_TYPE, RBAC.WILDCARD_RESOURCES_ID, NewsletterTemplateResourceIdService.PERMISSION_CREATE,
+                user ) )
         {
             return true;
         }
@@ -800,8 +799,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
 
         for ( NewsLetterTemplate newsletterTemplate : listNewsletterTemplates )
         {
-            if ( RBACService.isAuthorized( newsletterTemplate, NewsletterTemplateResourceIdService.PERMISSION_CREATE,
-                    user ) )
+            if ( RBACService.isAuthorized( newsletterTemplate, NewsletterTemplateResourceIdService.PERMISSION_CREATE, user ) )
             {
                 return true;
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,6 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 
 import java.util.ArrayList;
 
-
 /**
  * This class provides Data Access methods for NewsLetterArchivePortlet objects
  */
@@ -51,7 +50,8 @@ public interface INewsLetterArchivePortletDAO extends IPortletInterfaceDAO
      *            the identifier of the portlet.
      * @param nSendingId
      *            the identifier of the sending.
-     * @param plugin the plugin
+     * @param plugin
+     *            the plugin
      */
     void insertSending( int nPortletId, int nSendingId, Plugin plugin );
 
@@ -60,7 +60,8 @@ public interface INewsLetterArchivePortletDAO extends IPortletInterfaceDAO
      * 
      * @param nPortletId
      *            the identifier of the portlet.
-     * @param plugin the plugin
+     * @param plugin
+     *            the plugin
      * @param nSendingId
      *            the identifier of the sending.
      */
@@ -71,9 +72,9 @@ public interface INewsLetterArchivePortletDAO extends IPortletInterfaceDAO
      * 
      * @param nPortletId
      *            the identifier of the portlet.
-     * @param plugin the plugin
-     * @return a Set of Integer objects containing the identifers of the
-     *         sendings.
+     * @param plugin
+     *            the plugin
+     * @return a Set of Integer objects containing the identifers of the sendings.
      */
     ArrayList<Integer> findSendingsInPortlet( int nPortletId, Plugin plugin );
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,6 @@ import fr.paris.lutece.portal.service.workgroup.AdminWorkgroupResource;
 import fr.paris.lutece.portal.service.workgroup.WorkgroupRemovalListenerService;
 
 import java.sql.Timestamp;
-
 
 /**
  * This class represents business NewsLetter Object
@@ -99,7 +98,8 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     /**
      * Sets the identifier of the newsletter
      * 
-     * @param nId the newsletter identifier
+     * @param nId
+     *            the newsletter identifier
      */
     public void setId( int nId )
     {
@@ -119,7 +119,8 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     /**
      * Sets the test subject of the newsletter
      * 
-     * @param strTestSubject the newsletter test subject
+     * @param strTestSubject
+     *            the newsletter test subject
      */
     public void setTestSubject( String strTestSubject )
     {
@@ -129,7 +130,9 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     /**
      * 
      * Set if the user must validate by mail
-     * @param bIsValidationActive the boolean
+     * 
+     * @param bIsValidationActive
+     *            the boolean
      */
     public void setValidationActive( boolean bIsValidationActive )
     {
@@ -138,6 +141,7 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
 
     /**
      * return if the validation by mail is active
+     * 
      * @return _bIsValidationActive the boolean
      */
     public boolean isValidationActive( )
@@ -148,7 +152,9 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     /**
      * 
      * Set if the user must enter a captcha to subscribe
-     * @param bIsCaptchaActive the boolean
+     * 
+     * @param bIsCaptchaActive
+     *            the boolean
      */
     public void setCaptchaActive( boolean bIsCaptchaActive )
     {
@@ -157,6 +163,7 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
 
     /**
      * return if the user must enter a captcha to subscribe
+     * 
      * @return bIsCaptchaActive the boolean
      */
     public boolean isCaptchaActive( )
@@ -177,7 +184,8 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     /**
      * Sets the name of the newsletter
      * 
-     * @param strName the newsletter name
+     * @param strName
+     *            the newsletter name
      */
     public void setName( String strName )
     {
@@ -197,7 +205,8 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     /**
      * Sets the description of the newsletter
      * 
-     * @param strDescription the description
+     * @param strDescription
+     *            the description
      */
     public void setDescription( String strDescription )
     {
@@ -217,7 +226,8 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     /**
      * Sets the value of the unsubscription to the newsletter
      * 
-     * @param strUnsubscribe the newsletter name
+     * @param strUnsubscribe
+     *            the newsletter name
      */
     public void setUnsubscribe( String strUnsubscribe )
     {
@@ -227,7 +237,8 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     /**
      * Sets the date of the last newsletter sending
      * 
-     * @param dateLastSending the last date of sending
+     * @param dateLastSending
+     *            the last date of sending
      */
     public void setDateLastSending( Timestamp dateLastSending )
     {
@@ -257,7 +268,8 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     /**
      * Sets the html content of the newsletter
      * 
-     * @param strHtml the html content of the newsletter
+     * @param strHtml
+     *            the html content of the newsletter
      */
     public void setHtml( String strHtml )
     {
@@ -277,7 +289,8 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     /**
      * Sets the tos content of the newsletter
      * 
-     * @param strTermOfService the tos content of the newsletter
+     * @param strTermOfService
+     *            the tos content of the newsletter
      */
     public void setTOS( String strTermOfService )
     {
@@ -297,7 +310,8 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     /**
      * Sets the identifier of the newsletter template
      * 
-     * @param nNewsLetterTemplateId the newsletter template identifier
+     * @param nNewsLetterTemplateId
+     *            the newsletter template identifier
      */
     public void setNewsLetterTemplateId( int nNewsLetterTemplateId )
     {
@@ -306,6 +320,7 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
 
     /**
      * Returns the workgroup
+     * 
      * @return The workgroup
      */
     public String getWorkgroup( )
@@ -315,7 +330,9 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
 
     /**
      * Sets the workgroup
-     * @param strWorkgroup The workgroup
+     * 
+     * @param strWorkgroup
+     *            The workgroup
      */
     public void setWorkgroup( String strWorkgroup )
     {
@@ -324,6 +341,7 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
 
     /**
      * Returns the test recipients
+     * 
      * @return The test recipients
      */
     public String getTestRecipients( )
@@ -333,7 +351,9 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
 
     /**
      * Sets the test recipients
-     * @param strTestRecipients The Test recipients
+     * 
+     * @param strTestRecipients
+     *            The Test recipients
      */
     public void setTestRecipients( String strTestRecipients )
     {
@@ -342,6 +362,7 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
 
     /**
      * Returns the Newsletter sender mail
+     * 
      * @return The Newsletter sender mail
      */
     public String getNewsletterSenderMail( )
@@ -351,7 +372,9 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
 
     /**
      * Sets the Newsletter sender mail
-     * @param strNewsletterSenderMail The NewsletterSenderMail
+     * 
+     * @param strNewsletterSenderMail
+     *            The NewsletterSenderMail
      */
     public void setNewsletterSenderMail( String strNewsletterSenderMail )
     {
@@ -360,6 +383,7 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
 
     /**
      * Returns the Newsletter sender name
+     * 
      * @return The Newsletter sender name
      */
     public String getNewsletterSenderName( )
@@ -369,7 +393,9 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
 
     /**
      * Sets the Newsletter sender name
-     * @param strNewsletterSenderName The NewsletterSenderName
+     * 
+     * @param strNewsletterSenderName
+     *            The NewsletterSenderName
      */
     public void setNewsletterSenderName( String strNewsletterSenderName )
     {
@@ -378,6 +404,7 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
 
     /**
      * Returns the Resource Type Code that identify the resource type
+     * 
      * @return The Resource Type Code
      */
     public String getResourceId( )
@@ -387,6 +414,7 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
 
     /**
      * Returns the resource Id of the current object
+     * 
      * @return The resource Id of the current object
      */
     public String getResourceTypeCode( )
@@ -396,6 +424,7 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
 
     /**
      * Get the number of sections of this newsletter
+     * 
      * @return The number of sections of this newsletter
      */
     public int getNbSections( )
@@ -405,7 +434,9 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
 
     /**
      * Set the number of sections of this newsletter
-     * @param nNbSections The number of sections of this newsletter
+     * 
+     * @param nNbSections
+     *            The number of sections of this newsletter
      */
     public void setNbSections( int nNbSections )
     {

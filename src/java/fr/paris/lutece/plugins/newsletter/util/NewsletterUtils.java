@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,7 +51,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Locale;
 import java.util.Optional;
 
-
 /**
  * This classe provides utility methods for newsletters.
  */
@@ -66,10 +65,12 @@ public final class NewsletterUtils
 
     /**
      * Retrieve the html template for the given template id
-     * @param nTemplateId the id of the template to retrieve
-     * @param plugin the plugin
-     * @return the html template to use of null if no NewsletterTemplate found
-     *         for this Id
+     * 
+     * @param nTemplateId
+     *            the id of the template to retrieve
+     * @param plugin
+     *            the plugin
+     * @return the html template to use of null if no NewsletterTemplate found for this Id
      */
     public static String getHtmlTemplatePath( int nTemplateId, Plugin plugin )
     {
@@ -80,8 +81,7 @@ public final class NewsletterUtils
             return null;
         }
 
-        String strTemplatePathName = AppPropertiesService
-                .getProperty( NewsLetterConstants.PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE );
+        String strTemplatePathName = AppPropertiesService.getProperty( NewsLetterConstants.PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE );
         strTemplatePathName += NewsLetterConstants.CONSTANT_SLASH;
         strTemplatePathName += newsletterTemplate.getFileName( );
 
@@ -90,7 +90,9 @@ public final class NewsletterUtils
 
     /**
      * Cleans a string in order to make it usable in a javascript script
-     * @param strIn the string to clean
+     * 
+     * @param strIn
+     *            the string to clean
      * @return the javascript escaped String
      */
     public static String convertForJavascript( String strIn )
@@ -118,7 +120,9 @@ public final class NewsletterUtils
 
     /**
      * Encode a string for passage in parameter in URL
-     * @param strEntry the string entry
+     * 
+     * @param strEntry
+     *            the string entry
      * @return the string encoding
      */
     public static String encodeForURL( String strEntry )
@@ -128,13 +132,17 @@ public final class NewsletterUtils
 
     /**
      * Addition of information as header of the http response
-     * @param request The Http Request
-     * @param response The Http Response
-     * @param strFileName THe filename of the file
-     * @param strFileExtension The file extension
+     * 
+     * @param request
+     *            The Http Request
+     * @param response
+     *            The Http Response
+     * @param strFileName
+     *            THe filename of the file
+     * @param strFileExtension
+     *            The file extension
      */
-    public static void addHeaderResponse( HttpServletRequest request, HttpServletResponse response, String strFileName,
-            String strFileExtension )
+    public static void addHeaderResponse( HttpServletRequest request, HttpServletResponse response, String strFileName, String strFileExtension )
     {
         response.setHeader( "Content-Disposition", "attachment ;filename=\"" + strFileName + "\"" );
 
@@ -163,12 +171,15 @@ public final class NewsletterUtils
 
     /**
      * Adds all parameter values to the urlItem
-     * @param urlItem the urlItem
-     * @param strParameterName the name of the parameter which has multiple
-     *            values
-     * @param values parameter values
+     * 
+     * @param urlItem
+     *            the urlItem
+     * @param strParameterName
+     *            the name of the parameter which has multiple values
+     * @param values
+     *            parameter values
      */
-    public static void addParameters( UrlItem urlItem, String strParameterName, String[] values )
+    public static void addParameters( UrlItem urlItem, String strParameterName, String [ ] values )
     {
         for ( String strParameterValue : values )
         {
@@ -177,25 +188,28 @@ public final class NewsletterUtils
     }
 
     /**
-     * Get the first String of a String array. If the array is null, or if it
-     * has no element, then return null.
-     * @param strArrayValues The string array to get the first element of.
-     * @return The first element of the array, or null if the array has no
-     *         element or is null.
+     * Get the first String of a String array. If the array is null, or if it has no element, then return null.
+     * 
+     * @param strArrayValues
+     *            The string array to get the first element of.
+     * @return The first element of the array, or null if the array has no element or is null.
      */
-    public static String getStringFromStringArray( String[] strArrayValues )
+    public static String getStringFromStringArray( String [ ] strArrayValues )
     {
         if ( strArrayValues != null )
         {
-            return strArrayValues.length == 0 ? null : strArrayValues[0];
+            return strArrayValues.length == 0 ? null : strArrayValues [0];
         }
         return null;
     }
 
     /**
      * Rewrite relatives url to absolutes urls
-     * @param strContent The content to analyze
-     * @param strBaseUrl The base url
+     * 
+     * @param strContent
+     *            The content to analyze
+     * @param strBaseUrl
+     *            The base url
      * @return The converted content
      */
     public static String rewriteUrls( String strContent, String strBaseUrl )
@@ -210,8 +224,9 @@ public final class NewsletterUtils
         return doc.getContent( );
     }
 
-    public static Locale getLocale(ServletRequest request) {
-        return Optional.ofNullable(request).map(ServletRequest::getLocale).orElse(I18nService.getDefaultLocale( ));
+    public static Locale getLocale( ServletRequest request )
+    {
+        return Optional.ofNullable( request ).map( ServletRequest::getLocale ).orElse( I18nService.getDefaultLocale( ) );
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -50,7 +50,6 @@ import org.apache.commons.lang3.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
-
 /**
  * This class represents the business object NewsLetterSubscriptionPortlet.
  */
@@ -86,11 +85,13 @@ public class NewsLetterSubscriptionPortlet extends Portlet
     {
         /**
          * Compare the last sending dates of two newsletters.
-         * @param obj1 The first newsletter
-         * @param obj2 The second newsletter
-         * @return the value <code>0</code> if the two objects are equal; a
-         *         value less than <code>0</code> if the first object is before
-         *         the second; and a value greater than <code>0</code> otherwise
+         * 
+         * @param obj1
+         *            The first newsletter
+         * @param obj2
+         *            The second newsletter
+         * @return the value <code>0</code> if the two objects are equal; a value less than <code>0</code> if the first object is before the second; and a value
+         *         greater than <code>0</code> otherwise
          */
         public int compare( NewsLetter obj1, NewsLetter obj2 )
         {
@@ -98,14 +99,15 @@ public class NewsLetterSubscriptionPortlet extends Portlet
         }
     };
 
-    //Captcha
+    // Captcha
     private CaptchaSecurityService _captchaService;
     private Plugin _plugin;
 
     /**
      * Sets the name of the plugin associated with this portlet.
      * 
-     * @param strPluginName The plugin name.
+     * @param strPluginName
+     *            The plugin name.
      */
     public void setPluginName( String strPluginName )
     {
@@ -118,7 +120,8 @@ public class NewsLetterSubscriptionPortlet extends Portlet
     /**
      * Returns the Xml code of the Subscriber portlet with XML heading
      * 
-     * @param request The HTTP servlet request
+     * @param request
+     *            The HTTP servlet request
      * @return the Xml code of the Subscription portlet
      */
     public String getXmlDocument( HttpServletRequest request )
@@ -129,12 +132,13 @@ public class NewsLetterSubscriptionPortlet extends Portlet
     /**
      * Returns the Xml code of the Subscuption portlet without XML heading
      * 
-     * @param request The HTTP servlet request
+     * @param request
+     *            The HTTP servlet request
      * @return the Xml code of the Subscription portlet content
      */
     public String getXml( HttpServletRequest request )
     {
-        //        List listErrors = new ArrayList(  );
+        // List listErrors = new ArrayList( );
         String strMailError = null;
         String strNoChoiceError = null;
 
@@ -196,7 +200,7 @@ public class NewsLetterSubscriptionPortlet extends Portlet
             XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_ID, sending.getId( ) );
             XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_DESC, sending.getName( ) );
             XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_DATE,
-                    DateUtil.getDateString( sending.getDateLastSending( ), NewsletterUtils.getLocale(request)) );
+                    DateUtil.getDateString( sending.getDateLastSending( ), NewsletterUtils.getLocale( request ) ) );
             XmlUtil.endElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION );
         }
 
@@ -208,8 +212,7 @@ public class NewsLetterSubscriptionPortlet extends Portlet
         if ( bIsCaptchaEnabled && properties.isCaptchaActive( ) )
         {
             _captchaService = new CaptchaSecurityService( );
-            XmlUtil.addElement( strXml, TAG_NEWSLETTER_CAPTCHA, TAG_CDATA_BEGIN + _captchaService.getHtmlCode( )
-                    + TAG_CDATA_END );
+            XmlUtil.addElement( strXml, TAG_NEWSLETTER_CAPTCHA, TAG_CDATA_BEGIN + _captchaService.getHtmlCode( ) + TAG_CDATA_END );
         }
 
         if ( StringUtils.isNotEmpty( properties.getTOS( ) ) )
@@ -222,8 +225,7 @@ public class NewsLetterSubscriptionPortlet extends Portlet
         {
             if ( StringUtils.isNotEmpty( strMailError ) )
             {
-                XmlUtil.addElement( strXml, TAG_NEWSLETTER_EMAIL_ERROR,
-                        I18nService.getLocalizedString( PROPERTY_ERROR_INVALID_MAIL, request.getLocale( ) ) );
+                XmlUtil.addElement( strXml, TAG_NEWSLETTER_EMAIL_ERROR, I18nService.getLocalizedString( PROPERTY_ERROR_INVALID_MAIL, request.getLocale( ) ) );
             }
 
             if ( StringUtils.isNotEmpty( strNoChoiceError ) )
@@ -232,10 +234,8 @@ public class NewsLetterSubscriptionPortlet extends Portlet
                         I18nService.getLocalizedString( PROPERTY_ERROR_NO_CHOICE_ERROR, request.getLocale( ) ) );
             }
 
-            XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_BUTTON,
-                    I18nService.getLocalizedString( PROPERTY_LABEL_BUTTON, request.getLocale( ) ) );
-            XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_EMAIL,
-                    I18nService.getLocalizedString( PROPERTY_LABEL_MAIL, request.getLocale( ) ) );
+            XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_BUTTON, I18nService.getLocalizedString( PROPERTY_LABEL_BUTTON, request.getLocale( ) ) );
+            XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_EMAIL, I18nService.getLocalizedString( PROPERTY_LABEL_MAIL, request.getLocale( ) ) );
         }
 
         String str = addPortletTags( strXml );

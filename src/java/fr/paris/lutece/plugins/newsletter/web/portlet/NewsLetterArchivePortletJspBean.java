@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,7 +56,6 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
  * This class provides the user interface to manage newsletter archive portlets.
  */
@@ -84,7 +83,8 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
     /**
      * Returns the creation form for the portlet
      * 
-     * @param request the HTML request
+     * @param request
+     *            the HTML request
      * @return the HTML code for the page
      */
     public String getCreate( HttpServletRequest request )
@@ -100,7 +100,8 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
     /**
      * Processes the creation of the portlet
      * 
-     * @param request the HTML request
+     * @param request
+     *            the HTML request
      * @return the URL to redirect to
      */
     public String doCreate( HttpServletRequest request )
@@ -133,14 +134,15 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
         // Creating portlet
         NewsLetterArchivePortletHome.getInstance( ).create( portlet );
 
-        //Displays the page with the new Portlet
+        // Displays the page with the new Portlet
         return getPageUrl( nIdPage );
     }
 
     /**
      * Returns the modification form for the portlet
      * 
-     * @param request the HTML request
+     * @param request
+     *            the HTML request
      * @return the HTML code for the page
      */
     public String getModify( HttpServletRequest request )
@@ -174,7 +176,8 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
     /**
      * Processes the modification of the portlet
      * 
-     * @param request the HTTP request
+     * @param request
+     *            the HTTP request
      * @return the URL to redirect to
      */
     public String doModify( HttpServletRequest request )
@@ -223,11 +226,12 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
     }
 
     /**
-     * Helper method to determine which sendings were checked in the portlet
-     * modification form, and update the database accordingly.
+     * Helper method to determine which sendings were checked in the portlet modification form, and update the database accordingly.
      * 
-     * @param request the HTTP request
-     * @param portlet the portlet
+     * @param request
+     *            the HTTP request
+     * @param portlet
+     *            the portlet
      */
     private static void modifySendings( HttpServletRequest request, NewsLetterArchivePortlet portlet )
     {
@@ -261,8 +265,7 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
         {
             if ( !previousSendings.contains( newSending ) )
             {
-                NewsLetterArchivePortletHome.insertSending( portlet.getId( ), newSending.intValue( ),
-                        PluginService.getPlugin( portlet.getPluginName( ) ) );
+                NewsLetterArchivePortletHome.insertSending( portlet.getId( ), newSending.intValue( ), PluginService.getPlugin( portlet.getPluginName( ) ) );
             }
         }
 
@@ -271,8 +274,7 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
         {
             if ( !checkedSendings.contains( oldSending ) )
             {
-                NewsLetterArchivePortletHome.removeSending( portlet.getId( ), oldSending.intValue( ),
-                        PluginService.getPlugin( portlet.getPluginName( ) ) );
+                NewsLetterArchivePortletHome.removeSending( portlet.getId( ), oldSending.intValue( ), PluginService.getPlugin( portlet.getPluginName( ) ) );
             }
         }
     }

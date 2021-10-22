@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,19 +38,20 @@ import fr.paris.lutece.util.sql.DAOUtil;
 
 import org.apache.commons.lang3.StringUtils;
 
-
 /**
  * This class provides Data Access methods for NewsletterProperties objects
  */
 public final class NewsletterPropertiesDAO implements INewsletterPropertiesDAO
 {
-    // Constants   
+    // Constants
     private static final String SQL_QUERY_SELECT = "SELECT validation_activated, captcha_activated, tos FROM newsletter_properties ";
     private static final String SQL_QUERY_UPDATE = "UPDATE newsletter_properties SET validation_activated = ?, captcha_activated = ?, tos = ?";
 
     /**
      * loads data from NewsLetterProperties
-     * @param plugin the Plugin
+     * 
+     * @param plugin
+     *            the Plugin
      * @return an object NewsLetterProperties
      */
     public NewsLetterProperties load( Plugin plugin )
@@ -83,8 +84,11 @@ public final class NewsletterPropertiesDAO implements INewsletterPropertiesDAO
 
     /**
      * Update the record in the table
-     * @param properties the instance of properties class to be updated
-     * @param plugin the Plugin
+     * 
+     * @param properties
+     *            the instance of properties class to be updated
+     * @param plugin
+     *            the Plugin
      */
     public void store( NewsLetterProperties properties, Plugin plugin )
     {
