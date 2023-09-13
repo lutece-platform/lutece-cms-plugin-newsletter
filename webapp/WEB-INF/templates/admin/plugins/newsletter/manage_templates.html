@@ -20,15 +20,15 @@
 						<@td>${templateDisplay.template.description}</@td>
 						<@td>${templateDisplay.template.topicType}</@td>
 						<@td>
-							<@img url="images/admin/skin/plugins/newsletter/newsletter_templates/${templateDisplay.template.picture}" alt="#i18n{newsletter.manage_templates.columnTitleImage} ${templateDisplay.template.description}" title="#i18n{newsletter.manage_templates.columnTitleImage} ${templateDisplay.template.description}" class="image-thumbnail" /> ${templateDisplay.template.fileName}
+							<@img url="images/admin/skin/plugins/newsletter/newsletter_templates/${templateDisplay.template.picture}" alt="#i18n{newsletter.manage_templates.columnTitleImage} ${templateDisplay.template.description}" title="#i18n{newsletter.manage_templates.columnTitleImage} ${templateDisplay.template.description}" class='thumbnail-sm' /> ${templateDisplay.template.fileName}
 						</@td>
 						<@td>${templateDisplay.newsletter_template_workgroup_description}</@td>
 						<@td>
 							<#if templateDisplay.newsletter_template_allow_modification>
-								<@aButton href='jsp/admin/plugins/newsletter/ModifyNewsLetterTemplate.jsp?newsletter_template_id=${templateDisplay.template.id}' buttonIcon='edit' title='#i18n{newsletter.manage_templates.buttonModifyTemplate}' size='' />
+								<@aButton href='jsp/admin/plugins/newsletter/ModifyNewsLetterTemplate.jsp?newsletter_template_id=${templateDisplay.template.id}' buttonIcon='edit me-1' title='#i18n{newsletter.manage_templates.buttonModifyTemplate}' size='' />
 							</#if>
 							<#if templateDisplay.newsletter_template_allow_deletion>
-								<@aButton href='jsp/admin/plugins/newsletter/RemoveNewsLetterTemplate.jsp?newsletter_template_id=${templateDisplay.template.id}' title='' buttonIcon='trash' size='' color='danger' />
+								<@aButton href='jsp/admin/plugins/newsletter/RemoveNewsLetterTemplate.jsp?newsletter_template_id=${templateDisplay.template.id}' title='#i18n{portal.util.labelDelete}' buttonIcon='trash me-1' size='' color='danger' />
 							</#if>
 						</@td>
 					</@tr>
