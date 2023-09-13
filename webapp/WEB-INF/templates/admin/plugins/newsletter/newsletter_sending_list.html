@@ -1,20 +1,14 @@
 <@table>
     <@tr>
-        <@th>&nbsp;</@th>
+        <@th></@th>
         <@th>#i18n{newsletter.newsletter_sending_list.labelDateSent}</@th>
         <@th>#i18n{newsletter.newsletter_sending_list.labelSubject}</@th>
     </@tr>
     <#list sending_newsletter_list as sending>
     <@tr>
-        <@td>
-        	<@checkBox name='cbx_snd_${sending.id}' checked=${selected_sendings_list?seq_contains(sending.id) />
-		</@td>
-        <@td>
-            ${sending.date}
-        </@td>
-        <@td>
-			<strong>${sending.emailSubject}</strong>
-        </@td>
+        <@td><@checkBox name='cbx_snd_${sending.id}' checked=selected_sendings_list?seq_contains(sending.id) /></@td>
+        <@td>${sending.date}</@td>
+        <@td><strong>${sending.emailSubject}</strong></@td>
     </@tr>
     </#list>
 </@table>

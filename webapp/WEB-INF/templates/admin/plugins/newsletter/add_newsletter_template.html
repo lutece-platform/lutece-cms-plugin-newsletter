@@ -2,7 +2,7 @@
 	<@columns>
 		<@box>
 			<@boxHeader title='#i18n{newsletter.add_newsletter_template.boxTitle}' />
-			<@boxBody>
+			<@boxBody id='create_newsletter_template'>
 				<@tform method='post' enctype='multipart/form-data' action='jsp/admin/plugins/newsletter/DoAddNewsLetterTemplate.jsp'>
 					<@formGroup labelFor='newsletter_template_name' labelKey='#i18n{newsletter.add_newsletter_template.name}' mandatory=true>
 						<@input type='text' id='newsletter_template_name' name='newsletter_template_name' maxlength=50 value='' />

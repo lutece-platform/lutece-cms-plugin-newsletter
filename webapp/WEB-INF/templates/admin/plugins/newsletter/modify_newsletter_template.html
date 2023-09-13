@@ -1,45 +1,33 @@
-<@row>
-	<@columns>
-		<@box>
-			<@boxHeader title='#i18n{newsletter.modify_newsletter_template.boxTitle}' />
-			<@boxBody>
-				<@tform method='post' enctype='multipart/form-data' action='jsp/admin/plugins/newsletter/DoModifyNewsLetterTemplate.jsp'>
-					<@input type='hidden' name='newsletter_template_id' value='${template.id}' />
-					
-					<@formGroup labelFor='newsletter_template_name' labelKey='#i18n{newsletter.add_newsletter_template.name}' mandatory=true>
-						<@input type='text' id='newsletter_template_name' name='newsletter_template_name' maxlength=50 value='${template.description}' />
-					</@formGroup>
-					
-					<@formGroup labelFor='newsletter_template_type' labelKey='#i18n{newsletter.add_newsletter_template.templateType}' mandatory=true>
-						<@select name='newsletter_template_type' items=template_type default_value=template.topicType />
-					</@formGroup>
-					
-					<@formGroup labelFor='newsletter_template_new_file' labelKey='#i18n{newsletter.add_newsletter_template.fileName}'>
-						<@input type='file' id='newsletter_template_new_file' name='newsletter_template_new_file' value='' />
-					</@formGroup>
-					
-					<@formGroup>
-						<@aButton href='jsp/admin/plugins/newsletter/ModifyNewsLetterTemplateFile.jsp?newsletter_template_id=${template.id}' buttonIcon='edit' title='#i18n{newsletter.modify_newsletter_template.modifyTemplateCode}' />
-					</@formGroup>
-					
-					<@formGroup labelFor='newsletter_template_new_picture' labelKey='#i18n{newsletter.add_newsletter_template.imageFileName}'>
-						<@input type='file' id='newsletter_template_new_picture' name='newsletter_template_new_picture' value='' />
-					</@formGroup>
-					
-					<@formGroup labelFor='newsletter_template_section' labelKey='#i18n{newsletter.add_newsletter_template.sectionNumber}'>
-						<@input type='number' id='newsletter_template_section' name='newsletter_template_section' value='${template.sectionNumber}' min=1 max=10 />
-					</@formGroup>
-					
-					<@formGroup labelFor='newsletter_template_workgroup' labelKey='#i18n{newsletter.add_newsletter_template.labelWorkgroup}'>
-						<@select name='newsletter_template_workgroup' default_value='${template.workgroup}' items=workgroup_list />
-					</@formGroup>
-					
-					<@formGroup>
-						<@button type='submit' buttonIcon='check' title='#i18n{newsletter.modify_newsletter_template.buttonModify}' />
-						<@aButton href='jsp/admin/plugins/newsletter/ManageTemplates.jsp' title='#i18n{newsletter.create_newsletter.buttonCancel}' buttonIcon='times' color='default' />
-					</@formGroup>
-				</@tform>
-			</@boxBody>
-		</@box>
-	</@columns>
-</@row>
+<@pageContainer>
+    <@pageColumn>
+        <@pageHeader title='#i18n{newsletter.modify_newsletter_template.boxTitle}' />
+		<@tform method='post' enctype='multipart/form-data' action='jsp/admin/plugins/newsletter/DoModifyNewsLetterTemplate.jsp' boxed=true>
+			<@input type='hidden' name='newsletter_template_id' value='${template.id}' />
+			<@formGroup labelFor='newsletter_template_name' labelKey='#i18n{newsletter.add_newsletter_template.name}' mandatory=true>
+				<@input type='text' id='newsletter_template_name' name='newsletter_template_name' maxlength=50 value='${template.description}' />
+			</@formGroup>
+			<@formGroup labelFor='newsletter_template_type' labelKey='#i18n{newsletter.add_newsletter_template.templateType}' mandatory=true>
+				<@select name='newsletter_template_type' items=template_type default_value=template.topicType />
+			</@formGroup>
+			<@formGroup labelFor='newsletter_template_new_file' labelKey='#i18n{newsletter.add_newsletter_template.fileName}'>
+				<@input type='file' id='newsletter_template_new_file' name='newsletter_template_new_file' value='' />
+			</@formGroup>
+			<@formGroup>
+				<@aButton href='jsp/admin/plugins/newsletter/ModifyNewsLetterTemplateFile.jsp?newsletter_template_id=${template.id}' buttonIcon='edit' title='#i18n{newsletter.modify_newsletter_template.modifyTemplateCode}' />
+			</@formGroup>
+			<@formGroup labelFor='newsletter_template_new_picture' labelKey='#i18n{newsletter.add_newsletter_template.imageFileName}'>
+				<@input type='file' id='newsletter_template_new_picture' name='newsletter_template_new_picture' value='' />
+			</@formGroup>
+			<@formGroup labelFor='newsletter_template_section' labelKey='#i18n{newsletter.add_newsletter_template.sectionNumber}'>
+				<@input type='number' id='newsletter_template_section' name='newsletter_template_section' value='${template.sectionNumber}' min=1 max=10 />
+			</@formGroup>
+			<@formGroup labelFor='newsletter_template_workgroup' labelKey='#i18n{newsletter.add_newsletter_template.labelWorkgroup}'>
+				<@select name='newsletter_template_workgroup' default_value='${template.workgroup}' items=workgroup_list />
+			</@formGroup>
+			<@formGroup>
+				<@button type='submit' buttonIcon='check' title='#i18n{newsletter.modify_newsletter_template.buttonModify}' />
+				<@aButton href='jsp/admin/plugins/newsletter/ManageTemplates.jsp' title='#i18n{newsletter.create_newsletter.buttonCancel}' buttonIcon='times' color='default' />
+			</@formGroup>
+		</@tform>
+	</@pageColumn>
+</@pageContainer>

@@ -1,35 +1,32 @@
 <#if import_delete?has_content && import_delete>
 	<#assign boxTitle  = '#i18n{newsletter.import_delete_subscribers.boxTitle}' />
+	<#assign alertTitle = '#i18n{newsletter.import_delete_subscribers.notice1}' />
 <#else>
 	<#assign boxTitle = '#i18n{newsletter.import_subscribers.boxTitle}' />
+	<#assign alertTitle = '#i18n{newsletter.import_subscribers.notice1}' />
 </#if>
-
-<@row>
-	<@columns>
-		<@box>
-			<@boxHeader title=boxTitle />
-			<@boxBody>
-				<@tform method='post' enctype='multipart/form-data' action='jsp/admin/plugins/newsletter/DoImportSubscribers.jsp'>
-					<@input type='hidden' name='newsletter_id' value='${newsletter_id}' />
-					<@input type='hidden' name='import_delete' value='${import_delete?string}' />
+<@pageContainer>
+    <@pageColumn>
+        <@pageHeader title=boxTitle />
+		<@tform method='post' enctype='multipart/form-data' action='jsp/admin/plugins/newsletter/DoImportSubscribers.jsp' boxed=true>
+			<@input type='hidden' name='newsletter_id' value='${newsletter_id}' />
+			<@input type='hidden' name='import_delete' value='${import_delete?string}' />
+			<@row>
+				<@columns sm=6>
 					<@formGroup labelFor='newsletter_import_path' labelKey='#i18n{newsletter.import_subscribers.label}' mandatory=true>
-						<@input type='file' id='newsletter_import_path' name='newsletter_import_path' value='' />
+						<@inputGroup>
+							<@input type='file' id='newsletter_import_path' name='newsletter_import_path' value='' />
+							<@inputGroupItem type='btn'>
+								<@button type='submit' buttonIcon='upload' title='#i18n{newsletter.import_subscribers.buttonImport}' />
+							</@inputGroupItem>
+						</@inputGroup>
 					</@formGroup>
-					<@formGroup>
-						<@button type='submit' buttonIcon='upload' title='#i18n{newsletter.import_subscribers.buttonImport}' />
-					</@formGroup>
-
-					<@formGroup>
-						<#if import_delete?has_content && import_delete>
-							<#assign alertTitle = '#i18n{newsletter.import_delete_subscribers.notice1}' />
-						<#else>
-							<#assign alertTitle = '#i18n{newsletter.import_subscribers.notice1}' />
-						</#if>
-						<@alert color='info'><@icon style='info-circle' /> ${alertTitle}</@alert>
-						<@alert color='warning'><@icon style='exclamation-triangle' /> #i18n{newsletter.import_subscribers.notice2}</@alert>
-					</@formGroup>
-				</@tform>
-			</@boxBody>
-		</@box>
-	</@columns>
-</@row>
+				</@columns>
+				<@columns sm=6 class='d-flex align-items-center justify-content-center mt-3'>
+					<@alert color='info'><@icon style='alert-circle me-2' /> ${alertTitle}</@alert>
+					<@alert color='warning ms-3'><@icon style='alert-triangle me-2' /> #i18n{newsletter.import_subscribers.notice2}</@alert>
+				</@columns>
+			</@row>
+		</@tform>
+	</@pageColumn>
+</@pageContainer>

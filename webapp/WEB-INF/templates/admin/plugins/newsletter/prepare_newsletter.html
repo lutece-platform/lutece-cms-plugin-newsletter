@@ -1,27 +1,23 @@
-<@row>
-	<@columns>
-		<@box>
-			<@boxHeader title='#i18n{newsletter.prepare_newsletter.boxTitle}'>
-				<@tform method='post' action='jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}'>
-					<@button type='submit' buttonIcon='keyboard' title='#i18n{newsletter.prepare_newsletter.composeNewsletter}' size='sm' hideTitle=['xs','sm'] />
-				</@tform>
-			</@boxHeader>
-			<@boxBody>
-				<@tform method='post' action='jsp/admin/plugins/newsletter/ConfirmSendNewsLetter.jsp'>
-					<@input type='hidden' name='newsletter_id' value='${newsletter.id}' />
-					<@formGroup labelFor='newsletter_object' labelKey='#i18n{newsletter.prepare_newsletter.newsletterSubject}'>
-						<@inputGroup>
-							<@input type='text' value='${newsletter_object}' id='newsletter_object' name='newsletter_object' />
-							<@inputGroupItem>
-								<@button type='submit' buttonIcon='envelope' title='#i18n{newsletter.prepare_newsletter.sendButton}' />
-							</@inputGroupItem>
-						</@inputGroup>
-					</@formGroup>
-					<@formGroup labelFor='newsletter_body' labelKey='#i18n{newsletter.prepare_newsletter.newsletterBody}'>
-						<iframe name="preview" src="jsp/admin/plugins/newsletter/PreviewNewsLetter.jsp?newsletter_id=${newsletter.id}&plugin_name=newsletter" style="min-height:600px; width:100%; border:0;" scrolling="auto"></iframe>
-					</@formGroup>
-				</@tform>
-			</@boxBody>
-		</@box>
-	</@columns>
-</@row>
+<@pageContainer>
+    <@pageColumn>
+        <@pageHeader title='#i18n{newsletter.prepare_newsletter.boxTitle}'>
+			<@tform method='post' action='jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}'>
+				<@button type='submit' buttonIcon='keyboard me-2' title='#i18n{newsletter.prepare_newsletter.composeNewsletter}' size='' hideTitle=['xs','sm'] />
+			</@tform>
+		</@pageHeader>
+		<@tform method='post' action='jsp/admin/plugins/newsletter/ConfirmSendNewsLetter.jsp' boxed=true>
+			<@input type='hidden' name='newsletter_id' value='${newsletter.id}' />
+			<@formGroup labelFor='newsletter_object' labelKey='#i18n{newsletter.prepare_newsletter.newsletterSubject}'>
+				<@inputGroup>
+					<@input type='text' value='${newsletter_object}' id='newsletter_object' name='newsletter_object' />
+					<@inputGroupItem type='btn'>
+						<@button type='submit' buttonIcon='envelope' title='#i18n{newsletter.prepare_newsletter.sendButton}' />
+					</@inputGroupItem>
+				</@inputGroup>
+			</@formGroup>
+			<@formGroup labelFor='newsletter_body' labelKey='#i18n{newsletter.prepare_newsletter.newsletterBody}'>
+				<iframe name="preview" src="jsp/admin/plugins/newsletter/PreviewNewsLetter.jsp?newsletter_id=${newsletter.id}&plugin_name=newsletter" style="min-height:600px; width:100%; border:0;" scrolling="auto"></iframe>
+			</@formGroup>
+		</@tform>
+	</@pageColumn>
+</@pageContainer>

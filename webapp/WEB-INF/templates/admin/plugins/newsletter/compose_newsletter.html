@@ -1,41 +1,39 @@
-<@row>
-	<@columns>
-		<@tabs>
+<@pageContainer>
+    <@pageColumn>
+    	<@pageHeader title=newsletter.name />
+        <@tabs>
 			<@tabList>
 				<@tabLink href='jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletter.id}' title='#i18n{newsletter.modify_newsletter.manageAttributes}' />
-				<@tabLink href='jsp/admin/plugins/newsletter/GetManageNewsletterTopics.jsp?newsletter_id=${newsletter.id}' title='#i18n{newsletter.modify_newsletter.manageTopics}' />
+				<@tabLink href='jsp/admin/plugins/newsletter/GetManageNewsletterTopics.jsp?newsletter_id=${newsletter.id}' title='#i18n{newsletter.manage_topics.pageTitle}' />
 				<@tabLink active=true href='jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}' title='#i18n{newsletter.compose_newsletter.boxTitle}' />
 			</@tabList>
 			<@tabContent>
 				<@alert color='info'>
-					<p><strong>${newsletter.name}</strong></p>
-					<p>#i18n{newsletter.modify_newsletter.dateLastSend} <strong>${newsletter.dateLastSending?date}</strong></p>
-					<@tform style='inline' method='post' action='jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp'>
-						<@input type='hidden' name='newsletter_id' value='${newsletter.id}' />
+					<@p class='px-2 text-center mb-0'>#i18n{newsletter.modify_newsletter.dateLastSend}  <strong>${newsletter.dateLastSending?date}</strong></@p>
+					<@tform style='inline' action='jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp'>
+						<@input type='hidden' name='newsletter_id' value=newsletter.id />
 						<@input type='hidden' name='generate' value='' />
 						<@button type='submit' title='#i18n{newsletter.compose_newsletter.automaticGeneration}' buttonIcon='cog' color='primary' title='#i18n{newsletter.compose_newsletter.generate}' />
 					</@tform>
 				</@alert>
-				
-				<@tform method='post' action='jsp/admin/plugins/newsletter/DoRegisterNewsLetter.jsp' method='post'>
+				<@tform method='post' action='jsp/admin/plugins/newsletter/DoRegisterNewsLetter.jsp' method='post' boxed=true >
 					<@input type='hidden' name='newsletter_id' value='${newsletter.id}' />
 					<@input type='hidden' name='newsletter_template_id' value='${newsletter_template_id}' />
-					
-					<@btnGroup>
-						<@button name='action' value='#i18n{newsletter.compose_newsletter.buttonRegister}' type='submit' buttonIcon='check' title='#i18n{newsletter.compose_newsletter.buttonRegister}' />
-						<@button name='action' value='#i18n{newsletter.compose_newsletter.buttonTestSending}' type='submit' buttonIcon='share' title='#i18n{newsletter.compose_newsletter.buttonTestSending}' />
-						<@button name='action' value='#i18n{newsletter.compose_newsletter.buttonPrepareSending}' type='submit' buttonIcon='envelope' title='#i18n{newsletter.compose_newsletter.buttonPrepareSending}' />
-						<@button name='action' type='submit' value='#i18n{newsletter.compose_newsletter.buttonCancel}' buttonIcon='times' title='#i18n{newsletter.compose_newsletter.buttonCancel}' />
-					</@btnGroup>
-					
+					<@div class='d-flex justify-content-end align-items-center'>			
+						<@btnGroup class='mb-3'>
+							<@button name='action' value='#i18n{newsletter.compose_newsletter.buttonRegister}' type='submit' buttonIcon='check me-2' title='#i18n{newsletter.compose_newsletter.buttonRegister}' />
+							<@button name='action' value='#i18n{newsletter.compose_newsletter.buttonTestSending}' type='submit' buttonIcon='share me-2' title='#i18n{newsletter.compose_newsletter.buttonTestSending}' />
+							<@button name='action' value='#i18n{newsletter.compose_newsletter.buttonPrepareSending}' type='submit' buttonIcon='envelope me-2' title='#i18n{newsletter.compose_newsletter.buttonPrepareSending}' />
+							<@button name='action' type='submit' value='#i18n{newsletter.compose_newsletter.buttonCancel}' buttonIcon='x me-2' color='warning' title='#i18n{newsletter.compose_newsletter.buttonCancel}' />
+						</@btnGroup>
+					</@div>	
 					<@formGroup>
 						<@input type='textarea' id='html_content' name='html_content' rows=20 richtext=true>${html_content}</@input>
 					</@formGroup>
 				</@tform>
 			</@tabContent>
 		</@tabs>
-	</@columns>
-</@row>
-
+	</@pageColumn>
+</@pageContainer>
 <#include "/admin/util/editor/editor.html" />
 <@initEditor cssFiles="newsletter.css" />

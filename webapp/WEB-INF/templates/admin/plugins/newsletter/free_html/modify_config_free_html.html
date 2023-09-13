@@ -1,5 +1,5 @@
 <@formGroup labelFor='html_content' labelKey='#i18n{newsletter.free_html_config.topicContent}'>
-	<@input type='textarea' id='html_content' name='html_content' rows=20>${htmlTopic.htmlContent!}</@input>
+	<@input type='textarea' richtext=true id='html_content' name='html_content' rows=20>${htmlTopic.htmlContent!}</@input>
 </@formGroup>
 <#include "/admin/util/editor/editor.html" />
 <@initEditor />

@@ -1,81 +1,64 @@
-<@row>
-	<@columns>
-		<@box>
-			<@boxHeader title='#i18n{newsletter.manage_newsletters.boxTitle}'>
-				<@tform method='post' action='jsp/admin/plugins/newsletter/CreateNewsLetter.jsp'>
-					<#if right_manage_newsletter_properties?? && right_manage_newsletter_properties>
-						<@aButton href='jsp/admin/plugins/newsletter/ManageNewsLetterProperties.jsp' buttonIcon='cog' title='#i18n{newsletter.adminFeature.newsletter_properties_management.name}' size='sm' hideTitle=['xs','sm','md'] />
-					</#if>
-					<#if creation_allowed>
-						<@button type='submit' buttonIcon='plus' title='#i18n{newsletter.manage_newsletters.buttonAddNewsletter}' size='sm' hideTitle=['xs','sm','md'] />
-					</#if>
-				</@tform>
-			</@boxHeader>
-			<@boxBody>
-				<@paginationAdmin paginator=paginator combo=1 />
-				<@table>
-					<thead>
-						<@tr>
-							<@th>#i18n{newsletter.manage_newsletters.columnTitleLabel}</@th>
-							<@th>#i18n{newsletter.manage_newsletters.columnTitleDescription}</@th>
-							<@th>#i18n{newsletter.manage_newsletters.columnTitleLastSent}</@th>
-							<@th>#i18n{newsletter.manage_newsletters.columnTitleSubscribersCount}</@th>
-							<@th>#i18n{newsletter.manage_newsletters.columnTitleActions}</@th>
-						</@tr>
-					</thead>
-					<tbody>
-					<#list newsletters_list as newsletterDisplay >	                
-					<@tr>
-						<@td><strong>${newsletterDisplay.newsletter.name}</strong></@td>
-						<@td>${newsletterDisplay.newsletter.description}</@td>
-						<@td>${newsletterDisplay.newsletter.dateLastSending?string.short}</@td>
-						<@td>${newsletterDisplay.newsletter_count_subscribers}</@td>
-						<@td>
-							<#if newsletterDisplay.newsletter_allow_modification>
-								<@aButton href='jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleModify}' buttonIcon='pencil' size='sm' hideTitle=['all'] />
-								<@aButton href='jsp/admin/plugins/newsletter/GetManageNewsletterTopics.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleManageGeneration}' buttonIcon='cogs' size='sm' hideTitle=['all'] />
-								<@aButton href='jsp/admin/plugins/newsletter/DoComposeNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleCompose}' buttonIcon='keyboard' size='sm' hideTitle=['all'] />
-							<#else>
-								&nbsp;
-							</#if>
-							<#if newsletterDisplay.newsletter_allow_sending>
-								<@aButton href='jsp/admin/plugins/newsletter/DoPrepareNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitlePrepareSending}' buttonIcon='envelope' size='sm' hideTitle=['all'] />
-							<#else>
-								&nbsp;
-							</#if>
-							<#if newsletterDisplay.newsletter_allow_manage_archive>
-								<@aButton href='jsp/admin/plugins/newsletter/ManageArchive.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleArchive}' buttonIcon='archive' size='sm' hideTitle=['all'] />
-							<#else>
-								&nbsp;
-							</#if>
-							<#if newsletterDisplay.newsletter_allow_manage_subscribers>
-								<@aButton href='jsp/admin/plugins/newsletter/ManageSubscribers.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleManageSubscribers}' buttonIcon='user-edit' size='sm' hideTitle=['all'] />
-							</#if>
-							<#if creation_allowed>
-								<@aButton href='jsp/admin/plugins/newsletter/DoCopyNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleCopy}' buttonIcon='copy' size='sm' hideTitle=['all'] />
-								</a>
-							<#else>
-								&nbsp;
-							</#if>
-							<#if newsletterDisplay.newsletter_allow_export_subscribers>
-								<@aButton href='jsp/admin/plugins/newsletter/DoExportCsv.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleExportCsv}' buttonIcon='download' size='sm' hideTitle=['all'] />
-							<#else>
-								&nbsp;
-							</#if>
-						   <#if newsletterDisplay.newsletter_allow_deletion>
-								<@aButton href='jsp/admin/plugins/newsletter/RemoveNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleDelete}' buttonIcon='trash' color='danger' size='sm' hideTitle=['all'] />
-							<#else>
-								&nbsp;
-							</#if>
-						</@td>
-					</@tr>
-					  <#if newsletterDisplay.newsletter_allow_creation>
-						<#assign creation_allowed = true >
-					   </#if>
-					</#list>
-					</tbody>		
-				</@table>
-			</@boxBody>
-		</@box>
-	</@columns>
-</@row>
+<@pageContainer>
+    <@pageColumn>
+        <@pageHeader title='#i18n{newsletter.manage_newsletters.boxTitle}'>
+			<#if right_manage_newsletter_properties?? && right_manage_newsletter_properties>
+				<@offcanvas targetUrl="jsp/admin/plugins/newsletter/ManageNewsLetterProperties.jsp" targetElement="#manage_properties" redirectForm=false id="template-manage-properties" title="#i18n{newsletter.adminFeature.newsletter_properties_management.name}" btnTitle="#i18n{newsletter.adminFeature.newsletter_properties_management.name}" btnIcon="cog me-2" btnSize="" position="end" />
+			</#if>
+			<#if creation_allowed>
+				<@span class='ms-1'></@span>
+				<@offcanvas targetUrl="jsp/admin/plugins/newsletter/CreateNewsLetter.jsp" targetElement="#create_newsletter" redirectForm=false id="template-create-newsletter" title="#i18n{newsletter.manage_newsletters.buttonAddNewsletter}" btnTitle="#i18n{newsletter.manage_newsletters.buttonAddNewsletter}" btnIcon="plus me-2" btnSize="" position="end" size="full" />
+			</#if>
+        </@pageHeader>
+		<#if newsletters_list?size gt 0>
+			<@table headBody=true >
+				<@tr>
+					<@th>#i18n{newsletter.manage_newsletters.columnTitleLabel}</@th>
+					<@th>#i18n{newsletter.manage_newsletters.columnTitleDescription}</@th>
+					<@th>#i18n{newsletter.manage_newsletters.columnTitleLastSent}</@th>
+					<@th>#i18n{newsletter.manage_newsletters.columnTitleSubscribersCount}</@th>
+					<@th>#i18n{newsletter.manage_newsletters.columnTitleActions}</@th>
+				</@tr>
+				<@tableHeadBodySeparator />
+				<#list newsletters_list as newsletterDisplay >	                
+				<@tr>
+					<@td><strong>${newsletterDisplay.newsletter.name}</strong></@td>
+					<@td>${newsletterDisplay.newsletter.description}</@td>
+					<@td>${newsletterDisplay.newsletter.dateLastSending?string.short}</@td>
+					<@td>${newsletterDisplay.newsletter_count_subscribers}</@td>
+					<@td>
+						<#if newsletterDisplay.newsletter_allow_modification>
+							<@aButton href='jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleModify}' buttonIcon='pencil' size='' hideTitle=['all'] />
+							<@aButton href='jsp/admin/plugins/newsletter/GetManageNewsletterTopics.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleManageGeneration}' buttonIcon='cog' size='' hideTitle=['all'] />
+							<@aButton href='jsp/admin/plugins/newsletter/DoComposeNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleCompose}' buttonIcon='keyboard' size='' hideTitle=['all'] />
+						</#if>
+						<#if newsletterDisplay.newsletter_allow_sending>
+							<@aButton href='jsp/admin/plugins/newsletter/DoPrepareNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitlePrepareSending}' buttonIcon='envelope' size='' hideTitle=['all'] />
+						</#if>
+						<#if newsletterDisplay.newsletter_allow_manage_archive>
+							<@aButton href='jsp/admin/plugins/newsletter/ManageArchive.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleArchive}' buttonIcon='archive' size='' hideTitle=['all'] />
+						</#if>
+						<#if newsletterDisplay.newsletter_allow_manage_subscribers>
+							<@aButton href='jsp/admin/plugins/newsletter/ManageSubscribers.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleManageSubscribers}' buttonIcon='user-edit' size='' hideTitle=['all'] />
+						</#if>
+						<#if newsletterDisplay.newsletter_allow_export_subscribers>
+							<@aButton href='jsp/admin/plugins/newsletter/DoExportCsv.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleExportCsv}' buttonIcon='download' size='' hideTitle=['all'] />
+						</#if>
+						<#if creation_allowed>
+							<@aButton href='jsp/admin/plugins/newsletter/DoCopyNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleCopy}' buttonIcon='copy' size='' hideTitle=['all'] />
+						</#if>
+						<#if newsletterDisplay.newsletter_allow_deletion>
+							<@aButton href='jsp/admin/plugins/newsletter/RemoveNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleDelete}' buttonIcon='trash' color='danger' size='' hideTitle=['all'] />
+						</#if>
+					</@td>
+				</@tr>
+				<#if newsletterDisplay.newsletter_allow_creation>
+					<#assign creation_allowed = true >
+				</#if>
+				</#list>	
+			</@table>
+			<@paginationAdmin paginator=paginator combo=1 showcount=0 />
+		<#else>
+			<@empty />
+		</#if>
+	</@pageColumn>
+</@pageContainer>

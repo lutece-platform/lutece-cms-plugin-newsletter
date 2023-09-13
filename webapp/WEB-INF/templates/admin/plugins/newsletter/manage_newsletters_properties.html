@@ -8,7 +8,7 @@
 					</@tform>
 				</#if>
 			</@boxHeader>
-			<@boxBody>
+			<@boxBody id='manage_properties'>
 				<@tform method='post' name='manage_newsletter_properties' action='jsp/admin/plugins/newsletter/DoManageNewsLetterProperties.jsp'>
 					<@formGroup labelKey='#i18n{newsletter.manage_newsletters_properties.labelActiveValidation}'>
 						<@checkBox labelFor='active_validation' labelKey='#i18n{newsletter.manage_newsletters_properties.labelActiveValidationComment}' name='active_validation' value='1' checked=properties.validationActive />

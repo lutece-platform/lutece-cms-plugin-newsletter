@@ -1,22 +1,18 @@
-<@row>
-	<@columns>
-		<@box>
-			<@boxHeader title='#i18n{newsletter.modify_topic_config.modifyConfigTitle}' />
-			<@boxBody>
-				<@tform action='jsp/admin/plugins/newsletter/DoModifyNewsletterTopicConfig.jsp'>
-					<@input type='hidden' name='newsletter_id' value='${topic.idNewsletter}' />
-					<@input type='hidden' name='topic_id' value='${topic.id}' />
-					<@formGroup labelFor='title' labelKey='#i18n{newsletter.modify_topic_config.topicTitle}'>
-						<@input type='text' name='title' id='title' value='${topic.title!}' />
-					</@formGroup>
-					${content!}
-					<@formGroup>
-						<@button type='submit' title='#i18n{portal.util.labelValidate}' buttonIcon='check' />
-						<@button type='submit' name='cancel' title='#i18n{portal.util.labelCancel}' buttonIcon='times' cancel=true />
-					</@formGroup>
-				</@tform>
-			</@boxBody>
-		</@box>
-	</@columns>
-</@row>
+<@pageContainer>
+    <@pageColumn>
+        <@pageHeader title='#i18n{newsletter.modify_topic_config.modifyConfigTitle}' />
+		<@tform action='jsp/admin/plugins/newsletter/DoModifyNewsletterTopicConfig.jsp' boxed=true >
+			<@input type='hidden' name='newsletter_id' value='${topic.idNewsletter}' />
+			<@input type='hidden' name='topic_id' value='${topic.id}' />
+			<@formGroup labelFor='title' labelKey='#i18n{newsletter.modify_topic_config.topicTitle}'>
+				<@input type='text' name='title' id='title' value='${topic.title!}' />
+			</@formGroup>
+			${content!}
+			<@formGroup>
+				<@button type='submit' title='#i18n{portal.util.labelValidate}' buttonIcon='check' />
+				<@button type='submit' name='cancel' title='#i18n{portal.util.labelCancel}' buttonIcon='times' cancel=true />
+			</@formGroup>
+		</@tform>
+	</@pageColumn>
+</@pageContainer>
 

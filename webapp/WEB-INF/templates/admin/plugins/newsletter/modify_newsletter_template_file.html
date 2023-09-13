@@ -1,36 +1,32 @@
-<@row>
-	<@columns>
-		<@box>
-			<@boxHeader title='#i18n{newsletter.modify_newsletter_template_file.boxTitle}' />
-			<@boxBody>
-			<#if template?exists>
-				<@tform method='post' enctype='multipart/form-data' action='jsp/admin/plugins/newsletter/DoModifyNewsLetterTemplateFile.jsp'>
-					<@input type='hidden' name='newsletter_template_id' value='${template.id}' />
-					<@formGroup labelFor='newsletter_template_name' labelKey='#i18n{newsletter.add_newsletter_template.name}' mandatory=true>
-						<@input type='text' id='newsletter_template_name' name='newsletter_template_name' maxlength=50 value='${template.description}' />
-					</@formGroup>
-					<@formGroup labelFor='newsletter_template_type' labelKey='#i18n{newsletter.add_newsletter_template.templateType}' mandatory=true>
-						<@select name='newsletter_template_type' items=template_type default_value=template.topicType />
-					</@formGroup>
-					<@formGroup labelFor='newsletter_template_new_picture' labelKey='#i18n{newsletter.add_newsletter_template.imageFileName}'>
-						<@input type='file' id='newsletter_template_new_picture' name='newsletter_template_new_picture' value='' />
-					</@formGroup>
-					<@formGroup labelFor='newsletter_template_section' labelKey='#i18n{newsletter.add_newsletter_template.sectionNumber}'>
-						<@input type='number' id='newsletter_template_section' name='newsletter_template_section' value='${template.sectionNumber}' min=1 max=10 />
-					</@formGroup>
-					<@formGroup labelFor='newsletter_template_new_file' labelKey='#i18n{newsletter.modify_newsletter_template.fileContent}'>
-						<@input type='text' readonly=true name='newsletter_template_new_file' value='${template.fileName}' />
-					</@formGroup>
-					<@formGroup labelFor='newsletter_template_source' labelKey='#i18n{newsletter.modify_newsletter_template.fileContent}' helpKey='#i18n{newsletter.modify_newsletter_template.contentHelp}'>
-						<@input type='textarea' rows=20 id='newsletter_template_source' name='newsletter_template_source'>${template_source}</@input>
-					</@formGroup>
-					<@formGroup>
-						<@button type='submit' buttonIcon='check' title='#i18n{newsletter.modify_newsletter_template.buttonModify}' />
-						<@aButton href='jsp/admin/plugins/newsletter/ManageTemplates.jsp' buttonIcon='times' title='#i18n{newsletter.create_newsletter.buttonCancel}' color='default' />
-					</@formGroup>
-				</@tform>
-			</#if>
-			</@boxBody>
-		</@box>
-	</@columns>
-</@row>
+<@pageContainer>
+    <@pageColumn>
+        <@pageHeader title='#i18n{newsletter.modify_newsletter_template_file.boxTitle}' />
+		<#if template?exists>
+		<@tform method='post' enctype='multipart/form-data' action='jsp/admin/plugins/newsletter/DoModifyNewsLetterTemplateFile.jsp' boxed=true>
+			<@input type='hidden' name='newsletter_template_id' value='${template.id}' />
+			<@formGroup labelFor='newsletter_template_name' labelKey='#i18n{newsletter.add_newsletter_template.name}' mandatory=true>
+				<@input type='text' id='newsletter_template_name' name='newsletter_template_name' maxlength=50 value='${template.description}' />
+			</@formGroup>
+			<@formGroup labelFor='newsletter_template_type' labelKey='#i18n{newsletter.add_newsletter_template.templateType}' mandatory=true>
+				<@select name='newsletter_template_type' items=template_type default_value=template.topicType />
+			</@formGroup>
+			<@formGroup labelFor='newsletter_template_new_picture' labelKey='#i18n{newsletter.add_newsletter_template.imageFileName}'>
+				<@input type='file' id='newsletter_template_new_picture' name='newsletter_template_new_picture' value='' />
+			</@formGroup>
+			<@formGroup labelFor='newsletter_template_section' labelKey='#i18n{newsletter.add_newsletter_template.sectionNumber}'>
+				<@input type='number' id='newsletter_template_section' name='newsletter_template_section' value='${template.sectionNumber}' min=1 max=10 />
+			</@formGroup>
+			<@formGroup labelFor='newsletter_template_new_file' labelKey='#i18n{newsletter.modify_newsletter_template.fileContent}'>
+				<@input type='text' readonly=true name='newsletter_template_new_file' value='${template.fileName}' />
+			</@formGroup>
+			<@formGroup labelFor='newsletter_template_source' labelKey='#i18n{newsletter.modify_newsletter_template.fileContent}' helpKey='#i18n{newsletter.modify_newsletter_template.contentHelp}'>
+				<@input type='textarea' rows=20 id='newsletter_template_source' name='newsletter_template_source'>${template_source}</@input>
+			</@formGroup>
+			<@formGroup>
+				<@button type='submit' buttonIcon='check' title='#i18n{newsletter.modify_newsletter_template.buttonModify}' />
+				<@aButton href='jsp/admin/plugins/newsletter/ManageTemplates.jsp' buttonIcon='times' title='#i18n{newsletter.create_newsletter.buttonCancel}' color='default' />
+			</@formGroup>
+		</@tform>
+		</#if>
+	</@pageColumn>
+</@pageContainer>
