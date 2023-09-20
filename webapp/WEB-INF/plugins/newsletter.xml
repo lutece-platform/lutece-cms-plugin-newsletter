@@ -11,7 +11,7 @@
     <user-guide/>
     <provider>newsletter.plugin.provider</provider>
     <provider-url>http://lutece.paris.fr</provider-url>
-    <icon-url>themes/admin/shared/images/plugins/newsletter/newsletter.svg</icon-url>
+    <icon-url>themes/admin/shared/plugins/newsletter/images/newsletter.svg</icon-url>
     <copyright>Copyright 2001-2009 Mairie de Paris</copyright>
     <core-version-dependency>
 		<min-core-version>4.0.0</min-core-version>

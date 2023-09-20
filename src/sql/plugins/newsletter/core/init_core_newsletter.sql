@@ -2,8 +2,8 @@
 -- Dumping data for table core_admin_right
 --
 
-INSERT INTO core_admin_right (id_right,name,level_right,admin_url,description,is_updatable,plugin_name,id_feature_group,icon_url,documentation_url) VALUES ('NEWSLETTER_MANAGEMENT','newsletter.adminFeature.newsletter_management.name',2,'jsp/admin/plugins/newsletter/ManageNewsLetter.jsp','newsletter.adminFeature.newsletter_management.description',0,'newsletter','CONTENT','images/admin/skin/plugins/newsletter/newsletter.png', NULL);
-INSERT INTO core_admin_right (id_right,name,level_right,admin_url,description,is_updatable,plugin_name,id_feature_group,icon_url,documentation_url) VALUES ('NEWSLETTER_TEMPLATE_MANAGEMENT','newsletter.adminFeature.newsletter_template_management.name',2,'jsp/admin/plugins/newsletter/ManageTemplates.jsp','newsletter.adminFeature.newsletter_template_management.description',0,'newsletter','STYLE','images/admin/skin/plugins/newsletter/newsletter.png', NULL);
+INSERT INTO core_admin_right (id_right,name,level_right,admin_url,description,is_updatable,plugin_name,id_feature_group,icon_url,documentation_url) VALUES ('NEWSLETTER_MANAGEMENT','newsletter.adminFeature.newsletter_management.name',2,'jsp/admin/plugins/newsletter/ManageNewsLetter.jsp','newsletter.adminFeature.newsletter_management.description',0,'newsletter','CONTENT','themes/admin/shared/plugins/newsletter/images/newsletter.svg', NULL);
+INSERT INTO core_admin_right (id_right,name,level_right,admin_url,description,is_updatable,plugin_name,id_feature_group,icon_url,documentation_url) VALUES ('NEWSLETTER_TEMPLATE_MANAGEMENT','newsletter.adminFeature.newsletter_template_management.name',2,'jsp/admin/plugins/newsletter/ManageTemplates.jsp','newsletter.adminFeature.newsletter_template_management.description',0,'newsletter','STYLE','themes/admin/shared/plugins/newsletter/images/newsletter_templates/model-newsletter.svg', NULL);
 
 --
 -- Dumping data for table core_admin_role
