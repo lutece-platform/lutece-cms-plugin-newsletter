@@ -6,6 +6,12 @@
 				<@tabLink href='jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletter.id}' title='#i18n{newsletter.modify_newsletter.manageAttributes}' />
 				<@tabLink active=true href='jsp/admin/plugins/newsletter/GetManageNewsletterTopics.jsp?newsletter_id=${newsletter.id}' title='#i18n{newsletter.manage_topics.pageTitle}' />
 				<@tabLink href='jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}' title='#i18n{newsletter.compose_newsletter.boxTitle}' />
+				<@p class='ms-auto mb-0 mt-2 me-4'>
+					<@icon style='calendar-stats' />
+					<@span class='border-end border-4 border-primary d-inline-block pe-2'>
+						#i18n{newsletter.modify_newsletter.dateLastSend} : <strong>${newsletter.dateLastSending?date}</strong>
+					</@span>
+				</@p>
 			</@tabList>
 			<@tabContent>
 				<@row>
@@ -19,12 +25,11 @@
 							<@fieldSet legend='#i18n{newsletter.manage_topics.labelSelectNewsletterTemplate}' hideLegend=['all'] >
 								<#if newsletter_templates?has_content>
 									<#assign nIndex=1>
-									<@ul>
+									<@ul class='list-unstyled'>
 									<#list newsletter_templates as template >
-										<@li class="d-flex">
-											<@radioButton labelFor='newsletter_template_id_${nIndex}' class='radio-image' id='newsletter_template_id_${nIndex}' name='newsletter_template_id' value='${template.id}' checked=template.id=newsletter_template_id labelKey=''>
-												<@img url="${img_path}/${template.picture}" class="me-1" alt="${template.description}" title="#i18n{newsletter.compose_newsletter.newsletterTemplate} ${template.description}" />
-												${template.description}
+										<@li>
+											<@radioButton labelFor='newsletter_template_id_${nIndex}' labelClass='ps-0' class='radio-image' id='newsletter_template_id_${nIndex}' name='newsletter_template_id' value='${template.id}' checked=template.id=newsletter_template_id >
+												<@img url="${img_path}/${template.picture}" class="img-fluid img-thumbnail thumbnail-sm" alt="${template.description}" title="#i18n{newsletter.compose_newsletter.newsletterTemplate} ${template.description}" />  ${template.description}
 											</@radioButton>
 										</@li>
 										<#assign nIndex=nIndex+1>
@@ -44,20 +49,26 @@
 							<@boxBody>
 							<@tform action='jsp/admin/plugins/newsletter/DoAddNewsletterTopic.jsp'>
 								<@input type='hidden' name='newsletter_id' id='newsletter_id' value='${newsletter.id}' />
-								<@formGroup labelFor='topic_type' labelKey='#i18n{newsletter.manage_topics.labelTopicType}' rows=2>
-									<@select name='topic_type' items=list_topic_types default_value='' />
-								</@formGroup>
-								<#if 1 < newsletter.nbSections>
-									<@formGroup labelFor='topic_section_number' labelKey='#i18n{newsletter.manage_topics.labelSectionNumber}'>
-										<@select name='topic_section_number'>
-											<#list 1..newsletter.nbSections as i>
-												<@option value=i label=i />
-											</#list>
-										</@select>
-									</@formGroup>
-								<#else>
-									<@input type='hidden' name='topic_section_number' value='1' />
-								</#if>
+								<@row>
+									<@columns sm=12 md=9>
+										<@formGroup labelFor='topic_type' labelKey='#i18n{newsletter.manage_topics.labelTopicType}' rows=2>
+											<@select name='topic_type' items=list_topic_types default_value='' />
+										</@formGroup>
+									</@columns>
+									<#if 1 < newsletter.nbSections>
+									<@columns sm=12 md=3>
+										<@formGroup labelFor='topic_section_number' labelKey='#i18n{newsletter.manage_topics.labelSectionNumber}' rows=2>
+											<@select name='topic_section_number'>
+												<#list 1..newsletter.nbSections as i>
+													<@option value=i label=i />
+												</#list>
+											</@select>
+										</@formGroup>
+									</@columns>
+									<#else>
+										<@input type='hidden' name='topic_section_number' value='1' />
+									</#if>
+								</@row>
 								<@formGroup>
 									<@button type='submit' title='#i18n{newsletter.manage_topics.labelAddTopic}' buttonIcon='plus' title='#i18n{newsletter.manage_topics.labelAddTopic}' hideTitle=['xs'] />
 								</@formGroup>
@@ -66,22 +77,21 @@
 						</@box>
 					</#if>
 					</@columns>
-					<@columns sm=4>
+					<@columns sm=5>
 						<@box>
 							<@boxHeader title='#i18n{newsletter.manage_topics.labelTopicManageTitle}' />
 							<@boxBody>
-							<#if 0 < newsletter_template_id><@dataTable dataTableManager=table_manager actionMacro="getActionColumn" /></#if>
+							<#if 0 < newsletter_template_id>
+							<@dataTable dataTableManager=table_manager actionMacro="getActionColumn" />
+							</#if>
 							</@boxBody>
 						</@box>
 					</@columns>
-					<@columns sm=5>
-						<@alert color='info'>
-							<@p>#i18n{newsletter.modify_newsletter.dateLastSend} : <strong>${newsletter.dateLastSending?date}</strong></@p>
-						</@alert>
+					<@columns sm=4>
 						<#if html_content?? && html_content?has_content>
 						<@box>
 							<@boxHeader title='#i18n{newsletter.manage_topics.labelPreview}' />
-							<@boxBody>
+							<@boxBody id='preview'>
 								${html_content!}
 							</@boxBody>
 						</@box>
@@ -92,19 +102,27 @@
 		</@tabs>
 	</@pageColumn>
 </@pageContainer>
+<script>
+// If any "style" attribute is added by template loaded in preview remove it  and set it only on "preview" !
+const bodyStyles = document.querySelector('body').getAttribute('style')
+if( bodyStyles != undefined ){
+	document.querySelector('body').removeAttribute('style')
+	document.getElementById('preview').setAttribute('style',bodyStyles)
+}
+</script>
 <#macro getActionColumn item>
-<@aButton title='#i18n{portal.util.labelModify}' href='jsp/admin/plugins/newsletter/GetModifyTopicConfig.jsp?newsletter_id=${item.idNewsletter}&topic_id=${item.id}' buttonIcon='edit' size='sm' hideTitle=['all'] />
+<@aButton title='#i18n{portal.util.labelModify}' href='jsp/admin/plugins/newsletter/GetModifyTopicConfig.jsp?newsletter_id=${item.idNewsletter}&topic_id=${item.id}' buttonIcon='pencil' size='' hideTitle=['all'] />
 <#if 1< item.order >
-	<@aButton title='#i18n{newsletter.manage_topics.labelUp}' href='jsp/admin/plugins/newsletter/DoMoveNewsletterTopic.jsp?newsletter_id=${item.idNewsletter}&topic_id=${item.id}&move_up=true' buttonIcon='chevron-up' size='sm' hideTitle=['all'] />
+	<@aButton title='#i18n{newsletter.manage_topics.labelUp}' href='jsp/admin/plugins/newsletter/DoMoveNewsletterTopic.jsp?newsletter_id=${item.idNewsletter}&topic_id=${item.id}&move_up=true' buttonIcon='chevron-up' size='' hideTitle=['all'] />
 </#if>
 <#if item.order < section_size[item.section - 1]>
-	<@aButton title='#i18n{newsletter.manage_topics.labelDown}' href='jsp/admin/plugins/newsletter/DoMoveNewsletterTopic.jsp?newsletter_id=${item.idNewsletter}&topic_id=${item.id}&move_up=false' buttonIcon='chevron-down' hideTitle=['all'] size='sm' />
+	<@aButton title='#i18n{newsletter.manage_topics.labelDown}' href='jsp/admin/plugins/newsletter/DoMoveNewsletterTopic.jsp?newsletter_id=${item.idNewsletter}&topic_id=${item.id}&move_up=false' buttonIcon='chevron-down' hideTitle=['all'] size='' />
 </#if>
-<@aButton title='#i18n{portal.util.labelDelete}' href='jsp/admin/plugins/newsletter/ConfirmRemoveNewsletterTopic.jsp?newsletter_id=${item.idNewsletter}&topic_id=${item.id}' color='danger' buttonIcon='trash' hideTitle=['all'] size='sm' />
+<@aButton title='#i18n{portal.util.labelDelete}' href='jsp/admin/plugins/newsletter/ConfirmRemoveNewsletterTopic.jsp?newsletter_id=${item.idNewsletter}&topic_id=${item.id}' color='danger' buttonIcon='trash' hideTitle=['all'] size='' />
 </#macro>
 <#macro getSectionColumn item>
 <#if 1 < newsletter.nbSections>
-<@tform action='jsp/admin/plugins/newsletter/DoChangeNewsletterTopicSection.jsp' boxed=true>
+<@tform action='jsp/admin/plugins/newsletter/DoChangeNewsletterTopicSection.jsp'>
 	<@input type='hidden' name='newsletter_id' id='newsletter_id' value='${newsletter.id}' />
 	<@input type='hidden' name='topic_id' id='topic_id' value='${item.id}' />
 	<@formGroup>
@@ -114,9 +132,7 @@
 				<option value="${i}" <#if i==item.section >selected="selected"</#if>>${i}</option>
 			</#list>
 			</@select>
-			<@inputGroupItem type='btn'>
-				<@button title='#i18n{newsletter.manage_topics.labelChangeTopicSection}' buttonIcon='arrows-v' size='' />
-			</@inputGroupItem>
+			<@button type='submit' title='#i18n{newsletter.manage_topics.labelChangeTopicSection}' hideTitle=['all'] buttonIcon='arrows-sort' size='' />
 		</@inputGroup>
 	</@formGroup>
 </@tform>
