@@ -103,14 +103,6 @@
 	display: none;
 }	
 </style>
-<script>
-// If any "style" attribute is added by template loaded in preview remove it  and set it only on "preview" !
-const bodyStyles = document.querySelector('body').getAttribute('style')
-if( bodyStyles != undefined ){
-	document.querySelector('body').removeAttribute('style')
-	document.getElementById('preview').setAttribute('style',bodyStyles)
-}
-</script>
 <#macro getActionColumn item>
 <@aButton title='#i18n{portal.util.labelModify}' href='jsp/admin/plugins/newsletter/GetModifyTopicConfig.jsp?newsletter_id=${item.idNewsletter}&topic_id=${item.id}' buttonIcon='pencil' size='' hideTitle=['all'] />
 <#if 1< item.order >
