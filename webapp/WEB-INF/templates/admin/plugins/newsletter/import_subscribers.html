@@ -13,7 +13,7 @@
 			<@input type='hidden' name='import_delete' value='${import_delete?string}' />
 			<@row>
 				<@columns sm=6>
-					<@formGroup labelFor='newsletter_import_path' labelKey='#i18n{newsletter.import_subscribers.label}' mandatory=true>
+					<@formGroup labelFor='newsletter_import_path' labelKey='#i18n{newsletter.import_subscribers.label}' helpKey='#i18n{newsletter.import_subscribers.label.help}' mandatory=true>
 						<@inputGroup>
 							<@input type='file' id='newsletter_import_path' name='newsletter_import_path' value='' />
 							<@inputGroupItem type='btn'>
