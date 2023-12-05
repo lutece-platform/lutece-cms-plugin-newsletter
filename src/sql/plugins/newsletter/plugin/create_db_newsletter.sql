@@ -11,7 +11,7 @@ CREATE TABLE newsletter_description (
   html LONG VARCHAR,
   id_newsletter_template INT DEFAULT '0',
   workgroup_key VARCHAR(50) DEFAULT NULL,
-  unsubscribe VARCHAR(6) DEFAULT NULL,
+  unsubscribe VARCHAR(6) DEFAULT 'TRUE',
   test_recipients VARCHAR(255) DEFAULT NULL,
   sender_mail VARCHAR(255) DEFAULT NULL,
   sender_name VARCHAR(255) DEFAULT NULL,

@@ -4,46 +4,40 @@
 			<@boxHeader title='#i18n{newsletter.create_newsletter.boxTitle}' />
 			<@boxBody id='create_newsletter'>
 				<@tform method='post' name='create_newsletter' action='jsp/admin/plugins/newsletter/DoCreateNewsLetter.jsp'>
-					<@formGroup labelFor='newsletter_name' labelKey='#i18n{newsletter.create_newsletter.label}' mandatory=true>
-						<@input type='text' id='newsletter_name' name='newsletter_name' maxlength=50 />
-					</@formGroup>
-					<@formGroup labelFor='newsletter_description' labelKey='#i18n{newsletter.create_newsletter.description}' mandatory=true>
-						<@input type='textarea' id='newsletter_description' name='newsletter_description' rows=2  />
-					</@formGroup>
-					<@formGroup labelFor='date_first_send' labelKey='#i18n{newsletter.create_newsletter.initialDate}' mandatory=true>
-						<@inputGroup>
-							<@inputGroupItem type='text'>
-								<@icon style='calendar' />
-							</@inputGroupItem>
-							<@input type='date' name='date_first_send' id='date_first_send' maxlength=10 value='${newsletter_last_sent}' />
-						</@inputGroup>
-					</@formGroup>
-					<@formGroup labelFor='newsletter_sender_name' labelKey='#i18n{newsletter.create_newsletter.labelSenderName}' mandatory=true>
-						<@input type='text' id='newsletter_sender_name' name='newsletter_sender_name' maxlength=255 />
-					</@formGroup>
-					<@formGroup labelFor='newsletter_sender_mail' labelKey='#i18n{newsletter.create_newsletter.labelSenderMail}' mandatory=true>
-						<@input type='text' id='newsletter_sender_mail' name='newsletter_sender_mail' maxlength=255 />
-					</@formGroup>
-					<@row>
-						<@columns sm=6>
-							<@formGroup labelFor='newsletter_unsubscribe' labelKey='#i18n{newsletter.create_newsletter.labelUnsubscribe}' rows=2>
-								<@select name='newsletter_unsubscribe' default_value='' items=unsubscribe_list />
-							</@formGroup>
-						</@columns>
-					</@row>
-					<@formGroup labelFor='newsletter_test_subject' labelKey='#i18n{newsletter.modify_newsletter.labelSubject}'>
-						<@input type='text' id='newsletter_test_subject' name='newsletter_test_subject' maxlength=255 value='' />
-					</@formGroup>
-					<@formGroup labelFor='newsletter_test_recipients' labelKey='#i18n{newsletter.create_newsletter.labelTestRecipients}' helpKey='#i18n{newsletter.modify_newsletter.noticeDelimiter}' mandatory=true>
-						<@input type='text' id='newsletter_test_recipients' name='newsletter_test_recipients' maxlength=255 />
-					</@formGroup>
-					<@formGroup labelFor='newsletter_workgroup' labelKey='#i18n{newsletter.create_newsletter.labelWorkgroup}' mandatory=true>
-						<@select name='newsletter_workgroup' default_value='' items=workgroup_list />
-					</@formGroup>
-					<@formGroup>
-						<@button type='submit' buttonIcon='check' title='#i18n{newsletter.create_newsletter.buttonValidate}' />
-						<@aButton href='jsp/admin/plugins/newsletter/ManageNewsLetter.jsp' buttonIcon='times' title='#i18n{newsletter.create_newsletter.buttonCancel}' color='default' />
-					</@formGroup>
+				<@input type='hidden' value='TRUE' name='newsletter_unsubscribe' />
+				<@formGroup labelFor='newsletter_name' labelKey='#i18n{newsletter.create_newsletter.label}' mandatory=true>
+					<@input type='text' id='newsletter_name' name='newsletter_name' maxlength=50 />
+				</@formGroup>
+				<@formGroup labelFor='newsletter_description' labelKey='#i18n{newsletter.create_newsletter.description}' mandatory=true>
+					<@input type='textarea' id='newsletter_description' name='newsletter_description' rows=2  />
+				</@formGroup>
+				<@formGroup labelFor='date_first_send' labelKey='#i18n{newsletter.create_newsletter.initialDate}' mandatory=true>
+					<@inputGroup>
+						<@inputGroupItem type='text'>
+							<@icon style='calendar' />
+						</@inputGroupItem>
+						<@input type='date' name='date_first_send' id='date_first_send' maxlength=10 value='${newsletter_last_sent}' />
+					</@inputGroup>
+				</@formGroup>
+				<@formGroup labelFor='newsletter_sender_name' labelKey='#i18n{newsletter.create_newsletter.labelSenderName}' mandatory=true>
+					<@input type='text' id='newsletter_sender_name' name='newsletter_sender_name' maxlength=255 />
+				</@formGroup>
+				<@formGroup labelFor='newsletter_sender_mail' labelKey='#i18n{newsletter.create_newsletter.labelSenderMail}' mandatory=true>
+					<@input type='text' id='newsletter_sender_mail' name='newsletter_sender_mail' maxlength=255 />
+				</@formGroup>
+				<@formGroup labelFor='newsletter_test_subject' labelKey='#i18n{newsletter.modify_newsletter.labelSubject}'>
+					<@input type='text' id='newsletter_test_subject' name='newsletter_test_subject' maxlength=255 value='' />
+				</@formGroup>
+				<@formGroup labelFor='newsletter_test_recipients' labelKey='#i18n{newsletter.create_newsletter.labelTestRecipients}' helpKey='#i18n{newsletter.modify_newsletter.noticeDelimiter}' mandatory=true>
+					<@input type='text' id='newsletter_test_recipients' name='newsletter_test_recipients' maxlength=255 />
+				</@formGroup>
+				<@formGroup labelFor='newsletter_workgroup' labelKey='#i18n{newsletter.create_newsletter.labelWorkgroup}' mandatory=true>
+					<@select name='newsletter_workgroup' default_value='' items=workgroup_list />
+				</@formGroup>
+				<@formGroup>
+					<@button type='submit' buttonIcon='check' title='#i18n{newsletter.create_newsletter.buttonValidate}' />
+					<@aButton href='jsp/admin/plugins/newsletter/ManageNewsLetter.jsp' buttonIcon='times' title='#i18n{newsletter.create_newsletter.buttonCancel}' color='default' />
+				</@formGroup>
 				</@tform>
 			</@boxBody>
 		</@box>

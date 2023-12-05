@@ -1,0 +1,1 @@
+ALTER TABLE newsletter_description	CHANGE COLUMN `unsubscribe` `unsubscribe` VARCHAR(6) NULL DEFAULT 'TRUE';
