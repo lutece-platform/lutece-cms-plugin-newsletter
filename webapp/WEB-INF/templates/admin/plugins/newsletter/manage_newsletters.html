@@ -5,8 +5,7 @@
 				<@offcanvas targetUrl="jsp/admin/plugins/newsletter/ManageNewsLetterProperties.jsp" targetElement="#manage_properties" redirectForm=false id="template-manage-properties" title="#i18n{newsletter.adminFeature.newsletter_properties_management.name}" btnTitle="#i18n{newsletter.adminFeature.newsletter_properties_management.name}" btnIcon="cog me-2" btnSize="" position="end" />
 			</#if>
 			<#if creation_allowed>
-				<@span class='ms-1'></@span>
-				<@offcanvas targetUrl="jsp/admin/plugins/newsletter/CreateNewsLetter.jsp" targetElement="#create_newsletter" redirectForm=false id="template-create-newsletter" title="#i18n{newsletter.manage_newsletters.buttonAddNewsletter}" btnTitle="#i18n{newsletter.manage_newsletters.buttonAddNewsletter}" btnIcon="plus me-2" btnSize="" position="end" size="full" />
+				<@aButton href='jsp/admin/plugins/newsletter/CreateNewsLetter.jsp' title='#i18n{newsletter.manage_newsletters.buttonAddNewsletter}' title='#i18n{newsletter.manage_newsletters.buttonAddNewsletter}' buttonIcon='plus' size='' />
 			</#if>
         </@pageHeader>
 		<#if newsletters_list?size gt 0>
