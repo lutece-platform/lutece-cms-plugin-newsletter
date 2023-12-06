@@ -12,19 +12,19 @@
 			<@input type='hidden' name='newsletter_id' value='${newsletter_id}' />
 			<@input type='hidden' name='import_delete' value='${import_delete?string}' />
 			<@row>
-				<@columns sm=6>
+				<@columns sm=5>
 					<@formGroup labelFor='newsletter_import_path' labelKey='#i18n{newsletter.import_subscribers.label}' helpKey='#i18n{newsletter.import_subscribers.label.help}' mandatory=true>
 						<@inputGroup>
-							<@input type='file' id='newsletter_import_path' name='newsletter_import_path' value='' />
+							<@input type='file' id='newsletter_import_path' name='newsletter_import_path' value='' accept='.csv' />
 							<@inputGroupItem type='btn'>
 								<@button type='submit' buttonIcon='upload' title='#i18n{newsletter.import_subscribers.buttonImport}' />
 							</@inputGroupItem>
 						</@inputGroup>
 					</@formGroup>
 				</@columns>
-				<@columns sm=6 class='d-flex align-items-center justify-content-center mt-3'>
-					<@alert color='info'><@icon style='alert-circle me-2' /> ${alertTitle}</@alert>
-					<@alert color='warning ms-3'><@icon style='alert-triangle me-2' /> #i18n{newsletter.import_subscribers.notice2}</@alert>
+				<@columns sm=3>
+					<@alert color='info' title=alertTitle iconTitle='alert-circle fs-1' />
+					<@alert color='warning' title='#i18n{newsletter.import_subscribers.notice2}' iconTitle='alert-triangle fs-1 me-2' />
 				</@columns>
 			</@row>
 		</@tform>
