@@ -1,175 +1,292 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-	<html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		<base href="${base_url}" />
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<meta name="format-detection" content="telephone=no" /> <!-- disable auto telephone linking in iOS -->
-		<title>Respmail is a response HTML email designed to work on all major email platforms and smartphones</title>
-		<style type="text/css">
-			/* RESET STYLES */
-			html { background-color:#E1E1E1; margin:0; padding:0; }
-			body, #bodyTable, #bodyCell, #bodyCell{height:100% !important; margin:0; padding:0; width:100% !important;font-family:Helvetica, Arial, "Lucida Grande", sans-serif;}
-			table{border-collapse:collapse;}
-			table[id=bodyTable] {width:100%!important;margin:auto;max-width:500px!important;color:#7A7A7A;font-weight:normal;}
-			img, a img{border:0; outline:none; text-decoration:none;height:auto; line-height:100%;}
-			a {text-decoration:none !important;border-bottom: 1px solid;}
-			h1, h2, h3, h4, h5, h6{color:#5F5F5F; font-weight:normal; font-family:Helvetica; font-size:20px; line-height:125%; text-align:Left; letter-spacing:normal;margin-top:0;margin-right:0;margin-bottom:10px;margin-left:0;padding-top:0;padding-bottom:0;padding-left:0;padding-right:0;}
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+    <meta charset="utf-8"> <!-- utf-8 works for most cases -->
+    <meta name="viewport" content="width=device-width"> <!-- Forcing initial-scale shouldn't be necessary -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- Use the latest (edge) version of IE rendering engine -->
+    <meta name="x-apple-disable-message-reformatting">  <!-- Disable auto-scale in iOS 10 Mail entirely -->
+    <meta name="format-detection" content="telephone=no,address=no,email=no,date=no,url=no"> <!-- Tell iOS not to automatically link certain text strings. -->
+    <meta name="color-scheme" content="light dark">
+    <meta name="supported-color-schemes" content="light dark">
+    <title>CiteLibre</title> <!-- The title tag shows in email notifications, like Android 4.4. -->
 
-			/* CLIENT-SPECIFIC STYLES */
-			.ReadMsgBody{width:100%;} .ExternalClass{width:100%;} /* Force Hotmail/Outlook.com to display emails at full width. */
-			.ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div{line-height:100%;} /* Force Hotmail/Outlook.com to display line heights normally. */
-			table, td{mso-table-lspace:0pt; mso-table-rspace:0pt;} /* Remove spacing between tables in Outlook 2007 and up. */
-			#outlook a{padding:0;} /* Force Outlook 2007 and up to provide a "view in browser" message. */
-			img{-ms-interpolation-mode: bicubic;display:block;outline:none; text-decoration:none;} /* Force IE to smoothly render resized images. */
-			body, table, td, p, a, li, blockquote{-ms-text-size-adjust:100%; -webkit-text-size-adjust:100%; font-weight:normal!important;} /* Prevent Windows- and Webkit-based mobile platforms from changing declared text sizes. */
-			.ExternalClass td[class="ecxflexibleContainerBox"] h3 {padding-top: 10px !important;} /* Force hotmail to push 2-grid sub headers down */
+    <!-- What it does: Makes background images in 72ppi Outlook render at correct size. -->
+    <!--[if gte mso 9]>
+    <xml>
+        <o:OfficeDocumentSettings>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+    </xml>
+    <![endif]-->
 
-			/* /\/\/\/\/\/\/\/\/ TEMPLATE STYLES /\/\/\/\/\/\/\/\/ */
+    <!-- Web Font / @font-face : BEGIN -->
+    <!-- NOTE: If web fonts are not required, lines 23 - 41 can be safely removed. -->
 
-			/* ========== Page Styles ========== */
-			h1{display:block;font-size:26px;font-style:normal;font-weight:normal;line-height:100%;}
-			h2{display:block;font-size:20px;font-style:normal;font-weight:normal;line-height:120%;}
-			h3{display:block;font-size:17px;font-style:normal;font-weight:normal;line-height:110%;}
-			h4{display:block;font-size:18px;font-style:italic;font-weight:normal;line-height:100%;}
-			.flexibleImage{height:auto;}
-			.linkRemoveBorder{border-bottom:0 !important;}
-			table[class=flexibleContainerCellDivider] {padding-bottom:0 !important;padding-top:0 !important;}
+    <!-- Desktop Outlook chokes on web font references and defaults to Times New Roman, so we force a safe fallback font. -->
+    <!--[if mso]>
+        <style>
+            * {
+                font-family: sans-serif !important;
+            }
+        </style>
+    <![endif]-->
 
-			body, #bodyTable{background-color:#E1E1E1;}
-			#emailHeader{background-color:#FFFFFF;}
-			#emailBody{background-color:#FFFFFF;}
-			#emailFooter{background-color:#FFFFFF;}
-			.nestedContainer{background-color:#F8F8F8; border:1px solid #CCCCCC;}
-			.emailButton{background-color:#205478; border-collapse:separate;}
-			.buttonContent{color:#FFFFFF; font-family:Helvetica; font-size:18px; font-weight:bold; line-height:100%; padding:15px; text-align:center;}
-			.buttonContent a{color:#FFFFFF; display:block; text-decoration:none!important; border:0!important;}
-			.emailCalendar{background-color:#FFFFFF; border:1px solid #CCCCCC;}
-			.emailCalendarMonth{background-color:#205478; color:#FFFFFF; font-family:Helvetica, Arial, sans-serif; font-size:16px; font-weight:bold; padding-top:10px; padding-bottom:10px; text-align:center;}
-			.emailCalendarDay{color:#205478; font-family:Helvetica, Arial, sans-serif; font-size:60px; font-weight:bold; line-height:100%; padding-top:20px; padding-bottom:20px; text-align:center;}
-			.imageContentText {margin-top: 10px;line-height:0;}
-			.imageContentText a {line-height:0;}
-			#invisibleIntroduction {display:none !important;} /* Removing the introduction text from the view */
+    <!-- All other clients get the webfont reference; some will render the font and others will silently fail to the fallbacks. More on that here: https://web.archive.org/web/20190717120616/http://stylecampaign.com/blog/2015/02/webfont-support-in-email/ -->
+    <!--[if !mso]><!-->
+    <!-- insert web font reference, eg: <link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'> -->
+    <!--<![endif]-->
 
-			/*FRAMEWORK HACKS & OVERRIDES */
-			span[class=ios-color-hack] a {color:#275100!important;text-decoration:none!important;} /* Remove all link colors in IOS (below are duplicates based on the color preference) */
-			span[class=ios-color-hack2] a {color:#205478!important;text-decoration:none!important;}
-			span[class=ios-color-hack3] a {color:#8B8B8B!important;text-decoration:none!important;}
-			/* A nice and clean way to target phone numbers you want clickable and avoid a mobile phone from linking other numbers that look like, but are not phone numbers.  Use these two blocks of code to "unstyle" any numbers that may be linked.  The second block gives you a class to apply with a span tag to the numbers you would like linked and styled.
-			Inspired by Campaign Monitor's article on using phone numbers in email: http://www.campaignmonitor.com/blog/post/3571/using-phone-numbers-in-html-email/.
-			*/
-			.a[href^="tel"], a[href^="sms"] {text-decoration:none!important;color:#606060!important;pointer-events:none!important;cursor:default!important;}
-			.mobile_link a[href^="tel"], .mobile_link a[href^="sms"] {text-decoration:none!important;color:#606060!important;pointer-events:auto!important;cursor:default!important;}
+    <!-- Web Font / @font-face : END -->
 
+    <!-- CSS Reset : BEGIN -->
+    <style>
 
-			/* MOBILE STYLES */
-			@media only screen and (max-width: 480px){
-				/*////// CLIENT-SPECIFIC STYLES //////*/
-				body{width:100% !important; min-width:100% !important;} /* Force iOS Mail to render the email at full width. */
+        /* What it does: Tells the email client that both light and dark styles are provided. A duplicate of meta color-scheme meta tag above. */
+        :root {
+          color-scheme: light dark;
+          supported-color-schemes: light dark;
+        }
 
-				/* FRAMEWORK STYLES */
-				/*
-				CSS selectors are written in attribute
-				selector format to prevent Yahoo Mail
-				from rendering media query styles on
-				desktop.
-				*/
-				/*td[class="textContent"], td[class="flexibleContainerCell"] { width: 100%; padding-left: 10px !important; padding-right: 10px !important; }*/
-				table[id="emailHeader"],
-				table[id="emailBody"],
-				table[id="emailFooter"],
-				table[class="flexibleContainer"],
-				td[class="flexibleContainerCell"] {width:100% !important;}
-				td[class="flexibleContainerBox"], td[class="flexibleContainerBox"] table {display: block;width: 100%;text-align: left;}
-				/*
-				The following style rule makes any
-				image classed with 'flexibleImage'
-				fluid when the query activates.
-				Make sure you add an inline max-width
-				to those images to prevent them
-				from blowing out.
-				*/
-				td[class="imageContent"] img {height:auto !important; width:100% !important; max-width:100% !important; }
-				img[class="flexibleImage"]{height:auto !important; width:100% !important;max-width:100% !important;}
-				img[class="flexibleImageSmall"]{height:auto !important; width:auto !important;}
+        /* What it does: Remove spaces around the email design added by some email clients. */
+        /* Beware: It can remove the padding / margin and add a background color to the compose a reply window. */
+        html,
+        body {
+            margin: 0 auto !important;
+            padding: 0 !important;
+            height: 100% !important;
+            width: 100% !important;
+        }
 
+        /* What it does: Stops email clients resizing small text. */
+        * {
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
 
-				/*
-				Create top space for every second element in a block
-				*/
-				table[class="flexibleContainerBoxNext"]{padding-top: 10px !important;}
+        /* What it does: Centers email on Android 4.4 */
+        div[style*="margin: 16px 0"] {
+            margin: 0 !important;
+        }
 
-				/*
-				Make buttons in the email span the
-				full width of their container, allowing
-				for left- or right-handed ease of use.
-				*/
-				table[class="emailButton"]{width:100% !important;}
-				td[class="buttonContent"]{padding:0 !important;}
-				td[class="buttonContent"] a{padding:15px !important;}
+        /* What it does: forces Samsung Android mail clients to use the entire viewport */
+        #MessageViewBody, #MessageWebViewDiv{
+            width: 100% !important;
+        }
 
+        /* What it does: Stops Outlook from adding extra spacing to tables. */
+        table,
+        td {
+            mso-table-lspace: 0pt !important;
+            mso-table-rspace: 0pt !important;
+        }
+
+        /* What it does: Fixes webkit padding issue. */
+        table {
+            border-spacing: 0 !important;
+            border-collapse: collapse !important;
+            table-layout: fixed !important;
+            margin: 0 auto !important;
+        }
+
+        /* What it does: Uses a better rendering method when resizing images in IE. */
+        img {
+            -ms-interpolation-mode:bicubic;
+        }
+
+        /* What it does: Prevents Windows 10 Mail from underlining links despite inline CSS. Styles for underlined links should be inline. */
+        a {
+            text-decoration: none;
+        }
+
+        /* What it does: A work-around for email clients meddling in triggered links. */
+        a[x-apple-data-detectors],  /* iOS */
+        .unstyle-auto-detected-links a,
+        .aBn {
+            border-bottom: 0 !important;
+            cursor: default !important;
+            color: inherit !important;
+            text-decoration: none !important;
+            font-size: inherit !important;
+            font-family: inherit !important;
+            font-weight: inherit !important;
+            line-height: inherit !important;
+        }
+
+        /* What it does: Prevents Gmail from displaying a download button on large, non-linked images. */
+        .a6S {
+            display: none !important;
+            opacity: 0.01 !important;
+        }
+
+        /* What it does: Prevents Gmail from changing the text color in conversation threads. */
+        .im {
+            color: inherit !important;
+        }
+
+        /* If the above doesn't work, add a .g-img class to any image in question. */
+        img.g-img + div {
+            display: none !important;
+        }
+
+        /* What it does: Removes right gutter in Gmail iOS app: https://github.com/TedGoas/Cerberus/issues/89  */
+        /* Create one of these media queries for each additional viewport size you'd like to fix */
+
+        /* iPhone 4, 4S, 5, 5S, 5C, and 5SE */
+        @media only screen and (min-device-width: 320px) and (max-device-width: 374px) {
+            u ~ div .email-container {
+                min-width: 320px !important;
+            }
+        }
+        /* iPhone 6, 6S, 7, 8, and X */
+        @media only screen and (min-device-width: 375px) and (max-device-width: 413px) {
+            u ~ div .email-container {
+                min-width: 375px !important;
+            }
+        }
+        /* iPhone 6+, 7+, and 8+ */
+        @media only screen and (min-device-width: 414px) {
+            u ~ div .email-container {
+                min-width: 414px !important;
+            }
+        }
+    </style>
+    <!-- CSS Reset : END -->
+    <!-- Progressive Enhancements : BEGIN -->
+    <style>
+	    /* What it does: Hover styles for buttons */
+	    .button-td,
+	    .button-a {
+	        transition: all 100ms ease-in;
+	    }
+	    .button-td-primary:hover,
+	    .button-a-primary:hover {
+	        background: #555555 !important;
+	        border-color: #555555 !important;
+	    }
+
+	    /* Media Queries */
+	    @media screen and (max-width: 600px) {
+
+	        /* What it does: Adjust typography on small screens to improve readability */
+	        .email-container p {
+	            font-size: 17px !important;
+	        }
+
+	    }
+
+        /* Dark Mode Styles : BEGIN */
+        @media (prefers-color-scheme: dark) {
+			.email-bg {
+				background: #111111 !important;
 			}
-
-			/*  CONDITIONS FOR ANDROID DEVICES ONLY
-			*   http://developer.android.com/guide/webapps/targeting.html
-			*   http://pugetworks.com/2011/04/css-media-queries-for-targeting-different-mobile-devices/ ;
-			=====================================================*/
-
-			@media only screen and (-webkit-device-pixel-ratio:.75){
-				/* Put CSS for low density (ldpi) Android layouts in here */
+            .darkmode-bg {
+                background: #ffffff !important;
+            }
+			h1,
+			h2,
+			h3,
+			p,
+			li,
+			.darkmode-text,
+			.email-container a:not([class]) {
+				color: #F7F7F9 !important;
 			}
-
-			@media only screen and (-webkit-device-pixel-ratio:1){
-				/* Put CSS for medium density (mdpi) Android layouts in here */
+			td.button-td-primary,
+			td.button-td-primary a {
+				background: #ffffff !important;
+				border-color: #ffffff !important;
+				color: #ffffff !important;
 			}
-
-			@media only screen and (-webkit-device-pixel-ratio:1.5){
-				/* Put CSS for high density (hdpi) Android layouts in here */
+			td.button-td-primary:hover,
+			td.button-td-primary a:hover {
+				background: #cccccc !important;
+				border-color: #cccccc !important;
 			}
-			/* end Android targeting */
-
-			/* CONDITIONS FOR IOS DEVICES ONLY
-			=====================================================*/
-			@media only screen and (min-device-width : 320px) and (max-device-width:568px) {
-
+			.footer td {
+				color: #aaaaaa !important;
 			}
-			/* end IOS targeting */
-		</style>
-		<!--
-			Outlook Conditional CSS
-
-			These two style blocks target Outlook 2007 & 2010 specifically, forcing
-			columns into a single vertical stack as on mobile clients. This is
-			primarily done to avoid the 'page break bug' and is optional.
-
-			More information here:
-			http://templates.mailchimp.com/development/css/outlook-conditional-css
-		-->
-		<!--[if mso 12]>
-			<style type="text/css">
-				.flexibleContainer{display:block !important; width:100% !important;}
-			</style>
-		<![endif]-->
-		<!--[if mso 14]>
-			<style type="text/css">
-				.flexibleContainer{display:block !important; width:100% !important;}
-			</style>
-		<![endif]-->
-	</head>
-	<body bgcolor="#E1E1E1" leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
-	<center style="background-color:#E1E1E1;">
+            .darkmode-fullbleed-bg {
+                background-color: #0F3016 !important;
+            }
+		}
+        /* Dark Mode Styles : END */
+    </style>
+    <!-- Progressive Enhancements : END -->
+</head>
+<!--
+	The email background color (#ffffff) is defined in three places:
+	1. body tag: for most email clients
+	2. center tag: for Gmail and Inbox mobile apps and web versions of Gmail, GSuite, Inbox, Yahoo, AOL, Libero, Comcast, freenet, Mail.ru, Orange.fr
+	3. mso conditional: For Windows 10 Mail
+-->
+<body width="100%" style="margin: 0; padding: 0 !important; mso-line-height-rule: exactly; background-color: #ffffff;" class="email-bg">
+	<center role="article" aria-roledescription="email" lang="fr" style="width: 100%; background-color: #ffffff;" class="email-bg">
+	<!--[if mso | IE]>
+	<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #ffffff;" class="email-bg">
+	<tr>
+	<td>
+	<![endif]-->
+	<!-- Visually Hidden Preheader Text : BEGIN -->
+	<div style="max-height:0; overflow:hidden; mso-hide:all;" aria-hidden="true">
+	<!-- (Optional) This text will appear in the inbox preview, but not the email body. It can be used to supplement the email subject line or even summarize the email's contents. Extended text preheaders (~490 characters) seems like a better UX for anyone using a screenreader or voice-command apps like Siri to dictate the contents of an email. If this text is not included, email clients will automatically populate it using the text (including image alt text) at the start of the email's body. -->
+	</div>
+	<!-- Visually Hidden Preheader Text : END -->
+	<!-- Create white space after the desired preview text so email clients don’t pull other distracting text into the inbox preview. Extend as necessary. -->
+	<!-- Preview Text Spacing Hack : BEGIN -->
+	<div style="display: none; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
+	&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+	</div>
+	<!-- Preview Text Spacing Hack : END -->
+	<!--
+		Set the email width. Defined in two places:
+		1. max-width for all clients except Desktop Windows Outlook, allowing the email to squish on narrow but never go wider than 600px.
+		2. MSO tags for Desktop Windows Outlook enforce a 600px width.
+	-->
+	<div style="max-width: 600px; margin: 0 auto;" class="email-container">
+	<!--[if mso]>
+	<table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="600">
+	<tr>
+	<td>
+	<![endif]-->
+	<!-- Email Body : BEGIN -->
+	<table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: auto;">
+	<!-- Email Header : BEGIN -->
+	<tr>
+		<td style="padding: 20px 0; text-align: center">
+			<img src="${base_url}/images/Lutece-logo.png" width="600" height="" alt="alt_text" border="0" style="width: 100%; max-width: 600px; height: auto; background: #dddddd; font-family: sans-serif; font-size: 15px; line-height: 15px; color: #555555; margin: auto; display: block;" class="g-img">
+		</td>
+	</tr>
+	<!-- Email Header : END -->
 	${newsletter_content}
-	<#if unsubscribe?exists>
-		<#if unsubscribe = "TRUE">
-			<p align="center" style="font-size: small;">
-				#i18n{newsletter.send_newsletter.labelToUnsubscribe}
-				<a href="${base_url}jsp/site/Portal.jsp?page=newsletter&action=confirm_unsubscribe&subscriber_email=${subscriber_email}&newsletter_id=${newsletter_id}&unsubscribe_key=${unsubscribe_key}" class="newsletter">
-					#i18n{newsletter.send_newsletter.labelClickHere}
-				</a>
-			</p>
-		</#if>
-	</#if>
-	</center>
-	</body>
+	<!-- Email Footer Usnubscribe : BEGIN -->
+	<table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: auto;" class="footer">
+		<tr>
+			<td style="padding: 0 20px; font-family: sans-serif; font-size: 12px; line-height: 15px; text-align: center; color: #ffffff;">
+				<#if unsubscribe?exists>
+		            <#if unsubscribe = "TRUE">
+						<p>
+							#i18n{newsletter.send_newsletter.labelToUnsubscribe}<br/>
+                            <a style="color: #ffffff; text-decoration: underline;" href="${base_url}jsp/site/Portal.jsp?page=newsletter&action=confirm_unsubscribe&subscriber_email=${subscriber_email}&newsletter_id=${newsletter_id}&unsubscribe_key=${unsubscribe_key}" class="newsletter">
+                            #i18n{newsletter.send_newsletter.labelToUnsubscribe} #i18n{newsletter.send_newsletter.labelClickHere}
+                            </a>
+                        </p>
+				    </#if>
+				</#if>
+			</td>
+		</tr>
+	</table>
+	<!-- Email Footer Unsubscribe : END -->
+	<!--[if mso]>
+	</td>
+	</tr>
+	</table>
+	<![endif]-->
+    </div>
+    <!--[if mso | IE]>
+    </td>
+    </tr>
+    </table>
+    <![endif]-->
+    </center>
+</body>
 </html>
