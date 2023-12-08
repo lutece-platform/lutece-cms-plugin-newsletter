@@ -1,14 +1,6 @@
-<@table>
-    <@tr>
-        <@th></@th>
-        <@th>#i18n{newsletter.newsletter_sending_list.labelDateSent}</@th>
-        <@th>#i18n{newsletter.newsletter_sending_list.labelSubject}</@th>
-    </@tr>
-    <#list sending_newsletter_list as sending>
-    <@tr>
-        <@td><@checkBox name='cbx_snd_${sending.id}' checked=selected_sendings_list?seq_contains(sending.id) /></@td>
-        <@td>${sending.date}</@td>
-        <@td><strong>${sending.emailSubject}</strong></@td>
-    </@tr>
-    </#list>
-</@table>
+<@listGroup>
+<#list sending_newsletter_list as sending>
+<@listGroupItem><@checkBox orientation='switch' name='cbx_snd_${sending.id}' labelClass='fs-3 ms-3' labelKey='<strong>${sending.emailSubject}</strong><br><small>#i18n{newsletter.newsletter_sending_list.labelDateSent} : ${sending.date}</small>' checked=selected_sendings_list?seq_contains(sending.id) /></@listGroupItem>
+</#list>
+</@listGroup>
+
