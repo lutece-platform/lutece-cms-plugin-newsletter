@@ -1,1 +1,46 @@
-    <!-- 1 Column Text + Button : BEGIN -->    <tr>        <td style="background-color: #ffffff;" class="darkmode-bg">            ${content_1!}        </td>    </tr>    <!-- 1 Column Text + Button : END -->    <!-- 2 Even Columns : BEGIN -->    ${content_2!}    <!-- 2 Even Columns : END -->    <!-- Clear Spacer : BEGIN -->    <tr>        <td aria-hidden="true" height="40" style="font-size: 0px; line-height: 0px;">            &nbsp;        </td>    </tr>    <!-- Clear Spacer : END -->	<#if content_3 != ''>    <!-- 1 Column Text : BEGIN -->    <tr>        <td style="background-color: #ffffff;" class="darkmode-bg">            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">                <tr>                    <td style="padding: 20px; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555;">                        ${content_3!}                        <!-- <p style="margin: 0;">Maecenas sed ante pellentesque, posuere leo id, eleifend dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent laoreet malesuada cursus. Maecenas scelerisque congue eros eu posuere. Praesent in felis ut velit pretium lobortis rhoncus ut&nbsp;erat.</p> -->                    </td>                </tr>            </table>        </td>    </tr>	</#if>    <!-- 1 Column Text : END -->    </table>    <!-- Email Body : END -->    <!-- Email Footer Text : BEGIN -->    <table class="footer" style="margin: auto;" role="presentation" border="0" width="100%" cellspacing="0" cellpadding="0" align="center">        <tbody>        <tr>           <td style="padding: 0 20px; font-family: sans-serif; font-size: 12px; line-height: 15px; text-align: center; color: #ffffff;" align="center">				<img src="${base_url}/images/poweredby.png" >			</td>		</tr>        </tbody>    </table>    <!-- Email Footer Text : END -->
+<!-- 1 Column Text + Button : BEGIN -->
+<tr>
+	<td style="background-color: #ffffff;" class="darkmode-bg">
+	   <#if content_1?? && content_1 != ''> ${content_1!}</#if>
+	</td>
+</tr>
+<!-- 1 Column Text + Button : END -->
+<!-- 2 Even Columns : BEGIN -->
+<#if content_2?? && content_2 != ''>${content_2!}</#if>
+<!-- 2 Even Columns : END -->
+<!-- Clear Spacer : BEGIN -->
+<tr>
+	<td aria-hidden="true" height="40" style="font-size: 0px; line-height: 0px;">
+		&nbsp;
+	</td>
+</tr>
+<!-- Clear Spacer : END -->
+<#if content_3?? && content_3 != ''>
+<!-- 1 Column Text : BEGIN -->
+<tr>
+	<td style="background-color: #ffffff;" class="darkmode-bg">
+		<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+			<tr>
+				<td style="padding: 20px; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555;">
+					${content_3!}
+					<!-- <p style="margin: 0;">Maecenas sed ante pellentesque, posuere leo id, eleifend dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent laoreet malesuada cursus. Maecenas scelerisque congue eros eu posuere. Praesent in felis ut velit pretium lobortis rhoncus ut&nbsp;erat.</p> -->
+				</td>
+			</tr>
+		</table>
+	</td>
+</tr>
+</#if>
+<!-- 1 Column Text : END -->
+</table>
+<!-- Email Body : END -->
+<!-- Email Footer Text : BEGIN -->
+<table class="footer" style="margin: auto;" role="presentation" border="0" width="100%" cellspacing="0" cellpadding="0" align="center">
+	<tbody>
+	<tr>
+	   <td style="padding: 0 20px; font-family: sans-serif; font-size: 12px; line-height: 15px; text-align: center; color: #ffffff;" align="center">
+			<img src="${base_url}/images/poweredby.png" >
+		</td>
+	</tr>
+	</tbody>
+</table>
+<!-- Email Footer Text : END -->
