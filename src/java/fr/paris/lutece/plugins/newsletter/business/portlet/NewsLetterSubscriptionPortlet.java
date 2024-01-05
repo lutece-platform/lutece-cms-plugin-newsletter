@@ -50,6 +50,8 @@ import org.apache.commons.lang3.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
+import static fr.paris.lutece.portal.service.admin.AdminUserService.getLocale;
+
 /**
  * This class represents the business object NewsLetterSubscriptionPortlet.
  */
@@ -225,17 +227,17 @@ public class NewsLetterSubscriptionPortlet extends Portlet
         {
             if ( StringUtils.isNotEmpty( strMailError ) )
             {
-                XmlUtil.addElement( strXml, TAG_NEWSLETTER_EMAIL_ERROR, I18nService.getLocalizedString( PROPERTY_ERROR_INVALID_MAIL, request.getLocale( ) ) );
+                XmlUtil.addElement( strXml, TAG_NEWSLETTER_EMAIL_ERROR, I18nService.getLocalizedString( PROPERTY_ERROR_INVALID_MAIL, getLocale( request ) ) );
             }
 
             if ( StringUtils.isNotEmpty( strNoChoiceError ) )
             {
                 XmlUtil.addElement( strXml, TAG_NEWSLETTER_NO_CHOICE_ERROR,
-                        I18nService.getLocalizedString( PROPERTY_ERROR_NO_CHOICE_ERROR, request.getLocale( ) ) );
+                        I18nService.getLocalizedString( PROPERTY_ERROR_NO_CHOICE_ERROR, getLocale( request ) ) );
             }
 
-            XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_BUTTON, I18nService.getLocalizedString( PROPERTY_LABEL_BUTTON, request.getLocale( ) ) );
-            XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_EMAIL, I18nService.getLocalizedString( PROPERTY_LABEL_MAIL, request.getLocale( ) ) );
+            XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_BUTTON, I18nService.getLocalizedString( PROPERTY_LABEL_BUTTON, getLocale( request ) ) );
+            XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_EMAIL, I18nService.getLocalizedString( PROPERTY_LABEL_MAIL, getLocale( request ) ) );
         }
 
         String str = addPortletTags( strXml );

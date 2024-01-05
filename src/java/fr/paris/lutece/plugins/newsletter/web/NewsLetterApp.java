@@ -57,6 +57,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static fr.paris.lutece.portal.service.admin.AdminUserService.getLocale;
+
 /**
  * This XPage handles the newsletter subscription, and the newsletter archives.
  */
@@ -164,14 +166,14 @@ public class NewsLetterApp implements XPageApplication
         if ( request.getParameter( PARAMETER_VIEW_REQUIREMENT ) != null )
         {
             // See conditional use
-            page.setTitle( I18nService.getLocalizedString( PROPERTY_PATHLABEL, request.getLocale( ) ) );
-            page.setPathLabel( I18nService.getLocalizedString( PROPERTY_PAGETITLE, request.getLocale( ) ) );
+            page.setTitle( I18nService.getLocalizedString( PROPERTY_PATHLABEL, getLocale( request ) ) );
+            page.setPathLabel( I18nService.getLocalizedString( PROPERTY_PAGETITLE, getLocale( request ) ) );
             page.setContent( getRequirement( request, plugin ) );
         }
         else
         {
-            page.setPathLabel( I18nService.getLocalizedString( PROPERTY_PATHLABEL, request.getLocale( ) ) );
-            page.setTitle( I18nService.getLocalizedString( PROPERTY_PAGETITLE, request.getLocale( ) ) );
+            page.setPathLabel( I18nService.getLocalizedString( PROPERTY_PATHLABEL, getLocale( request ) ) );
+            page.setTitle( I18nService.getLocalizedString( PROPERTY_PAGETITLE, getLocale( request ) ) );
 
             HashMap<String, Object> model = new HashMap<String, Object>( );
             Collection<NewsLetter> list = NewsLetterHome.findAll( plugin );
@@ -190,7 +192,7 @@ public class NewsLetterApp implements XPageApplication
                 _captchaService = new CaptchaSecurityService( );
                 model.put( MARK_CAPTCHA, _captchaService.getHtmlCode( ) );
             }
-            HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_XPAGE_NEWSLETTER, request.getLocale( ), model );
+            HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_XPAGE_NEWSLETTER, getLocale( request ), model );
             page.setContent( template.getHtml( ) );
         }
 
@@ -262,7 +264,7 @@ public class NewsLetterApp implements XPageApplication
     private String getRequirement( HttpServletRequest request, Plugin plugin )
     {
         Map<String, Object> model = new HashMap<String, Object>( );
-        Locale locale = request.getLocale( );
+        Locale locale = getLocale( request );
 
         NewsLetterProperties properties = NewsletterPropertiesHome.find( plugin );
         model.put( MARK_TOS, properties.getTOS( ) );
