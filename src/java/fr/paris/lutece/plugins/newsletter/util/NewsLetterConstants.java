@@ -43,6 +43,7 @@ public final class NewsLetterConstants
     public static final String CONSTANT_EMPTY_STRING = "";
     public static final String CONSTANT_SLASH = "/";
     public static final String CONSTANT_PDF_FILE_TYPE = "pdf";
+    public static final String PLUGIN_NAME = "newsletter";
 
     ///////////////////////////////////////////////////////////////////////
     // BOOKMARKS
@@ -149,6 +150,7 @@ public final class NewsLetterConstants
     public static final String MARK_CONTENT_SECTION = "content_";
     public static final String MARK_UNSUBSCRIBE_KEY = "unsubscribe_key";
     public static final String MARK_UNSUBSCRIBE_KEY_EACH = "@unsubscribe_key@";
+    public static final String TEMPLATE_NEWSLETTER_SUBSCRIPTION_LIST = "admin/plugins/newsletter/newsletter_subscription_list.html";
 
     /**
      * Private constructor

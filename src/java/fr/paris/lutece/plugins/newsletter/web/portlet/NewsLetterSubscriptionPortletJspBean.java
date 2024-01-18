@@ -46,6 +46,7 @@ import fr.paris.lutece.portal.service.message.SiteMessageException;
 import fr.paris.lutece.portal.service.message.SiteMessageService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
+import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.workgroup.AdminWorkgroupService;
 import fr.paris.lutece.portal.web.constants.Messages;
 import fr.paris.lutece.portal.web.constants.Parameters;
@@ -61,6 +62,9 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.Jsoup;
 
 /**
  * This class provides the user interface to manage newsletter subscription portlets.
@@ -101,10 +105,24 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
     {
         String strPageId = request.getParameter( PARAMETER_PAGE_ID );
         String strPortletTypeId = request.getParameter( PARAMETER_PORTLET_TYPE_ID );
-
-        HtmlTemplate template = getCreateTemplate( strPageId, strPortletTypeId );
-
-        return template.getHtml( );
+        Plugin plugin = PluginService.getPlugin( NewsLetterConstants.PLUGIN_NAME );
+        // get the list of newsletter
+        Collection<NewsLetter> colNewsLetter = NewsLetterHome.findAll( plugin );
+        colNewsLetter = AdminWorkgroupService.getAuthorizedCollection( colNewsLetter, getUser( ) );
+        Set<Integer> selectedNewsletterList = new HashSet<Integer>( );
+        HashMap<String, Object> model = new HashMap<String, Object>( );
+        model.put( MARK_NEWSLETTER_LIST, colNewsLetter );
+        model.put( MARK_SELECTED_NEWSLETTER_LIST, selectedNewsletterList );
+        HtmlTemplate templateCreate = getCreateTemplate( strPageId, strPortletTypeId );
+        HtmlTemplate templateNewsletterList = AppTemplateService.getTemplate(NewsLetterConstants.TEMPLATE_NEWSLETTER_SUBSCRIPTION_LIST, this.getLocale(), model);
+        // add the list of newsletter to the create the template
+        Document templateCreateDoc = Jsoup.parse(templateCreate.getHtml());
+        Element divListNewsletter = new Element("div");
+        divListNewsletter.attr("class", "row m-1");
+        divListNewsletter.append(templateNewsletterList.getHtml());
+        Element targetDiv = templateCreateDoc.select("#portlet-properties").first();
+        targetDiv.child(targetDiv.children().size()-1).before(divListNewsletter.outerHtml());
+        return templateCreateDoc.outerHtml();
     }
 
     /**
@@ -143,7 +161,9 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
 
         // Creating portlet
         NewsLetterSubscriptionPortletHome.getInstance( ).create( portlet );
+        // get the new portlet id
 
+        modifySubscriptions( request,  portlet );
         // Displays the page with the new Portlet
         return getPageUrl( nIdPage );
     }
@@ -176,8 +196,7 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
         Set<Integer> selectedNewsletterList = NewsLetterSubscriptionPortletHome.findSelectedNewsletters( nPortletId );
         model.put( MARK_NEWSLETTER_LIST, colNewsLetter );
         model.put( MARK_SELECTED_NEWSLETTER_LIST, selectedNewsletterList );
-
-        // Fill the specific part of the modify form
+       // Fill the specific part of the modify form
         HtmlTemplate template = getModifyTemplate( portlet, model );
 
         return template.getHtml( );
