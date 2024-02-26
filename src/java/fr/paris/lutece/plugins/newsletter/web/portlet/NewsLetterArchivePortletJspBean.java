@@ -37,11 +37,13 @@ import fr.paris.lutece.plugins.newsletter.business.SendingNewsLetter;
 import fr.paris.lutece.plugins.newsletter.business.SendingNewsLetterHome;
 import fr.paris.lutece.plugins.newsletter.business.portlet.NewsLetterArchivePortlet;
 import fr.paris.lutece.plugins.newsletter.business.portlet.NewsLetterArchivePortletHome;
+import fr.paris.lutece.plugins.newsletter.util.NewsLetterConstants;
 import fr.paris.lutece.portal.business.portlet.PortletHome;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
+import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.web.constants.Messages;
 import fr.paris.lutece.portal.web.constants.Parameters;
 import fr.paris.lutece.portal.web.portlet.PortletJspBean;
@@ -55,7 +57,9 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
-
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.Jsoup;
 /**
  * This class provides the user interface to manage newsletter archive portlets.
  */
@@ -91,10 +95,22 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
     {
         String strPageId = request.getParameter( PARAMETER_PAGE_ID );
         String strPortletTypeId = request.getParameter( PARAMETER_PORTLET_TYPE_ID );
-
-        HtmlTemplate template = getCreateTemplate( strPageId, strPortletTypeId );
-
-        return template.getHtml( );
+        Plugin plugin = PluginService.getPlugin( NewsLetterConstants.PLUGIN_NAME );
+        ArrayList<Integer> selectedSendings = new ArrayList<>();
+        List<SendingNewsLetter> sendingNewsletterList = SendingNewsLetterHome.findAllSendings( plugin );
+        HashMap<String, Object> model = new HashMap<String, Object>( );
+        model.put( MARK_SENDING_NEWSLETTER_LIST, sendingNewsletterList );
+        model.put( MARK_SELECTED_SENDING_LIST, selectedSendings );
+        HtmlTemplate templateCreate = getCreateTemplate( strPageId, strPortletTypeId );
+        HtmlTemplate templateNewsletterList = AppTemplateService.getTemplate(NewsLetterConstants.TEMPLATE_NEWSLETTER_SUBSCRIPTION_LIST, this.getLocale(), model);
+        // add the list of newsletterArchives to the create the template
+        Document templateCreateDoc = Jsoup.parse(templateCreate.getHtml());
+        Element divListNewsletter = new Element("div");
+        divListNewsletter.attr("class", "row m-1");
+        divListNewsletter.append(templateNewsletterList.getHtml());
+        Element targetDiv = templateCreateDoc.select("#portlet-properties").first();
+        targetDiv.child(targetDiv.children().size()-1).before(divListNewsletter.outerHtml());
+        return templateCreateDoc.outerHtml();
     }
 
     /**
@@ -134,6 +150,7 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
         // Creating portlet
         NewsLetterArchivePortletHome.getInstance( ).create( portlet );
 
+        modifySendings( request, portlet );
         // Displays the page with the new Portlet
         return getPageUrl( nIdPage );
     }
