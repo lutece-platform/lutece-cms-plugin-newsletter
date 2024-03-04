@@ -1,15 +1,29 @@
 <html>
 <head>
-	<title></title>
+	<title>'#i18n{newsletter.confirm_mail.boxTitle}'</title>
+	<style>
+		${css!}
+	</style>
 </head>
 <body>
-<@row>
-	<@columns>
-		<@fieldSet legend='#i18n{newsletter.confirm_mail.boxTitle}'>
-			<p>#i18n{newsletter.confirm_mail.message}</p>
-			<@link href='${confirm_url}' title='#i18n{newsletter.confirm_mail.link}' />
-		</@fieldSet>
-	</@columns>
-</@row>
+<div class="body-wrap container">
+	<h1 class="text-center masthead">${site_name!}</h1>
+	<p class="text-center">#i18n{newsletter.confirm_mail.boxTitle}</p>
+	<p class="text-center">#i18n{newsletter.confirm_mail.boxText}</p>
+	<ul>
+	<#list newsletter_list as newsletter>
+	  <li>
+	  <strong>${newsletter.getName()} : </strong>
+	  <em>${newsletter.getDescription()}</em>
+	  </li>
+    </#list>
+	</ul>
+	<p class="text-center">#i18n{newsletter.confirm_mail.message}</p>
+		<div class="text-center">
+		  <a href='${confirm_url}' title='#i18n{newsletter.confirm_mail.link}'>
+		     <strong class="button">#i18n{newsletter.confirm_mail.link}</strong>
+	      </a>
+		</div>
+</div>
 </body>
 </html>
