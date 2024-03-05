@@ -57,9 +57,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.Jsoup;
 /**
  * This class provides the user interface to manage newsletter archive portlets.
  */
@@ -83,6 +80,8 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
     // Templates
     private static final String MARK_SENDING_NEWSLETTER_LIST = "sending_newsletter_list";
     private static final String MARK_SELECTED_SENDING_LIST = "selected_sendings_list";
+    private static final String MARK_NEWSLETTER_SUBCRIPTION_LIST = "newsletter_subscription_list";
+
 
     /**
      * Returns the creation form for the portlet
@@ -98,19 +97,19 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
         Plugin plugin = PluginService.getPlugin( NewsLetterConstants.PLUGIN_NAME );
         ArrayList<Integer> selectedSendings = new ArrayList<>();
         List<SendingNewsLetter> sendingNewsletterList = SendingNewsLetterHome.findAllSendings( plugin );
-        HashMap<String, Object> model = new HashMap<String, Object>( );
-        model.put( MARK_SENDING_NEWSLETTER_LIST, sendingNewsletterList );
-        model.put( MARK_SELECTED_SENDING_LIST, selectedSendings );
         HtmlTemplate templateCreate = getCreateTemplate( strPageId, strPortletTypeId );
-        HtmlTemplate templateNewsletterList = AppTemplateService.getTemplate(NewsLetterConstants.TEMPLATE_NEWSLETTER_SUBSCRIPTION_LIST, this.getLocale(), model);
-        // add the list of newsletterArchives to the create the template
-        Document templateCreateDoc = Jsoup.parse(templateCreate.getHtml());
-        Element divListNewsletter = new Element("div");
-        divListNewsletter.attr("class", "row m-1");
-        divListNewsletter.append(templateNewsletterList.getHtml());
-        Element targetDiv = templateCreateDoc.select("#portlet-properties").first();
-        targetDiv.child(targetDiv.children().size()-1).before(divListNewsletter.outerHtml());
-        return templateCreateDoc.outerHtml();
+        if(sendingNewsletterList != null && sendingNewsletterList.size() > 0)
+        {
+            HashMap<String, Object> model = new HashMap<String, Object>( );
+            model.put( MARK_SENDING_NEWSLETTER_LIST, sendingNewsletterList );
+            model.put( MARK_SELECTED_SENDING_LIST, selectedSendings );
+            HtmlTemplate templateNewsletterList = AppTemplateService.getTemplate( NewsLetterConstants.TEMPLATE_NEWSLETTER_ARCHIVE_LIST, this.getLocale( ),
+                    model );
+            return templateCreate.getHtml( ).replace( MARK_NEWSLETTER_SUBCRIPTION_LIST, templateNewsletterList.getHtml( ) );
+        } else
+        {
+            return templateCreate.getHtml( ).replace( MARK_NEWSLETTER_SUBCRIPTION_LIST, "" );
+        }
     }
 
     /**

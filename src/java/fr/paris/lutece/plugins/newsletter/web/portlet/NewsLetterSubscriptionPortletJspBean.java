@@ -62,9 +62,6 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.Jsoup;
 
 /**
  * This class provides the user interface to manage newsletter subscription portlets.
@@ -93,6 +90,7 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
     // Templates
     private static final String MARK_NEWSLETTER_LIST = "subscribed_newsletter_list";
     private static final String MARK_SELECTED_NEWSLETTER_LIST = "selected_newsletter_list";
+    private static final String MARK_NEWSLETTER_SUBCRIPTION_LIST = "newsletter_subscription_list";
 
     /**
      * Returns the creation form for the portlet
@@ -106,23 +104,23 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
         String strPageId = request.getParameter( PARAMETER_PAGE_ID );
         String strPortletTypeId = request.getParameter( PARAMETER_PORTLET_TYPE_ID );
         Plugin plugin = PluginService.getPlugin( NewsLetterConstants.PLUGIN_NAME );
+        HtmlTemplate templateCreate = getCreateTemplate( strPageId, strPortletTypeId );
         // get the list of newsletter
         Collection<NewsLetter> colNewsLetter = NewsLetterHome.findAll( plugin );
+        if(colNewsLetter != null && colNewsLetter.size() > 0)
+        {
         colNewsLetter = AdminWorkgroupService.getAuthorizedCollection( colNewsLetter, getUser( ) );
         Set<Integer> selectedNewsletterList = new HashSet<Integer>( );
         HashMap<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_NEWSLETTER_LIST, colNewsLetter );
         model.put( MARK_SELECTED_NEWSLETTER_LIST, selectedNewsletterList );
-        HtmlTemplate templateCreate = getCreateTemplate( strPageId, strPortletTypeId );
         HtmlTemplate templateNewsletterList = AppTemplateService.getTemplate(NewsLetterConstants.TEMPLATE_NEWSLETTER_SUBSCRIPTION_LIST, this.getLocale(), model);
-        // add the list of newsletter to the create the template
-        Document templateCreateDoc = Jsoup.parse(templateCreate.getHtml());
-        Element divListNewsletter = new Element("div");
-        divListNewsletter.attr("class", "row m-1");
-        divListNewsletter.append(templateNewsletterList.getHtml());
-        Element targetDiv = templateCreateDoc.select("#portlet-properties").first();
-        targetDiv.child(targetDiv.children().size()-1).before(divListNewsletter.outerHtml());
-        return templateCreateDoc.outerHtml();
+        return templateCreate.getHtml().replace( MARK_NEWSLETTER_SUBCRIPTION_LIST, templateNewsletterList.getHtml( ) );
+        }
+        else
+        {
+            return templateCreate.getHtml();
+        }
     }
 
     /**
