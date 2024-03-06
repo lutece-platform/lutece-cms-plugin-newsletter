@@ -68,6 +68,8 @@ import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.string.StringUtil;
 import fr.paris.lutece.util.url.UrlItem;
 
+import static fr.paris.lutece.portal.service.admin.AdminUserService.getLocale;
+
 /**
  * The class responsible for the subscription and unsubscription process
  */
@@ -208,11 +210,11 @@ public final class NewsLetterRegistrationService
                 Map<Object, String> model = new HashMap<Object, String>( );
                 model.put( NewsLetterConstants.MARK_CONFIRM_URL, urlItem.getUrl( ) );
 
-                HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CONFIRM_MAIL, request.getLocale( ), model );
+                HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CONFIRM_MAIL, getLocale( request ), model );
 
                 MailService.sendMailHtml( subscriber.getEmail( ), NewsLetterConstants.PROPERTY_CONFIRM_MAIL_SENDER_NAME,
                         NewsLetterConstants.PROPERTY_CONFIRM_MAIL_SENDER_ADDRESS,
-                        I18nService.getLocalizedString( PROPERTY_MESSAGE_CONFIRM_MAIL_TITLE, request.getLocale( ) ), template.getHtml( ) );
+                        I18nService.getLocalizedString( PROPERTY_MESSAGE_CONFIRM_MAIL_TITLE, getLocale( request ) ), template.getHtml( ) );
             }
 
             String strMessage;

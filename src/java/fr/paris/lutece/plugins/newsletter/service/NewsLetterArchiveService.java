@@ -52,6 +52,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 
+import static fr.paris.lutece.portal.service.admin.AdminUserService.getLocale;
+
 /**
  * The service that renders the archived newsletters
  */
@@ -115,7 +117,7 @@ public final class NewsLetterArchiveService
         Map<String, Object> model = new HashMap<String, Object>( );
         model.put( NewsLetterConstants.MARK_SENDING, sending );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_VIEW_NEWSLETTER_ARCHIVE, request.getLocale( ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_VIEW_NEWSLETTER_ARCHIVE, getLocale( request ), model );
         template.substitute( NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE, strBaseUrl );
 
         return template.getHtml( );
