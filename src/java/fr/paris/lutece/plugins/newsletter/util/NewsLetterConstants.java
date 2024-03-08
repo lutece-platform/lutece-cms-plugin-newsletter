@@ -151,7 +151,7 @@ public final class NewsLetterConstants
     public static final String MARK_UNSUBSCRIBE_KEY = "unsubscribe_key";
     public static final String MARK_UNSUBSCRIBE_KEY_EACH = "@unsubscribe_key@";
     public static final String TEMPLATE_NEWSLETTER_SUBSCRIPTION_LIST = "admin/plugins/newsletter/newsletter_subscription_list.html";
-
+    public static final String TEMPLATE_NEWSLETTER_ARCHIVE_LIST = "admin/plugins/newsletter/newsletter_sending_list.html";
     /**
      * Private constructor
      */
