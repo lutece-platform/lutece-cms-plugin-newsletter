@@ -158,4 +158,6 @@ public final class NewsLetterConstants
     private NewsLetterConstants( )
     {
     }
+    public static final String MARK_SITE_NAME = "site_name";
+    public static final String MARK_NEWSLETTER_LIST = "newsletter_list";
 }

@@ -36,13 +36,13 @@ package fr.paris.lutece.plugins.newsletter.service;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
+import java.util.Collection;
+import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-
 import fr.paris.lutece.plugins.newsletter.business.AwaitingActivationHome;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetter;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterHome;
@@ -67,6 +67,7 @@ import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.string.StringUtil;
 import fr.paris.lutece.util.url.UrlItem;
+import static fr.paris.lutece.portal.service.portal.PortalService.getSiteName;
 
 /**
  * The class responsible for the subscription and unsubscription process
@@ -75,7 +76,9 @@ public final class NewsLetterRegistrationService
 {
     private static final String PARAMETER_TOS = "tos";
     private static final String TEMPLATE_CONFIRM_MAIL = "admin/plugins/newsletter/confirm_mail.html";
+    private static final String CSS_CONFIRM_MAIL = "admin/plugins/newsletter/confirm_mail.css";
     private static final String JSP_PORTAL = "/jsp/site/Portal.jsp";
+    private static final String MARK_CSS = "css";
 
     // properties
     private static final String PROPERTY_MESSAGE_CONFIRM_MAIL_TITLE = "newsletter.confirm_mail.title";
@@ -178,9 +181,12 @@ public final class NewsLetterRegistrationService
                 subscriber.setEmail( strEmail );
                 subscriber = SubscriberHome.create( subscriber, getPlugin( ) );
             }
-
+            Collection<NewsLetter> listNewsLetter = new ArrayList<NewsLetter>();
             for ( String strId : arrayNewsletters )
             {
+                // get the newsletter name and description
+                NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( Integer.parseInt( strId ), getPlugin( ) );
+                listNewsLetter.add(newsletter);
                 NewsLetterHome.addSubscriber( Integer.parseInt( strId ), subscriber.getId( ), !properties.isValidationActive( ),
                         new Timestamp( new Date( ).getTime( ) ), getPlugin( ) );
             }
@@ -205,11 +211,13 @@ public final class NewsLetterRegistrationService
                 NewsletterUtils.addParameters( urlItem, NewsLetterConstants.PARAMETER_NEWSLETTER_ID,
                         request.getParameterValues( NewsLetterConstants.PARAMETER_NEWSLETTER_ID ) );
 
-                Map<Object, String> model = new HashMap<Object, String>( );
+                HashMap<String, Object> model = new HashMap<String, Object>( );
+                String strCss = AppTemplateService.getTemplate( CSS_CONFIRM_MAIL, request.getLocale( ) ).getHtml( );
+                model.put( MARK_CSS, strCss );
                 model.put( NewsLetterConstants.MARK_CONFIRM_URL, urlItem.getUrl( ) );
-
+                model.put( NewsLetterConstants.MARK_NEWSLETTER_LIST, listNewsLetter);
+                model.put(NewsLetterConstants.MARK_SITE_NAME , getSiteName( ));
                 HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CONFIRM_MAIL, request.getLocale( ), model );
-
                 MailService.sendMailHtml( subscriber.getEmail( ), NewsLetterConstants.PROPERTY_CONFIRM_MAIL_SENDER_NAME,
                         NewsLetterConstants.PROPERTY_CONFIRM_MAIL_SENDER_ADDRESS,
                         I18nService.getLocalizedString( PROPERTY_MESSAGE_CONFIRM_MAIL_TITLE, request.getLocale( ) ), template.getHtml( ) );
