@@ -97,19 +97,14 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
         Plugin plugin = PluginService.getPlugin( NewsLetterConstants.PLUGIN_NAME );
         ArrayList<Integer> selectedSendings = new ArrayList<>();
         List<SendingNewsLetter> sendingNewsletterList = SendingNewsLetterHome.findAllSendings( plugin );
-        HtmlTemplate templateCreate = getCreateTemplate( strPageId, strPortletTypeId );
-        if(sendingNewsletterList != null && sendingNewsletterList.size() > 0)
-        {
             HashMap<String, Object> model = new HashMap<String, Object>( );
             model.put( MARK_SENDING_NEWSLETTER_LIST, sendingNewsletterList );
             model.put( MARK_SELECTED_SENDING_LIST, selectedSendings );
-            HtmlTemplate templateNewsletterList = AppTemplateService.getTemplate( NewsLetterConstants.TEMPLATE_NEWSLETTER_ARCHIVE_LIST, this.getLocale( ),
-                    model );
-            return templateCreate.getHtml( ).replace( MARK_NEWSLETTER_SUBCRIPTION_LIST, templateNewsletterList.getHtml( ) );
-        } else
-        {
-            return templateCreate.getHtml( ).replace( MARK_NEWSLETTER_SUBCRIPTION_LIST, "" );
-        }
+        HtmlTemplate templateNewsletterList = AppTemplateService.getTemplate( NewsLetterConstants.TEMPLATE_NEWSLETTER_ARCHIVE_LIST, this.getLocale( ),
+                model );
+        model.put( MARK_NEWSLETTER_SUBCRIPTION_LIST, templateNewsletterList.getHtml( ) );
+        HtmlTemplate templateCreate = getCreateTemplate( strPageId, strPortletTypeId , model );
+        return  templateCreate.getHtml( );
     }
 
     /**

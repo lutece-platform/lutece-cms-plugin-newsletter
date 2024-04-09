@@ -104,23 +104,17 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
         String strPageId = request.getParameter( PARAMETER_PAGE_ID );
         String strPortletTypeId = request.getParameter( PARAMETER_PORTLET_TYPE_ID );
         Plugin plugin = PluginService.getPlugin( NewsLetterConstants.PLUGIN_NAME );
-        HtmlTemplate templateCreate = getCreateTemplate( strPageId, strPortletTypeId );
         // get the list of newsletter
         Collection<NewsLetter> colNewsLetter = NewsLetterHome.findAll( plugin );
-        if(colNewsLetter != null && colNewsLetter.size() > 0)
-        {
         colNewsLetter = AdminWorkgroupService.getAuthorizedCollection( colNewsLetter, getUser( ) );
         Set<Integer> selectedNewsletterList = new HashSet<Integer>( );
         HashMap<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_NEWSLETTER_LIST, colNewsLetter );
         model.put( MARK_SELECTED_NEWSLETTER_LIST, selectedNewsletterList );
         HtmlTemplate templateNewsletterList = AppTemplateService.getTemplate(NewsLetterConstants.TEMPLATE_NEWSLETTER_SUBSCRIPTION_LIST, this.getLocale(), model);
-        return templateCreate.getHtml().replace( MARK_NEWSLETTER_SUBCRIPTION_LIST, templateNewsletterList.getHtml( ) );
-        }
-        else
-        {
-            return templateCreate.getHtml();
-        }
+        model.put( MARK_NEWSLETTER_SUBCRIPTION_LIST, templateNewsletterList.getHtml( ) );
+        HtmlTemplate templateCreate = getCreateTemplate( strPageId, strPortletTypeId , model );
+         return  templateCreate.getHtml( );
     }
 
     /**

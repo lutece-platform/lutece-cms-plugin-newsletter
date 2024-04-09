@@ -74,11 +74,13 @@
 				<#if portletType.createSpecificFormTemplate != "" ><#include portletType.createSpecificFormTemplate /></#if>
 			</@columns>
 		</@row>
-<@row class='m-1'>
-<@columns>
-  newsletter_subscription_list
-</@columns>
-</@row>
+      <#if newsletter_subscription_list??>
+        <@row class='m-1'>
+         <@columns>
+          ${newsletter_subscription_list!''}
+         </@columns>
+        </@row>
+      </#if>
 	<@row class='m-1'>
 			<@columns>
 				<@formGroup rows=2>
