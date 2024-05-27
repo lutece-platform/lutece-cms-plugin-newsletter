@@ -76,8 +76,8 @@ public final class NewsLetterRegistrationService
 {
     private static final String PARAMETER_TOS = "tos";
     private static final String TEMPLATE_CONFIRM_MAIL = "admin/plugins/newsletter/confirm_mail.html";
+    private static final String CONFIRM_MAIL_CSS = "admin/plugins/newsletter/confirm_mail_css.html";
     private static final String JSP_PORTAL = "/jsp/site/Portal.jsp";
-
     // properties
     private static final String PROPERTY_MESSAGE_CONFIRM_MAIL_TITLE = "newsletter.confirm_mail.title";
     private static final String PROPERTY_LIMIT_CONFIRM_DAYS = "newsletter.confirm.limit";
@@ -206,7 +206,11 @@ public final class NewsLetterRegistrationService
                 NewsletterUtils.addParameters( urlItem, NewsLetterConstants.PARAMETER_NEWSLETTER_ID,
                         request.getParameterValues( NewsLetterConstants.PARAMETER_NEWSLETTER_ID ) );
                 Collection<NewsLetter> listNewsLetter = NewsLetterHome.findAll( PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
+              // read css file
+                String strCss = AppTemplateService.getTemplate( CONFIRM_MAIL_CSS, getLocale( request ), null ).getHtml( );
+
                 Map<String, Object> model = new HashMap<String, Object>( );
+                model.put( NewsLetterConstants.MARK_CONFIRM_CSS,  strCss);
                 model.put( NewsLetterConstants.MARK_CONFIRM_URL, urlItem.getUrl( ) );
                 model.put( NewsLetterConstants.MARK_NEWSLETTER_LIST, listNewsLetter);
                 model.put(NewsLetterConstants.MARK_SITE_NAME , getSiteName( ));
