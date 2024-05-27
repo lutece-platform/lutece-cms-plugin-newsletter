@@ -160,4 +160,5 @@ public final class NewsLetterConstants
     }
     public static final String MARK_SITE_NAME = "site_name";
     public static final String MARK_NEWSLETTER_LIST = "newsletter_list";
+    public static final String MARK_CONFIRM_CSS = "css";
 }
