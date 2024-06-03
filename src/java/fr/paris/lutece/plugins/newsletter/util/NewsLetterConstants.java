@@ -44,6 +44,7 @@ public final class NewsLetterConstants
     public static final String CONSTANT_SLASH = "/";
     public static final String CONSTANT_PDF_FILE_TYPE = "pdf";
     public static final String PLUGIN_NAME = "newsletter";
+    public static final String PROPERTY_FileProviderStore = "newsletter.FileProviderStore";
 
     ///////////////////////////////////////////////////////////////////////
     // BOOKMARKS
@@ -63,7 +64,10 @@ public final class NewsLetterConstants
     public static final String PROPERTY_UNSUBSCRIBE_TRUE = "TRUE"; // FIXME
     public static final String PROPERTY_UNSUBSCRIBE_FALSE = "FALSE"; // FIXME
     public static final String PROPERTY_ABSOLUTE_URL_TRUE = "TRUE"; // FIXME
-
+    public static final String MARK_TEMPLATE_FILE = "template_file";
+    public static final String MARK_TEMPLATE_IMAGE = "template_image";
+    public static final String MARK_TEMPLATE_IMAGE_NAME = "template_image_name";
+    public static final String MARK_TEMPLATE_IMAGE_LIST = "template_image_list";
     public static final String MARK_SENDING = "sending";
     public static final String WEBAPP_PATH_FOR_LINKSERVICE = "@webapp_path_for_linkservice@";
 
