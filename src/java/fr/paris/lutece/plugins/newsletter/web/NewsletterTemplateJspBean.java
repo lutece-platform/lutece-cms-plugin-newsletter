@@ -41,6 +41,8 @@ import fr.paris.lutece.plugins.newsletter.service.NewsletterTemplateRemovalServi
 import fr.paris.lutece.plugins.newsletter.service.NewsletterTemplateResourceIdService;
 import fr.paris.lutece.plugins.newsletter.service.topic.NewsletterTopicService;
 import fr.paris.lutece.plugins.newsletter.util.NewsLetterConstants;
+import fr.paris.lutece.plugins.newsletter.service.NewsletterFileService;
+import fr.paris.lutece.portal.business.physicalfile.PhysicalFile;
 import fr.paris.lutece.portal.business.rbac.RBAC;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.business.workgroup.AdminWorkgroupHome;
@@ -78,6 +80,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Base64;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -187,7 +190,22 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 newsletterTemplateDisplay.put( MARK_NEWSLETTER_TEMPLATE_WORKGROUP_DESCRIPTION,
                         AdminWorkgroupHome.findByPrimaryKey( newsletterTemplate.getWorkgroup( ) ).getDescription( ) );
             }
+            String templateFileKey = newsletterTemplate.getFileKey();
+            // if template file key can be parsed as an int, it means it is not the name of the file
+            if ( templateFileKey != null && StringUtils.isNumeric( templateFileKey ) )
+            {
+                fr.paris.lutece.portal.business.file.File luteceTemplateFile = NewsletterFileService.getFileByKey( newsletterTemplate.getFileKey( ) );
+                newsletterTemplateDisplay.put( NewsLetterConstants.MARK_TEMPLATE_FILE, luteceTemplateFile.getPhysicalFile().getValue());
+                newsletterTemplateDisplay.put( NewsLetterConstants.MARK_TEMPLATE_FILE_NAME, luteceTemplateFile.getTitle());
+            }
+            String imageFileKey = newsletterTemplate.getPictureKey();
+            if(imageFileKey != null && StringUtils.isNumeric( imageFileKey ) )
+            {
+                fr.paris.lutece.portal.business.file.File luteceImageFile = NewsletterFileService.getFileByKey( newsletterTemplate.getPictureKey( ) );
+                newsletterTemplateDisplay.put( NewsLetterConstants.MARK_TEMPLATE_IMAGE, Base64.getEncoder().encodeToString(luteceImageFile.getPhysicalFile().getValue()));
+                newsletterTemplateDisplay.put( NewsLetterConstants.MARK_TEMPLATE_IMAGE_NAME, luteceImageFile.getTitle());
 
+            }
             listNewsletterTemplateDisplay.add( newsletterTemplateDisplay );
         }
 
@@ -245,11 +263,6 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
 
         try
         {
-            // initialize the paths
-            String strPathImageNewsletterTemplate = AppPathService.getPath( PROPERTY_PATH_IMAGE_NEWSLETTER_TEMPLATE );
-            String strPathFileNewsletterTemplate = AppPathService.getPath( PROPERTY_PATH_TEMPLATE )
-                    + AppPropertiesService.getProperty( NewsLetterConstants.PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE );
-
             // create the multipart request
             if ( request instanceof MultipartHttpServletRequest )
             {
@@ -276,37 +289,13 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                     return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
                 }
 
-                // create the directory if it doesn't exist
-                if ( !new File( strPathImageNewsletterTemplate ).exists( ) )
-                {
-                    File fDirectory = new File( strPathImageNewsletterTemplate );
-                    if ( !fDirectory.exists( ) )
-                    {
-                        fDirectory.mkdir( );
-                    }
-                }
-
-                File fileImage = new File( strPathImageNewsletterTemplate + File.separator + strImageFileName );
-
-                if ( fileImage.exists( ) )
-                {
-                    return AdminMessageService.getMessageUrl( request, MESSAGE_IMAGE_FILE_ALREADY_EXISTS, AdminMessage.TYPE_STOP );
-                }
-
                 int nSections = Integer.parseInt( strSectionNumber );
-
-                File fileTemplate = new File( strPathFileNewsletterTemplate + File.separator + strTemplateFileName );
-                if ( fileTemplate.exists( ) )
-                {
-                    return AdminMessageService.getMessageUrl( request, MESSAGE_FILE_ALREADY_EXISTS, AdminMessage.TYPE_STOP );
-                }
-
-                // if files are ok, save them
-                imageItem.write( fileImage );
-                newsletterTemplate.setPicture( strImageFileName );
-
-                modelItem.write( fileTemplate );
-                newsletterTemplate.setFileName( strTemplateFileName );
+                imageItem.setFieldName( strImageFileName );
+                String strTemplateFileKey = NewsletterFileService.storeFileItem( modelItem );
+                newsletterTemplate.setFileKey( strTemplateFileKey );
+                 imageItem.setFieldName( strImageFileName );
+                String strImageFileKey = NewsletterFileService.storeFileItem( imageItem );
+                newsletterTemplate.setPictureKey( strImageFileKey );
 
                 // Complete the newsLetterTemplate
                 newsletterTemplate.setDescription( strDescription );
@@ -372,11 +361,6 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
     {
         try
         {
-            // initialize the paths
-            String strPathImageNewsletterTemplate = AppPathService.getPath( PROPERTY_PATH_IMAGE_NEWSLETTER_TEMPLATE );
-            String strPathFileNewsletterTemplate = AppPathService.getPath( PROPERTY_PATH_TEMPLATE )
-                    + AppPropertiesService.getProperty( NewsLetterConstants.PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE );
-
             // create the multipart request
             if ( request instanceof MultipartHttpServletRequest )
             {
@@ -406,38 +390,29 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 int nSections = Integer.parseInt( strSectionNumber );
 
                 // Names of the old files
-                String strOldFileName = newsletterTemplate.getFileName( );
-                String strOldImageName = newsletterTemplate.getPicture( );
+                String strOldFileKey = newsletterTemplate.getFileKey( );
+                String strOldImageKey = newsletterTemplate.getPictureKey( );
 
                 FileItem imageItem = multi.getFile( PARAMETER_NEWSLETTER_TEMPLATE_NEW_PICTURE );
-                String strImageFileName = null;
+                String strImageFileKey = null;
                 File fileImage = null;
 
                 if ( ( imageItem != null ) && ( imageItem.getSize( ) != 0 ) )
                 {
-                    strImageFileName = UploadUtil.cleanFileName( imageItem.getName( ) );
+                    strImageFileKey = UploadUtil.cleanFileName( imageItem.getName( ) );
                     String strError = null;
-                    if ( !FileUtil.hasImageExtension( strImageFileName ) )
+                    if ( !FileUtil.hasImageExtension( strImageFileKey ) )
                     {
                         strError = MESSAGE_WRONG_IMAGE_EXTENSION;
                     }
 
-                    String strFullPathNewImageFileName = strPathImageNewsletterTemplate + File.separator + strImageFileName;
-                    String strFullPathOldImageFileName = strPathImageNewsletterTemplate + File.separator + strOldImageName;
-                    fileImage = new File( strFullPathNewImageFileName );
+                    fileImage = new File( strImageFileKey );
 
-                    if ( fileImage.exists( ) && !( strFullPathNewImageFileName ).equals( strFullPathOldImageFileName ) )
-                    {
-                        strError = MESSAGE_IMAGE_FILE_ALREADY_EXISTS;
-                    }
+
                     if ( strError != null )
                     {
                         return AdminMessageService.getMessageUrl( request, strError, AdminMessage.TYPE_STOP );
                     }
-
-                    // we delete the old picture
-                    File oldImageFile = new File( strFullPathOldImageFileName );
-                    oldImageFile.delete( );
                 }
 
                 FileItem modelItem = multi.getFile( PARAMETER_NEWSLETTER_TEMPLATE_NEW_FILE );
@@ -445,11 +420,9 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 if ( ( modelItem != null ) && ( modelItem.getSize( ) != 0 ) )
                 {
                     String strFileName = UploadUtil.cleanFileName( modelItem.getName( ) );
-                    String strFullPathNewFileName = strPathFileNewsletterTemplate + File.separator + strFileName;
-                    String strFullPathOldFileName = strPathFileNewsletterTemplate + File.separator + strOldFileName;
-                    File fileTemplate = new File( strFullPathNewFileName );
+                    File fileTemplate = new File( strFileName );
                     String strError = null;
-                    if ( fileTemplate.exists( ) && !( strFullPathNewFileName ).equals( strFullPathOldFileName ) )
+                    if ( fileTemplate.exists( ) && !( strFileName ).equals( strOldFileKey ) )
                     {
                         strError = MESSAGE_FILE_ALREADY_EXISTS;
                     }
@@ -461,20 +434,37 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                     {
                         return AdminMessageService.getMessageUrl( request, strError, AdminMessage.TYPE_STOP );
                     }
-
-                    // we delete the old file
-                    File oldFile = new File( strFullPathOldFileName );
-                    oldFile.delete( );
-
-                    modelItem.write( fileTemplate );
-                    newsletterTemplate.setFileName( strFileName );
+                    modelItem.setFieldName( strFileName );
+                  String templateFileKey =  NewsletterFileService.storeFileItem( modelItem );
+                    if( StringUtils.isNumeric( strOldFileKey ) )
+                    {
+                        NewsletterFileService.deleteFile( strOldFileKey );
+                    }
+                    else {
+                        String strPathFileNewsletterTemplate = AppPathService.getPath( PROPERTY_PATH_TEMPLATE )
+                                + AppPropertiesService.getProperty( NewsLetterConstants.PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE );
+                        File file = new File( strPathFileNewsletterTemplate + File.separator + newsletterTemplate.getFileKey() );
+                        file.delete( );
+                    }
+                    newsletterTemplate.setFileKey( templateFileKey );
                 }
 
                 // if the two files are ok, write them
-                if ( imageItem != null && fileImage != null && strImageFileName != null )
+                if ( imageItem != null && fileImage != null && strImageFileKey != null )
                 {
-                    imageItem.write( fileImage );
-                    newsletterTemplate.setPicture( strImageFileName );
+                    imageItem.setFieldName( strImageFileKey );
+                   String strImageKey = NewsletterFileService.storeFileItem( imageItem );
+                    if ( StringUtils.isNumeric( strOldImageKey ) )
+                    {
+                        NewsletterFileService.deleteFile( strOldImageKey );
+                    }
+                    else
+                    {
+                        String strPathFileNewsletterTemplate = AppPathService.getPath( PROPERTY_PATH_IMAGE_NEWSLETTER_TEMPLATE );
+                        File file = new File( strPathFileNewsletterTemplate + File.separator + newsletterTemplate.getPictureKey() );
+                        file.delete( );
+                    }
+                    newsletterTemplate.setPictureKey( strImageKey );
                 }
 
                 // Complete the newsLetterTemplate
@@ -499,6 +489,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
         return getHomeUrl( request );
     }
 
+
     /**
      * Builds the newsletter's templates modification page (with the modification of the file content)
      * 
@@ -512,9 +503,6 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
 
         Map<String, Object> model = new HashMap<String, Object>( );
 
-        BufferedReader fileReader = null;
-        try
-        {
             int nIdTemplate = Integer.parseInt( request.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_ID ) );
             NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome.findByPrimaryKey( nIdTemplate, getPlugin( ) );
 
@@ -526,41 +514,68 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
             }
 
             // get the file content
+
+            fr.paris.lutece.portal.business.file.File luteceTemplateFile = null;
+        String templateFileKey = newsletterTemplate.getFileKey();
+
+            // get the file content
             String strPathFileNewsletterTemplate = AppPathService.getPath( PROPERTY_PATH_TEMPLATE )
                     + AppPropertiesService.getProperty( NewsLetterConstants.PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE );
+              BufferedReader fileReader = null;
+                try
+                {
 
-            String strFileName = newsletterTemplate.getFileName( );
-            fileReader = new BufferedReader( new FileReader( strPathFileNewsletterTemplate + File.separator + strFileName ) );
+                    // if template file key can be parsed as an int, it means it is not the name of the file
+                    if ( templateFileKey != null && StringUtils.isNumeric( templateFileKey ) )
+                    {
+                        luteceTemplateFile = NewsletterFileService.getFileByKey( templateFileKey );
+                        // write the file content in a temporary file
+                        File file = File.createTempFile( "temp", ".html" );
+                        FileWriter fileWriter = new FileWriter( file );
+                        fileWriter.write( new String( luteceTemplateFile.getPhysicalFile().getValue() ) );
+                        fileWriter.close( );
+                        fileReader = new BufferedReader( new FileReader( file ) );
+                        // delete the temporary file
+                        file.delete( );
+                        String strFileName = luteceTemplateFile.getTitle( );
+                        model.put( NewsLetterConstants.MARK_TEMPLATE_FILE_NAME, strFileName );
+                        model.put( fr.paris.lutece.plugins.newsletter.util.NewsLetterConstants.MARK_TEMPLATE_FILE, luteceTemplateFile.getPhysicalFile().getValue() );
+                    }
+                    else
+                    {
+                        String strFileName = newsletterTemplate.getFileKey( );
+                        fileReader = new BufferedReader( new FileReader( strPathFileNewsletterTemplate + File.separator + strFileName ) );
+                        model.put( NewsLetterConstants.MARK_TEMPLATE_FILE_NAME, strFileName );
 
-            StringBuilder sbSource = new StringBuilder( );
-            String line = fileReader.readLine( );
+                    }
 
-            while ( line != null )
+                StringBuilder sbSource = new StringBuilder( );
+                String line = fileReader.readLine( );
+
+                while ( line != null )
+                {
+                    sbSource.append( line + CONSTANT_END_OF_LINE );
+                    line = fileReader.readLine( );
+                }
+                fileReader.close( );
+                model.put( NewsLetterConstants.MARK_TEMPLATE_SOURCE, sbSource.toString( ) );
+
+                }
+             catch( FileNotFoundException f )
             {
-                sbSource.append( line + CONSTANT_END_OF_LINE );
-                line = fileReader.readLine( );
+                AppLogService.error(  f.getMessage() );
+            }
+             catch( IOException i )
+            {
+                AppLogService.error( i.getMessage() );
+            }
+             finally
+            {
+                IOUtils.closeQuietly( fileReader );
             }
 
-            fileReader.close( );
-
             model.put( NewsLetterConstants.MARK_TEMPLATE_TYPE, buildTemplateTypeList( AdminUserService.getLocale( request ) ) );
-
-            model.put( NewsLetterConstants.MARK_TEMPLATE_SOURCE, sbSource.toString( ) );
-            model.put( NewsLetterConstants.MARK_TEMPLATE_FILE_NAME, strFileName );
             model.put( NewsLetterConstants.MARK_TEMPLATE, newsletterTemplate );
-        }
-        catch( FileNotFoundException f )
-        {
-            AppLogService.debug( f );
-        }
-        catch( IOException i )
-        {
-            AppLogService.debug( i );
-        }
-        finally
-        {
-            IOUtils.closeQuietly( fileReader );
-        }
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_NEWSLETTER_TEMPLATE_FILE, getLocale( ), model );
 
         return getAdminPage( template.getHtml( ) );
@@ -578,11 +593,6 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
         FileWriter fileWriter = null;
         try
         {
-            // initialize the paths
-            String strPathImageNewsletterTemplate = AppPathService.getPath( PROPERTY_PATH_IMAGE_NEWSLETTER_TEMPLATE );
-            String strPathFileNewsletterTemplate = AppPathService.getPath( PROPERTY_PATH_TEMPLATE )
-                    + AppPropertiesService.getProperty( NewsLetterConstants.PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE );
-
             // create the multipart request
             if ( request instanceof MultipartHttpServletRequest )
             {
@@ -611,28 +621,60 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 int nSections = Integer.parseInt( strSectionNumber );
 
                 // Names of the old files
-                String strOldFileName = newsletterTemplate.getFileName( );
-                String strOldImageName = newsletterTemplate.getPicture( );
+                String strOldFileKey = newsletterTemplate.getFileKey( );
+                String strOldImageName = newsletterTemplate.getPictureKey( );
 
                 FileItem imageItem = multi.getFile( PARAMETER_NEWSLETTER_TEMPLATE_NEW_PICTURE );
 
                 if ( ( imageItem != null ) && ( imageItem.getSize( ) != 0 ) )
                 {
                     String strFileName = UploadUtil.cleanFileName( imageItem.getName( ) );
-                    imageItem.write( new File( strPathImageNewsletterTemplate + File.separator + strFileName ) );
-                    newsletterTemplate.setPicture( strFileName );
-
+                    imageItem.setFieldName( strFileName );
+                    String strFileKey =  NewsletterFileService.storeFileItem( imageItem );
+                    newsletterTemplate.setPictureKey( strFileKey );
                     // we delete the old picture
-                    File oldImageFile = new File( strPathImageNewsletterTemplate + File.separator + strOldImageName );
-                    oldImageFile.delete( );
+                    if ( strOldImageName != null && StringUtils.isNumeric( strOldImageName ) )
+                    {
+                        NewsletterFileService.deleteFile( strOldImageName );
+                    }
+                    else
+                    {
+                        String strPathFileNewsletterTemplate = AppPathService.getPath( PROPERTY_PATH_IMAGE_NEWSLETTER_TEMPLATE );
+                        File file = new File( strPathFileNewsletterTemplate + File.separator + strOldImageName );
+                        file.delete( );
+                    }
                 }
 
                 // Writes the new content of the file.
                 String fileContent = multi.getParameter( NewsLetterConstants.PARAMETER_NEWSLETTER_TEMPLATE_SOURCE );
+                if ( strOldFileKey != null && StringUtils.isNumeric( strOldFileKey ) )
+                {
+                    fr.paris.lutece.portal.business.file.File fileToModify  = NewsletterFileService.getFileByKey( strOldFileKey );
+                    fileToModify.getPhysicalFile().setValue( fileContent.getBytes() );
+                    NewsletterFileService.deleteFile( strOldFileKey );
+                    String newFileKey =  NewsletterFileService.storeFile( fileToModify );
+                    newsletterTemplate.setFileKey( newFileKey );
 
-                fileWriter = new FileWriter( strPathFileNewsletterTemplate + File.separator + strOldFileName );
-                fileWriter.write( fileContent );
-                fileWriter.close( );
+                }
+                else {
+                    String strPathFileNewsletterTemplate = AppPathService.getPath( PROPERTY_PATH_TEMPLATE )
+                            + AppPropertiesService.getProperty( NewsLetterConstants.PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE );
+                    String strFileName = newsletterTemplate.getFileKey( );
+                    File file = new File( strPathFileNewsletterTemplate + File.separator + strFileName );
+                    fr.paris.lutece.portal.business.file.File luteceFile = new fr.paris.lutece.portal.business.file.File( );
+                    luteceFile.setTitle( strFileName );
+                    luteceFile.setSize( (int) file.length( ) );
+                    luteceFile.setMimeType( "text/html" );
+                    NewsletterFileService.storeFile( luteceFile );
+                    PhysicalFile physicalFile = new PhysicalFile( );
+                    physicalFile.setValue( fileContent.getBytes() );
+                    luteceFile.setPhysicalFile( physicalFile );
+                    String newFileKey =  NewsletterFileService.storeFile( luteceFile );
+                    newsletterTemplate.setFileKey( newFileKey );
+                    file.delete();
+
+                }
+
 
                 int nOldSectionNumber = newsletterTemplate.getSectionNumber( );
                 NewsletterService.getService( ).modifySectionNumber( nOldSectionNumber, nSections, newsletterTemplate.getId( ) );
@@ -646,10 +688,6 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 }
                 NewsLetterTemplateHome.update( newsletterTemplate, getPlugin( ) );
             }
-        }
-        catch( IOException io )
-        {
-            AppLogService.error( io.getMessage( ), io );
         }
         catch( Exception e )
         {
@@ -718,8 +756,8 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
 
-        String strFileName = newsLetterTemplate.getFileName( );
-        String strPictureName = newsLetterTemplate.getPicture( );
+        String strFileName = newsLetterTemplate.getFileKey( );
+        String strPictureName = newsLetterTemplate.getPictureKey( );
 
         // removes the file
         String strPathFileNewsletterTemplate = AppPathService.getPath( PROPERTY_PATH_TEMPLATE )

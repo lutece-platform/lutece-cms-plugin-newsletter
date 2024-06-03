@@ -157,7 +157,6 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String TEMPLATE_MANAGE_OLD_NEWSLETTERS = "admin/plugins/newsletter/manage_old_newsletters.html";
     private static final String TEMPLATE_MANAGE_NEWSLETTER_TOPICS = "admin/plugins/newsletter/manage_newsletter_topics.html";
     private static final String TEMPLATE_MODIFY_TOPIC_CONFIG = "admin/plugins/newsletter/modify_topic_config.html";
-
     // marks
     private static final String MARK_LIST_NEWSLETTER_TEMPLATES = "newsletter_templates";
     private static final String MARK_NEWSLETTER = "newsletter";
@@ -596,6 +595,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         setPageTitleProperty( PROPERTY_PAGE_TITLE_COMPOSE );
 
         String strBaseUrl = AppPathService.getProdUrl( request );
+
 
         String strPathImageTemplate = _newsletterService.getImageFolderPath( AppPathService.getBaseUrl( request ) );
 
@@ -2105,9 +2105,23 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         Collection<NewsLetterTemplate> newsletterTemplatesList = NewsLetterTemplateHome.getTemplatesCollectionByType( NewsLetterTemplate.RESOURCE_TYPE,
                 getPlugin( ) );
         newsletterTemplatesList = AdminWorkgroupService.getAuthorizedCollection( newsletterTemplatesList, user );
-
+        List<String> listNewsletterImage = new java.util.ArrayList<>( );
+        for ( int i = 0; i < newsletterTemplatesList.size(); i++ )
+        {
+            NewsLetterTemplate newsletterTemplate = (NewsLetterTemplate) newsletterTemplatesList.toArray()[i];
+            String imageFileKey = newsletterTemplate.getPictureKey();
+            if(imageFileKey != null && StringUtils.isNumeric( imageFileKey ) )
+            {
+                fr.paris.lutece.portal.business.file.File luteceImageFile = fr.paris.lutece.plugins.newsletter.service.NewsletterFileService.getFileByKey( newsletterTemplate.getPictureKey( ) );
+                listNewsletterImage.add(java.util.Base64.getEncoder().encodeToString(luteceImageFile.getPhysicalFile().getValue()));
+            }
+            else
+            {
+                listNewsletterImage.add( StringUtils.EMPTY );
+            }
+        }
         String strPathImageTemplate = _newsletterService.getImageFolderPath( AppPathService.getBaseUrl( request ) );
-
+        model.put( NewsLetterConstants.MARK_TEMPLATE_IMAGE_LIST, listNewsletterImage );
         model.put( MARK_NEWSLETTER, newsletter );
         model.put( MARK_NEWSLETTER_TABLE_MANAGER, tableManager );
         model.put( MARK_LIST_TOPIC_TYPES, refListTopicType );

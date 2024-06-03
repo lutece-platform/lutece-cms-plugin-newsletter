@@ -19,5 +19,16 @@
 	
 	<!-- Free Html Topic -->
 	<bean id="newsletter.freeHtmlTopicService" class="fr.paris.lutece.plugins.newsletter.service.topic.FreeHtmlTopicService" />
-	
+
+	<!-- File service -->
+	<bean id="defaultFileDownloadUrlService" class="fr.paris.lutece.portal.service.file.implementation.DefaultFileDownloadService" />
+	<bean id="newsletterTemplateResourceIdService" class="fr.paris.lutece.plugins.newsletter.service.NewsletterTemplateResourceIdService" />
+	<bean id="defaultFileNoRBACService" class="fr.paris.lutece.portal.service.file.implementation.DefaultFileNoRBACService" />
+	<bean id="localDatabaseFileService" class="fr.paris.lutece.portal.service.file.implementation.LocalDatabaseFileService" >
+		<constructor-arg ref="defaultFileDownloadUrlService" />
+		<constructor-arg ref="defaultFileNoRBACService" />
+		<!--<constructor-arg ref="newsletterTemplateResourceIdService" /> -->
+		<property name="default" value="false" />
+		<property name="name" value="newsletterDatabaseFileProvider" />
+	</bean>
 </beans>

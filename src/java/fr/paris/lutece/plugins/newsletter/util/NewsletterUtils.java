@@ -76,14 +76,14 @@ public final class NewsletterUtils
     {
         NewsLetterTemplate newsletterTemplate = NewsLetterTemplateHome.findByPrimaryKey( nTemplateId, plugin );
 
-        if ( ( newsletterTemplate == null ) || StringUtils.isEmpty( newsletterTemplate.getFileName( ) ) )
+        if ( ( newsletterTemplate == null ) || StringUtils.isEmpty( newsletterTemplate.getFileKey( ) ) )
         {
             return null;
         }
 
         String strTemplatePathName = AppPropertiesService.getProperty( NewsLetterConstants.PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE );
         strTemplatePathName += NewsLetterConstants.CONSTANT_SLASH;
-        strTemplatePathName += newsletterTemplate.getFileName( );
+        strTemplatePathName += newsletterTemplate.getFileKey( );
 
         return strTemplatePathName;
     }

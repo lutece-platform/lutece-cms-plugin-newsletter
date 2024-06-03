@@ -43,6 +43,7 @@ import fr.paris.lutece.plugins.newsletter.service.topic.INewsletterTopicService;
 import fr.paris.lutece.plugins.newsletter.service.topic.NewsletterTopicService;
 import fr.paris.lutece.plugins.newsletter.util.NewsLetterConstants;
 import fr.paris.lutece.plugins.newsletter.util.NewsletterUtils;
+import fr.paris.lutece.plugins.newsletter.business.NewsLetterTemplateHome;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.mail.MailService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
@@ -357,11 +358,27 @@ public class NewsletterService implements Serializable
         }
         model.put( NewsLetterConstants.MARK_BASE_URL, strBaseUrl );
 
-        HtmlTemplate templateNewsLetter = AppTemplateService.getTemplate( strTemplatePath, locale, model );
+        HtmlTemplate templateNewsLetter = new HtmlTemplate( );
+        String templateFileKey = NewsLetterTemplateHome.findByPrimaryKey( nTemplateNewsLetterId, getPlugin( ) ).getFileKey();
+           // if template file key can be parsed as an int, it means it is not the name of the file
+            if ( templateFileKey != null && StringUtils.isNumeric( templateFileKey ) )
+            {
+                fr.paris.lutece.portal.business.file.File file = NewsletterFileService.getFileByKey( templateFileKey );
+                byte[] _bTemplate = file.getPhysicalFile().getValue( );
+
+                // convert byte array to html
+                String strTemplate = new String( _bTemplate );
+                templateNewsLetter = AppTemplateService.getTemplateFromStringFtl( strTemplate, locale, model );
+
+            }
+            else
+            {
+                 templateNewsLetter = AppTemplateService.getTemplate( strTemplatePath, locale, model );
+
+            }
 
         return templateNewsLetter.getHtml( );
     }
-
     /**
      * Get the url of the image folder used by templates
      * 

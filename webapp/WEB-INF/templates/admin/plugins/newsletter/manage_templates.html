@@ -20,8 +20,19 @@
 						<@td>${templateDisplay.template.description}</@td>
 						<@td>${templateDisplay.template.topicType}</@td>
 						<@td>
-							<@img url="themes/admin/shared/plugins/newsletter/images/newsletter_templates/${templateDisplay.template.picture}" alt="#i18n{newsletter.manage_templates.columnTitleImage} ${templateDisplay.template.description}" title="#i18n{newsletter.manage_templates.columnTitleImage} ${templateDisplay.template.description}" class='thumbnail-sm' /> ${templateDisplay.template.fileName}
-						</@td>
+                      <#if templateDisplay.template_image??>
+                            <img src="data:image/jpeg;base64,${templateDisplay.template_image!}" alt="#i18n{newsletter.manage_templates.columnTitleImage}" title="#i18n{newsletter.manage_templates.columnTitleImage}" class="thumbnail-sm" />
+                        <#else>
+  							<@img url="themes/admin/shared/plugins/newsletter/images/newsletter_templates/${templateDisplay.template.pictureKey}" alt="#i18n{newsletter.manage_templates.columnTitleImage}" title="#i18n{newsletter.manage_templates.columnTitleImage}" class="thumbnail-sm" />
+                        </#if>
+
+						<#if templateDisplay.template_file??>
+						<p>${templateDisplay.template_file_name!}</p>
+						<#else>
+						<p>${templateDisplay.template.fileKey}</p>
+						</#if>
+
+                        </@td>
 						<@td>${templateDisplay.newsletter_template_workgroup_description}</@td>
 						<@td>
 							<#if templateDisplay.newsletter_template_allow_modification>

@@ -51,8 +51,8 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
     private int _nId;
     private String _strTopicType;
     private String _strDescription;
-    private String _strFileName;
-    private String _strPicture;
+    private String strFileKey;
+    private String _strPictureKey;
     private String _strWorkgroup;
     private int _nSectionNumber;
 
@@ -136,9 +136,9 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
      * 
      * @return the template file name
      */
-    public String getFileName( )
+    public String getFileKey( )
     {
-        return _strFileName;
+        return strFileKey;
     }
 
     /**
@@ -147,9 +147,9 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
      * @param strFileName
      *            the template file name
      */
-    public void setFileName( String strFileName )
+    public void setFileKey( String strFileName )
     {
-        _strFileName = ( strFileName == null ) ? EMPTY_STRING : strFileName;
+        strFileKey = ( strFileName == null ) ? EMPTY_STRING : strFileName;
     }
 
     /**
@@ -157,9 +157,9 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
      * 
      * @return the template picture
      */
-    public String getPicture( )
+    public String getPictureKey( )
     {
-        return _strPicture;
+        return _strPictureKey;
     }
 
     /**
@@ -168,9 +168,9 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
      * @param strPicture
      *            the template picture
      */
-    public void setPicture( String strPicture )
+    public void setPictureKey( String strPicture )
     {
-        _strPicture = ( strPicture == null ) ? EMPTY_STRING : strPicture;
+        _strPictureKey = ( strPicture == null ) ? EMPTY_STRING : strPicture;
     }
 
     /**

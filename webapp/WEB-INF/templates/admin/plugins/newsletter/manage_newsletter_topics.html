@@ -26,10 +26,18 @@
 								<#if newsletter_templates?has_content>
 									<#assign nIndex=1>
 									<@ul class='list-unstyled'>
+                                <#assign templateIterator=0>
 									<#list newsletter_templates as template >
-										<@li>
+                                         <@li>
 											<@radioButton labelFor='newsletter_template_id_${nIndex}' labelClass='ps-0' class='radio-image' id='newsletter_template_id_${nIndex}' name='newsletter_template_id' value='${template.id}' checked=template.id=newsletter_template_id >
-												<@img url="${img_path}/${template.picture}" class="img-fluid img-thumbnail thumbnail-sm" alt="${template.description}" title="#i18n{newsletter.compose_newsletter.newsletterTemplate} ${template.description}" />  ${template.description}
+                                            <#assign templateImage=template_image_list[templateIterator]!>
+											<#assign templateIterator=templateIterator+1>
+												<#if templateImage?? && templateImage != "">
+												<img src="data:image/jpeg;base64,${templateImage!}" class="img-fluid img-thumbnail thumbnail-sm" alt="${template.description}" title="#i18n{newsletter.compose_newsletter.newsletterTemplate}" />
+												<#else>
+												<@img url="${img_path}/${template.pictureKey}" class="img-fluid img-thumbnail thumbnail-sm" alt="${template.description}" title="#i18n{newsletter.compose_newsletter.newsletterTemplate}" />
+                                                </#if>
+                                              ${template.description}
 											</@radioButton>
 										</@li>
 										<#assign nIndex=nIndex+1>
