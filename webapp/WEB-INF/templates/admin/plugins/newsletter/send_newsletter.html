@@ -263,10 +263,10 @@
 		<tr>
 			<td style="padding: 0 20px; font-family: sans-serif; font-size: 12px; line-height: 15px; text-align: center; color: #ffffff;">
 				<#if unsubscribe?exists>
-		            <#if unsubscribe = "TRUE">
+		            <#if unsubscribe?? && unsubscribe >
 						<p>
 							#i18n{newsletter.send_newsletter.labelToUnsubscribe}<br/>
-                            <a style="color: #ffffff; text-decoration: underline;" href="${base_url}jsp/site/Portal.jsp?page=newsletter&action=confirm_unsubscribe&subscriber_email=${subscriber_email}&newsletter_id=${newsletter_id}&unsubscribe_key=${unsubscribe_key}" class="newsletter">
+                            <a style="text-decoration: underline;" href="${base_url}jsp/site/Portal.jsp?page=newsletter&action=confirm_unsubscribe&subscriber_email=${subscriber_email}&newsletter_id=${newsletter_id}&unsubscribe_key=${unsubscribe_key}" class="newsletter">
                             #i18n{newsletter.send_newsletter.labelToUnsubscribe} #i18n{newsletter.send_newsletter.labelClickHere}
                             </a>
                         </p>

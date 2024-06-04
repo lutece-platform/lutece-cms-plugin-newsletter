@@ -1718,7 +1718,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         if ( Boolean.parseBoolean( newsletter.getUnsubscribe( ) ) )
         {
-            templateNewsLetter = setHtmlTemplateEmail( newsletter, strBaseUrl, Boolean.toString( false ) );
+            templateNewsLetter = setHtmlTemplateEmail( newsletter, strBaseUrl, newsletter.getUnsubscribe() );
         }
         sending.setHtml( templateNewsLetter.getHtml( ) );
         sending.setEmailSubject( strObject );
@@ -2543,7 +2543,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     {
         Map<String, Object> sendingModel = new HashMap<String, Object>( );
         sendingModel.put( MARK_CSS, getCssContent( ) );
-        sendingModel.put( MARK_UNSUBSCRIBE, strUnsubscribe );
+        sendingModel.put( MARK_UNSUBSCRIBE, Boolean.parseBoolean( strUnsubscribe));
         sendingModel.put( MARK_NEWSLETTER_ID, newsletter.getId( ) );
         sendingModel.put( MARK_NEWSLETTER_CONTENT, newsletter.getHtml( ) );
         sendingModel.put( NewsLetterConstants.MARK_BASE_URL, strBaseUrl );
