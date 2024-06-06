@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:output method="html" indent="yes"/>
+    <xsl:output method="html" indent="yes"/>
     <xsl:param name="site-path" select="site-path" />
     <xsl:variable name="portlet-id" select="portlet/portlet-id" />
     <xsl:variable name="e-mail-error" select="portlet/newsletter-email-error" />
@@ -31,20 +31,24 @@
                     <xsl:if test="not(string(newsletter-subscription-tos)='')">
                         <label class="checkbox" for="top">
                             <input type="checkbox" name="tos" id="tos" value="1" />
-                            #i18n{newsletter.siteMessage.tos.title}								
+                            #i18n{newsletter.siteMessage.tos.title}
+							<button class="btn btn-link" type="button" data-toggle="modal" data-target="#requirementModal"> #i18n{newsletter.page_newsletter.tos.header}</button>
                         </label>
-                        <a href="#requirement" role="button" class="btn btn-link" data-toggle="modal">#i18n{newsletter.page_newsletter.requirement}</a>
-                        <div id="requirement" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="requirementLabel" aria-hidden="true">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                                <h3 id="requirementLabel">#i18n{newsletter.page_newsletter.tos.header}</h3>
-                            </div>
-                            <div class="modal-body">
-                                <xsl:value-of disable-output-escaping="yes" select="newsletter-subscription-tos-content" />
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                            </div>
+                        <div id="requirementModal" class="modal fade" tabindex="-1" aria-labelledby="requirementLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h2 id="requirementLabel">#i18n{newsletter.page_newsletter.tos.header}</h2>
+										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+									</div>
+									<div class="modal-body p-3">
+										<xsl:value-of disable-output-escaping="yes" select="newsletter-subscription-tos-content" />
+									</div>
+									<div class="modal-footer">
+										<button class="btn" data-dismiss="modal" aria-hidden="true">#i18n{portal.util.labelBack}</button>
+									</div>
+								</div>
+							</div>
                         </div>
                     </xsl:if>							
                     <xsl:if test="not(string(newsletter-subscription-captcha)='')">
