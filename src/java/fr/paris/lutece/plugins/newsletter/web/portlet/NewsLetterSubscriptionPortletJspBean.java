@@ -313,7 +313,7 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
     public static String doRegister( HttpServletRequest request ) throws SiteMessageException
     {
         SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_SUBSCRIPTION_OK_ALERT_MESSAGE, null,
-                NewsLetterConstants.PROPERTY_SUBSCRIPTION_OK_TITLE_MESSAGE, null, null, SiteMessage.TYPE_STOP );
+                NewsLetterConstants.PROPERTY_SUBSCRIPTION_OK_TITLE_MESSAGE, null, null, SiteMessage.TYPE_CONFIRMATION );
 
         return StringUtils.EMPTY;
     }
