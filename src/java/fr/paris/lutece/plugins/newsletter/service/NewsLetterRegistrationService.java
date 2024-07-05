@@ -232,7 +232,7 @@ public final class NewsLetterRegistrationService
                 strMessage = NewsLetterConstants.PROPERTY_SUBSCRIPTION_OK_ALERT_MESSAGE;
             }
 
-            SiteMessageService.setMessage( request, strMessage, NewsLetterConstants.PROPERTY_SUBSCRIPTION_OK_TITLE_MESSAGE, SiteMessage.TYPE_INFO );
+            SiteMessageService.setMessage( request, strMessage, NewsLetterConstants.PROPERTY_SUBSCRIPTION_OK_TITLE_MESSAGE, SiteMessage.TYPE_CONFIRMATION );
         }
     }
 
@@ -323,7 +323,7 @@ public final class NewsLetterRegistrationService
             AwaitingActivationHome.remove( nIdUser, nKey, getPlugin( ) );
         }
 
-        SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_SUBSCRIPTION_CONFIRM_ALERT_MESSAGE, SiteMessage.TYPE_INFO,
+        SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_SUBSCRIPTION_CONFIRM_ALERT_MESSAGE, SiteMessage.TYPE_CONFIRMATION,
                 request.getRequestURI( ), NewsLetterConstants.PROPERTY_SUBSCRIPTION_CONFIRM_TITLE_MESSAGE, null );
     }
 
