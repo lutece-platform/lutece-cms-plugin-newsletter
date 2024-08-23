@@ -1,10 +1,13 @@
 package fr.paris.lutece.plugins.newsletter.service;
 
 import java.util.List;
+
+import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.plugins.newsletter.util.NewsLetterConstants;
 import fr.paris.lutece.portal.service.file.IFileStoreServiceProvider;
 import fr.paris.lutece.portal.service.file.FileService;
+import fr.paris.lutece.portal.service.file.FileServiceException;
 import fr.paris.lutece.portal.business.file.File;
 import org.apache.commons.fileupload.FileItem;
 
@@ -14,7 +17,13 @@ public class NewsletterFileService
     {
         String fileProviderName = AppPropertiesService.getProperty( NewsLetterConstants.PROPERTY_FileProviderStore );
         IFileStoreServiceProvider fileStoreServiceProvider = FileService.getInstance( ).getFileStoreServiceProvider(fileProviderName);
-        return fileStoreServiceProvider.getFile( strFileName );
+        try {
+			return fileStoreServiceProvider.getFile( strFileName );
+		} catch (FileServiceException e) {
+			AppLogService.error(e);
+			return null;
+		}        
+
     }
 
     public static String getFileStoreProvideName(){
@@ -68,12 +77,25 @@ public class NewsletterFileService
     public static String storeFileItem( FileItem luteceFile )
     {
         IFileStoreServiceProvider fileStoreServiceProvider = FileService.getInstance( ).getFileStoreServiceProvider(getFileStoreProvideName());
-        return fileStoreServiceProvider.storeFileItem( luteceFile );
+        try 
+        {
+			return fileStoreServiceProvider.storeFileItem( luteceFile );
+		} catch (FileServiceException e) {
+			AppLogService.error(e);
+			return null;
+		}
+
     }
     public static String storeFile( File luteceFile )
     {
         IFileStoreServiceProvider fileStoreServiceProvider = FileService.getInstance( ).getFileStoreServiceProvider(getFileStoreProvideName());
-         return    fileStoreServiceProvider.storeFile( luteceFile );
-
+        try 
+        {
+			return fileStoreServiceProvider.storeFile( luteceFile );
+		} catch (FileServiceException e) {
+			AppLogService.error(e);
+			return null;
+		}
+         
     }
 }
