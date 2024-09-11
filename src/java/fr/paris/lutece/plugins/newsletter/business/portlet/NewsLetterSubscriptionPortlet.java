@@ -50,8 +50,6 @@ import org.apache.commons.lang3.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
-import static fr.paris.lutece.portal.service.admin.AdminUserService.getLocale;
-
 /**
  * This class represents the business object NewsLetterSubscriptionPortlet.
  */
@@ -87,7 +85,7 @@ public class NewsLetterSubscriptionPortlet extends Portlet
     {
         /**
          * Compare the last sending dates of two newsletters.
-         * 
+         *
          * @param obj1
          *            The first newsletter
          * @param obj2
@@ -107,7 +105,7 @@ public class NewsLetterSubscriptionPortlet extends Portlet
 
     /**
      * Sets the name of the plugin associated with this portlet.
-     * 
+     *
      * @param strPluginName
      *            The plugin name.
      */
@@ -121,7 +119,7 @@ public class NewsLetterSubscriptionPortlet extends Portlet
 
     /**
      * Returns the Xml code of the Subscriber portlet with XML heading
-     * 
+     *
      * @param request
      *            The HTTP servlet request
      * @return the Xml code of the Subscription portlet
@@ -132,15 +130,14 @@ public class NewsLetterSubscriptionPortlet extends Portlet
     }
 
     /**
-     * Returns the Xml code of the Subscuption portlet without XML heading
-     * 
+     * Returns the Xml code of the Subscription portlet without XML heading
+     *
      * @param request
      *            The HTTP servlet request
      * @return the Xml code of the Subscription portlet content
      */
     public String getXml( HttpServletRequest request )
     {
-        // List listErrors = new ArrayList( );
         String strMailError = null;
         String strNoChoiceError = null;
 
@@ -167,7 +164,7 @@ public class NewsLetterSubscriptionPortlet extends Portlet
         // We need the data of the sendings associated with this portlet.
         // However, the association table and the sendings table are on two
         // different datasources (AppConnectionService and
-        // PluginConnectionService respectively). Therefore we can't roll
+        // PluginConnectionService respectively). Therefore, we can't roll
         // everything into a single SQL request.
         // Hence the manual join and ordering below.
         // Get the ids of the newsletter sendings to display in the portlet.
