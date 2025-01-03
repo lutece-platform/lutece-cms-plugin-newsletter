@@ -18,7 +18,7 @@
 							<@inputGroupItem type='text'>
 								<@icon style='calendar' />
 							</@inputGroupItem>
-							<@input type='date' name='date_first_send' id='date_first_send' format='j/m/Y' maxlength=10 value='${newsletter_last_sent}' />
+							<@input type='date' name='date_first_send' id='date_first_send' maxlength=10 value=newsletter_last_sent />
 						</@inputGroup>
 					</@formGroup>
 					<@formGroup labelFor='newsletter_workgroup' labelKey='#i18n{newsletter.create_newsletter.labelWorkgroup}' mandatory=true  rows=2>
