@@ -23,7 +23,7 @@
 							</@formGroup>
 						</@columns>
 						<@columns sm=3>
-							<@formGroup labelFor='newsletter_sender_mail' labelKey='#i18n{newsletter.modify_newsletter.labelSenderMail}' mandatory=true rows=2>
+							<@formGroup labelFor='newsletter_sender_mail' labelKey='#i18n{newsletter.modify_newsletter.labelSenderMail}' helpKey='#i18n{newsletter.modify_newsletter.labelSenderMailHelp}' mandatory=true rows=2>
 								<@input type='text' id='newsletter_sender_mail' name='newsletter_sender_mail' maxlength=255 value='${newsletter.newsletterSenderMail}' />
 							</@formGroup>
 						</@columns>
