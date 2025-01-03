@@ -923,11 +923,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         // if not, newsletter.getDateLastSending keeps its value
         NewsLetterHome.update( newsletter, getPlugin( ) );
 
-        String strId = Integer.toString( nNewsletterId );
-        UrlItem url = new UrlItem( JSP_URL_MODIFY_NEWSLETTER );
-        url.addParameter( PARAMETER_NEWSLETTER_ID, strId );
-
-        return url.getUrl( );
+        return JSP_URL_MANAGE_NEWSLETTER;
     }
 
     /**
