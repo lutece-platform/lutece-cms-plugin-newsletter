@@ -44,6 +44,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -779,7 +780,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = new NewsLetter( );
         newsletter.setName( strNewsletterName );
 
-        Timestamp dateFirstSend = DateUtil.formatTimestamp( strDateFirstSend, getLocale( ) );
+        Date date = DateUtil.parseIsoDate( strDateFirstSend );
+        Timestamp dateFirstSend = date == null ? null : new Timestamp(date.getTime());
 
         if ( dateFirstSend != null )
         {
@@ -910,7 +912,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         newsletter.setNewsletterSenderMail( strSenderMail );
         newsletter.setNewsletterSenderName( strSenderName );
 
-        Timestamp dateLastSend = DateUtil.formatTimestamp( strDateLastSend, getLocale( ) );
+        Date date = DateUtil.parseIsoDate(strDateLastSend);
+        Timestamp dateLastSend = date == null ? null : new Timestamp(date.getTime());
 
         if ( dateLastSend != null )
         {

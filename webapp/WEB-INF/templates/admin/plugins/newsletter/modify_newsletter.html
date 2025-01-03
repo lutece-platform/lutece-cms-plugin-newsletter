@@ -28,10 +28,12 @@
 							</@formGroup>
 						</@columns>
 						<@columns sm=2>
-							<@formGroup labelFor='date_last_send' labelKey='#i18n{newsletter.modify_newsletter.dateLastSend}' helpKey='#i18n{newsletter.modify_newsletter.dateLastSend.help}' mandatory=true  rows=2>
+							<@formGroup labelFor='date_last_send' labelKey='#i18n{newsletter.modify_newsletter.dateLastSend}' mandatory=true  rows=2>
 								<@inputGroup>
-									<@inputGroupItem type='text'><@icon style='calendar' /></@inputGroupItem>
-									<@input type='text' id='date_last_send' name='date_last_send' value=date_last_sending maxlength=10 pattern='[0-9]{2}/[0-9]{2}/[0-9]{4}' />
+									<@inputGroupItem type='text'>
+										<@icon style='calendar' />
+									</@inputGroupItem>
+									<@input type='date' name='date_last_send' id='date_last_send' value=date_last_sending />
 								</@inputGroup>
 							</@formGroup>
 						</@columns>
