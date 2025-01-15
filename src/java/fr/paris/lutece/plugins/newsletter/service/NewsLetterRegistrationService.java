@@ -33,11 +33,11 @@
  */
 package fr.paris.lutece.plugins.newsletter.service;
 
+import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import  java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -189,7 +189,7 @@ public final class NewsLetterRegistrationService
             if ( properties.isValidationActive( ) )
             {
                 // generate validation key
-                Random random = new Random( );
+                SecureRandom random = new SecureRandom( );
                 int nAlea = random.nextInt( );
                 // add pair in db
                 AwaitingActivationHome.create( subscriber.getId( ), nAlea, getPlugin( ) );
