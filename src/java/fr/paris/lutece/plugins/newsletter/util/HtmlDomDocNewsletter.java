@@ -40,8 +40,8 @@ import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 
+import javax.xml.XMLConstants;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -206,18 +206,14 @@ public class HtmlDomDocNewsletter
         StringWriter writer = new StringWriter( );
         StreamResult result = new StreamResult( writer );
         TransformerFactory tf = TransformerFactory.newInstance( );
+        tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
         Transformer transformer;
 
         try
         {
             transformer = tf.newTransformer( );
             transformer.transform( domSource, result );
-        }
-        catch( TransformerConfigurationException e )
-        {
-            AppLogService.error( e.getMessage( ) );
-
-            return null;
         }
         catch( TransformerException e )
         {
@@ -226,9 +222,8 @@ public class HtmlDomDocNewsletter
             return null;
         }
 
-        String stringResult = writer.toString( );
+        return writer.toString( );
 
-        return stringResult;
     }
 
     /**
