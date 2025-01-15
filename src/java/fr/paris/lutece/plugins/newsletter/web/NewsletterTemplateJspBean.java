@@ -74,6 +74,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -444,7 +445,9 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                         String strPathFileNewsletterTemplate = AppPathService.getPath( PROPERTY_PATH_TEMPLATE )
                                 + AppPropertiesService.getProperty( NewsLetterConstants.PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE );
                         File file = new File( strPathFileNewsletterTemplate + File.separator + newsletterTemplate.getFileKey() );
-                        file.delete( );
+                        if( file.exists( ) ) {
+                            Files.delete( file.toPath( ) );
+                        }
                     }
                     newsletterTemplate.setFileKey( templateFileKey );
                 }
@@ -462,7 +465,9 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                     {
                         String strPathFileNewsletterTemplate = AppPathService.getPath( PROPERTY_PATH_IMAGE_NEWSLETTER_TEMPLATE );
                         File file = new File( strPathFileNewsletterTemplate + File.separator + newsletterTemplate.getPictureKey() );
-                        file.delete( );
+                        if( file.exists( ) ) {
+                            Files.delete( file.toPath( ) );
+                        }
                     }
                     newsletterTemplate.setPictureKey( strImageKey );
                 }
@@ -536,7 +541,9 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                         fileWriter.close( );
                         fileReader = new BufferedReader( new FileReader( file ) );
                         // delete the temporary file
-                        file.delete( );
+                        if( file.exists( ) ) {
+                            Files.delete( file.toPath( ) );
+                        }
                         String strFileName = luteceTemplateFile.getTitle( );
                         model.put( NewsLetterConstants.MARK_TEMPLATE_FILE_NAME, strFileName );
                         model.put( fr.paris.lutece.plugins.newsletter.util.NewsLetterConstants.MARK_TEMPLATE_FILE, luteceTemplateFile.getPhysicalFile().getValue() );
@@ -641,7 +648,9 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                     {
                         String strPathFileNewsletterTemplate = AppPathService.getPath( PROPERTY_PATH_IMAGE_NEWSLETTER_TEMPLATE );
                         File file = new File( strPathFileNewsletterTemplate + File.separator + strOldImageName );
-                        file.delete( );
+                        if( file.exists( ) ) {
+                            Files.delete(file.toPath());
+                        }
                     }
                 }
 
@@ -671,7 +680,9 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                     luteceFile.setPhysicalFile( physicalFile );
                     String newFileKey =  NewsletterFileService.storeFile( luteceFile );
                     newsletterTemplate.setFileKey( newFileKey );
-                    file.delete();
+                    if( file.exists( ) ) {
+                        Files.delete( file.toPath( ) );
+                    }
 
                 }
 
@@ -756,30 +767,34 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
 
-        String strFileName = newsLetterTemplate.getFileKey( );
-        String strPictureName = newsLetterTemplate.getPictureKey( );
+        try {
+            String strFileName = newsLetterTemplate.getFileKey( );
+            String strPictureName = newsLetterTemplate.getPictureKey( );
 
-        // removes the file
-        String strPathFileNewsletterTemplate = AppPathService.getPath( PROPERTY_PATH_TEMPLATE )
-                + AppPropertiesService.getProperty( NewsLetterConstants.PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE );
-        File file = new File( strPathFileNewsletterTemplate + NewsLetterConstants.CONSTANT_SLASH + strFileName );
+            // removes the file
+            String strPathFileNewsletterTemplate = AppPathService.getPath( PROPERTY_PATH_TEMPLATE )
+                    + AppPropertiesService.getProperty( NewsLetterConstants.PROPERTY_PATH_FILE_NEWSLETTER_TEMPLATE );
+            File file = new File( strPathFileNewsletterTemplate + NewsLetterConstants.CONSTANT_SLASH + strFileName );
 
-        if ( file.exists( ) )
-        {
-            file.delete( );
+            if ( file.exists( ) )
+            {
+                Files.delete( file.toPath( ) );
+            }
+
+            // removes the picture
+            String strPathImageNewsletterTemplate = AppPathService.getPath( PROPERTY_PATH_IMAGE_NEWSLETTER_TEMPLATE );
+            File picture = new File( strPathImageNewsletterTemplate + NewsLetterConstants.CONSTANT_SLASH + strPictureName );
+
+            if ( picture.exists( ) )
+            {
+                Files.delete( picture.toPath( ) );
+            }
+
+            // removes the newsletter template from the database
+            NewsLetterTemplateHome.remove( nNewsletterTemplateId, getPlugin( ) );
+        } catch (IOException e) {
+            AppLogService.error( e.getMessage( ), e );
         }
-
-        // removes the picture
-        String strPathImageNewsletterTemplate = AppPathService.getPath( PROPERTY_PATH_IMAGE_NEWSLETTER_TEMPLATE );
-        File picture = new File( strPathImageNewsletterTemplate + NewsLetterConstants.CONSTANT_SLASH + strPictureName );
-
-        if ( picture.exists( ) )
-        {
-            picture.delete( );
-        }
-
-        // removes the newsletter template from the database
-        NewsLetterTemplateHome.remove( nNewsletterTemplateId, getPlugin( ) );
 
         // loads the newsletter templates management page
         // If the operation occurred well returns on the info of the newsletter
