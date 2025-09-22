@@ -1,3 +1,6 @@
+-- liquibase formatted sql
+-- changeset newsletter:update_db_newsletter-2.1.9-3.0.0.sql
+-- preconditions onFail:MARK_RAN onError:WARN
 DROP TABLE IF EXISTS newsletter_topic;
 CREATE TABLE newsletter_topic (
   id_topic INT,

@@ -1,3 +1,6 @@
+-- liquibase formatted sql
+-- changeset newsletter:init_db_newsletter.sql
+-- preconditions onFail:MARK_RAN onError:WARN
 --
 -- Dumping data for table newsletter
 --

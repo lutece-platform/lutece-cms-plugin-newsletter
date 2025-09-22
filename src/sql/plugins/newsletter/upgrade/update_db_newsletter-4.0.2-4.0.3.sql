@@ -1,3 +1,6 @@
+-- liquibase formatted sql
+-- changeset newsletter:update_db_newsletter-4.0.2-4.0.3.sql
+-- preconditions onFail:MARK_RAN onError:WARN
 ALTER TABLE newsletter_description	CHANGE COLUMN `unsubscribe` `unsubscribe` VARCHAR(6) NULL DEFAULT 'TRUE';
 
 ALTER TABLE newsletter_template RENAME COLUMN `file_name` TO `template_file_key`;
