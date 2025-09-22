@@ -1,3 +1,6 @@
+-- liquibase formatted sql
+-- changeset newsletter:update_db_newsletter-2.0.11-2.1.1.sql
+-- preconditions onFail:MARK_RAN onError:WARN
 --
 -- Table structure for table newsletter_properties
 --

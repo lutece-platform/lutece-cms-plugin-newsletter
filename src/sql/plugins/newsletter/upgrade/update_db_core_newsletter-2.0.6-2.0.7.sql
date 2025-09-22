@@ -1,3 +1,6 @@
+-- liquibase formatted sql
+-- changeset newsletter:update_db_core_newsletter-2.0.6-2.0.7.sql
+-- preconditions onFail:MARK_RAN onError:WARN
 INSERT INTO core_portlet_type(id_portlet_type,name,url_creation,url_update,home_class,plugin_name,url_docreate,create_script,create_specific,create_specific_form,url_domodify,modify_script,modify_specific,modify_specific_form) VALUES
 ('NEWSLETTER_ARCHIVE_PORTLET','newsletter.portlet.name','plugins/newsletter/CreatePortletNewsletter.jsp','plugins/newsletter/ModifyPortletNewsletter.jsp','fr.paris.lutece.plugins.newsletter.business.portlet.NewsLetterArchivePortletHome','newsletter','plugins/newsletter/DoCreatePortletNewsletter.jsp','/admin/portlet/script_create_portlet.html','','','plugins/newsletter/DoModifyPortletNewsletter.jsp','/admin/portlet/script_modify_portlet.html','/admin/plugins/newsletter/newsletter_sending_list.html','');
 INSERT INTO core_portlet_type(id_portlet_type,name,url_creation,url_update,home_class,plugin_name,url_docreate,create_script,create_specific,create_specific_form,url_domodify,modify_script,modify_specific,modify_specific_form) VALUES
