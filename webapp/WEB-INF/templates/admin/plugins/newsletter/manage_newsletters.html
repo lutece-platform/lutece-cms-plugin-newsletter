@@ -11,9 +11,13 @@
 		<#if newsletters_list?size gt 0>
 			<@table headBody=true >
 				<@tr>
-					<@th>#i18n{newsletter.manage_newsletters.columnTitleLabel}</@th>
+					<@th hide=['xs']>#i18n{newsletter.manage_newsletters.columnTitleLabel}
+						<@sort jsp_url="jsp/admin/plugins/newsletter/ManageNewsLetter.jsp" attribute="name" />
+					</@th>
 					<@th>#i18n{newsletter.manage_newsletters.columnTitleDescription}</@th>
-					<@th>#i18n{newsletter.manage_newsletters.columnTitleLastSent}</@th>
+					<@th hide=['xs']>#i18n{newsletter.manage_newsletters.columnTitleLastSent}
+						<@sort jsp_url="jsp/admin/plugins/newsletter/ManageNewsLetter.jsp" attribute="dateLastSending" />
+					</@th>
 					<@th>#i18n{newsletter.manage_newsletters.columnTitleSubscribersCount}</@th>
 					<@th>#i18n{newsletter.manage_newsletters.columnTitleActions}</@th>
 				</@tr>

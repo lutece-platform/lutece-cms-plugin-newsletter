@@ -49,6 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -325,6 +326,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
     private static final int CONSTANT_DEFAULT_ITEM_PER_PAGE = 50;
     private static final String CONSTANT_FREEMARKER_MACRO_COLUMN_SECTION = "getSectionColumn";
+    private static final String CONSTANT_DEFAULT_NEWSLETTERS_SORT_ATTRIBUTE = "name";
 
     // constants
     private static final String JCAPTCHA_PLUGIN = "jcaptcha";
@@ -333,6 +335,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private int _nDefaultItemsPerPage;
     private String _strCurrentPageIndex;
     private String [ ] _multiSelectionValues;
+    private String _strSortedAttributeName;
+    private Boolean _bIsAscSort;
     private NewsletterService _newsletterService = NewsletterService.getService( );
     private NewsletterTopicService _newsletterTopicService = NewsletterTopicService.getService( );
 
@@ -360,6 +364,24 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         Map<String, Object> model = new HashMap<String, Object>( );
         Collection<NewsLetter> listNewsletter = NewsLetterHome.findAll( getPlugin( ) );
         listNewsletter = AdminWorkgroupService.getAuthorizedCollection( listNewsletter, getUser( ) );
+
+        // SORT
+        if ( _strSortedAttributeName == null )
+        {
+            _strSortedAttributeName = CONSTANT_DEFAULT_NEWSLETTERS_SORT_ATTRIBUTE;
+            _bIsAscSort = Boolean.TRUE;
+        }
+
+        if ( request.getParameter( Parameters.SORTED_ATTRIBUTE_NAME ) != null )
+        {
+            _strSortedAttributeName = request.getParameter( Parameters.SORTED_ATTRIBUTE_NAME );
+            _bIsAscSort = Boolean.parseBoolean( request.getParameter( Parameters.SORTED_ASC ) );
+        }
+
+        UrlItem url = new UrlItem( request.getRequestURI( ) );
+        url.addParameter( Parameters.SORTED_ATTRIBUTE_NAME, _strSortedAttributeName );
+        url.addParameter( Parameters.SORTED_ASC, Boolean.toString(_bIsAscSort) );
+        listNewsletter = listNewsletter.stream().sorted(new AttributeComparator( _strSortedAttributeName, _bIsAscSort )).collect(Collectors.toList());
 
         Collection<Map<String, Object>> listNewsletterDisplay = new ArrayList<Map<String, Object>>( );
 
@@ -401,7 +423,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         }
 
         IPaginator<Map<String, Object>> paginator = new Paginator<Map<String, Object>>( (List<Map<String, Object>>) listNewsletterDisplay, _nItemsPerPage,
-                getHomeUrl( request ), PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
+                url.getUrl( ), PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
 
         model.put( MARK_NEWSLETTER_LIST, paginator.getPageItems( ) );
         model.put( MARK_PAGINATOR, paginator );
