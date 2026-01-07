@@ -130,10 +130,11 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String PROPERTY_LIMIT_MAX_SUSCRIBER = "newsletter.limit.max";
     private static final String PROPERTY_LIMIT_MIN_SUSCRIBER = "newsletter.limit.min";
 
-    private static final String PROPERTY_REGISTER_ACTION = "newsletter.compose_newsletter.buttonRegister";
-    private static final String PROPERTY_PREPARE_SENDING_ACTION = "newsletter.compose_newsletter.buttonPrepareSending";
-    private static final String PROPERTY_CANCEL_ACTION = "newsletter.compose_newsletter.buttonCancel";
-    private static final String PROPERTY_TEST_SENDING_ACTION = "newsletter.compose_newsletter.buttonTestSending";
+    private static final String CONSTANT_ACTION_REGISTER = "register";
+    private static final String CONSTANT_ACTION_PREPARE_SENDING = "prepare_sending";
+    private static final String CONSTANT_ACTION_CANCEL = "cancel";
+    private static final String CONSTANT_ACTION_TEST_SENDING = "test_sending";
+
     private static final String PROPERTY_LIMIT_CONFIRM_DAYS = "newsletter.confirm.limit";
     private static final String PROPERTY_SELECT_MANDATORY = "newsletter.manage_archive.multiSelectError";
 
@@ -180,9 +181,6 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String MARK_NEWSLETTER_TEMPLATE_ID = "newsletter_template_id";
     private static final String MARK_PREVIEW = "newsletter_preview";
     private static final String MARK_NEWSLETTER_OBJECT = "newsletter_object";
-    private static final String MARK_REGISTER_ACTION = "register_action";
-    private static final String MARK_PREPARE_SENDING_ACTION = "prepare_sending_action";
-    private static final String MARK_CANCEL_ACTION = "cancel_action";
     private static final String MARK_DATE_LAST_SEND = "newsletter_last_sent";
     private static final String MARK_IMG_PATH = "img_path";
     private static final String MARK_LOCALE = "locale";
@@ -649,9 +647,6 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         model.put( MARK_NEWSLETTER, newsletter );
         model.put( MARK_NEWSLETTER_TEMPLATE_ID, nTemplateNewsLetterId );
-        model.put( MARK_REGISTER_ACTION, AppPropertiesService.getProperty( PROPERTY_REGISTER_ACTION ) );
-        model.put( MARK_PREPARE_SENDING_ACTION, AppPropertiesService.getProperty( PROPERTY_PREPARE_SENDING_ACTION ) );
-        model.put( MARK_CANCEL_ACTION, AppPropertiesService.getProperty( PROPERTY_CANCEL_ACTION ) );
 
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
         model.put( MARK_LOCALE, getLocale( ).getLanguage( ) );
@@ -1753,7 +1748,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
 
-        if ( !strAction.equals( I18nService.getLocalizedString( PROPERTY_CANCEL_ACTION, getLocale( ) ) ) )
+        if ( !CONSTANT_ACTION_CANCEL.equals(strAction) )
         {
             String strBaseUrl = AppPathService.getBaseUrl( request );
 
@@ -1761,21 +1756,21 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
             NewsLetterHome.update( newsletter, getPlugin( ) );
 
-            if ( strAction.equals( I18nService.getLocalizedString( PROPERTY_REGISTER_ACTION, getLocale( ) ) ) )
+            if ( CONSTANT_ACTION_REGISTER.equals( strAction ) )
             {
                 UrlItem url = new UrlItem( JSP_URL_DO_COMPOSE_NEWSLETTER );
                 url.addParameter( PARAMETER_NEWSLETTER_ID, nNewsletterId );
                 strReturn = url.getUrl( );
             }
             else
-                if ( strAction.equals( I18nService.getLocalizedString( PROPERTY_PREPARE_SENDING_ACTION, getLocale( ) ) ) )
+                if ( CONSTANT_ACTION_PREPARE_SENDING.equals(strAction) )
                 {
                     UrlItem url = new UrlItem( JSP_URL_DO_PREPARE_NEWSLETTER );
                     url.addParameter( PARAMETER_NEWSLETTER_ID, nNewsletterId );
                     strReturn = url.getUrl( );
                 }
                 else
-                    if ( strAction.equals( I18nService.getLocalizedString( PROPERTY_TEST_SENDING_ACTION, getLocale( ) ) ) )
+                    if ( CONSTANT_ACTION_TEST_SENDING.equals(strAction) )
                     {
                         UrlItem url = new UrlItem( JSP_URL_CONFIRM_TEST_NEWSLETTER );
                         url.addParameter( PARAMETER_NEWSLETTER_ID, nNewsletterId );
