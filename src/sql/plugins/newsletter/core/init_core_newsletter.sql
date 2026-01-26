@@ -19,8 +19,8 @@ INSERT INTO core_admin_role VALUES ('newsletter_manager','The role needed to acc
 -- Dumping data for table core_admin_role_resource
 --
 
-INSERT INTO core_admin_role_resource VALUES (109,'newsletter_manager','NEWSLETTER','*','*');
-INSERT INTO core_admin_role_resource VALUES (110,'newsletter_manager','NEWSLETTER_TEMPLATE','*','*');
+INSERT INTO core_admin_role_resource (role_key,resource_type,resource_id,permission) VALUES ('newsletter_manager','NEWSLETTER','*','*');
+INSERT INTO core_admin_role_resource (role_key,resource_type,resource_id,permission) VALUES ('newsletter_manager','NEWSLETTER_TEMPLATE','*','*');
 
  
 --
