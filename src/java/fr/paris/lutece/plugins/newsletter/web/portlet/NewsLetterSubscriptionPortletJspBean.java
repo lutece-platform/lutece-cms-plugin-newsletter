@@ -33,6 +33,7 @@
  */
 package fr.paris.lutece.plugins.newsletter.web.portlet;
 
+import fr.paris.lutece.api.user.User;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetter;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterHome;
 import fr.paris.lutece.plugins.newsletter.business.portlet.NewsLetterSubscriptionPortlet;
@@ -59,7 +60,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -106,7 +107,7 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
         Plugin plugin = PluginService.getPlugin( NewsLetterConstants.PLUGIN_NAME );
         // get the list of newsletter
         Collection<NewsLetter> colNewsLetter = NewsLetterHome.findAll( plugin );
-        colNewsLetter = AdminWorkgroupService.getAuthorizedCollection( colNewsLetter, getUser( ) );
+        colNewsLetter = AdminWorkgroupService.getAuthorizedCollection( colNewsLetter, (User) getUser( ) );
         Set<Integer> selectedNewsletterList = new HashSet<Integer>( );
         HashMap<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_NEWSLETTER_LIST, colNewsLetter );
@@ -183,7 +184,7 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
         Plugin plugin = PluginService.getPlugin( portlet.getPluginName( ) );
 
         Collection<NewsLetter> colNewsLetter = NewsLetterHome.findAll( plugin );
-        colNewsLetter = AdminWorkgroupService.getAuthorizedCollection( colNewsLetter, getUser( ) );
+        colNewsLetter = AdminWorkgroupService.getAuthorizedCollection( colNewsLetter, (User) getUser( ) );
 
         Set<Integer> selectedNewsletterList = NewsLetterSubscriptionPortletHome.findSelectedNewsletters( nPortletId );
         model.put( MARK_NEWSLETTER_LIST, colNewsLetter );
@@ -259,8 +260,6 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
         // Build the set of the subscriptions that were checked in the page
         Set<Integer> checkedSubscriptions = new HashSet<Integer>( );
 
-        // Read all request parameters
-        @SuppressWarnings( "unchecked" )
         Enumeration<String> enumParameterNames = request.getParameterNames( );
 
         while ( enumParameterNames.hasMoreElements( ) )
@@ -274,7 +273,7 @@ public class NewsLetterSubscriptionPortletJspBean extends PortletJspBean
                 String strSubscriptionId = strParameterName.substring( PREFIX_CHECKBOX_NAME.length( ) );
 
                 // Add the Integer object to the set
-                checkedSubscriptions.add( new Integer( strSubscriptionId ) );
+                checkedSubscriptions.add( Integer.valueOf( strSubscriptionId ) );
             }
         }
 

@@ -34,7 +34,7 @@
 package fr.paris.lutece.plugins.newsletter.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+import jakarta.enterprise.inject.spi.CDI;
 
 /**
  *
@@ -43,7 +43,7 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 public final class AwaitingActivationHome
 {
     // Static variable pointed at the DAO instance
-    private static IAwaitingActivationDAO _dao = SpringContextService.getBean( "newsletter.awaitingActivationDAO" );
+    private static IAwaitingActivationDAO _dao = CDI.current( ).select( IAwaitingActivationDAO.class ).get( );
 
     /**
      * Private constructor - this class need not be instantiated

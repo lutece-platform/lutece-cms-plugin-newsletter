@@ -40,12 +40,13 @@ import fr.paris.lutece.plugins.newsletter.business.NewsletterPropertiesHome;
 import fr.paris.lutece.plugins.newsletter.service.NewsLetterArchiveService;
 import fr.paris.lutece.plugins.newsletter.service.NewsLetterRegistrationService;
 import fr.paris.lutece.plugins.newsletter.util.NewsLetterConstants;
-import fr.paris.lutece.portal.service.captcha.CaptchaSecurityService;
+import fr.paris.lutece.portal.service.captcha.ICaptchaService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.message.SiteMessageException;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.portal.service.util.BeanUtils;
 import fr.paris.lutece.portal.web.xpages.XPage;
 import fr.paris.lutece.portal.web.xpages.XPageApplication;
 import fr.paris.lutece.util.html.HtmlTemplate;
@@ -55,15 +56,24 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
+
 
 import static fr.paris.lutece.portal.service.admin.AdminUserService.getLocale;
 
 /**
  * This XPage handles the newsletter subscription, and the newsletter archives.
  */
+@SessionScoped
+@Named( "newsletter.xpage.newsletter" )
 public class NewsLetterApp implements XPageApplication
 {
+    private static final long serialVersionUID = 1L;
+
     // Templates used to generate the HTML code
     private static final String TEMPLATE_XPAGE_NEWSLETTER = "skin/plugins/newsletter/page_newsletter.html";
     private static final String TEMPLATE_XPAGE_TOS = "skin/plugins/newsletter/tos.html";
@@ -86,11 +96,19 @@ public class NewsLetterApp implements XPageApplication
     // Constants
     private static final String JCAPTCHA_PLUGIN = "jcaptcha";
 
-    // Captcha
-    private CaptchaSecurityService _captchaService;
+    @Inject
+    @Named( BeanUtils.BEAN_CAPTCHA_SERVICE )
+    private transient Instance<ICaptchaService> _captchaService;
+
+    @Inject
+    private transient NewsLetterRegistrationService _registrationService;
+
+    @Inject
+    private transient NewsLetterArchiveService _archiveService;
 
     /**
-     * 
+     * Init method kept for backward compatibility with the XPageApplication contract.
+     *
      * @param request
      *            The HTTP request
      * @param plugin
@@ -102,7 +120,7 @@ public class NewsLetterApp implements XPageApplication
 
     /**
      * Returns the Newsletter XPage content depending on the request parameters and the current mode.
-     * 
+     *
      * @param request
      *            The HTTP request.
      * @param nMode
@@ -113,12 +131,11 @@ public class NewsLetterApp implements XPageApplication
      * @throws fr.paris.lutece.portal.service.message.SiteMessageException
      *             Throws a message interpreted by the front office
      */
+    @Override
     public XPage getPage( HttpServletRequest request, int nMode, Plugin plugin ) throws SiteMessageException
     {
         String strAction = request.getParameter( NewsLetterConstants.PARAMETER_ACTION );
         init( request, plugin );
-
-        XPage resultPage = null;
 
         if ( strAction == null )
         {
@@ -127,32 +144,30 @@ public class NewsLetterApp implements XPageApplication
 
         if ( strAction.equals( NewsLetterConstants.ACTION_REGISTER ) )
         {
-            NewsLetterRegistrationService.getInstance( ).doSubscription( request );
+            _registrationService.doSubscription( request );
         }
         else
             if ( strAction.equals( NewsLetterConstants.ACTION_CONFIRM_UNSUBSCRIBE ) )
             {
-                NewsLetterRegistrationService.getInstance( ).doConfirmUnSubscribe( request );
+                _registrationService.doConfirmUnSubscribe( request );
             }
             else
                 if ( strAction.equals( NewsLetterConstants.ACTION_UNSUBSCRIBE ) )
                 {
-                    NewsLetterRegistrationService.getInstance( ).doUnSubscribe( request );
+                    _registrationService.doUnSubscribe( request );
                 }
                 else
                     if ( strAction.equals( NewsLetterConstants.ACTION_CONFIRM_SUBSCRIBE ) )
                     {
-                        NewsLetterRegistrationService.getInstance( ).doConfirmSubscribe( request );
+                        _registrationService.doConfirmSubscribe( request );
                     }
 
-        resultPage = getPage( request, plugin );
-
-        return resultPage;
+        return getPage( request, plugin );
     }
 
     /**
      * Get the main page of this app.
-     * 
+     *
      * @param request
      *            The request
      * @param plugin
@@ -165,7 +180,6 @@ public class NewsLetterApp implements XPageApplication
 
         if ( request.getParameter( PARAMETER_VIEW_REQUIREMENT ) != null )
         {
-            // See conditional use
             page.setTitle( I18nService.getLocalizedString( PROPERTY_PATHLABEL, getLocale( request ) ) );
             page.setPathLabel( I18nService.getLocalizedString( PROPERTY_PAGETITLE, getLocale( request ) ) );
             page.setContent( getRequirement( request, plugin ) );
@@ -175,22 +189,20 @@ public class NewsLetterApp implements XPageApplication
             page.setPathLabel( I18nService.getLocalizedString( PROPERTY_PATHLABEL, getLocale( request ) ) );
             page.setTitle( I18nService.getLocalizedString( PROPERTY_PAGETITLE, getLocale( request ) ) );
 
-            HashMap<String, Object> model = new HashMap<String, Object>( );
+            Map<String, Object> model = new HashMap<>( );
             Collection<NewsLetter> list = NewsLetterHome.findAll( plugin );
             NewsLetterProperties properties = NewsletterPropertiesHome.find( plugin );
             model.put( MARK_PROPERTIES, properties );
             model.put( MARK_NEWSLETTERS_LIST, list );
             model.put( MARK_TOS, properties.getTOS( ) );
-
             model.put( MARK_PLUGIN, plugin );
 
             boolean bIsCaptchaEnabled = PluginService.isPluginEnable( JCAPTCHA_PLUGIN );
             model.put( MARK_IS_ACTIVE_CAPTCHA, bIsCaptchaEnabled );
 
-            if ( bIsCaptchaEnabled )
+            if ( bIsCaptchaEnabled && _captchaService.isResolvable( ) )
             {
-                _captchaService = new CaptchaSecurityService( );
-                model.put( MARK_CAPTCHA, _captchaService.getHtmlCode( ) );
+                model.put( MARK_CAPTCHA, _captchaService.get( ).getHtmlCode( ) );
             }
             HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_XPAGE_NEWSLETTER, getLocale( request ), model );
             page.setContent( template.getHtml( ) );
@@ -201,7 +213,7 @@ public class NewsLetterApp implements XPageApplication
 
     /**
      * Returns the Newsletter archive XPage content depending on the request parameters and the current mode.
-     * 
+     *
      * @return The page content.
      * @param request
      *            The HTTP request.
@@ -210,12 +222,12 @@ public class NewsLetterApp implements XPageApplication
      */
     public String getShowArchivePage( HttpServletRequest request ) throws SiteMessageException
     {
-        return NewsLetterArchiveService.getInstance( ).getShowArchivePage( request );
+        return _archiveService.getShowArchivePage( request );
     }
 
     /**
      * Performs the subscription process
-     * 
+     *
      * @param request
      *            The Http request
      * @throws fr.paris.lutece.portal.service.message.SiteMessageException
@@ -223,12 +235,12 @@ public class NewsLetterApp implements XPageApplication
      */
     public void doSubscription( HttpServletRequest request ) throws SiteMessageException
     {
-        NewsLetterRegistrationService.getInstance( ).doSubscription( request );
+        _registrationService.doSubscription( request );
     }
 
     /**
      * Performs unsubscription process
-     * 
+     *
      * @param request
      *            The http request
      * @throws fr.paris.lutece.portal.service.message.SiteMessageException
@@ -236,12 +248,12 @@ public class NewsLetterApp implements XPageApplication
      */
     public void doUnSubscribe( HttpServletRequest request ) throws SiteMessageException
     {
-        NewsLetterRegistrationService.getInstance( ).doUnSubscribe( request );
+        _registrationService.doUnSubscribe( request );
     }
 
     /**
      * Confirm a subscribtion
-     * 
+     *
      * @param request
      *            The request
      * @throws SiteMessageException
@@ -249,21 +261,21 @@ public class NewsLetterApp implements XPageApplication
      */
     public void doConfirmSubscribe( HttpServletRequest request ) throws SiteMessageException
     {
-        NewsLetterRegistrationService.getInstance( ).doConfirmSubscribe( request );
+        _registrationService.doConfirmSubscribe( request );
     }
 
     /**
      * Return the newsletter requirement
-     * 
+     *
      * @param request
      *            The HTTP request
      * @param plugin
      *            The Plugin
      * @return the form recap
-     **/
+     */
     private String getRequirement( HttpServletRequest request, Plugin plugin )
     {
-        Map<String, Object> model = new HashMap<String, Object>( );
+        Map<String, Object> model = new HashMap<>( );
         Locale locale = getLocale( request );
 
         NewsLetterProperties properties = NewsletterPropertiesHome.find( plugin );

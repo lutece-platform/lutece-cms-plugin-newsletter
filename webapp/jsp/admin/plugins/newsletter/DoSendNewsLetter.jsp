@@ -1,9 +1,5 @@
 <%@ page errorPage="../../ErrorPage.jsp" %>
+<%@ page import="fr.paris.lutece.plugins.newsletter.web.NewsletterJspBean" %>
 
-<jsp:useBean id="newsletter" scope="session" class="fr.paris.lutece.plugins.newsletter.web.NewsletterJspBean" />
-
-<% newsletter.init( request, newsletter.RIGHT_NEWSLETTER_MANAGEMENT ); %>
-<%
-String strUrl = newsletter.doSendNewsLetter( request );
-response.sendRedirect( strUrl );
-%>
+${ newsletterJspBean.init( pageContext.request, NewsletterJspBean.RIGHT_NEWSLETTER_MANAGEMENT ) }
+${ pageContext.response.sendRedirect( newsletterJspBean.doSendNewsLetter( pageContext.request ) ) }

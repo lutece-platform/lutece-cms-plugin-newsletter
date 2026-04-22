@@ -48,8 +48,10 @@ import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.mail.MailService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
@@ -71,6 +73,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -78,8 +81,9 @@ import au.com.bytecode.opencsv.CSVWriter;
 
 /**
  * The newsletter service
- * 
+ *
  */
+@ApplicationScoped
 public class NewsletterService implements Serializable
 {
     /**
@@ -97,21 +101,14 @@ public class NewsletterService implements Serializable
     private static final String PROPERTY_PATH_IMAGE_NEWSLETTER_TEMPLATE = "newsletter.path.image.newsletter.template";
     private static final String PROPERTY_NO_SECURED_IMG_FOLDER = "newsletter.nosecured.img.folder.name";
     private static final String PROPERTY_WEBAPP_PATH = "newsletter.nosecured.webapp.path";
-    private static final String PROPERTY_WEBAPP_URL = "newsletter.nosecured.webapp.url";
     private static final String PROPERTY_NO_SECURED_IMG_OPTION = "newsletter.nosecured.img.option";
     private static final String PROPERTY_UNSUBSCRIBE_KEY_ENCRYPTION_ALGORITHM = "newsletter.unsubscribe.key.encryptionAlgorithm";
 
-    private NewsletterTopicService _newsletterTopicService;
+    @Inject
+    private transient NewsletterTopicService _newsletterTopicService;
 
-    /**
-     * Returns the instance of the singleton
-     * 
-     * @return The instance of the singleton
-     */
-    public static NewsletterService getService( )
-    {
-        return SpringContextService.getBean( BEAN_NAME );
-    }
+    @Inject
+    private transient Instance<INewsletterTopicService> _topicServices;
 
     /**
      * Send the newsletter to a list of subscribers
@@ -422,16 +419,6 @@ public class NewsletterService implements Serializable
     }
 
     /**
-     * Get the absolute url to the unsecured webapp.
-     * 
-     * @return The absolute url to the unsecured webapp, or the base url of this webapp if none is defined
-     */
-    public String getUnsecuredWebappUrl( )
-    {
-        return AppPropertiesService.getProperty( PROPERTY_WEBAPP_URL, AppPathService.getBaseUrl( ) );
-    }
-
-    /**
      * Get the unsubscription key associated with the given email address.
      * 
      * @param strEmail
@@ -496,15 +483,11 @@ public class NewsletterService implements Serializable
 
     /**
      * Get the NewsletterTopicService instance of this service
-     * 
+     *
      * @return The NewsletterTopicService instance of this service
      */
     private NewsletterTopicService getNewsletterTopicService( )
     {
-        if ( _newsletterTopicService == null )
-        {
-            _newsletterTopicService = NewsletterTopicService.getService( );
-        }
         return _newsletterTopicService;
     }
 
@@ -528,9 +511,9 @@ public class NewsletterService implements Serializable
         topicList.stream( ).forEach( ( NewsletterTopic nt ) -> {
             int oldTopicId = nt.getId( );
             nt.setIdNewsletter( newsletter.getId( ) );
-            for ( INewsletterTopicService service : SpringContextService.getBeansOfType( INewsletterTopicService.class ) )
+            for ( INewsletterTopicService service : _topicServices )
             {
-                if ( StringUtils.equals( service.getNewsletterTopicTypeCode( ), nt.getTopicTypeCode( ) ) )
+                if ( Objects.equals( service.getNewsletterTopicTypeCode( ), nt.getTopicTypeCode( ) ) )
                 {
                     NewsletterTopicHome.insertNewsletterTopic( nt, getPlugin( ) );
                     service.copyNewsletterTopic( oldTopicId, nt, user, locale );

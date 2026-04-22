@@ -17,6 +17,10 @@
  *     contributors may be used to endorse or promote products derived from
  *     this software without specific prior written permission.
  *
+ *  Neither the name of 'Mairie de Paris' nor 'Lutece' nor the names of its
+ *  contributors may be used to endorse or promote products derived from
+ *  this software without specific prior written permission.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,23 +37,34 @@
  */
 package fr.paris.lutece.plugins.newsletter.service;
 
-import fr.paris.lutece.portal.service.daemon.Daemon;
+import fr.paris.lutece.plugins.newsletter.business.NewsletterTemplateRemovalListener;
+import fr.paris.lutece.portal.service.util.RemovalListenerService;
 
-import jakarta.enterprise.inject.spi.CDI;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Named;
 
 /**
- * Daemon that purges unconfirmed newsletter subscribers. This class is
- * reflection-instantiated by the Lutece daemon framework and therefore is not
- * CDI-managed; dependencies are resolved at run time via CDI lookup.
+ * CDI producer for the newsletter template removal service. Replaces the
+ * Spring XML bean {@code newsletter.newsletterTemplateRemovalService}.
  */
-public class SubscriberCleaningDaemon extends Daemon
+@ApplicationScoped
+public class NewsletterTemplateRemovalServiceProducer
 {
     /**
-     * Runs the cleaning process by delegating to the registration service.
+     * Produces the {@link RemovalListenerService} used to check whether a
+     * newsletter template can be removed. Registers the newsletter template
+     * removal listener on creation.
+     *
+     * @return The removal listener service instance with listeners registered
      */
-    public void run( )
+    @Produces
+    @ApplicationScoped
+    @Named( "newsletter.newsletterTemplateRemovalService" )
+    public RemovalListenerService produceNewsletterTemplateRemovalService( )
     {
-        NewsLetterRegistrationService service = CDI.current( ).select( NewsLetterRegistrationService.class ).get( );
-        setLastRunLogs( service.doRemoveOldUnconfirmed( ) );
+        RemovalListenerService service = new RemovalListenerService( );
+        service.registerListener( new NewsletterTemplateRemovalListener( ) );
+        return service;
     }
 }

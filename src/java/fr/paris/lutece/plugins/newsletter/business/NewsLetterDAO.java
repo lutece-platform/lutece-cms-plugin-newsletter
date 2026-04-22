@@ -38,6 +38,8 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.sql.DAOUtil;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Named;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -46,9 +48,10 @@ import java.util.Collection;
 /**
  * This class provides Data Access methods for NewsLetter objects
  */
-public final class NewsLetterDAO implements INewsLetterDAO
+@ApplicationScoped
+@Named( "newsletter.newsLetterDAO" )
+public class NewsLetterDAO implements INewsLetterDAO
 {
-    // Constants
     private static final String SQL_QUERY_SELECT = "SELECT name, description, date_last_send, html, id_newsletter_template, workgroup_key, unsubscribe, sender_mail, sender_name, test_recipients, test_subject, nb_sections  FROM newsletter_description WHERE id_newsletter = ? ";
     private static final String SQL_QUERY_SELECT_ALL = "SELECT id_newsletter , name, description, date_last_send, html, id_newsletter_template, workgroup_key, test_recipients , sender_mail, sender_name, test_subject, nb_sections FROM newsletter_description ";
     private static final String SQL_QUERY_SELECT_ALL_ID = "SELECT id_newsletter, name FROM newsletter_description ";
@@ -71,9 +74,6 @@ public final class NewsLetterDAO implements INewsLetterDAO
 
     private static final String CONSTANT_PERCENT = "%";
 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    // Access methods to data
-
     /**
      * {@inheritDoc}
      */
@@ -83,25 +83,25 @@ public final class NewsLetterDAO implements INewsLetterDAO
         int nNewPrimaryKey = newPrimaryKey( plugin );
         newsLetter.setId( nNewPrimaryKey );
 
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
+        {
+            int nIndex = 1;
+            daoUtil.setInt( nIndex++, newsLetter.getId( ) );
+            daoUtil.setString( nIndex++, newsLetter.getName( ) );
+            daoUtil.setString( nIndex++, newsLetter.getDescription( ) );
+            daoUtil.setTimestamp( nIndex++, newsLetter.getDateLastSending( ) );
+            daoUtil.setString( nIndex++, newsLetter.getHtml( ) );
+            daoUtil.setInt( nIndex++, newsLetter.getNewsLetterTemplateId( ) );
+            daoUtil.setString( nIndex++, newsLetter.getWorkgroup( ) );
+            daoUtil.setString( nIndex++, newsLetter.getUnsubscribe( ) );
+            daoUtil.setString( nIndex++, newsLetter.getNewsletterSenderMail( ) );
+            daoUtil.setString( nIndex++, newsLetter.getNewsletterSenderName( ) );
+            daoUtil.setString( nIndex++, newsLetter.getTestRecipients( ) );
+            daoUtil.setString( nIndex++, newsLetter.getTestSubject( ) );
+            daoUtil.setInt( nIndex, newsLetter.getNbSections( ) );
 
-        int nIndex = 1;
-        daoUtil.setInt( nIndex++, newsLetter.getId( ) );
-        daoUtil.setString( nIndex++, newsLetter.getName( ) );
-        daoUtil.setString( nIndex++, newsLetter.getDescription( ) );
-        daoUtil.setTimestamp( nIndex++, newsLetter.getDateLastSending( ) );
-        daoUtil.setString( nIndex++, newsLetter.getHtml( ) );
-        daoUtil.setInt( nIndex++, newsLetter.getNewsLetterTemplateId( ) );
-        daoUtil.setString( nIndex++, newsLetter.getWorkgroup( ) );
-        daoUtil.setString( nIndex++, newsLetter.getUnsubscribe( ) );
-        daoUtil.setString( nIndex++, newsLetter.getNewsletterSenderMail( ) );
-        daoUtil.setString( nIndex++, newsLetter.getNewsletterSenderName( ) );
-        daoUtil.setString( nIndex++, newsLetter.getTestRecipients( ) );
-        daoUtil.setString( nIndex++, newsLetter.getTestSubject( ) );
-        daoUtil.setInt( nIndex, newsLetter.getNbSections( ) );
-
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -110,11 +110,11 @@ public final class NewsLetterDAO implements INewsLetterDAO
     @Override
     public void delete( int nNewsLetterId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1, nNewsLetterId );
-
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+        {
+            daoUtil.setInt( 1, nNewsLetterId );
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -125,29 +125,29 @@ public final class NewsLetterDAO implements INewsLetterDAO
     {
         NewsLetter newsLetter = new NewsLetter( );
 
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
-        daoUtil.setInt( 1, nNewsLetterId );
-        daoUtil.executeQuery( );
-
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
         {
-            int nIndex = 1;
-            newsLetter.setId( nNewsLetterId );
-            newsLetter.setName( daoUtil.getString( nIndex++ ) );
-            newsLetter.setDescription( daoUtil.getString( nIndex++ ) );
-            newsLetter.setDateLastSending( daoUtil.getTimestamp( nIndex++ ) );
-            newsLetter.setHtml( daoUtil.getString( nIndex++ ) );
-            newsLetter.setNewsLetterTemplateId( daoUtil.getInt( nIndex++ ) );
-            newsLetter.setWorkgroup( daoUtil.getString( nIndex++ ) );
-            newsLetter.setUnsubscribe( daoUtil.getString( nIndex++ ) );
-            newsLetter.setNewsletterSenderMail( daoUtil.getString( nIndex++ ) );
-            newsLetter.setNewsletterSenderName( daoUtil.getString( nIndex++ ) );
-            newsLetter.setTestRecipients( daoUtil.getString( nIndex++ ) );
-            newsLetter.setTestSubject( daoUtil.getString( nIndex++ ) );
-            newsLetter.setNbSections( daoUtil.getInt( nIndex ) );
-        }
+            daoUtil.setInt( 1, nNewsLetterId );
+            daoUtil.executeQuery( );
 
-        daoUtil.free( );
+            if ( daoUtil.next( ) )
+            {
+                int nIndex = 1;
+                newsLetter.setId( nNewsLetterId );
+                newsLetter.setName( daoUtil.getString( nIndex++ ) );
+                newsLetter.setDescription( daoUtil.getString( nIndex++ ) );
+                newsLetter.setDateLastSending( daoUtil.getTimestamp( nIndex++ ) );
+                newsLetter.setHtml( daoUtil.getString( nIndex++ ) );
+                newsLetter.setNewsLetterTemplateId( daoUtil.getInt( nIndex++ ) );
+                newsLetter.setWorkgroup( daoUtil.getString( nIndex++ ) );
+                newsLetter.setUnsubscribe( daoUtil.getString( nIndex++ ) );
+                newsLetter.setNewsletterSenderMail( daoUtil.getString( nIndex++ ) );
+                newsLetter.setNewsletterSenderName( daoUtil.getString( nIndex++ ) );
+                newsLetter.setTestRecipients( daoUtil.getString( nIndex++ ) );
+                newsLetter.setTestSubject( daoUtil.getString( nIndex++ ) );
+                newsLetter.setNbSections( daoUtil.getInt( nIndex ) );
+            }
+        }
 
         return newsLetter;
     }
@@ -158,24 +158,25 @@ public final class NewsLetterDAO implements INewsLetterDAO
     @Override
     public void store( NewsLetter newsLetter, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
-        int nIndex = 1;
-        daoUtil.setString( nIndex++, newsLetter.getName( ) );
-        daoUtil.setString( nIndex++, newsLetter.getDescription( ) );
-        daoUtil.setTimestamp( nIndex++, newsLetter.getDateLastSending( ) );
-        daoUtil.setString( nIndex++, newsLetter.getHtml( ) );
-        daoUtil.setInt( nIndex++, newsLetter.getNewsLetterTemplateId( ) );
-        daoUtil.setString( nIndex++, newsLetter.getWorkgroup( ) );
-        daoUtil.setString( nIndex++, newsLetter.getUnsubscribe( ) );
-        daoUtil.setString( nIndex++, newsLetter.getNewsletterSenderMail( ) );
-        daoUtil.setString( nIndex++, newsLetter.getNewsletterSenderName( ) );
-        daoUtil.setString( nIndex++, newsLetter.getTestRecipients( ) );
-        daoUtil.setString( nIndex++, newsLetter.getTestSubject( ) );
-        daoUtil.setInt( nIndex++, newsLetter.getNbSections( ) );
-        daoUtil.setInt( nIndex, newsLetter.getId( ) );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
+        {
+            int nIndex = 1;
+            daoUtil.setString( nIndex++, newsLetter.getName( ) );
+            daoUtil.setString( nIndex++, newsLetter.getDescription( ) );
+            daoUtil.setTimestamp( nIndex++, newsLetter.getDateLastSending( ) );
+            daoUtil.setString( nIndex++, newsLetter.getHtml( ) );
+            daoUtil.setInt( nIndex++, newsLetter.getNewsLetterTemplateId( ) );
+            daoUtil.setString( nIndex++, newsLetter.getWorkgroup( ) );
+            daoUtil.setString( nIndex++, newsLetter.getUnsubscribe( ) );
+            daoUtil.setString( nIndex++, newsLetter.getNewsletterSenderMail( ) );
+            daoUtil.setString( nIndex++, newsLetter.getNewsletterSenderName( ) );
+            daoUtil.setString( nIndex++, newsLetter.getTestRecipients( ) );
+            daoUtil.setString( nIndex++, newsLetter.getTestSubject( ) );
+            daoUtil.setInt( nIndex++, newsLetter.getNbSections( ) );
+            daoUtil.setInt( nIndex, newsLetter.getId( ) );
 
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -184,20 +185,13 @@ public final class NewsLetterDAO implements INewsLetterDAO
     @Override
     public boolean checkPrimaryKey( int nKey, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_PRIMARY_KEY, plugin );
-        daoUtil.setInt( 1, nKey );
-        daoUtil.executeQuery( );
-
-        if ( !daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_PRIMARY_KEY, plugin ) )
         {
-            daoUtil.free( );
+            daoUtil.setInt( 1, nKey );
+            daoUtil.executeQuery( );
 
-            return false;
+            return daoUtil.next( );
         }
-
-        daoUtil.free( );
-
-        return true;
     }
 
     /**
@@ -206,20 +200,13 @@ public final class NewsLetterDAO implements INewsLetterDAO
     @Override
     public boolean checkLinkedPortlet( int nIdNewsletter )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_LINKED_PORTLET, PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) );
-        daoUtil.setInt( 1, nIdNewsletter );
-        daoUtil.executeQuery( );
-
-        if ( !daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_LINKED_PORTLET, PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME ) ) )
         {
-            daoUtil.free( );
+            daoUtil.setInt( 1, nIdNewsletter );
+            daoUtil.executeQuery( );
 
-            return false;
+            return daoUtil.next( );
         }
-
-        daoUtil.free( );
-
-        return true;
     }
 
     /**
@@ -228,22 +215,18 @@ public final class NewsLetterDAO implements INewsLetterDAO
     @Override
     public int newPrimaryKey( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PRIMARY_KEY, plugin );
-        int nKey;
-
-        daoUtil.executeQuery( );
-
-        if ( !daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PRIMARY_KEY, plugin ) )
         {
-            // If the table is empty
-            nKey = 1;
+            daoUtil.executeQuery( );
+
+            int nKey = 1;
+            if ( daoUtil.next( ) )
+            {
+                nKey = daoUtil.getInt( 1 ) + 1;
+            }
+
+            return nKey;
         }
-
-        nKey = daoUtil.getInt( 1 ) + 1;
-
-        daoUtil.free( );
-
-        return nKey;
     }
 
     /**
@@ -252,31 +235,31 @@ public final class NewsLetterDAO implements INewsLetterDAO
     @Override
     public Collection<NewsLetter> selectAll( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL, plugin );
-        daoUtil.executeQuery( );
+        ArrayList<NewsLetter> list = new ArrayList<>( );
 
-        ArrayList<NewsLetter> list = new ArrayList<NewsLetter>( );
-
-        while ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL, plugin ) )
         {
-            int nIndex = 1;
-            NewsLetter newsLetter = new NewsLetter( );
-            newsLetter.setId( daoUtil.getInt( nIndex++ ) );
-            newsLetter.setName( daoUtil.getString( nIndex++ ) );
-            newsLetter.setDescription( daoUtil.getString( nIndex++ ) );
-            newsLetter.setDateLastSending( daoUtil.getTimestamp( nIndex++ ) );
-            newsLetter.setHtml( daoUtil.getString( nIndex++ ) );
-            newsLetter.setNewsLetterTemplateId( daoUtil.getInt( nIndex++ ) );
-            newsLetter.setWorkgroup( daoUtil.getString( nIndex++ ) );
-            newsLetter.setTestRecipients( daoUtil.getString( nIndex++ ) );
-            newsLetter.setNewsletterSenderMail( daoUtil.getString( nIndex++ ) );
-            newsLetter.setNewsletterSenderName( daoUtil.getString( nIndex++ ) );
-            newsLetter.setTestSubject( daoUtil.getString( nIndex++ ) );
-            newsLetter.setNbSections( daoUtil.getInt( nIndex ) );
-            list.add( newsLetter );
-        }
+            daoUtil.executeQuery( );
 
-        daoUtil.free( );
+            while ( daoUtil.next( ) )
+            {
+                int nIndex = 1;
+                NewsLetter newsLetter = new NewsLetter( );
+                newsLetter.setId( daoUtil.getInt( nIndex++ ) );
+                newsLetter.setName( daoUtil.getString( nIndex++ ) );
+                newsLetter.setDescription( daoUtil.getString( nIndex++ ) );
+                newsLetter.setDateLastSending( daoUtil.getTimestamp( nIndex++ ) );
+                newsLetter.setHtml( daoUtil.getString( nIndex++ ) );
+                newsLetter.setNewsLetterTemplateId( daoUtil.getInt( nIndex++ ) );
+                newsLetter.setWorkgroup( daoUtil.getString( nIndex++ ) );
+                newsLetter.setTestRecipients( daoUtil.getString( nIndex++ ) );
+                newsLetter.setNewsletterSenderMail( daoUtil.getString( nIndex++ ) );
+                newsLetter.setNewsletterSenderName( daoUtil.getString( nIndex++ ) );
+                newsLetter.setTestSubject( daoUtil.getString( nIndex++ ) );
+                newsLetter.setNbSections( daoUtil.getInt( nIndex ) );
+                list.add( newsLetter );
+            }
+        }
 
         return list;
     }
@@ -287,17 +270,17 @@ public final class NewsLetterDAO implements INewsLetterDAO
     @Override
     public ReferenceList selectAllId( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL_ID, plugin );
-        daoUtil.executeQuery( );
-
         ReferenceList list = new ReferenceList( );
 
-        while ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL_ID, plugin ) )
         {
-            list.addItem( daoUtil.getInt( 1 ), daoUtil.getString( 2 ) );
-        }
+            daoUtil.executeQuery( );
 
-        daoUtil.free( );
+            while ( daoUtil.next( ) )
+            {
+                list.addItem( daoUtil.getInt( 1 ), daoUtil.getString( 2 ) );
+            }
+        }
 
         return list;
     }
@@ -308,32 +291,32 @@ public final class NewsLetterDAO implements INewsLetterDAO
     @Override
     public Collection<NewsLetter> selectAllByTemplateId( int nTemplateId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL_BY_ID_TEMPLATE, plugin );
-        daoUtil.setInt( 1, nTemplateId );
-        daoUtil.executeQuery( );
+        ArrayList<NewsLetter> list = new ArrayList<>( );
 
-        ArrayList<NewsLetter> list = new ArrayList<NewsLetter>( );
-
-        while ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL_BY_ID_TEMPLATE, plugin ) )
         {
-            int nIndex = 1;
-            NewsLetter newsLetter = new NewsLetter( );
-            newsLetter.setId( daoUtil.getInt( nIndex++ ) );
-            newsLetter.setName( daoUtil.getString( nIndex++ ) );
-            newsLetter.setDescription( daoUtil.getString( nIndex++ ) );
-            newsLetter.setDateLastSending( daoUtil.getTimestamp( nIndex++ ) );
-            newsLetter.setHtml( daoUtil.getString( nIndex++ ) );
-            newsLetter.setNewsLetterTemplateId( daoUtil.getInt( nIndex++ ) );
-            newsLetter.setWorkgroup( daoUtil.getString( nIndex++ ) );
-            newsLetter.setTestRecipients( daoUtil.getString( nIndex++ ) );
-            newsLetter.setNewsletterSenderMail( daoUtil.getString( nIndex++ ) );
-            newsLetter.setNewsletterSenderName( daoUtil.getString( nIndex++ ) );
-            newsLetter.setTestSubject( daoUtil.getString( nIndex++ ) );
-            newsLetter.setNbSections( daoUtil.getInt( nIndex ) );
-            list.add( newsLetter );
-        }
+            daoUtil.setInt( 1, nTemplateId );
+            daoUtil.executeQuery( );
 
-        daoUtil.free( );
+            while ( daoUtil.next( ) )
+            {
+                int nIndex = 1;
+                NewsLetter newsLetter = new NewsLetter( );
+                newsLetter.setId( daoUtil.getInt( nIndex++ ) );
+                newsLetter.setName( daoUtil.getString( nIndex++ ) );
+                newsLetter.setDescription( daoUtil.getString( nIndex++ ) );
+                newsLetter.setDateLastSending( daoUtil.getTimestamp( nIndex++ ) );
+                newsLetter.setHtml( daoUtil.getString( nIndex++ ) );
+                newsLetter.setNewsLetterTemplateId( daoUtil.getInt( nIndex++ ) );
+                newsLetter.setWorkgroup( daoUtil.getString( nIndex++ ) );
+                newsLetter.setTestRecipients( daoUtil.getString( nIndex++ ) );
+                newsLetter.setNewsletterSenderMail( daoUtil.getString( nIndex++ ) );
+                newsLetter.setNewsletterSenderName( daoUtil.getString( nIndex++ ) );
+                newsLetter.setTestSubject( daoUtil.getString( nIndex++ ) );
+                newsLetter.setNbSections( daoUtil.getInt( nIndex ) );
+                list.add( newsLetter );
+            }
+        }
 
         return list;
     }
@@ -353,21 +336,20 @@ public final class NewsLetterDAO implements INewsLetterDAO
     @Override
     public void insertSubscriber( int nNewsLetterId, int nSubscriberId, boolean bValidate, Timestamp tToday, Plugin plugin )
     {
-        // Check if the subscriber is yet registered for the newsletter
         if ( isRegistered( nNewsLetterId, nSubscriberId, plugin ) )
         {
             return;
         }
 
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_SUBSCRIBER, plugin );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_SUBSCRIBER, plugin ) )
+        {
+            daoUtil.setInt( 1, nNewsLetterId );
+            daoUtil.setInt( 2, nSubscriberId );
+            daoUtil.setTimestamp( 3, tToday );
+            daoUtil.setBoolean( 4, bValidate );
 
-        daoUtil.setInt( 1, nNewsLetterId );
-        daoUtil.setInt( 2, nSubscriberId );
-        daoUtil.setTimestamp( 3, tToday );
-        daoUtil.setBoolean( 4, bValidate );
-
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -376,13 +358,13 @@ public final class NewsLetterDAO implements INewsLetterDAO
     @Override
     public void deleteSubscriber( int nNewsLetterId, int nSubscriberId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_FROM_SUBSCRIBER, plugin );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_FROM_SUBSCRIBER, plugin ) )
+        {
+            daoUtil.setInt( 1, nNewsLetterId );
+            daoUtil.setInt( 2, nSubscriberId );
 
-        daoUtil.setInt( 1, nNewsLetterId );
-        daoUtil.setInt( 2, nSubscriberId );
-
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -391,16 +373,17 @@ public final class NewsLetterDAO implements INewsLetterDAO
     @Override
     public void deleteOldUnconfirmed( Timestamp confirmLimitDate, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_OLD_FROM_SUBSCRIBER, plugin );
-        daoUtil.setTimestamp( 1, confirmLimitDate );
-        daoUtil.setBoolean( 2, false );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_OLD_FROM_SUBSCRIBER, plugin ) )
+        {
+            daoUtil.setTimestamp( 1, confirmLimitDate );
+            daoUtil.setBoolean( 2, false );
+            daoUtil.executeUpdate( );
+        }
 
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
-
-        daoUtil = new DAOUtil( SQL_QUERY_DELETE_UNUSED_EMAIL, plugin );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_UNUSED_EMAIL, plugin ) )
+        {
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -409,22 +392,14 @@ public final class NewsLetterDAO implements INewsLetterDAO
     @Override
     public boolean isRegistered( int nNewsLetterId, int nSubscriberId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_IS_REGISTERED, plugin );
-
-        daoUtil.setInt( 1, nNewsLetterId );
-        daoUtil.setInt( 2, nSubscriberId );
-        daoUtil.executeQuery( );
-
-        if ( !daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_IS_REGISTERED, plugin ) )
         {
-            daoUtil.free( );
+            daoUtil.setInt( 1, nNewsLetterId );
+            daoUtil.setInt( 2, nSubscriberId );
+            daoUtil.executeQuery( );
 
-            return false;
+            return daoUtil.next( );
         }
-
-        daoUtil.free( );
-
-        return true;
     }
 
     /**
@@ -433,21 +408,13 @@ public final class NewsLetterDAO implements INewsLetterDAO
     @Override
     public boolean isTemplateUsed( int nTemplateId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_IS_TEMPLATE_USED, plugin );
-
-        daoUtil.setInt( 1, nTemplateId );
-        daoUtil.executeQuery( );
-
-        if ( !daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_IS_TEMPLATE_USED, plugin ) )
         {
-            daoUtil.free( );
+            daoUtil.setInt( 1, nTemplateId );
+            daoUtil.executeQuery( );
 
-            return false;
+            return daoUtil.next( );
         }
-
-        daoUtil.free( );
-
-        return true;
     }
 
     /**
@@ -456,28 +423,18 @@ public final class NewsLetterDAO implements INewsLetterDAO
     @Override
     public int selectNbrSubscribers( int nNewsLetterId, String strSearchString, Plugin plugin )
     {
-        int nCount;
-
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_NBR_SUBSCRIBERS, plugin );
-
-        daoUtil.setString( 1, CONSTANT_PERCENT + strSearchString + CONSTANT_PERCENT );
-        daoUtil.setInt( 2, nNewsLetterId );
-
-        daoUtil.executeQuery( );
-
-        if ( !daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_NBR_SUBSCRIBERS, plugin ) )
         {
-            // If the table is empty
-            nCount = 0;
-        }
-        else
-        {
-            nCount = daoUtil.getInt( 1 );
-        }
+            daoUtil.setString( 1, CONSTANT_PERCENT + strSearchString + CONSTANT_PERCENT );
+            daoUtil.setInt( 2, nNewsLetterId );
+            daoUtil.executeQuery( );
 
-        daoUtil.free( );
-
-        return nCount;
+            if ( daoUtil.next( ) )
+            {
+                return daoUtil.getInt( 1 );
+            }
+            return 0;
+        }
     }
 
     /**
@@ -486,28 +443,18 @@ public final class NewsLetterDAO implements INewsLetterDAO
     @Override
     public int selectNbrActiveSubscribers( int nNewsLetterId, String strSearchString, Plugin plugin )
     {
-        int nCount;
-
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_NBR_ACTIVE_SUBSCRIBERS, plugin );
-
-        daoUtil.setString( 1, CONSTANT_PERCENT + strSearchString + CONSTANT_PERCENT );
-        daoUtil.setInt( 2, nNewsLetterId );
-
-        daoUtil.executeQuery( );
-
-        if ( !daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_NBR_ACTIVE_SUBSCRIBERS, plugin ) )
         {
-            // If the table is empty
-            nCount = 0;
-        }
-        else
-        {
-            nCount = daoUtil.getInt( 1 );
-        }
+            daoUtil.setString( 1, CONSTANT_PERCENT + strSearchString + CONSTANT_PERCENT );
+            daoUtil.setInt( 2, nNewsLetterId );
+            daoUtil.executeQuery( );
 
-        daoUtil.free( );
-
-        return nCount;
+            if ( daoUtil.next( ) )
+            {
+                return daoUtil.getInt( 1 );
+            }
+            return 0;
+        }
     }
 
     /**
@@ -516,12 +463,12 @@ public final class NewsLetterDAO implements INewsLetterDAO
     @Override
     public void validateSubscriber( int nNewsLetterId, int nSubscriberId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_VALIDATE_SUBSCRIBER, plugin );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_VALIDATE_SUBSCRIBER, plugin ) )
+        {
+            daoUtil.setInt( 1, nNewsLetterId );
+            daoUtil.setInt( 2, nSubscriberId );
 
-        daoUtil.setInt( 1, nNewsLetterId );
-        daoUtil.setInt( 2, nSubscriberId );
-
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.executeUpdate( );
+        }
     }
 }

@@ -34,7 +34,7 @@
 package fr.paris.lutece.plugins.newsletter.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+import jakarta.enterprise.inject.spi.CDI;
 
 /**
  * This class provides instacnes management methods (find, ...) for NewsLetterProperties objects
@@ -42,7 +42,7 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 public final class NewsletterPropertiesHome
 {
     // Static variable pointed at the DAO instance
-    private static INewsletterPropertiesDAO _dao = SpringContextService.getBean( "newsletter.newsletterPropertiesDAO" );
+    private static INewsletterPropertiesDAO _dao = CDI.current( ).select( INewsletterPropertiesDAO.class ).get( );
 
     /**
      * Private constructor - this class need not be instantiated

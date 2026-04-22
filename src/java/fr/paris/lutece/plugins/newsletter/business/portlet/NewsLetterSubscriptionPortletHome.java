@@ -36,7 +36,7 @@ package fr.paris.lutece.plugins.newsletter.business.portlet;
 import fr.paris.lutece.portal.business.portlet.IPortletInterfaceDAO;
 import fr.paris.lutece.portal.business.portlet.PortletHome;
 import fr.paris.lutece.portal.business.portlet.PortletTypeHome;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+import jakarta.enterprise.inject.spi.CDI;
 
 import java.util.Set;
 
@@ -49,7 +49,7 @@ public class NewsLetterSubscriptionPortletHome extends PortletHome
     private static NewsLetterSubscriptionPortletHome _singleton = new NewsLetterSubscriptionPortletHome( );
 
     // Static variable pointed at the DAO instance
-    private static INewsLetterSubscriptionPortletDAO _dao = SpringContextService.getBean( "newsletter.newsLetterSubscriptionPortletDAO" );
+    private static INewsLetterSubscriptionPortletDAO _dao = CDI.current( ).select( INewsLetterSubscriptionPortletDAO.class ).get( );
 
     /**
      * Returns the identifier of the portlet type

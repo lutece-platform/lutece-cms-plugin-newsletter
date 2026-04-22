@@ -37,7 +37,7 @@ import fr.paris.lutece.portal.business.portlet.IPortletInterfaceDAO;
 import fr.paris.lutece.portal.business.portlet.PortletHome;
 import fr.paris.lutece.portal.business.portlet.PortletTypeHome;
 import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+import jakarta.enterprise.inject.spi.CDI;
 
 import java.util.ArrayList;
 
@@ -50,7 +50,7 @@ public class NewsLetterArchivePortletHome extends PortletHome
     private static NewsLetterArchivePortletHome _singleton = new NewsLetterArchivePortletHome( );
 
     // Static variable pointed at the DAO instance
-    private static INewsLetterArchivePortletDAO _dao = SpringContextService.getBean( "newsletter.newsLetterArchivePortletDAO" );
+    private static INewsLetterArchivePortletDAO _dao = CDI.current( ).select( INewsLetterArchivePortletDAO.class ).get( );
 
     /**
      * Constructor

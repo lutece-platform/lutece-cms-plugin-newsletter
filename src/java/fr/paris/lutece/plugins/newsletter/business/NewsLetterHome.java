@@ -35,8 +35,8 @@ package fr.paris.lutece.plugins.newsletter.business;
 
 import fr.paris.lutece.plugins.newsletter.util.NewsLetterConstants;
 import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.util.ReferenceList;
+import jakarta.enterprise.inject.spi.CDI;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -48,7 +48,7 @@ import java.util.Collection;
 public final class NewsLetterHome
 {
     // Static variable pointed at the DAO instance
-    private static INewsLetterDAO _dao = SpringContextService.getBean( "newsletter.newsLetterDAO" );
+    private static INewsLetterDAO _dao = CDI.current( ).select( INewsLetterDAO.class ).get( );
 
     /**
      * Private constructor - this class need not be instantiated

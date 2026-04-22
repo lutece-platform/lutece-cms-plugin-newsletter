@@ -34,8 +34,8 @@
 package fr.paris.lutece.plugins.newsletter.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.util.ReferenceList;
+import jakarta.enterprise.inject.spi.CDI;
 
 import java.util.Collection;
 import java.util.List;
@@ -48,7 +48,7 @@ public final class NewsLetterTemplateHome
     /**
      * The data access object initialised by Spring mechanism
      */
-    private static INewsLetterTemplateDAO _dao = SpringContextService.getBean( "newsletter.newsLetterTemplateDAO" );
+    private static INewsLetterTemplateDAO _dao = CDI.current( ).select( INewsLetterTemplateDAO.class ).get( );
 
     /**
      * Private constructor - this class need not be instantiated

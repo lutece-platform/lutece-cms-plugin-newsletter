@@ -34,7 +34,7 @@
 package fr.paris.lutece.plugins.newsletter.business.topic;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+import jakarta.enterprise.inject.spi.CDI;
 
 import java.util.List;
 
@@ -43,7 +43,7 @@ import java.util.List;
  */
 public final class NewsletterTopicHome
 {
-    private static INewsletterTopicDAO _dao = SpringContextService.getBean( "newsletter.newsletterTopicDAO" );
+    private static INewsletterTopicDAO _dao = CDI.current( ).select( INewsletterTopicDAO.class ).get( );
 
     /**
      * Private constructor
