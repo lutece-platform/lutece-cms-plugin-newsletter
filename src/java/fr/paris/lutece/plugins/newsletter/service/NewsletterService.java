@@ -77,7 +77,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
-import au.com.bytecode.opencsv.CSVWriter;
+import com.opencsv.CSVWriter;
 
 /**
  * The newsletter service

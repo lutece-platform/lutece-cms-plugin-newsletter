@@ -1,18 +1,28 @@
 <#if import_delete?has_content && import_delete>
-	<#assign boxTitle  = '#i18n{newsletter.import_delete_subscribers.boxTitle}' />
-	<#assign alertTitle = '#i18n{newsletter.import_delete_subscribers.notice1}' />
+<#assign boxTitle  = '#i18n{newsletter.import_delete_subscribers.boxTitle}' />
+<#assign alertTitle = '#i18n{newsletter.import_delete_subscribers.notice1}' />
 <#else>
-	<#assign boxTitle = '#i18n{newsletter.import_subscribers.boxTitle}' />
-	<#assign alertTitle = '#i18n{newsletter.import_subscribers.notice1}' />
+<#assign boxTitle = '#i18n{newsletter.import_subscribers.boxTitle}' />
+<#assign alertTitle = '#i18n{newsletter.import_subscribers.notice1}' />
 </#if>
 <@pageContainer>
     <@pageColumn>
         <@pageHeader title=boxTitle />
+		<@breadcrumbs class='mb-3'>
+			<@breadcrumbItem>
+				<@link href='jsp/admin/plugins/newsletter/ManageNewsLetter.jsp' title='#i18n{newsletter.manage_newsletters.boxTitle}'>
+					<@icon style='home' /> #i18n{newsletter.manage_newsletters.boxTitle}
+				</@link>
+			</@breadcrumbItem>
+			<@breadcrumbItem><@link href='jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletter_id}'>${newsletter_name!}</@link></@breadcrumbItem>
+			<@breadcrumbItem><@link href='jsp/admin/plugins/newsletter/ManageSubscribers.jsp?newsletter_id=${newsletter_id}'>#i18n{newsletter.manage_subscribers.boxTitle}</@link></@breadcrumbItem>
+			<@breadcrumbItem>${boxTitle}</@breadcrumbItem>
+		</@breadcrumbs>
 		<@tform method='post' enctype='multipart/form-data' action='jsp/admin/plugins/newsletter/DoImportSubscribers.jsp' boxed=true>
 			<@input type='hidden' name='newsletter_id' value='${newsletter_id}' />
 			<@input type='hidden' name='import_delete' value='${import_delete?string}' />
 			<@row>
-				<@columns sm=5>
+				<@columns md=8>
 					<@formGroup labelFor='newsletter_import_path' labelKey='#i18n{newsletter.import_subscribers.label}' helpKey='#i18n{newsletter.import_subscribers.label.help}' mandatory=true>
 						<@inputGroup>
 							<@input type='file' id='newsletter_import_path' name='newsletter_import_path' value='' accept='.csv' />
@@ -22,7 +32,7 @@
 						</@inputGroup>
 					</@formGroup>
 				</@columns>
-				<@columns sm=3>
+				<@columns md=4>
 					<@alert color='info' title=alertTitle iconTitle='alert-circle fs-1' />
 					<@alert color='warning' title='#i18n{newsletter.import_subscribers.notice2}' iconTitle='alert-triangle fs-1 me-2' />
 				</@columns>

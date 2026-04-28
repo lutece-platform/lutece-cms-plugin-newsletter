@@ -53,6 +53,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.enterprise.inject.spi.CDI;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
@@ -62,7 +63,10 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import au.com.bytecode.opencsv.CSVReader;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvException;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetter;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterHome;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterProperties;
@@ -182,6 +186,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String MARK_NEWSLETTER_WORKGROUP_DESCRIPTION = "newsletter_workgroup_description";
     private static final String MARK_NEWSLETTER_COUNT_SUBSCRIBERS = "newsletter_count_subscribers";
     private static final String MARK_NEWSLETTER_ID = "newsletter_id";
+    private static final String MARK_NEWSLETTER_NAME = "newsletter_name";
     private static final String MARK_IMPORT_DELETE = "import_delete";
     private static final String MARK_NEWSLETTER_CONTENT = "newsletter_content";
     private static final String MARK_HTML_CONTENT = "html_content";
@@ -357,6 +362,39 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     }
 
     /**
+     * JspBeans are instantiated by &lt;jsp:useBean&gt; outside of the CDI
+     * container, so @Inject is not honored. In addition, instances kept in the
+     * HTTP session can predate any constructor changes. The lazy getters below
+     * resolve the required services via CDI lookup on first use.
+     */
+    private NewsletterService getNewsletterService( )
+    {
+        if ( _newsletterService == null )
+        {
+            _newsletterService = CDI.current( ).select( NewsletterService.class ).get( );
+        }
+        return _newsletterService;
+    }
+
+    private NewsletterTopicService getNewsletterTopicService( )
+    {
+        if ( _newsletterTopicService == null )
+        {
+            _newsletterTopicService = CDI.current( ).select( NewsletterTopicService.class ).get( );
+        }
+        return _newsletterTopicService;
+    }
+
+    private NewsLetterRegistrationService getRegistrationService( )
+    {
+        if ( _registrationService == null )
+        {
+            _registrationService = CDI.current( ).select( NewsLetterRegistrationService.class ).get( );
+        }
+        return _registrationService;
+    }
+
+    /**
      * Returns the list of newsletters
      * 
      * @param request
@@ -462,6 +500,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         int nIdNewsletter = Integer.parseInt( request.getParameter( PARAMETER_NEWSLETTER_ID ) );
         Map<String, Object> model = new HashMap<String, Object>( );
         List<SendingNewsLetter> listNewsletter = SendingNewsLetterHome.findAllLastSendingForNewsletterId( nIdNewsletter, getPlugin( ) );
+        NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nIdNewsletter, getPlugin( ) );
 
         UrlItem url = new UrlItem( request.getRequestURI( ) );
         url.addParameter( PARAMETER_NEWSLETTER_ID, nIdNewsletter );
@@ -472,6 +511,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         model.put( MARK_NEWSLETTER_LIST, paginator.getPageItems( ) );
         model.put( MARK_PAGINATOR, paginator );
         model.put( MARK_NEWSLETTER_ID, nIdNewsletter );
+        model.put( MARK_NEWSLETTER_NAME, newsletter != null ? newsletter.getName( ) : StringUtils.EMPTY );
         model.put( MARK_NB_ITEMS_PER_PAGE, StringUtils.EMPTY + _nItemsPerPage );
 
         HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_MANAGE_OLD_NEWSLETTERS, getLocale( ), model );
@@ -628,7 +668,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         String strBaseUrl = AppPathService.getProdUrl( request );
 
 
-        String strPathImageTemplate = _newsletterService.getImageFolderPath( AppPathService.getBaseUrl( request ) );
+        String strPathImageTemplate = getNewsletterService().getImageFolderPath( AppPathService.getBaseUrl( request ) );
 
         Map<String, Object> model = new HashMap<String, Object>( );
 
@@ -662,7 +702,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             }
             if ( nTemplateNewsLetterId > 0 )
             {
-                strHtmlContent = _newsletterService.generateNewsletterHtmlCode( newsletter, nTemplateNewsLetterId, strBaseUrl, user, getLocale( ) );
+                strHtmlContent = getNewsletterService().generateNewsletterHtmlCode( newsletter, nTemplateNewsLetterId, strBaseUrl, user, getLocale( ) );
             }
             if ( strHtmlContent == null )
             {
@@ -739,7 +779,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
 
-        _registrationService.doRemoveOldUnconfirmed( );
+        getRegistrationService().doRemoveOldUnconfirmed( );
 
         int nConfirmLimit = AppPropertiesService.getPropertyInt( PROPERTY_LIMIT_CONFIRM_DAYS, DEFAULT_LIMIT );
         Object [ ] messages = new String [ 1];
@@ -1042,7 +1082,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         if ( subscriber != null )
         {
-            _newsletterService.removeSubscriberFromNewsletter( subscriber, nNewsletterId, getPlugin( ) );
+            getNewsletterService().removeSubscriberFromNewsletter( subscriber, nNewsletterId, getPlugin( ) );
         }
 
         UrlItem urlItem = new UrlItem( JSP_URL_MANAGE_SUBSCRIBERS );
@@ -1080,7 +1120,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
                 if ( subscriber != null )
                 {
-                    _newsletterService.removeSubscriberFromNewsletter( subscriber, nNewsletterId, getPlugin( ) );
+                    getNewsletterService().removeSubscriberFromNewsletter( subscriber, nNewsletterId, getPlugin( ) );
                 }
             }
         }
@@ -1685,7 +1725,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         HtmlTemplate templateNewsLetter = setHtmlTemplateEmail( newsletter, strBaseUrl, newsletter.getUnsubscribe( ) );
 
-        _newsletterService.sendMail( newsletter, strObject, strBaseUrl, templateNewsLetter, convertToList( newsletter.getTestRecipients( ) ) );
+        getNewsletterService().sendMail( newsletter, strObject, strBaseUrl, templateNewsLetter, convertToList( newsletter.getTestRecipients( ) ) );
 
         return getHomeUrl( request );
     }
@@ -1735,7 +1775,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         // Get the HtmlTemplate of email
         HtmlTemplate templateNewsLetter = setHtmlTemplateEmail( newsletter, strBaseUrl, newsletter.getUnsubscribe( ) );
 
-        _newsletterService.sendMail( newsletter, strObject, strBaseUrl, templateNewsLetter, list );
+        getNewsletterService().sendMail( newsletter, strObject, strBaseUrl, templateNewsLetter, list );
 
         SendingNewsLetter sending = new SendingNewsLetter( );
         sending.setNewsLetterId( nNewsletterId );
@@ -1842,6 +1882,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_NEWSLETTER_ID, nNewsletterId );
+        model.put( MARK_NEWSLETTER_NAME, newsletter.getName( ) );
         model.put( MARK_IMPORT_DELETE, false );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_IMPORT_SUBSCRIBERS, getLocale( ), model );
@@ -1873,6 +1914,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_NEWSLETTER_ID, nNewsletterId );
+        model.put( MARK_NEWSLETTER_NAME, newsletter.getName( ) );
         model.put( MARK_IMPORT_DELETE, true );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_IMPORT_SUBSCRIBERS, getLocale( ), model );
@@ -1925,8 +1967,11 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                 }
 
                 List<String [ ]> tabUsers;
+                char cDelimiter = AppPropertiesService.getProperty( PROPERTY_IMPORT_DELIMITER ).charAt( 0 );
                 try ( Reader fileReader = new InputStreamReader( csvItem.getInputStream( ) );
-                      CSVReader csvReader = new CSVReader( fileReader, AppPropertiesService.getProperty( PROPERTY_IMPORT_DELIMITER ).charAt( 0 ) ) )
+                      CSVReader csvReader = new CSVReaderBuilder( fileReader )
+                              .withCSVParser( new CSVParserBuilder( ).withSeparator( cDelimiter ).build( ) )
+                              .build( ) )
                 {
                     tabUsers = csvReader.readAll( );
                 }
@@ -1984,7 +2029,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
             return urlItem.getUrl( );
         }
-        catch( IOException e )
+        catch( IOException | CsvException e )
         {
             throw new RuntimeException( e.getMessage( ) );
         }
@@ -2014,7 +2059,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         }
 
         String strFileName = newsletter.getName( ) + CONSTANT_CSV_FILE_EXTENSION;
-        byte [ ] byteSubscribersList = _newsletterService.getSubscribersCsvExport( nNewsletterId );
+        byte [ ] byteSubscribersList = getNewsletterService().getSubscribersCsvExport( nNewsletterId );
         NewsletterUtils.addHeaderResponse( request, response, strFileName, CONSTANT_CSV_FILE_EXTENSION );
         response.setContentLength( byteSubscribersList.length );
 
@@ -2097,7 +2142,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             tblSectionSize [i] = NewsletterTopicHome.getLastOrder( nNewsletterId, i + 1, getPlugin( ) );
         }
 
-        ReferenceList refListTopicType = _newsletterTopicService.getNewsletterTopicTypeRefList( AdminUserService.getLocale( request ) );
+        ReferenceList refListTopicType = getNewsletterTopicService().getNewsletterTopicTypeRefList( AdminUserService.getLocale( request ) );
 
         UrlItem url = new UrlItem( JSP_URL_MANAGE_NEWSLETTER_TOPIC );
         url.addParameter( PARAMETER_NEWSLETTER_ID, strNewsletterId );
@@ -2147,14 +2192,14 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                 listNewsletterImage.add( StringUtils.EMPTY );
             }
         }
-        String strPathImageTemplate = _newsletterService.getImageFolderPath( AppPathService.getBaseUrl( request ) );
+        String strPathImageTemplate = getNewsletterService().getImageFolderPath( AppPathService.getBaseUrl( request ) );
         model.put( NewsLetterConstants.MARK_TEMPLATE_IMAGE_LIST, listNewsletterImage );
         model.put( MARK_NEWSLETTER, newsletter );
         model.put( MARK_NEWSLETTER_TABLE_MANAGER, tableManager );
         model.put( MARK_LIST_TOPIC_TYPES, refListTopicType );
         model.put( MARK_SECTION_SIZES, tblSectionSize );
         model.put( MARK_HTML_CONTENT,
-                _newsletterService.generateNewsletterHtmlCode( newsletter, newsletter.getNewsLetterTemplateId( ), strBaseUrl, user, locale ) );
+                getNewsletterService().generateNewsletterHtmlCode( newsletter, newsletter.getNewsLetterTemplateId( ), strBaseUrl, user, locale ) );
         model.put( MARK_WEBAPP_URL, strBaseUrl );
         model.put( MARK_LOCALE, getLocale( ) );
         model.put( MARK_LIST_NEWSLETTER_TEMPLATES, newsletterTemplatesList );
@@ -2194,7 +2239,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         {
             newsletterTopic.setSection( 1 );
         }
-        _newsletterTopicService.createNewsletterTopic( newsletterTopic, getUser( ), AdminUserService.getLocale( request ) );
+        getNewsletterTopicService().createNewsletterTopic( newsletterTopic, getUser( ), AdminUserService.getLocale( request ) );
 
         UrlItem urlItem = new UrlItem( JSP_URL_MODIFY_TOPIC_CONFIG );
         urlItem.addParameter( PARAMETER_NEWSLETTER_ID, strNewsletterId );
@@ -2260,7 +2305,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         }
         int nIdTopic = Integer.parseInt( strTopicId );
         NewsletterTopic newsletterTopic = NewsletterTopicHome.findByPrimaryKey( nIdTopic, getPlugin( ) );
-        _newsletterTopicService.removeNewsletterTopic( newsletterTopic, AdminUserService.getAdminUser( request ) );
+        getNewsletterTopicService().removeNewsletterTopic( newsletterTopic, AdminUserService.getAdminUser( request ) );
 
         UrlItem urlItem = new UrlItem( JSP_URL_MANAGE_TOPICS );
         urlItem.addParameter( PARAMETER_NEWSLETTER_ID, strNewsletterId );
@@ -2286,7 +2331,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         int nIdTopic = Integer.parseInt( strTopicId );
         String strMoveUp = request.getParameter( PARAMETER_MOVE_UP );
         NewsletterTopic newsletterTopic = NewsletterTopicHome.findByPrimaryKey( nIdTopic, getPlugin( ) );
-        _newsletterTopicService.modifyNewsletterTopicOrder( newsletterTopic, Boolean.parseBoolean( strMoveUp ) );
+        getNewsletterTopicService().modifyNewsletterTopicOrder( newsletterTopic, Boolean.parseBoolean( strMoveUp ) );
 
         return getManageNewsletterTopics( request );
     }
@@ -2311,7 +2356,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         setPageTitleProperty( PROPERTY_PAGE_TITLE_MODIFY_TOPIC_CONFIGURATION );
         NewsletterTopic newsletterTopic = NewsletterTopicHome.findByPrimaryKey( nIdTopic, getPlugin( ) );
         Locale locale = AdminUserService.getLocale( request );
-        String strContent = _newsletterTopicService.getConfigurationPage( newsletterTopic, AppPathService.getBaseUrl( request ),
+        String strContent = getNewsletterTopicService().getConfigurationPage( newsletterTopic, AppPathService.getBaseUrl( request ),
                 AdminUserService.getAdminUser( request ), locale );
 
         Map<String, Object> model = new HashMap<String, Object>( );
@@ -2354,7 +2399,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             }
 
             Map<String, String [ ]> mapParameters = request.getParameterMap( );
-            _newsletterTopicService.saveConfiguration( mapParameters, newsletterTopic, AdminUserService.getAdminUser( request ),
+            getNewsletterTopicService().saveConfiguration( mapParameters, newsletterTopic, AdminUserService.getAdminUser( request ),
                     AdminUserService.getLocale( request ) );
         }
         return AppPathService.getBaseUrl( request ) + url.getUrl( );
@@ -2381,7 +2426,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         NewsletterTopic newsletterTopic = NewsletterTopicHome.findByPrimaryKey( nIdTopic, getPlugin( ) );
 
-        _newsletterTopicService.modifyNewsletterTopicSection( newsletterTopic, nSection );
+        getNewsletterTopicService().modifyNewsletterTopicSection( newsletterTopic, nSection );
 
         return getManageNewsletterTopics( request );
     }
@@ -2628,7 +2673,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         }
 
         // Copy of newsletter
-        _newsletterService.copyExistingNewsletter( newsletter, user, locale );
+        getNewsletterService().copyExistingNewsletter( newsletter, user, locale );
         return getHomeUrl( request );
     }
 }

@@ -3,7 +3,7 @@
 		<@box>
 			<@boxHeader title='#i18n{newsletter.add_newsletter_template.boxTitle}' />
 			<@boxBody id='create_newsletter_template'>
-				<@tform method='post' enctype='multipart/form-data' action='jsp/admin/plugins/newsletter/DoAddNewsLetterTemplate.jsp'>
+				<@tform method='post' enctype='multipart/form-data' action='jsp/admin/plugins/newsletter/DoAddNewsLetterTemplate.jsp' params='target="_top"' >
 					<@formGroup labelFor='newsletter_template_name' labelKey='#i18n{newsletter.add_newsletter_template.name}' mandatory=true>
 						<@input type='text' id='newsletter_template_name' name='newsletter_template_name' maxlength=50 value='' />
 					</@formGroup>
@@ -23,8 +23,8 @@
 						<@select name='newsletter_template_workgroup' default_value='all' items=workgroup_list />
 					</@formGroup>
 					<@formGroup>
-						<@button type='submit' buttonIcon='check' title='#i18n{newsletter.add_newsletter_template.buttonAdd}' />
-						<@aButton href='jsp/admin/plugins/newsletter/ManageTemplates.jsp' buttonIcon='close' title='#i18n{newsletter.create_newsletter.buttonCancel}' color='default' />
+						<@button type='submit' buttonIcon='check' title='#i18n{newsletter.add_newsletter_template.buttonAdd}' class='form-validation'/>
+						<@aButton href='jsp/admin/plugins/newsletter/ManageTemplates.jsp' buttonIcon='close' title='#i18n{newsletter.create_newsletter.buttonCancel}' color='default' target='_top' />
 					</@formGroup>
 				</@tform>
 			</@boxBody>

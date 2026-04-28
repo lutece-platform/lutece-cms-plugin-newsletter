@@ -84,6 +84,8 @@ import java.util.Map;
 import java.util.Base64;
 
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.literal.NamedLiteral;
+import jakarta.enterprise.inject.spi.CDI;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
@@ -158,6 +160,41 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
     @Inject
     @Named( "newsletter.newsletterTemplateRemovalService" )
     private transient RemovalListenerService _templateRemovalService;
+
+    /**
+     * JspBeans are instantiated by &lt;jsp:useBean&gt; outside of the CDI
+     * container, so @Inject is not honored. In addition, instances kept in the
+     * HTTP session can predate any constructor changes. The lazy getters below
+     * resolve the required services via CDI lookup on first use.
+     */
+    private NewsletterTopicService getNewsletterTopicService( )
+    {
+        if ( _newsletterTopicService == null )
+        {
+            _newsletterTopicService = CDI.current( ).select( NewsletterTopicService.class ).get( );
+        }
+        return _newsletterTopicService;
+    }
+
+    private NewsletterService getNewsletterService( )
+    {
+        if ( _newsletterService == null )
+        {
+            _newsletterService = CDI.current( ).select( NewsletterService.class ).get( );
+        }
+        return _newsletterService;
+    }
+
+    private RemovalListenerService getTemplateRemovalService( )
+    {
+        if ( _templateRemovalService == null )
+        {
+            _templateRemovalService = CDI.current( )
+                    .select( RemovalListenerService.class, NamedLiteral.of( "newsletter.newsletterTemplateRemovalService" ) )
+                    .get( );
+        }
+        return _templateRemovalService;
+    }
 
     /**
      * Builds the newsletter's templates management page
@@ -479,7 +516,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
                 newsletterTemplate.setWorkgroup( strWorkgroup );
 
                 int nOldSectionNumber = newsletterTemplate.getSectionNumber( );
-                _newsletterService.modifySectionNumber( nOldSectionNumber, nSections, newsletterTemplate.getId( ) );
+                getNewsletterService().modifySectionNumber( nOldSectionNumber, nSections, newsletterTemplate.getId( ) );
                 if ( nSections > 0 )
                 {
                     newsletterTemplate.setSectionNumber( nSections );
@@ -681,7 +718,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
 
 
                 int nOldSectionNumber = newsletterTemplate.getSectionNumber( );
-                _newsletterService.modifySectionNumber( nOldSectionNumber, nSections, newsletterTemplate.getId( ) );
+                getNewsletterService().modifySectionNumber( nOldSectionNumber, nSections, newsletterTemplate.getId( ) );
 
                 // Complete the newsLetterTemplate
                 newsletterTemplate.setDescription( strDescription );
@@ -725,7 +762,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
         List<String> listMessages = new ArrayList<String>( );
-        if ( !_templateRemovalService.checkForRemoval( strNewsletterTemplateId, listMessages, AdminUserService.getLocale( request ) ) )
+        if ( !getTemplateRemovalService().checkForRemoval( strNewsletterTemplateId, listMessages, AdminUserService.getLocale( request ) ) )
         {
             Object [ ] args = {
                     listMessages.get( 0 )
@@ -810,7 +847,7 @@ public class NewsletterTemplateJspBean extends PluginAdminPageJspBean
      */
     private ReferenceList buildTemplateTypeList( Locale locale )
     {
-        ReferenceList refTemplateTypeList = _newsletterTopicService.getNewsletterTopicTypeRefList( locale );
+        ReferenceList refTemplateTypeList = getNewsletterTopicService().getNewsletterTopicTypeRefList( locale );
         ReferenceItem refItemTemplate = new ReferenceItem( );
         refItemTemplate.setCode( NewsLetterTemplate.RESOURCE_TYPE );
         refItemTemplate.setName( I18nService.getLocalizedString( MESSAGE_NEWSLETTER_TEMPLATE, locale ) );

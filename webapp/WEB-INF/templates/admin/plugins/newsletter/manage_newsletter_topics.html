@@ -6,14 +6,13 @@
 				<@tabLink href='jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletter.id}' title='#i18n{newsletter.modify_newsletter.manageAttributes}' />
 				<@tabLink active=true href='jsp/admin/plugins/newsletter/GetManageNewsletterTopics.jsp?newsletter_id=${newsletter.id}' title='#i18n{newsletter.manage_topics.pageTitle}' />
 				<@tabLink href='jsp/admin/plugins/newsletter/ComposeNewsLetter.jsp?newsletter_id=${newsletter.id}' title='#i18n{newsletter.compose_newsletter.boxTitle}' />
-				<@p class='ms-auto mb-0 mt-2 me-4'>
-					<@icon style='calendar-stats' />
-					<@span class='border-end border-4 border-primary d-inline-block pe-2'>
-						#i18n{newsletter.modify_newsletter.dateLastSend} : <strong>${newsletter.dateLastSending?date}</strong>
-					</@span>
-				</@p>
+				<@link href='jsp/admin/plugins/newsletter/ManageSubscribers.jsp?newsletter_id=${newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleManageSubscribers}' linkIcon='users' class='nav-link ms-auto' />
 			</@tabList>
 			<@tabContent>
+				<@tabPanel id='manage_topics' active=true>
+				<@alert color='info' iconTitle='info-circle'>
+					<@span>#i18n{newsletter.modify_newsletter.dateLastSend} : </@span><strong class="ms-1">${newsletter.dateLastSending?date}</strong>
+				</@alert>
 				<@row>
 					<@columns sm=2>
 						<@box>
@@ -33,9 +32,9 @@
                                             <#assign templateImage=template_image_list[templateIterator]!>
 											<#assign templateIterator=templateIterator+1>
 												<#if templateImage?? && templateImage != "">
-												<img src="data:image/jpeg;base64,${templateImage!}" class="img-fluid img-thumbnail thumbnail-sm" alt="${template.description}" title="#i18n{newsletter.compose_newsletter.newsletterTemplate}" />
+												<@img url='data:image/jpeg;base64,${templateImage!}' class='img-fluid img-thumbnail thumbnail-sm' alt='${template.description}' title='#i18n{newsletter.compose_newsletter.newsletterTemplate}' />
 												<#else>
-												<@img url="${img_path}/${template.pictureKey}" class="img-fluid img-thumbnail thumbnail-sm" alt="${template.description}" title="#i18n{newsletter.compose_newsletter.newsletterTemplate}" />
+												<@img url='${img_path}/${template.pictureKey}' class='img-fluid img-thumbnail thumbnail-sm' alt='${template.description}' title='#i18n{newsletter.compose_newsletter.newsletterTemplate}' />
                                                 </#if>
                                               ${template.description}
 											</@radioButton>
@@ -80,7 +79,7 @@
 									</#if>
 									<@columns sm=12 md=4>
 										<@formGroup rows=2>
-											<@button type='submit' class='mt-4' title='#i18n{newsletter.manage_topics.labelAddTopic}' buttonIcon='plus' title='#i18n{newsletter.manage_topics.labelAddTopic}' hideTitle=['xs'] />
+											<@button type='submit' class='mt-4 form-validation' title='#i18n{newsletter.manage_topics.labelAddTopic}' buttonIcon='plus' title='#i18n{newsletter.manage_topics.labelAddTopic}' hideTitle=['xs'] />
 										</@formGroup>
 									</@columns>
 								</@row>
@@ -101,6 +100,7 @@
 						</#if>
 					</@columns>
 				</@row>
+				</@tabPanel>
 			</@tabContent>
 		</@tabs>
 	</@pageColumn>
@@ -130,7 +130,7 @@
 		<@inputGroup>
 			<@select name='topic_section_number'>
 			<#list 1..newsletter.nbSections as i>
-				<option value="${i}" <#if i==item.section >selected="selected"</#if>>${i}</option>
+				<@option value=i selected=(i=item.section) label=i />
 			</#list>
 			</@select>
 			<@button type='submit' title='#i18n{newsletter.manage_topics.labelChangeTopicSection}' hideTitle=['all'] buttonIcon='arrows-sort' size='' />

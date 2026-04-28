@@ -1,52 +1,52 @@
 <@pageContainer>
-    <@pageColumn>
-        <@pageHeader title='#i18n{newsletter.manage_templates.boxTitle}' >
+	<@pageColumn>
+		<@pageHeader title='#i18n{newsletter.manage_templates.boxTitle}'>
 			<#if creation_allowed>
-				<@offcanvas targetUrl="jsp/admin/plugins/newsletter/AddNewsLetterTemplate.jsp" targetElement="#create_newsletter_template" redirectForm=false id="template-create-newsletter-template" title="#i18n{newsletter.manage_templates.buttonAddTemplate}" btnTitle="#i18n{newsletter.manage_templates.buttonAddTemplate}" btnIcon="plus" btnSize="" position="end" size="full" />
+				<@offcanvas id='template-create' targetUrl='jsp/admin/plugins/newsletter/AddNewsLetterTemplate.jsp' useIframe=true title='#i18n{newsletter.manage_templates.buttonAddTemplate}' btnTitle='#i18n{newsletter.manage_templates.buttonAddTemplate}' btnIcon='plus' btnColor='primary' position='end' size='half' />
 			</#if>
-        </@pageHeader>
-		<#if template_list?size gt 0>
-			<@table headBody=true >
-				<@tr>
-					<@th>#i18n{newsletter.manage_templates.columnTitleLabel}</@th>
-					<@th>#i18n{newsletter.manage_templates.columnTitleType}</@th>
-					<@th>#i18n{newsletter.manage_templates.columnTitleFile}</@th>
-					<@th>#i18n{newsletter.manage_templates.columnTitleWorkgroup}</@th>
-					<@th>#i18n{newsletter.manage_newsletters.columnTitleActions}</@th>
-				</@tr>
-				<@tableHeadBodySeparator />
+		</@pageHeader>
+		<@messages infos=infos />
+		<#if template_list?has_content>
+			<@manageFeature>
 				<#list template_list as templateDisplay>
-					<@tr>
-						<@td>${templateDisplay.template.description}</@td>
-						<@td>${templateDisplay.template.topicType}</@td>
-						<@td>
-                      <#if templateDisplay.template_image??>
-                            <img src="data:image/jpeg;base64,${templateDisplay.template_image!}" alt="#i18n{newsletter.manage_templates.columnTitleImage}" title="#i18n{newsletter.manage_templates.columnTitleImage}" class="thumbnail-sm" />
-                        <#else>
-  							<@img url="themes/admin/shared/plugins/newsletter/images/newsletter_templates/${templateDisplay.template.pictureKey}" alt="#i18n{newsletter.manage_templates.columnTitleImage}" title="#i18n{newsletter.manage_templates.columnTitleImage}" class="thumbnail-sm" />
-                        </#if>
-
-						<#if templateDisplay.template_file??>
-						<p>${templateDisplay.template_file_name!}</p>
-						<#else>
-						<p>${templateDisplay.template.fileKey}</p>
-						</#if>
-
-                        </@td>
-						<@td>${templateDisplay.newsletter_template_workgroup_description}</@td>
-						<@td>
+					<@manageFeatureItem>
+						<@manageFeatureItemColumn auto=true valign='top'>
+							<#if templateDisplay.template_image??>
+								<@img url='data:image/jpeg;base64,${templateDisplay.template_image!}' alt='#i18n{newsletter.manage_templates.columnTitleImage}' title='#i18n{newsletter.manage_templates.columnTitleImage}' class='thumbnail-xs img-fluid' />
+							<#else>
+								<@img url='themes/admin/shared/plugins/newsletter/images/newsletter_templates/${templateDisplay.template.pictureKey}' alt='#i18n{newsletter.manage_templates.columnTitleImage}' title='#i18n{newsletter.manage_templates.columnTitleImage}' class='thumbnail-xs img-fluid' />
+							</#if>
+						</@manageFeatureItemColumn>
+						<@manageFeatureItemColumn flex=false valign='top'>
+							<@h level=3 class='my-0'>${templateDisplay.template.description}</@h>
+						</@manageFeatureItemColumn>
+						<@manageFeatureItemColumn valign='top'>
+							<@p class='fs-4 my-0'>#i18n{newsletter.manage_templates.columnTitleType}</@p>
+							<@p class='fw-bold fs-4 ms-1 my-0'> : ${templateDisplay.template.topicType}</@p>
+						</@manageFeatureItemColumn>
+						<@manageFeatureItemColumn auto=true valign='top'>
+							<@p class='fs-4 my-0'>#i18n{newsletter.manage_templates.columnTitleWorkgroup}</@p>
+							<@p class='fw-bold fs-4 ms-1 my-0'> : ${templateDisplay.newsletter_template_workgroup_description}</@p>
+						</@manageFeatureItemColumn>
+						<@manageFeatureItemColumn align='end'>
 							<#if templateDisplay.newsletter_template_allow_modification>
-								<@aButton href='jsp/admin/plugins/newsletter/ModifyNewsLetterTemplate.jsp?newsletter_template_id=${templateDisplay.template.id}' buttonIcon='edit me-1' title='#i18n{newsletter.manage_templates.buttonModifyTemplate}' size='' />
+								<@offcanvas id='template-modify-${templateDisplay.template.id}' targetUrl='jsp/admin/plugins/newsletter/ModifyNewsLetterTemplate.jsp?newsletter_template_id=${templateDisplay.template.id}' useIframe=true title='#i18n{newsletter.manage_templates.buttonModifyTemplate}' btnTitle='#i18n{newsletter.manage_templates.buttonModifyTemplate}' btnIcon='edit' btnClass='me-1' hideTitle=['xs','sm'] position='end' size='half' />
 							</#if>
 							<#if templateDisplay.newsletter_template_allow_deletion>
-								<@aButton href='jsp/admin/plugins/newsletter/RemoveNewsLetterTemplate.jsp?newsletter_template_id=${templateDisplay.template.id}' title='#i18n{portal.util.labelDelete}' buttonIcon='trash me-1' size='' color='danger' />
+								<@aButton href='jsp/admin/plugins/newsletter/RemoveNewsLetterTemplate.jsp?newsletter_template_id=${templateDisplay.template.id}' title='#i18n{portal.util.labelDelete}' buttonIcon='trash' color='danger' hideTitle=['xs','sm'] />
 							</#if>
-						</@td>
-					</@tr>
+						</@manageFeatureItemColumn>
+					</@manageFeatureItem>
 				</#list>
-			</@table>
+			</@manageFeature>
 		<#else>
-			<@empty />
+			<@card>
+			<#if creation_allowed>
+				<@empty title='#i18n{newsletter.manage_templates.boxTitle}' iconName='template-off' subtitle='#i18n{newsletter.manage_templates.buttonAddTemplate}' actionTitle='#i18n{newsletter.manage_templates.buttonAddTemplate}' actionUrl='jsp/admin/plugins/newsletter/AddNewsLetterTemplate.jsp' />
+			<#else>
+				<@empty title='#i18n{newsletter.manage_templates.boxTitle}' iconName='template-off' />
+			</#if>
+			</@card>
 		</#if>
 	</@pageColumn>
 </@pageContainer>
