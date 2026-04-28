@@ -1,55 +1,73 @@
 <@pageContainer>
-    <@pageColumn>
+	<@pageColumn>
 		<@pageHeader title='#i18n{newsletter.manage_archive.boxTitle}' />
+		<@breadcrumbs class='mb-3'>
+			<@breadcrumbItem>
+				<@link href='jsp/admin/plugins/newsletter/ManageNewsLetter.jsp' title='#i18n{newsletter.manage_newsletters.boxTitle}'>
+					<@icon style='home' /> #i18n{newsletter.manage_newsletters.boxTitle}
+				</@link>
+			</@breadcrumbItem>
+			<@breadcrumbItem><@link href='jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletter_id}'>${newsletter_name!}</@link></@breadcrumbItem>
+			<@breadcrumbItem>#i18n{newsletter.manage_archive.boxTitle}</@breadcrumbItem>
+		</@breadcrumbs>
+		<@messages infos=infos />
 		<#if newsletters_list?has_content>
-			<@tform method='post' action='jsp/admin/plugins/newsletter/RemoveMultiNewsLetter.jsp' boxed=true >
+			<@tform method='post' id='form_bulk_delete' action='jsp/admin/plugins/newsletter/RemoveMultiNewsLetter.jsp' boxed=true>
 				<@input type='hidden' name='newsletter_id' value='${newsletter_id}' id='newsletter_id' />
-				<@table headBody=true id='archive-list'>
-					<@tr>
-						<@th> 
-							<@btnGroup>
-								<@button buttonIcon='filter' size='sm' color='info' class='toggleCheck' title='#i18n{portal.users.modify_user_rights.buttonLabelSelectAll}' params=' data-check="check" ' hideTitle=['all'] />
-								<@button buttonIcon='filter-off' size='sm' color='info' class='toggleCheck' title='#i18n{portal.users.modify_user_rights.buttonLabelUnSelectAll}' params=' data-check="uncheck" '  hideTitle=['all'] />
-							</@btnGroup>
-							<@button title='#i18n{portal.util.labelDelete}' id='delete-all' buttonIcon='trash' color='danger' title='#i18n{portal.util.labelDelete}' size='sm' />
-						</@th>	
-						<@th>#i18n{newsletter.manage_archive.columnTitleList}</@th>	
-						<@th>#i18n{newsletter.manage_archive.columnTitleDate}</@th>           
-						<@th>#i18n{newsletter.manage_archive.columnTitleDelete}</@th>
-					</@tr>
-					<@tableHeadBodySeparator />
+				<@row class='justify-content-end align-items-center'>
+					<@columns md=3>
+						<@checkBox orientation='switch' id='select_all' name='select_all' labelKey='#i18n{portal.users.modify_user_rights.buttonLabelSelectAll}' />
+					</@columns>
+					<@columns md=2>
+						<@button id='delete-all' type='submit' color='danger' buttonIcon='trash' title='#i18n{portal.util.labelDelete}' hideTitle=['all'] disabled=true />
+					</@columns>
+				</@row>
+				<@manageFeature id='archive-list'>
 					<#list newsletters_list as newsletter>
-					<@tr>
-						<@td><@checkBox id='newsletter_selection_${newsletter.id}' orientation='switch' name='newsletter_selection' value='${newsletter.id}' /></@td>
-						<@td class='d-flex justify-content-between align-items-center'>
-							<@span>${newsletter.emailSubject!} </@span>
-							<@aButton href='jsp/site/plugins/newsletter/ViewNewsletterArchive.jsp?sending_id=${newsletter.id}' title='#i18n{newsletter.manage_archive.showArchive}' target='_blank' buttonIcon='external-link' color='primary' size='' hideLabel='[all]' />
-						</@td>
-						<@td>${newsletter.date!}</@td>
-						<@td>
-							<@aButton href='jsp/admin/plugins/newsletter/RemoveSendingNewsLetter.jsp?newsletter_id=${newsletter_id}&sending_newsletter_id=${newsletter.id}' title='#i18n{portal.util.labelDelete}' buttonIcon='trash' color='danger' size='' />
-						</@td>
-					</@tr>
+						<@manageFeatureItem>
+							<@manageFeatureItemColumn auto=true>
+								<@checkBox orientation='switch' id='newsletter_selection_${newsletter.id}' name='newsletter_selection' value='${newsletter.id}' />
+							</@manageFeatureItemColumn>
+							<@manageFeatureItemColumn auto=true flex=false>
+								<strong>${newsletter.emailSubject!}</strong>
+							</@manageFeatureItemColumn>
+							<@manageFeatureItemColumn auto=true flex=false valign='top'>
+								<@p class='fw-bold fs-3'>#i18n{newsletter.manage_archive.columnTitleDate}</@p>
+								<@p>${newsletter.date!}</@p>
+							</@manageFeatureItemColumn>
+							<@manageFeatureItemColumn align='end'>
+								<@aButton href='jsp/site/plugins/newsletter/ViewNewsletterArchive.jsp?sending_id=${newsletter.id}' title='#i18n{newsletter.manage_archive.showArchive}' target='_blank' buttonIcon='external-link' hideTitle=['all'] />
+								<@aButton href='jsp/admin/plugins/newsletter/RemoveSendingNewsLetter.jsp?newsletter_id=${newsletter_id}&sending_newsletter_id=${newsletter.id}' title='#i18n{portal.util.labelDelete}' buttonIcon='trash' color='danger' hideTitle=['all'] />
+							</@manageFeatureItemColumn>
+						</@manageFeatureItem>
 					</#list>
-				</@table>
+				</@manageFeature>
 			</@tform>
+			<#if newsletters_list?size gte 10><@paginationAdmin paginator=paginator combo=1 /></#if>
 		<#else>
-			<@empty title='#i18n{newsletter.manage_archive.noArchive}' subtitle=' ' />
+			<@card>
+				<@empty title='#i18n{newsletter.manage_archive.noArchive}' iconName='archive-off' />
+			</@card>
 		</#if>
 	</@pageColumn>
 </@pageContainer>
 <script>
-document.addEventListener( "DOMContentLoaded", function(){	
-	const btnDeleteAll=document.getElementById('delete-all');
-	btnDeleteAll.setAttribute( 'disabled','');	
-	document.querySelectorAll('.toggleCheck').forEach(function(element) {
-		element.addEventListener('click', function() {
-			let isChecked = this.getAttribute('data-check') === 'check' ? true : false;
-			document.querySelectorAll('#archive-list input[type="checkbox"]').forEach(function(checkbox) {
-				checkbox.checked = isChecked;
-				if( isChecked ) { btnDeleteAll.removeAttribute( 'disabled') } else { btnDeleteAll.setAttribute( 'disabled','') };	
-			});
+document.addEventListener('DOMContentLoaded', function() {
+	const btnDeleteAll = document.getElementById('delete-all');
+	const selectAll = document.getElementById('select_all');
+	const checkboxes = document.querySelectorAll('#archive-list input[name="newsletter_selection"]');
+
+	function updateDeleteButton() {
+		const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+		if (anyChecked) { btnDeleteAll.removeAttribute('disabled'); } else { btnDeleteAll.setAttribute('disabled', ''); }
+	}
+
+	if (selectAll) {
+		selectAll.addEventListener('change', function() {
+			checkboxes.forEach(cb => { cb.checked = selectAll.checked; });
+			updateDeleteButton();
 		});
-	});
+	}
+	checkboxes.forEach(cb => cb.addEventListener('change', updateDeleteButton));
 });
 </script>

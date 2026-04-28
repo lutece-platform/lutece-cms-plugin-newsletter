@@ -2,7 +2,7 @@
     <@pageColumn>
         <@pageHeader title='#i18n{newsletter.modify_newsletter_template_file.boxTitle}' />
 		<#if template?exists>
-		<@tform method='post' enctype='multipart/form-data' action='jsp/admin/plugins/newsletter/DoModifyNewsLetterTemplateFile.jsp' boxed=true>
+		<@tform method='post' enctype='multipart/form-data' action='jsp/admin/plugins/newsletter/DoModifyNewsLetterTemplateFile.jsp' params='target="_top"'>
 			<@input type='hidden' name='newsletter_template_id' value='${template.id}' />
 			<@formGroup labelFor='newsletter_template_name' labelKey='#i18n{newsletter.add_newsletter_template.name}' mandatory=true>
 				<@input type='text' id='newsletter_template_name' name='newsletter_template_name' maxlength=50 value='${template.description}' />
@@ -23,8 +23,8 @@
 				<@input type='textarea' rows=20 id='newsletter_template_source' name='newsletter_template_source'>${template_source}</@input>
 			</@formGroup>
 			<@formGroup>
-				<@button type='submit' buttonIcon='check' title='#i18n{newsletter.modify_newsletter_template.buttonModify}' />
-				<@aButton href='jsp/admin/plugins/newsletter/ManageTemplates.jsp' buttonIcon='times' title='#i18n{newsletter.create_newsletter.buttonCancel}' color='default' />
+				<@button type='submit' buttonIcon='check' title='#i18n{newsletter.modify_newsletter_template.buttonModify}' class='form-validation'/>
+				<@aButton href='jsp/admin/plugins/newsletter/ManageTemplates.jsp' buttonIcon='times' title='#i18n{newsletter.create_newsletter.buttonCancel}' color='default' target='_top' />
 			</@formGroup>
 		</@tform>
 		</#if>
