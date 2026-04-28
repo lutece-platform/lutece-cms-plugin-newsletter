@@ -39,19 +39,24 @@ import fr.paris.lutece.plugins.newsletter.service.NewsletterPlugin;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.util.ReferenceItem;
 import fr.paris.lutece.util.ReferenceList;
 
 import java.io.Serializable;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * Service to manage newsletter content types
  */
+@ApplicationScoped
 public class NewsletterTopicService implements Serializable
 {
     /**
@@ -64,15 +69,8 @@ public class NewsletterTopicService implements Serializable
      */
     private static final long serialVersionUID = -555734991348133022L;
 
-    /**
-     * Get the service from Spring context
-     * 
-     * @return An instance of the service
-     */
-    public static NewsletterTopicService getService( )
-    {
-        return SpringContextService.getBean( BEAN_NAME );
-    }
+    @Inject
+    private Instance<INewsletterTopicService> _topicServices;
 
     /**
      * Get a reference list with every newsletter topic types
@@ -84,7 +82,7 @@ public class NewsletterTopicService implements Serializable
     public ReferenceList getNewsletterTopicTypeRefList( Locale locale )
     {
         ReferenceList refListResult = new ReferenceList( );
-        for ( INewsletterTopicService service : SpringContextService.getBeansOfType( INewsletterTopicService.class ) )
+        for ( INewsletterTopicService service : _topicServices )
         {
             ReferenceItem refItem = new ReferenceItem( );
             refItem.setCode( service.getNewsletterTopicTypeCode( ) );
@@ -107,9 +105,9 @@ public class NewsletterTopicService implements Serializable
     public void createNewsletterTopic( NewsletterTopic newsletterTopic, AdminUser user, Locale locale )
     {
         Plugin plugin = PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME );
-        for ( INewsletterTopicService service : SpringContextService.getBeansOfType( INewsletterTopicService.class ) )
+        for ( INewsletterTopicService service : _topicServices )
         {
-            if ( StringUtils.equals( service.getNewsletterTopicTypeCode( ), newsletterTopic.getTopicTypeCode( ) ) )
+            if ( Objects.equals( service.getNewsletterTopicTypeCode( ), newsletterTopic.getTopicTypeCode( ) ) )
             {
                 newsletterTopic.setTitle( service.getNewsletterTopicTypeName( locale ) );
                 NewsletterTopicHome.insertNewsletterTopic( newsletterTopic, plugin );
@@ -129,9 +127,9 @@ public class NewsletterTopicService implements Serializable
     public void removeNewsletterTopic( NewsletterTopic newsletterTopic, AdminUser user )
     {
         Plugin plugin = PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME );
-        for ( INewsletterTopicService service : SpringContextService.getBeansOfType( INewsletterTopicService.class ) )
+        for ( INewsletterTopicService service : _topicServices )
         {
-            if ( StringUtils.equals( service.getNewsletterTopicTypeCode( ), newsletterTopic.getTopicTypeCode( ) ) )
+            if ( Objects.equals( service.getNewsletterTopicTypeCode( ), newsletterTopic.getTopicTypeCode( ) ) )
             {
                 service.removeNewsletterTopic( newsletterTopic.getId( ) );
             }
@@ -155,9 +153,9 @@ public class NewsletterTopicService implements Serializable
      */
     public String getConfigurationPage( NewsletterTopic newsletterTopic, String strBaseUrl, AdminUser user, Locale locale )
     {
-        for ( INewsletterTopicService service : SpringContextService.getBeansOfType( INewsletterTopicService.class ) )
+        for ( INewsletterTopicService service : _topicServices )
         {
-            if ( StringUtils.equals( service.getNewsletterTopicTypeCode( ), newsletterTopic.getTopicTypeCode( ) ) )
+            if ( Objects.equals( service.getNewsletterTopicTypeCode( ), newsletterTopic.getTopicTypeCode( ) ) )
             {
                 return service.getConfigurationPage( newsletterTopic, strBaseUrl, user, locale );
             }
@@ -179,9 +177,9 @@ public class NewsletterTopicService implements Serializable
      */
     public void saveConfiguration( Map<String, String [ ]> mapParameters, NewsletterTopic newsletterTopic, AdminUser user, Locale locale )
     {
-        for ( INewsletterTopicService service : SpringContextService.getBeansOfType( INewsletterTopicService.class ) )
+        for ( INewsletterTopicService service : _topicServices )
         {
-            if ( StringUtils.equals( service.getNewsletterTopicTypeCode( ), newsletterTopic.getTopicTypeCode( ) ) )
+            if ( Objects.equals( service.getNewsletterTopicTypeCode( ), newsletterTopic.getTopicTypeCode( ) ) )
             {
                 service.saveConfiguration( mapParameters, newsletterTopic, user, locale );
             }
@@ -250,9 +248,9 @@ public class NewsletterTopicService implements Serializable
      */
     public String getTopicContent( NewsletterTopic newsletterTopic, AdminUser user, Locale locale )
     {
-        for ( INewsletterTopicService service : SpringContextService.getBeansOfType( INewsletterTopicService.class ) )
+        for ( INewsletterTopicService service : _topicServices )
         {
-            if ( StringUtils.equals( service.getNewsletterTopicTypeCode( ), newsletterTopic.getTopicTypeCode( ) ) )
+            if ( Objects.equals( service.getNewsletterTopicTypeCode( ), newsletterTopic.getTopicTypeCode( ) ) )
             {
                 return service.getHtmlContent( newsletterTopic, user, locale );
             }
@@ -269,9 +267,9 @@ public class NewsletterTopicService implements Serializable
      */
     public String getTopicTypeName( String strTopicTypeCode )
     {
-        for ( INewsletterTopicService service : SpringContextService.getBeansOfType( INewsletterTopicService.class ) )
+        for ( INewsletterTopicService service : _topicServices )
         {
-            if ( StringUtils.equals( service.getNewsletterTopicTypeCode( ), strTopicTypeCode ) )
+            if ( Objects.equals( service.getNewsletterTopicTypeCode( ), strTopicTypeCode ) )
             {
                 return service.getNewsletterTopicTypeName( Locale.getDefault( ) );
             }

@@ -35,56 +35,59 @@ package fr.paris.lutece.plugins.newsletter.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * This class provides Data Access methods for NewsletterProperties objects
  */
-public final class NewsletterPropertiesDAO implements INewsletterPropertiesDAO
+@ApplicationScoped
+@Named( "newsletter.newsletterPropertiesDAO" )
+public class NewsletterPropertiesDAO implements INewsletterPropertiesDAO
 {
-    // Constants
     private static final String SQL_QUERY_SELECT = "SELECT validation_activated, captcha_activated, tos FROM newsletter_properties ";
     private static final String SQL_QUERY_UPDATE = "UPDATE newsletter_properties SET validation_activated = ?, captcha_activated = ?, tos = ?";
 
     /**
      * loads data from NewsLetterProperties
-     * 
+     *
      * @param plugin
      *            the Plugin
      * @return an object NewsLetterProperties
      */
     public NewsLetterProperties load( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
-        daoUtil.executeQuery( );
-
         NewsLetterProperties properties = new NewsLetterProperties( );
 
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
         {
-            properties.setValidationActive( daoUtil.getBoolean( 1 ) );
-            properties.setCaptchaActive( daoUtil.getBoolean( 2 ) );
+            daoUtil.executeQuery( );
 
-            String strTos = daoUtil.getString( 3 );
-            if ( StringUtils.isNotEmpty( strTos ) )
+            if ( daoUtil.next( ) )
             {
-                properties.setTOS( strTos );
-            }
-            else
-            {
-                properties.setTOS( null );
+                properties.setValidationActive( daoUtil.getBoolean( 1 ) );
+                properties.setCaptchaActive( daoUtil.getBoolean( 2 ) );
+
+                String strTos = daoUtil.getString( 3 );
+                if ( StringUtils.isNotEmpty( strTos ) )
+                {
+                    properties.setTOS( strTos );
+                }
+                else
+                {
+                    properties.setTOS( null );
+                }
             }
         }
-
-        daoUtil.free( );
 
         return properties;
     }
 
     /**
      * Update the record in the table
-     * 
+     *
      * @param properties
      *            the instance of properties class to be updated
      * @param plugin
@@ -92,12 +95,13 @@ public final class NewsletterPropertiesDAO implements INewsletterPropertiesDAO
      */
     public void store( NewsLetterProperties properties, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
-        daoUtil.setBoolean( 1, properties.isValidationActive( ) );
-        daoUtil.setBoolean( 2, properties.isCaptchaActive( ) );
-        daoUtil.setString( 3, properties.getTOS( ) );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
+        {
+            daoUtil.setBoolean( 1, properties.isValidationActive( ) );
+            daoUtil.setBoolean( 2, properties.isCaptchaActive( ) );
+            daoUtil.setString( 3, properties.getTOS( ) );
 
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.executeUpdate( );
+        }
     }
 }

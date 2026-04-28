@@ -49,11 +49,16 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Named;
+
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * Service to manage topics with free html.
  */
+@ApplicationScoped
+@Named( "newsletter.freeHtmlTopicService" )
 public class FreeHtmlTopicService implements INewsletterTopicService
 {
 
@@ -75,7 +80,7 @@ public class FreeHtmlTopicService implements INewsletterTopicService
     // TEMPLATES
     private static final String TEMPLATE_MODIFY_FREE_HTML_CONFIGURATION = "admin/plugins/newsletter/free_html/modify_config_free_html.html";
 
-    private Plugin _plugin;
+    private static final Plugin _plugin = PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME );
 
     /**
      * {@inheritDoc}
@@ -111,7 +116,7 @@ public class FreeHtmlTopicService implements INewsletterTopicService
     @Override
     public String getConfigurationPage( NewsletterTopic newsletterTopic, String strBaseUrl, AdminUser user, Locale locale )
     {
-        FreeHtmlTopic htmlTopic = FreeHtmlTopicHome.findByPrimaryKey( newsletterTopic.getId( ), getPlugin( ) );
+        FreeHtmlTopic htmlTopic = FreeHtmlTopicHome.findByPrimaryKey( newsletterTopic.getId( ), _plugin );
         Map<String, Object> model = new HashMap<String, Object>( );
 
         model.put( MARK_HTML_TOPIC, htmlTopic );
@@ -132,9 +137,9 @@ public class FreeHtmlTopicService implements INewsletterTopicService
         String strContent = NewsletterUtils.getStringFromStringArray( mapParameters.get( PARAMETER_CONTENT ) );
         if ( StringUtils.isNotEmpty( strContent ) )
         {
-            FreeHtmlTopic topic = FreeHtmlTopicHome.findByPrimaryKey( newsletterTopic.getId( ), getPlugin( ) );
+            FreeHtmlTopic topic = FreeHtmlTopicHome.findByPrimaryKey( newsletterTopic.getId( ), _plugin );
             topic.setHtmlContent( strContent );
-            FreeHtmlTopicHome.updateFreeHtmlTopic( topic, getPlugin( ) );
+            FreeHtmlTopicHome.updateFreeHtmlTopic( topic, _plugin );
         }
     }
 
@@ -147,7 +152,7 @@ public class FreeHtmlTopicService implements INewsletterTopicService
         FreeHtmlTopic freeHtmlTopic = new FreeHtmlTopic( );
         freeHtmlTopic.setId( newsletterTopic.getId( ) );
         freeHtmlTopic.setHtmlContent( StringUtils.EMPTY );
-        FreeHtmlTopicHome.insertFreeHtmlTopic( freeHtmlTopic, getPlugin( ) );
+        FreeHtmlTopicHome.insertFreeHtmlTopic( freeHtmlTopic, _plugin );
     }
 
     /**
@@ -156,7 +161,7 @@ public class FreeHtmlTopicService implements INewsletterTopicService
     @Override
     public void removeNewsletterTopic( int nNewsletterTopicId )
     {
-        FreeHtmlTopicHome.removeFreeHtmlTopic( nNewsletterTopicId, getPlugin( ) );
+        FreeHtmlTopicHome.removeFreeHtmlTopic( nNewsletterTopicId, _plugin );
     }
 
     /**
@@ -165,28 +170,14 @@ public class FreeHtmlTopicService implements INewsletterTopicService
     @Override
     public String getHtmlContent( NewsletterTopic newsletterTopic, AdminUser user, Locale locale )
     {
-        FreeHtmlTopic freeHtmlTopic = FreeHtmlTopicHome.findByPrimaryKey( newsletterTopic.getId( ), getPlugin( ) );
+        FreeHtmlTopic freeHtmlTopic = FreeHtmlTopicHome.findByPrimaryKey( newsletterTopic.getId( ), _plugin );
         return freeHtmlTopic.getHtmlContent( );
-    }
-
-    /**
-     * Get the instance of the newsletter plugin
-     * 
-     * @return the newsletter plugin
-     */
-    private Plugin getPlugin( )
-    {
-        if ( _plugin == null )
-        {
-            _plugin = PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME );
-        }
-        return _plugin;
     }
 
     @Override
     public void copyNewsletterTopic( int oldTopicId, NewsletterTopic newsletterTopic, AdminUser user, Locale locale )
     {
-        FreeHtmlTopic oldFreeHtmlTopic = FreeHtmlTopicHome.findByPrimaryKey( oldTopicId, getPlugin( ) );
+        FreeHtmlTopic oldFreeHtmlTopic = FreeHtmlTopicHome.findByPrimaryKey( oldTopicId, _plugin );
 
         FreeHtmlTopic freeHtmlTopic = new FreeHtmlTopic( );
         freeHtmlTopic.setId( newsletterTopic.getId( ) );
@@ -198,6 +189,6 @@ public class FreeHtmlTopicService implements INewsletterTopicService
         {
             freeHtmlTopic.setHtmlContent( StringUtils.EMPTY );
         }
-        FreeHtmlTopicHome.insertFreeHtmlTopic( freeHtmlTopic, getPlugin( ) );
+        FreeHtmlTopicHome.insertFreeHtmlTopic( freeHtmlTopic, _plugin );
     }
 }

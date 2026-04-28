@@ -39,15 +39,19 @@ import fr.paris.lutece.plugins.newsletter.business.NewsLetterProperties;
 import fr.paris.lutece.plugins.newsletter.business.NewsletterPropertiesHome;
 import fr.paris.lutece.plugins.newsletter.util.NewsletterUtils;
 import fr.paris.lutece.portal.business.portlet.Portlet;
-import fr.paris.lutece.portal.service.captcha.CaptchaSecurityService;
+import fr.paris.lutece.portal.service.captcha.ICaptchaService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
+import fr.paris.lutece.portal.service.util.BeanUtils;
 import fr.paris.lutece.util.date.DateUtil;
 import fr.paris.lutece.util.xml.XmlUtil;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.literal.NamedLiteral;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -99,8 +103,6 @@ public class NewsLetterSubscriptionPortlet extends Portlet
         }
     };
 
-    // Captcha
-    private CaptchaSecurityService _captchaService;
     private Plugin _plugin;
 
     /**
@@ -210,8 +212,12 @@ public class NewsLetterSubscriptionPortlet extends Portlet
 
         if ( bIsCaptchaEnabled && properties.isCaptchaActive( ) )
         {
-            _captchaService = new CaptchaSecurityService( );
-            XmlUtil.addElement( strXml, TAG_NEWSLETTER_CAPTCHA, TAG_CDATA_BEGIN + _captchaService.getHtmlCode( ) + TAG_CDATA_END );
+            Instance<ICaptchaService> captchaInstance = CDI.current( ).select( ICaptchaService.class,
+                    NamedLiteral.of( BeanUtils.BEAN_CAPTCHA_SERVICE ) );
+            if ( captchaInstance.isResolvable( ) )
+            {
+                XmlUtil.addElement( strXml, TAG_NEWSLETTER_CAPTCHA, TAG_CDATA_BEGIN + captchaInstance.get( ).getHtmlCode( ) + TAG_CDATA_END );
+            }
         }
 
         if ( StringUtils.isNotEmpty( properties.getTOS( ) ) )

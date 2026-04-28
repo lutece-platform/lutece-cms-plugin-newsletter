@@ -33,23 +33,40 @@
  */
 package fr.paris.lutece.plugins.newsletter.service;
 
-import fr.paris.lutece.portal.service.daemon.Daemon;
+import fr.paris.lutece.plugins.newsletter.business.NewsletterTemplateWorkgroupRemovalListener;
+import fr.paris.lutece.plugins.newsletter.business.NewsletterWorkgroupRemovalListener;
+import fr.paris.lutece.portal.service.util.BeanUtils;
+import fr.paris.lutece.portal.service.util.RemovalListenerService;
 
-import jakarta.enterprise.inject.spi.CDI;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Initialized;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.ServletContext;
 
 /**
- * Daemon that purges unconfirmed newsletter subscribers. This class is
- * reflection-instantiated by the Lutece daemon framework and therefore is not
- * CDI-managed; dependencies are resolved at run time via CDI lookup.
+ * Registers the plugin's workgroup removal listeners against the core workgroup
+ * removal service when the CDI container starts. Replaces the legacy static
+ * {@code init( )} methods of {@code NewsLetter} and {@code NewsLetterTemplate}.
  */
-public class SubscriberCleaningDaemon extends Daemon
+@ApplicationScoped
+public class NewsletterListenersInitializer
 {
+    @Inject
+    @Named( BeanUtils.BEAN_WORKGROUP_REMOVAL_SERVICE )
+    private RemovalListenerService _workgroupRemovalService;
+
     /**
-     * Runs the cleaning process by delegating to the registration service.
+     * Registers the newsletter and newsletter-template workgroup removal
+     * listeners when the application-scoped context is initialized.
+     *
+     * @param context
+     *            the servlet context
      */
-    public void run( )
+    public void onStartup( @Observes @Initialized( ApplicationScoped.class ) ServletContext context )
     {
-        NewsLetterRegistrationService service = CDI.current( ).select( NewsLetterRegistrationService.class ).get( );
-        setLastRunLogs( service.doRemoveOldUnconfirmed( ) );
+        _workgroupRemovalService.registerListener( new NewsletterWorkgroupRemovalListener( ) );
+        _workgroupRemovalService.registerListener( new NewsletterTemplateWorkgroupRemovalListener( ) );
     }
 }

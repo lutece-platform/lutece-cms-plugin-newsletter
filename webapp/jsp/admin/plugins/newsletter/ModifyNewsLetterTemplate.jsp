@@ -1,10 +1,8 @@
 <%@ page errorPage="../../ErrorPage.jsp" %>
+<%@ page import="fr.paris.lutece.plugins.newsletter.web.NewsletterTemplateJspBean" %>
 <jsp:include page="../../AdminHeader.jsp" />
 
-<jsp:useBean id="newsletterTemplate" scope="session" class="fr.paris.lutece.plugins.newsletter.web.NewsletterTemplateJspBean" />
-
-<% newsletterTemplate.init( request, newsletterTemplate.RIGHT_NEWSLETTER_TEMPLATE_MANAGEMENT ); %>
-<%= newsletterTemplate.getModifyNewsLetterTemplate( request ) %>
-
+${ newsletterTemplateJspBean.init( pageContext.request, NewsletterTemplateJspBean.RIGHT_NEWSLETTER_TEMPLATE_MANAGEMENT ) }
+${ newsletterTemplateJspBean.getModifyNewsLetterTemplate( pageContext.request ) }
 
 <%@ include file="../../AdminFooter.jsp" %>

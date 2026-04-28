@@ -148,7 +148,7 @@ public class HtmlDomDocNewsletter
         }
         catch( UnsupportedEncodingException e )
         {
-            AppLogService.error( "Error when parsing Html document (Newsletter) : UnsupporterEncodingException (" + strEncoding + ")", e );
+            AppLogService.error( "Error when parsing Html document (Newsletter) : UnsupportedEncodingException ({})", strEncoding, e );
         }
 
         _strBaseUrl = ( strBaseUrl == null ) ? "" : strBaseUrl;

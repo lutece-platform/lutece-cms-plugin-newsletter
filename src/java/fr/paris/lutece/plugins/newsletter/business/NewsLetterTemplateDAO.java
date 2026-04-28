@@ -36,6 +36,8 @@ package fr.paris.lutece.plugins.newsletter.business;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.sql.DAOUtil;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Named;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,9 +46,10 @@ import java.util.List;
 /**
  * This class provides Data Access methods for NewsLetter's templates objects
  */
-public final class NewsLetterTemplateDAO implements INewsLetterTemplateDAO
+@ApplicationScoped
+@Named( "newsletter.newsLetterTemplateDAO" )
+public class NewsLetterTemplateDAO implements INewsLetterTemplateDAO
 {
-    // Constants
     private static final String SQL_QUERY_SELECT_ALL = "SELECT id_template, description, template_file_key, picture_file_key, workgroup_key, topic_type, sections FROM newsletter_template ORDER BY id_template asc ";
     private static final String SQL_QUERY_SELECT_ALL_BY_WORKGOUP_KEY = "SELECT id_template, description, template_file_key, picture_file_key, workgroup_key, topic_type, sections FROM newsletter_template WHERE workgroup_key = ?";
     private static final String SQL_QUERY_SELECT_ALL_REFERENCE = " SELECT id_template, description FROM newsletter_template ";
@@ -58,42 +61,34 @@ public final class NewsLetterTemplateDAO implements INewsLetterTemplateDAO
     private static final String SQL_QUERY_UPDATE = "UPDATE newsletter_template SET description = ?, template_file_key = ?, picture_file_key = ?, workgroup_key = ?, topic_type = ?, sections = ? WHERE id_template = ?";
     private static final String SQL_QUERY_DELETE = "DELETE FROM newsletter_template WHERE id_template = ? ";
 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    // Access methods to data
-
     /**
      * {@inheritDoc}
      */
     @Override
     public Collection<NewsLetterTemplate> selectTemplatesList( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL, plugin );
-        daoUtil.executeQuery( );
+        ArrayList<NewsLetterTemplate> list = new ArrayList<>( );
 
-        ArrayList<NewsLetterTemplate> list = new ArrayList<NewsLetterTemplate>( );
-
-        while ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL, plugin ) )
         {
-            NewsLetterTemplate template = new NewsLetterTemplate( );
+            daoUtil.executeQuery( );
 
-            template.setId( daoUtil.getInt( 1 ) );
-            template.setDescription( daoUtil.getString( 2 ) );
-            template.setFileKey( daoUtil.getString( 3 ) );
-            template.setPictureKey( daoUtil.getString( 4 ) );
-            template.setWorkgroup( daoUtil.getString( 5 ) );
-            template.setTopicType( daoUtil.getString( 6 ) );
-            template.setSectionNumber( daoUtil.getInt( 7 ) );
-
-            list.add( template );
+            while ( daoUtil.next( ) )
+            {
+                NewsLetterTemplate template = new NewsLetterTemplate( );
+                template.setId( daoUtil.getInt( 1 ) );
+                template.setDescription( daoUtil.getString( 2 ) );
+                template.setFileKey( daoUtil.getString( 3 ) );
+                template.setPictureKey( daoUtil.getString( 4 ) );
+                template.setWorkgroup( daoUtil.getString( 5 ) );
+                template.setTopicType( daoUtil.getString( 6 ) );
+                template.setSectionNumber( daoUtil.getInt( 7 ) );
+                list.add( template );
+            }
         }
-
-        daoUtil.free( );
 
         return list;
     }
-
-    ///////////////////////////////////////////////////////////////////////////////////////
-    // Access methods to data
 
     /**
      * {@inheritDoc}
@@ -101,20 +96,18 @@ public final class NewsLetterTemplateDAO implements INewsLetterTemplateDAO
     @Override
     public ReferenceList selectTemplatesListByType( String strTopicType, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_TEMPLATES_IDS_BY_TYPE, plugin );
-
-        daoUtil.setString( 1, strTopicType );
-
-        daoUtil.executeQuery( );
-
         ReferenceList list = new ReferenceList( );
 
-        while ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_TEMPLATES_IDS_BY_TYPE, plugin ) )
         {
-            list.addItem( daoUtil.getInt( 1 ), daoUtil.getString( 2 ) );
-        }
+            daoUtil.setString( 1, strTopicType );
+            daoUtil.executeQuery( );
 
-        daoUtil.free( );
+            while ( daoUtil.next( ) )
+            {
+                list.addItem( daoUtil.getInt( 1 ), daoUtil.getString( 2 ) );
+            }
+        }
 
         return list;
     }
@@ -125,30 +118,26 @@ public final class NewsLetterTemplateDAO implements INewsLetterTemplateDAO
     @Override
     public List<NewsLetterTemplate> selectTemplatesCollectionByType( String strTopicType, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_TEMPLATES_BY_TYPE, plugin );
+        List<NewsLetterTemplate> list = new ArrayList<>( );
 
-        daoUtil.setString( 1, strTopicType );
-
-        daoUtil.executeQuery( );
-
-        List<NewsLetterTemplate> list = new ArrayList<NewsLetterTemplate>( );
-
-        while ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_TEMPLATES_BY_TYPE, plugin ) )
         {
-            NewsLetterTemplate template = new NewsLetterTemplate( );
+            daoUtil.setString( 1, strTopicType );
+            daoUtil.executeQuery( );
 
-            template.setId( daoUtil.getInt( 1 ) );
-            template.setDescription( daoUtil.getString( 2 ) );
-            template.setFileKey( daoUtil.getString( 3 ) );
-            template.setPictureKey( daoUtil.getString( 4 ) );
-            template.setWorkgroup( daoUtil.getString( 5 ) );
-            template.setTopicType( daoUtil.getString( 6 ) );
-            template.setSectionNumber( daoUtil.getInt( 7 ) );
-
-            list.add( template );
+            while ( daoUtil.next( ) )
+            {
+                NewsLetterTemplate template = new NewsLetterTemplate( );
+                template.setId( daoUtil.getInt( 1 ) );
+                template.setDescription( daoUtil.getString( 2 ) );
+                template.setFileKey( daoUtil.getString( 3 ) );
+                template.setPictureKey( daoUtil.getString( 4 ) );
+                template.setWorkgroup( daoUtil.getString( 5 ) );
+                template.setTopicType( daoUtil.getString( 6 ) );
+                template.setSectionNumber( daoUtil.getInt( 7 ) );
+                list.add( template );
+            }
         }
-
-        daoUtil.free( );
 
         return list;
     }
@@ -161,18 +150,18 @@ public final class NewsLetterTemplateDAO implements INewsLetterTemplateDAO
     {
         newsletter.setId( newPrimaryKey( plugin ) );
 
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
+        {
+            daoUtil.setInt( 1, newsletter.getId( ) );
+            daoUtil.setString( 2, newsletter.getDescription( ) );
+            daoUtil.setString( 3, newsletter.getFileKey( ) );
+            daoUtil.setString( 4, newsletter.getPictureKey( ) );
+            daoUtil.setString( 5, newsletter.getWorkgroup( ) );
+            daoUtil.setString( 6, newsletter.getTopicType( ) );
+            daoUtil.setInt( 7, newsletter.getSectionNumber( ) );
 
-        daoUtil.setInt( 1, newsletter.getId( ) );
-        daoUtil.setString( 2, newsletter.getDescription( ) );
-        daoUtil.setString( 3, newsletter.getFileKey( ) );
-        daoUtil.setString( 4, newsletter.getPictureKey( ) );
-        daoUtil.setString( 5, newsletter.getWorkgroup( ) );
-        daoUtil.setString( 6, newsletter.getTopicType( ) );
-        daoUtil.setInt( 7, newsletter.getSectionNumber( ) );
-
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -183,24 +172,22 @@ public final class NewsLetterTemplateDAO implements INewsLetterTemplateDAO
     {
         NewsLetterTemplate template = new NewsLetterTemplate( );
 
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
-
-        daoUtil.setInt( 1, nTemplateId );
-
-        daoUtil.executeQuery( );
-
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
         {
-            template.setId( daoUtil.getInt( 1 ) );
-            template.setDescription( daoUtil.getString( 2 ) );
-            template.setFileKey( daoUtil.getString( 3 ) );
-            template.setPictureKey( daoUtil.getString( 4 ) );
-            template.setWorkgroup( daoUtil.getString( 5 ) );
-            template.setTopicType( daoUtil.getString( 6 ) );
-            template.setSectionNumber( daoUtil.getInt( 7 ) );
-        }
+            daoUtil.setInt( 1, nTemplateId );
+            daoUtil.executeQuery( );
 
-        daoUtil.free( );
+            if ( daoUtil.next( ) )
+            {
+                template.setId( daoUtil.getInt( 1 ) );
+                template.setDescription( daoUtil.getString( 2 ) );
+                template.setFileKey( daoUtil.getString( 3 ) );
+                template.setPictureKey( daoUtil.getString( 4 ) );
+                template.setWorkgroup( daoUtil.getString( 5 ) );
+                template.setTopicType( daoUtil.getString( 6 ) );
+                template.setSectionNumber( daoUtil.getInt( 7 ) );
+            }
+        }
 
         return template;
     }
@@ -211,18 +198,18 @@ public final class NewsLetterTemplateDAO implements INewsLetterTemplateDAO
     @Override
     public void store( NewsLetterTemplate newsLetterTemplate, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
+        {
+            daoUtil.setString( 1, newsLetterTemplate.getDescription( ) );
+            daoUtil.setString( 2, newsLetterTemplate.getFileKey( ) );
+            daoUtil.setString( 3, newsLetterTemplate.getPictureKey( ) );
+            daoUtil.setString( 4, newsLetterTemplate.getWorkgroup( ) );
+            daoUtil.setString( 5, newsLetterTemplate.getTopicType( ) );
+            daoUtil.setInt( 6, newsLetterTemplate.getSectionNumber( ) );
+            daoUtil.setInt( 7, newsLetterTemplate.getId( ) );
 
-        daoUtil.setString( 1, newsLetterTemplate.getDescription( ) );
-        daoUtil.setString( 2, newsLetterTemplate.getFileKey( ) );
-        daoUtil.setString( 3, newsLetterTemplate.getPictureKey( ) );
-        daoUtil.setString( 4, newsLetterTemplate.getWorkgroup( ) );
-        daoUtil.setString( 5, newsLetterTemplate.getTopicType( ) );
-        daoUtil.setInt( 6, newsLetterTemplate.getSectionNumber( ) );
-        daoUtil.setInt( 7, newsLetterTemplate.getId( ) );
-
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -231,10 +218,11 @@ public final class NewsLetterTemplateDAO implements INewsLetterTemplateDAO
     @Override
     public void delete( int nNewsLetterTemplateId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1, nNewsLetterTemplateId );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+        {
+            daoUtil.setInt( 1, nNewsLetterTemplateId );
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -244,19 +232,19 @@ public final class NewsLetterTemplateDAO implements INewsLetterTemplateDAO
     public ReferenceList selectTemplatesByRef( Plugin plugin )
     {
         ReferenceList listTemplates = new ReferenceList( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL_REFERENCE, plugin );
-        daoUtil.executeQuery( );
 
-        while ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL_REFERENCE, plugin ) )
         {
-            NewsLetterTemplate template = new NewsLetterTemplate( );
-            template.setId( daoUtil.getInt( 1 ) );
-            template.setDescription( daoUtil.getString( 2 ) );
+            daoUtil.executeQuery( );
 
-            listTemplates.addItem( template.getId( ), template.getDescription( ) );
+            while ( daoUtil.next( ) )
+            {
+                NewsLetterTemplate template = new NewsLetterTemplate( );
+                template.setId( daoUtil.getInt( 1 ) );
+                template.setDescription( daoUtil.getString( 2 ) );
+                listTemplates.addItem( template.getId( ), template.getDescription( ) );
+            }
         }
-
-        daoUtil.free( );
 
         return listTemplates;
     }
@@ -267,59 +255,49 @@ public final class NewsLetterTemplateDAO implements INewsLetterTemplateDAO
     @Override
     public Collection<NewsLetterTemplate> selectTemplatesListByWorkgoup( String strWorkgroupKey, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL_BY_WORKGOUP_KEY, plugin );
-        daoUtil.setString( 1, strWorkgroupKey );
-        daoUtil.executeQuery( );
+        ArrayList<NewsLetterTemplate> list = new ArrayList<>( );
 
-        ArrayList<NewsLetterTemplate> list = new ArrayList<NewsLetterTemplate>( );
-
-        while ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL_BY_WORKGOUP_KEY, plugin ) )
         {
-            NewsLetterTemplate template = new NewsLetterTemplate( );
+            daoUtil.setString( 1, strWorkgroupKey );
+            daoUtil.executeQuery( );
 
-            template.setId( daoUtil.getInt( 1 ) );
-            template.setDescription( daoUtil.getString( 2 ) );
-            template.setFileKey( daoUtil.getString( 3 ) );
-            template.setPictureKey( daoUtil.getString( 4 ) );
-            template.setWorkgroup( daoUtil.getString( 5 ) );
-            template.setTopicType( daoUtil.getString( 6 ) );
-            template.setSectionNumber( daoUtil.getInt( 7 ) );
-
-            list.add( template );
+            while ( daoUtil.next( ) )
+            {
+                NewsLetterTemplate template = new NewsLetterTemplate( );
+                template.setId( daoUtil.getInt( 1 ) );
+                template.setDescription( daoUtil.getString( 2 ) );
+                template.setFileKey( daoUtil.getString( 3 ) );
+                template.setPictureKey( daoUtil.getString( 4 ) );
+                template.setWorkgroup( daoUtil.getString( 5 ) );
+                template.setTopicType( daoUtil.getString( 6 ) );
+                template.setSectionNumber( daoUtil.getInt( 7 ) );
+                list.add( template );
+            }
         }
-
-        daoUtil.free( );
 
         return list;
     }
 
     /**
      * Calculate a new primary key to add a new NewsletterTemplate
-     * 
+     *
      * @param plugin
      *            the plugin
      * @return The new key.
      */
     private int newPrimaryKey( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PRIMARY_KEY, plugin );
-
-        int nKey;
-
-        daoUtil.executeQuery( );
-
-        if ( !daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PRIMARY_KEY, plugin ) )
         {
-            // If the table is empty
-            nKey = 1;
-        }
-        else
-        {
-            nKey = daoUtil.getInt( 1 ) + 1;
-        }
+            daoUtil.executeQuery( );
 
-        daoUtil.free( );
-
-        return nKey;
+            int nKey = 1;
+            if ( daoUtil.next( ) )
+            {
+                nKey = daoUtil.getInt( 1 ) + 1;
+            }
+            return nKey;
+        }
     }
 }

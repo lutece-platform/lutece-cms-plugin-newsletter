@@ -35,7 +35,9 @@ package fr.paris.lutece.plugins.newsletter.business.topic;
 
 import fr.paris.lutece.plugins.newsletter.service.topic.NewsletterTopicService;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.Objects;
+
+import jakarta.enterprise.inject.spi.CDI;
 
 /**
  * Class to describe a topic of a newsletter. this class implements the {@link java.lang.Comparable Comparable} interface.
@@ -108,7 +110,7 @@ public class NewsletterTopic implements Comparable<NewsletterTopic>
      */
     public String getTopicTypeName( )
     {
-        return NewsletterTopicService.getService( ).getTopicTypeName( getTopicTypeCode( ) );
+        return CDI.current( ).select( NewsletterTopicService.class ).get( ).getTopicTypeName( getTopicTypeCode( ) );
     }
 
     /**
@@ -255,7 +257,7 @@ public class NewsletterTopic implements Comparable<NewsletterTopic>
         }
         NewsletterTopic otherTopic = (NewsletterTopic) o;
         return getId( ) == otherTopic.getId( ) && getIdNewsletter( ) == otherTopic.getIdNewsletter( ) && getSection( ) == otherTopic.getSection( )
-                && getOrder( ) == otherTopic.getOrder( ) && StringUtils.equals( getTopicTypeCode( ), otherTopic.getTopicTypeCode( ) );
+                && getOrder( ) == otherTopic.getOrder( ) && Objects.equals( getTopicTypeCode( ), otherTopic.getTopicTypeCode( ) );
     }
 
 }

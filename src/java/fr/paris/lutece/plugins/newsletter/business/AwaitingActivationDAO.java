@@ -35,11 +35,15 @@ package fr.paris.lutece.plugins.newsletter.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Named;
 
 /**
  *
  * AwaitingActivationDAO provides newsletter_awaiting_confirmation table management
  */
+@ApplicationScoped
+@Named( "newsletter.awaitingActivationDAO" )
 public class AwaitingActivationDAO implements IAwaitingActivationDAO
 {
     private static final String SQL_QUERY_INSERT = "INSERT INTO newsletter_awaiting_confirmation(id_user, generated_key) VALUES (?, ?)";
@@ -48,7 +52,7 @@ public class AwaitingActivationDAO implements IAwaitingActivationDAO
 
     /**
      * Removes the entry
-     * 
+     *
      * @param nIdUser
      *            the user id
      * @param nKey
@@ -58,18 +62,18 @@ public class AwaitingActivationDAO implements IAwaitingActivationDAO
      */
     public void delete( int nIdUser, int nKey, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1, nIdUser );
-        daoUtil.setInt( 2, nKey );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+        {
+            daoUtil.setInt( 1, nIdUser );
+            daoUtil.setInt( 2, nKey );
 
-        daoUtil.executeUpdate( );
-
-        daoUtil.free( );
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
      * Checks if the pair user/key already exists.
-     * 
+     *
      * @param nIdUser
      *            the user id
      * @param nKey
@@ -80,22 +84,20 @@ public class AwaitingActivationDAO implements IAwaitingActivationDAO
      */
     public boolean exists( int nIdUser, int nKey, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_EXISTS, plugin );
-        daoUtil.setInt( 1, nIdUser );
-        daoUtil.setInt( 2, nKey );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_EXISTS, plugin ) )
+        {
+            daoUtil.setInt( 1, nIdUser );
+            daoUtil.setInt( 2, nKey );
 
-        daoUtil.executeQuery( );
+            daoUtil.executeQuery( );
 
-        boolean bExists = daoUtil.next( );
-
-        daoUtil.free( );
-
-        return bExists;
+            return daoUtil.next( );
+        }
     }
 
     /**
      * Adds a new pair user/key entry
-     * 
+     *
      * @param nIdUser
      *            the user id
      * @param nKey
@@ -105,12 +107,12 @@ public class AwaitingActivationDAO implements IAwaitingActivationDAO
      */
     public void insert( int nIdUser, int nKey, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
-        daoUtil.setInt( 1, nIdUser );
-        daoUtil.setInt( 2, nKey );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
+        {
+            daoUtil.setInt( 1, nIdUser );
+            daoUtil.setInt( 2, nKey );
 
-        daoUtil.executeUpdate( );
-
-        daoUtil.free( );
+            daoUtil.executeUpdate( );
+        }
     }
 }

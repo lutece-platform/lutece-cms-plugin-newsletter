@@ -35,7 +35,6 @@ package fr.paris.lutece.plugins.newsletter.business;
 
 import fr.paris.lutece.portal.service.rbac.RBACResource;
 import fr.paris.lutece.portal.service.workgroup.AdminWorkgroupResource;
-import fr.paris.lutece.portal.service.workgroup.WorkgroupRemovalListenerService;
 
 /**
  * This class represents business objects NewsLetterTemplate
@@ -47,7 +46,7 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
      */
     public static final String RESOURCE_TYPE = "NEWSLETTER_TEMPLATE";
     private static final String EMPTY_STRING = "";
-    private static NewsletterTemplateWorkgroupRemovalListener _listenerWorkgroup;
+
     private int _nId;
     private String _strTopicType;
     private String _strDescription;
@@ -55,18 +54,6 @@ public class NewsLetterTemplate implements AdminWorkgroupResource, RBACResource
     private String _strPictureKey;
     private String _strWorkgroup;
     private int _nSectionNumber;
-
-    /**
-     * Initialisation method
-     */
-    public static synchronized void init( )
-    {
-        if ( _listenerWorkgroup == null )
-        {
-            _listenerWorkgroup = new NewsletterTemplateWorkgroupRemovalListener( );
-            WorkgroupRemovalListenerService.getService( ).registerListener( _listenerWorkgroup );
-        }
-    }
 
     /**
      * Returns the identifier of the template

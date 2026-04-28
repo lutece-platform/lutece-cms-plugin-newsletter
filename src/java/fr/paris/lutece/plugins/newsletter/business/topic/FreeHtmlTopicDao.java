@@ -35,6 +35,8 @@ package fr.paris.lutece.plugins.newsletter.business.topic;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Named;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +44,8 @@ import java.util.List;
 /**
  * DAO implementation for {@link FreeHtmlTopic}
  */
+@ApplicationScoped
+@Named( "newsletter.freeHtmlTopicDao" )
 public class FreeHtmlTopicDao implements IFreeHtmlTopicDAO
 {
     private static final String SQL_QUERY_FIND_BY_PRIMARY_KEY = " SELECT id_topic, html_content FROM newsletter_topic_free_html WHERE id_topic = ? ";
@@ -59,18 +63,21 @@ public class FreeHtmlTopicDao implements IFreeHtmlTopicDAO
     @Override
     public FreeHtmlTopic findByPrimaryKey( int nId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_FIND_BY_PRIMARY_KEY, plugin );
-        daoUtil.setInt( 1, nId );
         FreeHtmlTopic topic = null;
 
-        daoUtil.executeQuery( );
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_FIND_BY_PRIMARY_KEY, plugin ) )
         {
-            topic = new FreeHtmlTopic( );
-            topic.setId( daoUtil.getInt( 1 ) );
-            topic.setHtmlContent( daoUtil.getString( 2 ) );
+            daoUtil.setInt( 1, nId );
+            daoUtil.executeQuery( );
+
+            if ( daoUtil.next( ) )
+            {
+                topic = new FreeHtmlTopic( );
+                topic.setId( daoUtil.getInt( 1 ) );
+                topic.setHtmlContent( daoUtil.getString( 2 ) );
+            }
         }
-        daoUtil.free( );
+
         return topic;
     }
 
@@ -80,11 +87,12 @@ public class FreeHtmlTopicDao implements IFreeHtmlTopicDAO
     @Override
     public void insert( FreeHtmlTopic freeHtmlTopic, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
-        daoUtil.setInt( 1, freeHtmlTopic.getId( ) );
-        daoUtil.setString( 2, freeHtmlTopic.getHtmlContent( ) );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
+        {
+            daoUtil.setInt( 1, freeHtmlTopic.getId( ) );
+            daoUtil.setString( 2, freeHtmlTopic.getHtmlContent( ) );
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -93,11 +101,12 @@ public class FreeHtmlTopicDao implements IFreeHtmlTopicDAO
     @Override
     public void update( FreeHtmlTopic freeHtmlTopic, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
-        daoUtil.setString( 1, freeHtmlTopic.getHtmlContent( ) );
-        daoUtil.setInt( 2, freeHtmlTopic.getId( ) );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
+        {
+            daoUtil.setString( 1, freeHtmlTopic.getHtmlContent( ) );
+            daoUtil.setInt( 2, freeHtmlTopic.getId( ) );
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -106,10 +115,11 @@ public class FreeHtmlTopicDao implements IFreeHtmlTopicDAO
     @Override
     public void remove( int nId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1, nId );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+        {
+            daoUtil.setInt( 1, nId );
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -118,12 +128,13 @@ public class FreeHtmlTopicDao implements IFreeHtmlTopicDAO
     @Override
     public List<FreeHtmlTopic> findCollection( List<Integer> listIds, Plugin plugin )
     {
-        List<FreeHtmlTopic> listTopic = new ArrayList<FreeHtmlTopic>( );
+        List<FreeHtmlTopic> listTopic = new ArrayList<>( );
+
         if ( listIds != null )
         {
-            List<Integer> listPrivIds = new ArrayList<Integer>( listIds );
+            List<Integer> listPrivIds = new ArrayList<>( listIds );
             StringBuilder sbSql = new StringBuilder( SQL_QUERY_FIND_BY_ID_LIST );
-            if ( listIds.size( ) > 0 )
+            if ( !listIds.isEmpty( ) )
             {
                 sbSql.append( listPrivIds.get( 0 ) );
                 listPrivIds.remove( 0 );
@@ -134,23 +145,26 @@ public class FreeHtmlTopicDao implements IFreeHtmlTopicDAO
                 sbSql.append( nId );
             }
             sbSql.append( CONSTANT_CLOSE_PARENTHESIS );
-            DAOUtil daoUtil = new DAOUtil( sbSql.toString( ), plugin );
-            int nIndex = 1;
-            for ( int nId : listIds )
-            {
-                daoUtil.setInt( nIndex++, nId );
-            }
 
-            daoUtil.executeQuery( );
-            while ( daoUtil.next( ) )
+            try ( DAOUtil daoUtil = new DAOUtil( sbSql.toString( ), plugin ) )
             {
-                FreeHtmlTopic topic = new FreeHtmlTopic( );
-                topic.setId( daoUtil.getInt( 1 ) );
-                topic.setHtmlContent( daoUtil.getString( 2 ) );
-                listTopic.add( topic );
+                int nIndex = 1;
+                for ( int nId : listIds )
+                {
+                    daoUtil.setInt( nIndex++, nId );
+                }
+
+                daoUtil.executeQuery( );
+                while ( daoUtil.next( ) )
+                {
+                    FreeHtmlTopic topic = new FreeHtmlTopic( );
+                    topic.setId( daoUtil.getInt( 1 ) );
+                    topic.setHtmlContent( daoUtil.getString( 2 ) );
+                    listTopic.add( topic );
+                }
             }
-            daoUtil.free( );
         }
+
         return listTopic;
     }
 }

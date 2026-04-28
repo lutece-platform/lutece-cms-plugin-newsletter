@@ -49,12 +49,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -80,6 +83,7 @@ import fr.paris.lutece.plugins.newsletter.service.topic.NewsletterTopicService;
 import fr.paris.lutece.plugins.newsletter.util.NewsLetterConstants;
 import fr.paris.lutece.plugins.newsletter.util.NewsletterUtils;
 import fr.paris.lutece.portal.business.rbac.RBAC;
+import fr.paris.lutece.api.user.User;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.business.workgroup.AdminWorkgroupHome;
 import fr.paris.lutece.portal.service.admin.AccessDeniedException;
@@ -91,6 +95,7 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.rbac.RBACService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.portal.service.upload.MultipartItem;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
@@ -114,6 +119,8 @@ import fr.paris.lutece.util.url.UrlItem;
 /**
  * This class provides the user interface to manage NewsLetters features
  */
+@SessionScoped
+@Named
 public class NewsletterJspBean extends PluginAdminPageJspBean
 {
     /**
@@ -265,7 +272,6 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String JSP_URL_MODIFY_TOPIC_CONFIG = "GetModifyTopicConfig.jsp";
     private static final String JSP_URL_DO_REMOVE_TOPIC = "jsp/admin/plugins/newsletter/DoRemoveNewsletterTopic.jsp";
     private static final String JSP_URL_MANAGE_TOPICS = "GetManageNewsletterTopics.jsp";
-    private static final String JSP_URL_MODIFY_NEWSLETTER = "ModifyNewsLetter.jsp";
 
     // messages
     private static final String MESSAGE_CONFIRM_TEST_NEWSLETTER = "newsletter.message.confirmTestNewsletter";
@@ -335,8 +341,12 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private String [ ] _multiSelectionValues;
     private String _strSortedAttributeName;
     private Boolean _bIsAscSort;
-    private NewsletterService _newsletterService = NewsletterService.getService( );
-    private NewsletterTopicService _newsletterTopicService = NewsletterTopicService.getService( );
+    @Inject
+    private transient NewsletterService _newsletterService;
+    @Inject
+    private transient NewsletterTopicService _newsletterTopicService;
+    @Inject
+    private transient NewsLetterRegistrationService _registrationService;
 
     /**
      * Creates a new NewsletterJspBean object.
@@ -361,7 +371,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         Map<String, Object> model = new HashMap<String, Object>( );
         Collection<NewsLetter> listNewsletter = NewsLetterHome.findAll( getPlugin( ) );
-        listNewsletter = AdminWorkgroupService.getAuthorizedCollection( listNewsletter, getUser( ) );
+        listNewsletter = AdminWorkgroupService.getAuthorizedCollection( listNewsletter, (User) getUser( ) );
 
         // SORT
         if ( _strSortedAttributeName == null )
@@ -388,21 +398,21 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             Map<String, Object> newsletterDisplay = new HashMap<String, Object>( );
             newsletterDisplay.put( MARK_NEWSLETTER, newsletter );
             newsletterDisplay.put( MARK_NEWSLETTER_ALLOW_CREATION,
-                    RBACService.isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_CREATE, getUser( ) ) );
+                    RBACService.isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_CREATE, (User) getUser( ) ) );
 
             newsletterDisplay.put( MARK_NEWSLETTER_ALLOW_MANAGE_ARCHIVE,
-                    RBACService.isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_ARCHIVE, getUser( ) ) );
+                    RBACService.isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_ARCHIVE, (User) getUser( ) ) );
 
             newsletterDisplay.put( MARK_NEWSLETTER_ALLOW_DELETION,
-                    RBACService.isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_DELETE, getUser( ) ) );
+                    RBACService.isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_DELETE, (User) getUser( ) ) );
             newsletterDisplay.put( MARK_NEWSLETTER_ALLOW_MANAGE_SUBSCRIBERS,
-                    RBACService.isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, getUser( ) ) );
+                    RBACService.isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, (User) getUser( ) ) );
             newsletterDisplay.put( MARK_NEWSLETTER_ALLOW_EXPORT_SUBSCRIBERS,
-                    RBACService.isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_EXPORT_SUBSCRIBERS, getUser( ) ) );
+                    RBACService.isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_EXPORT_SUBSCRIBERS, (User) getUser( ) ) );
             newsletterDisplay.put( MARK_NEWSLETTER_ALLOW_MODIFICATION,
-                    RBACService.isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) );
+                    RBACService.isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_MODIFY, (User) getUser( ) ) );
             newsletterDisplay.put( MARK_NEWSLETTER_ALLOW_SENDING,
-                    RBACService.isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_SEND, getUser( ) ) );
+                    RBACService.isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_SEND, (User) getUser( ) ) );
 
             // The workgroup description is needed for coherence and not the key
             if ( newsletter.getWorkgroup( ).equals( NewsLetterConstants.ALL_GROUPS ) )
@@ -428,7 +438,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         model.put( MARK_ALLOW_CREATION, isNewsletterCreationAllowed( request ) );
         model.put( MARK_NB_ITEMS_PER_PAGE, StringUtils.EMPTY + _nItemsPerPage );
         model.put( MARK_RIGHT_MANAGE_NEWSLETTER_PROPERTIES, RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, RBAC.WILDCARD_RESOURCES_ID,
-                NewsletterResourceIdService.PERMISSION_NEWSLETTER_ADVANCED_SETTINGS, getUser( ) ) );
+                NewsletterResourceIdService.PERMISSION_NEWSLETTER_ADVANCED_SETTINGS, (User) getUser( ) ) );
 
         // Collection refListAllTemplates = NewsLetterTemplateHome.getTemplatesList( getPlugin( ) );
         HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_MANAGE_NEWSLETTERS, getLocale( ), model );
@@ -481,7 +491,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     public String getManageNewsLettersProperties( HttpServletRequest request ) throws AccessDeniedException
     {
         if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, RBAC.WILDCARD_RESOURCES_ID,
-                NewsletterResourceIdService.PERMISSION_NEWSLETTER_ADVANCED_SETTINGS, getUser( ) ) )
+                NewsletterResourceIdService.PERMISSION_NEWSLETTER_ADVANCED_SETTINGS, (User) getUser( ) ) )
         {
             throw new AccessDeniedException( MESSAGE_USER_NOT_ALLOWED_NEWSLETTER_PROPERTIES + AdminUserService.getAdminUser( request ).getAccessCode( ) );
         }
@@ -497,7 +507,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         model.put( MARK_LOCALE, getLocale( ).getLanguage( ) );
         model.put( MARK_PROPERTIES, properties );
         model.put( MARK_CLEAN_RIGHT,
-                RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, null, NewsletterResourceIdService.PERMISSION_CLEAN_SUBSCRIBERS, getUser( ) ) );
+                RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, null, NewsletterResourceIdService.PERMISSION_CLEAN_SUBSCRIBERS, (User) getUser( ) ) );
 
         HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_MANAGE_NEWSLETTERS_PROPERTIES, getLocale( ), model );
 
@@ -516,7 +526,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     public String doManageNewsLetterProperties( HttpServletRequest request ) throws AccessDeniedException
     {
         if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, RBAC.WILDCARD_RESOURCES_ID,
-                NewsletterResourceIdService.PERMISSION_NEWSLETTER_ADVANCED_SETTINGS, getUser( ) ) )
+                NewsletterResourceIdService.PERMISSION_NEWSLETTER_ADVANCED_SETTINGS, (User) getUser( ) ) )
         {
             throw new AccessDeniedException( MESSAGE_USER_NOT_ALLOWED_NEWSLETTER_PROPERTIES + AdminUserService.getAdminUser( request ).getAccessCode( ) );
         }
@@ -607,8 +617,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         AdminUser user = getUser( );
 
         // RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, (User) getUser( ) ) )
         {
             return getManageNewsLetters( request );
         }
@@ -639,11 +649,11 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             {
                 Collection<NewsLetterTemplate> newsletterTemplatesList = NewsLetterTemplateHome.getTemplatesCollectionByType( NewsLetterTemplate.RESOURCE_TYPE,
                         getPlugin( ) );
-                newsletterTemplatesList = AdminWorkgroupService.getAuthorizedCollection( newsletterTemplatesList, getUser( ) );
+                newsletterTemplatesList = AdminWorkgroupService.getAuthorizedCollection( newsletterTemplatesList, (User) getUser( ) );
 
                 for ( NewsLetterTemplate template : newsletterTemplatesList )
                 {
-                    if ( StringUtils.equals( template.getResourceTypeCode( ), NewsLetter.RESOURCE_TYPE ) )
+                    if ( Objects.equals( template.getResourceTypeCode( ), NewsLetter.RESOURCE_TYPE ) )
                     {
                         nTemplateNewsLetterId = template.getId( );
                         break;
@@ -693,8 +703,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsLetterId, getPlugin( ) );
 
         // Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, (User) getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -724,12 +734,12 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     public String doCleanSubscribers( HttpServletRequest request )
     {
         // RBAC permissions, the user must have the right "clean subscribers" on all newsletters
-        if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, null, NewsletterResourceIdService.PERMISSION_CLEAN_SUBSCRIBERS, getUser( ) ) )
+        if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, null, NewsletterResourceIdService.PERMISSION_CLEAN_SUBSCRIBERS, (User) getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
 
-        NewsLetterRegistrationService.getInstance( ).doRemoveOldUnconfirmed( );
+        _registrationService.doRemoveOldUnconfirmed( );
 
         int nConfirmLimit = AppPropertiesService.getPropertyInt( PROPERTY_LIMIT_CONFIRM_DAYS, DEFAULT_LIMIT );
         Object [ ] messages = new String [ 1];
@@ -839,8 +849,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         int nNewsletterId = Integer.parseInt( strNewsletterId );
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, (User) getUser( ) ) )
         {
             return getManageNewsLetters( request );
         }
@@ -887,8 +897,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         String strTestSubject = request.getParameter( PARAMETER_TEST_SUBJECT );
 
         // RBAC permission
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, (User) getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1022,8 +1032,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         // RBAC permission
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
+                NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, (User) getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1056,8 +1066,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         // RBAC permission
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
+                NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, (User) getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1096,8 +1106,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         // RBAC permission
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_DELETE, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_DELETE, (User) getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1131,7 +1141,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         // RBAC permission
         if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, Integer.toString( nNewsletterId ), NewsletterResourceIdService.PERMISSION_ARCHIVE,
-                getUser( ) ) )
+                (User) getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1160,7 +1170,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         // RBAC permission
         if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, Integer.toString( nNewsletterId ), NewsletterResourceIdService.PERMISSION_ARCHIVE,
-                getUser( ) ) )
+                (User) getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1205,8 +1215,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         // Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE,
-                Integer.toString( newsletter.getId( ) ), NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE,
+                Integer.toString( newsletter.getId( ) ), NewsletterResourceIdService.PERMISSION_MODIFY, (User) getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1241,7 +1251,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         int nSendingNewsletterId = Integer.parseInt( request.getParameter( PARAMETER_SENDING_NEWSLETTER_ID ) );
 
         if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, Integer.toString( nNewsletterId ), NewsletterResourceIdService.PERMISSION_ARCHIVE,
-                getUser( ) ) )
+                (User) getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1267,7 +1277,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         String strSendingNewsletterId = request.getParameter( PARAMETER_SENDING_NEWSLETTER_ID );
 
         if ( !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, Integer.toString( nNewsletterId ), NewsletterResourceIdService.PERMISSION_ARCHIVE,
-                getUser( ) ) )
+                (User) getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1300,8 +1310,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetterProperties properties = NewsletterPropertiesHome.find( getPlugin( ) );
 
         // Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
+                NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, (User) getUser( ) ) )
         {
             return getManageNewsLetters( request );
         }
@@ -1352,11 +1362,11 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         model.put( MARK_SUBSCRIBERS_LIST, paginator.getPageItems( ) );
         model.put( MARK_DISPLAY_STATUS, properties.isValidationActive( ) );
         model.put( MARK_ADD_SUBSCRIBER_RIGHT,
-                RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_ADD_SUBSCRIBER, getUser( ) ) );
+                RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_ADD_SUBSCRIBER, (User) getUser( ) ) );
         model.put( MARK_IMPORT_SUBSCRIBER_RIGHT,
-                RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_IMPORT_SUBSCRIBERS, getUser( ) ) );
+                RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_IMPORT_SUBSCRIBERS, (User) getUser( ) ) );
         model.put( MARK_EXPORT_SUBSCRIBER_RIGTH,
-                RBACService.isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_EXPORT_SUBSCRIBERS, getUser( ) ) );
+                RBACService.isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_EXPORT_SUBSCRIBERS, (User) getUser( ) ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_SUBSCRIBERS, getLocale( ), model );
 
@@ -1377,8 +1387,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsLetterId, getPlugin( ) );
 
         // Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_ADD_SUBSCRIBER, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_ADD_SUBSCRIBER, (User) getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1434,8 +1444,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         // Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_SEND, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_SEND, (User) getUser( ) ) )
         {
             return getManageNewsLetters( request );
         }
@@ -1480,8 +1490,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         // Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_SEND, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_SEND, (User) getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1512,8 +1522,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         // Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_SEND, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_SEND, (User) getUser( ) ) )
         {
             return getManageNewsLetters( request );
         }
@@ -1544,8 +1554,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         // Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_SEND, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_SEND, (User) getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1610,8 +1620,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         // Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, (User) getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1645,8 +1655,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         // Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, (User) getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1695,8 +1705,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         // Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_SEND, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_SEND, (User) getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1764,8 +1774,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         // Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, (User) getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1822,8 +1832,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         // Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
+                NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, (User) getUser( ) ) )
         {
             return getManageNewsLetters( request );
         }
@@ -1853,8 +1863,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
         // Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
+                NewsletterResourceIdService.PERMISSION_MANAGE_SUBSCRIBERS, (User) getUser( ) ) )
         {
             return getManageNewsLetters( request );
         }
@@ -1886,8 +1896,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         Boolean bImportDelete = Boolean.valueOf( strImportDelete );
 
         // Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
-                NewsletterResourceIdService.PERMISSION_IMPORT_SUBSCRIBERS, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId,
+                NewsletterResourceIdService.PERMISSION_IMPORT_SUBSCRIBERS, (User) getUser( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }
@@ -1899,7 +1909,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                 // create the multipart request
                 MultipartHttpServletRequest multi = (MultipartHttpServletRequest) request;
 
-                FileItem csvItem = multi.getFile( PARAMETER_SUBSCRIBERS_FILE );
+                MultipartItem csvItem = multi.getFile( PARAMETER_SUBSCRIBERS_FILE );
                 String strMultiFileName = csvItem == null ? StringUtils.EMPTY : UploadUtil.cleanFileName( csvItem.getName( ) );
                 if ( csvItem == null || StringUtils.isEmpty( strMultiFileName ) )
                 {
@@ -1914,11 +1924,12 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                     return AdminMessageService.getMessageUrl( request, MESSAGE_CSV_FILE_EXTENSION, AdminMessage.TYPE_STOP );
                 }
 
-                Reader fileReader = new InputStreamReader( csvItem.getInputStream( ) );
-                CSVReader csvReader = new CSVReader( fileReader, AppPropertiesService.getProperty( PROPERTY_IMPORT_DELIMITER ).charAt( 0 ) );
-
-                @SuppressWarnings( "unchecked" )
-                List<String [ ]> tabUsers = csvReader.readAll( );
+                List<String [ ]> tabUsers;
+                try ( Reader fileReader = new InputStreamReader( csvItem.getInputStream( ) );
+                      CSVReader csvReader = new CSVReader( fileReader, AppPropertiesService.getProperty( PROPERTY_IMPORT_DELIMITER ).charAt( 0 ) ) )
+                {
+                    tabUsers = csvReader.readAll( );
+                }
 
                 // the file is empty
                 if ( ( tabUsers == null ) || ( tabUsers.size( ) == 0 ) )
@@ -2042,8 +2053,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         int nNewsletterId = Integer.parseInt( strNewsletterId );
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, (User) getUser( ) ) )
         {
             return getManageNewsLetters( request );
         }
@@ -2096,7 +2107,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         {
             tableManager = (DataTableManager<NewsletterTopic>) object;
             // If the table manager saved in session is not associated with this newsletter we create a new one
-            if ( !StringUtils.equals( tableManager.getSortUrl( ), url.getUrl( ) ) )
+            if ( !Objects.equals( tableManager.getSortUrl( ), url.getUrl( ) ) )
             {
                 tableManager = null;
             }
@@ -2120,7 +2131,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         Collection<NewsLetterTemplate> newsletterTemplatesList = NewsLetterTemplateHome.getTemplatesCollectionByType( NewsLetterTemplate.RESOURCE_TYPE,
                 getPlugin( ) );
-        newsletterTemplatesList = AdminWorkgroupService.getAuthorizedCollection( newsletterTemplatesList, user );
+        newsletterTemplatesList = AdminWorkgroupService.getAuthorizedCollection( newsletterTemplatesList, (User) user );
         List<String> listNewsletterImage = new java.util.ArrayList<>( );
         for ( int i = 0; i < newsletterTemplatesList.size(); i++ )
         {
@@ -2208,8 +2219,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         int nNewsletterId = Integer.parseInt( strNewsletterId );
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, (User) getUser( ) ) )
         {
             return JSP_URL_MANAGE_NEWSLETTER;
         }
@@ -2237,8 +2248,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         int nNewsletterId = Integer.parseInt( strNewsletterId );
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
-                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) getUser( ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_MODIFY, (User) getUser( ) ) )
         {
             return JSP_URL_MANAGE_NEWSLETTER;
         }
@@ -2342,7 +2353,6 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                 NewsletterTopicHome.updateNewsletterTopic( newsletterTopic, getPlugin( ) );
             }
 
-            @SuppressWarnings( "unchecked" )
             Map<String, String [ ]> mapParameters = request.getParameterMap( );
             _newsletterTopicService.saveConfiguration( mapParameters, newsletterTopic, AdminUserService.getAdminUser( request ),
                     AdminUserService.getLocale( request ) );
@@ -2440,8 +2450,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
      */
     private boolean isNewsletterCreationAllowed( HttpServletRequest request )
     {
-        // RBAC permission
-        AdminUser user = AdminUserService.getAdminUser( request );
+        User user = AdminUserService.getAdminUser( request );
         if ( RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, RBAC.WILDCARD_RESOURCES_ID, NewsletterResourceIdService.PERMISSION_CREATE, user ) )
         {
             return true;
@@ -2544,11 +2553,11 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         }
         catch( FileNotFoundException e )
         {
-            AppLogService.error( "plugin-newsletter - CSS '" + strFileName + "' not found ! " + e.getMessage( ) );
+            AppLogService.error( "plugin-newsletter - CSS '{}' not found ! {}", strFileName, e.getMessage( ), e );
         }
         catch( IOException e )
         {
-            AppLogService.error( "plugin-newsletter - error when reading CSS '" + strFileName + "' ! " + e.getMessage( ) );
+            AppLogService.error( "plugin-newsletter - error when reading CSS '{}' ! {}", strFileName, e.getMessage( ), e );
         }
         finally
         {
@@ -2602,9 +2611,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
 
         NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
 
-        // Workgroup & RBAC permissions
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE,
-                Integer.toString( newsletter.getId( ) ), NewsletterResourceIdService.PERMISSION_CREATE, getUser( ) ) )
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, (User) user ) || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE,
+                Integer.toString( newsletter.getId( ) ), NewsletterResourceIdService.PERMISSION_CREATE, (User) user ) )
         {
             return AdminMessageService.getMessageUrl( request, Messages.USER_ACCESS_DENIED, AdminMessage.TYPE_ERROR );
         }

@@ -1,6 +1,5 @@
 <%@ page errorPage="../../ErrorPage.jsp" %>
+<%@ page import="fr.paris.lutece.plugins.newsletter.web.NewsletterJspBean" %>
 
-<jsp:useBean id="newsLetter" scope="session" class="fr.paris.lutece.plugins.newsletter.web.NewsletterJspBean" />
-
-<% newsLetter.init( request, newsLetter.RIGHT_NEWSLETTER_MANAGEMENT ); %>
-<%= newsLetter.getPreviewNewsLetter ( request ) %>
+${ newsletterJspBean.init( pageContext.request, NewsletterJspBean.RIGHT_NEWSLETTER_MANAGEMENT ) }
+${ newsletterJspBean.getPreviewNewsLetter( pageContext.request ) }

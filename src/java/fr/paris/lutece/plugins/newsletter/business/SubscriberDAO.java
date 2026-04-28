@@ -35,6 +35,8 @@ package fr.paris.lutece.plugins.newsletter.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Named;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,9 +44,10 @@ import java.util.Collection;
 /**
  * This class provides Data Access methods for subscriber objects
  */
-public final class SubscriberDAO implements ISubscriberDAO
+@ApplicationScoped
+@Named( "newsletter.subscriberDAO" )
+public class SubscriberDAO implements ISubscriberDAO
 {
-    // Constants
     private static final String SQL_QUERY_INSERT = "INSERT INTO newsletter_subscriber_details ( id_subscriber , email ) VALUES ( ?, ? )";
     private static final String SQL_QUERY_DELETE = "DELETE FROM newsletter_subscriber_details WHERE id_subscriber = ? ";
     private static final String SQL_QUERY_SELECT = "SELECT email FROM newsletter_subscriber_details WHERE id_subscriber = ? ";
@@ -57,9 +60,6 @@ public final class SubscriberDAO implements ISubscriberDAO
     private static final String SQL_QUERY_COUNT_NEWSLETTERS_BY_SUBSCRIBER = "SELECT count(*) FROM newsletter_subscriber where id_subscriber = ? ";
     private static final String SQL_QUERY_CHECK_PRIMARY_KEY = "SELECT id_subscriber FROM newsletter_subscriber_details WHERE id_subscriber = ?";
     private static final String SQL_QUERY_NEW_PRIMARY_KEY = "SELECT max(id_subscriber) FROM newsletter_subscriber_details ";
-
-    ///////////////////////////////////////////////////////////////////////////////////////
-    // Access methods to data
 
     /**
      * Insert a new record in the table.
@@ -74,13 +74,12 @@ public final class SubscriberDAO implements ISubscriberDAO
         int nNewPrimaryKey = newPrimaryKey( plugin );
         subscriber.setId( nNewPrimaryKey );
 
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
-
-        daoUtil.setInt( 1, subscriber.getId( ) );
-        daoUtil.setString( 2, subscriber.getEmail( ) );
-
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
+        {
+            daoUtil.setInt( 1, subscriber.getId( ) );
+            daoUtil.setString( 2, subscriber.getEmail( ) );
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -93,10 +92,11 @@ public final class SubscriberDAO implements ISubscriberDAO
      */
     public void delete( int nId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1, nId );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+        {
+            daoUtil.setInt( 1, nId );
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -110,19 +110,19 @@ public final class SubscriberDAO implements ISubscriberDAO
      */
     public Subscriber load( int nId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
-        daoUtil.setInt( 1, nId );
-        daoUtil.executeQuery( );
-
         Subscriber subscriber = new Subscriber( );
 
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
         {
-            subscriber.setId( nId );
-            subscriber.setEmail( daoUtil.getString( 1 ) );
-        }
+            daoUtil.setInt( 1, nId );
+            daoUtil.executeQuery( );
 
-        daoUtil.free( );
+            if ( daoUtil.next( ) )
+            {
+                subscriber.setId( nId );
+                subscriber.setEmail( daoUtil.getString( 1 ) );
+            }
+        }
 
         return subscriber;
     }
@@ -138,20 +138,13 @@ public final class SubscriberDAO implements ISubscriberDAO
      */
     boolean checkPrimaryKey( int nKey, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_PRIMARY_KEY, plugin );
-        daoUtil.setInt( 1, nKey );
-        daoUtil.executeQuery( );
-
-        if ( !daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_CHECK_PRIMARY_KEY, plugin ) )
         {
-            daoUtil.free( );
+            daoUtil.setInt( 1, nKey );
+            daoUtil.executeQuery( );
 
-            return false;
+            return daoUtil.next( );
         }
-
-        daoUtil.free( );
-
-        return true;
     }
 
     /**
@@ -163,23 +156,17 @@ public final class SubscriberDAO implements ISubscriberDAO
      */
     int newPrimaryKey( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PRIMARY_KEY, plugin );
-
-        int nKey;
-
-        daoUtil.executeQuery( );
-
-        if ( !daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PRIMARY_KEY, plugin ) )
         {
-            // If the table is empty
-            nKey = 1;
+            daoUtil.executeQuery( );
+
+            int nKey = 1;
+            if ( daoUtil.next( ) )
+            {
+                nKey = daoUtil.getInt( 1 ) + 1;
+            }
+            return nKey;
         }
-
-        nKey = daoUtil.getInt( 1 ) + 1;
-
-        daoUtil.free( );
-
-        return nKey;
     }
 
     /**
@@ -191,21 +178,21 @@ public final class SubscriberDAO implements ISubscriberDAO
      */
     public Collection<Subscriber> selectAll( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL, plugin );
-        daoUtil.executeQuery( );
+        ArrayList<Subscriber> list = new ArrayList<>( );
 
-        ArrayList<Subscriber> list = new ArrayList<Subscriber>( );
-
-        while ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL, plugin ) )
         {
-            Subscriber subscriber = new Subscriber( );
-            subscriber.setId( daoUtil.getInt( 1 ) );
-            subscriber.setEmail( daoUtil.getString( 2 ) );
-            subscriber.setConfirmed( daoUtil.getBoolean( 3 ) );
-            list.add( subscriber );
-        }
+            daoUtil.executeQuery( );
 
-        daoUtil.free( );
+            while ( daoUtil.next( ) )
+            {
+                Subscriber subscriber = new Subscriber( );
+                subscriber.setId( daoUtil.getInt( 1 ) );
+                subscriber.setEmail( daoUtil.getString( 2 ) );
+                subscriber.setConfirmed( daoUtil.getBoolean( 3 ) );
+                list.add( subscriber );
+            }
+        }
 
         return list;
     }
@@ -221,20 +208,20 @@ public final class SubscriberDAO implements ISubscriberDAO
      */
     public Subscriber selectByEmail( String strEmail, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_EMAIL, plugin );
-        daoUtil.setString( 1, strEmail.toLowerCase( ) );
-        daoUtil.executeQuery( );
-
         Subscriber subscriber = null;
 
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_EMAIL, plugin ) )
         {
-            subscriber = new Subscriber( );
-            subscriber.setId( daoUtil.getInt( 1 ) );
-            subscriber.setEmail( daoUtil.getString( 2 ) );
-        }
+            daoUtil.setString( 1, strEmail.toLowerCase( ) );
+            daoUtil.executeQuery( );
 
-        daoUtil.free( );
+            if ( daoUtil.next( ) )
+            {
+                subscriber = new Subscriber( );
+                subscriber.setId( daoUtil.getInt( 1 ) );
+                subscriber.setEmail( daoUtil.getString( 2 ) );
+            }
+        }
 
         return subscriber;
     }
@@ -250,23 +237,23 @@ public final class SubscriberDAO implements ISubscriberDAO
      */
     public Collection<Subscriber> selectSubscribers( int nNewsLetterId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_SUBSCRIBERS_BY_NEWSLETTER, plugin );
-        daoUtil.setInt( 1, nNewsLetterId );
-        daoUtil.executeQuery( );
+        ArrayList<Subscriber> list = new ArrayList<>( );
 
-        ArrayList<Subscriber> list = new ArrayList<Subscriber>( );
-
-        while ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_SUBSCRIBERS_BY_NEWSLETTER, plugin ) )
         {
-            Subscriber subscriber = new Subscriber( );
-            subscriber.setId( daoUtil.getInt( 1 ) );
-            subscriber.setEmail( daoUtil.getString( 2 ) );
-            subscriber.setConfirmed( daoUtil.getBoolean( 3 ) );
-            subscriber.setDateSubscription( daoUtil.getTimestamp( 4 ) );
-            list.add( subscriber );
-        }
+            daoUtil.setInt( 1, nNewsLetterId );
+            daoUtil.executeQuery( );
 
-        daoUtil.free( );
+            while ( daoUtil.next( ) )
+            {
+                Subscriber subscriber = new Subscriber( );
+                subscriber.setId( daoUtil.getInt( 1 ) );
+                subscriber.setEmail( daoUtil.getString( 2 ) );
+                subscriber.setConfirmed( daoUtil.getBoolean( 3 ) );
+                subscriber.setDateSubscription( daoUtil.getTimestamp( 4 ) );
+                list.add( subscriber );
+            }
+        }
 
         return list;
     }
@@ -288,29 +275,26 @@ public final class SubscriberDAO implements ISubscriberDAO
      */
     public Collection<Subscriber> selectSubscribers( int nNewsLetterId, String strSearchString, int nBegin, int nEnd, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_SUBSCRIBERS, plugin );
+        ArrayList<Subscriber> list = new ArrayList<>( );
 
-        daoUtil.setInt( 1, nNewsLetterId );
-        daoUtil.setString( 2, "%" + strSearchString + "%" );
-        daoUtil.setInt( 3, nEnd );
-        daoUtil.setInt( 4, nBegin );
-
-        daoUtil.executeQuery( );
-
-        ArrayList<Subscriber> list = new ArrayList<Subscriber>( );
-
-        while ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_SUBSCRIBERS, plugin ) )
         {
-            Subscriber subscriber = new Subscriber( );
-            subscriber.setId( daoUtil.getInt( 1 ) );
-            subscriber.setEmail( daoUtil.getString( 2 ) );
-            subscriber.setConfirmed( daoUtil.getBoolean( 3 ) );
-            subscriber.setDateSubscription( daoUtil.getTimestamp( 4 ) );
+            daoUtil.setInt( 1, nNewsLetterId );
+            daoUtil.setString( 2, "%" + strSearchString + "%" );
+            daoUtil.setInt( 3, nEnd );
+            daoUtil.setInt( 4, nBegin );
+            daoUtil.executeQuery( );
 
-            list.add( subscriber );
+            while ( daoUtil.next( ) )
+            {
+                Subscriber subscriber = new Subscriber( );
+                subscriber.setId( daoUtil.getInt( 1 ) );
+                subscriber.setEmail( daoUtil.getString( 2 ) );
+                subscriber.setConfirmed( daoUtil.getBoolean( 3 ) );
+                subscriber.setDateSubscription( daoUtil.getTimestamp( 4 ) );
+                list.add( subscriber );
+            }
         }
-
-        daoUtil.free( );
 
         return list;
     }
@@ -332,29 +316,26 @@ public final class SubscriberDAO implements ISubscriberDAO
      */
     public Collection<Subscriber> selectSubscribersForSending( int nNewsLetterId, String strSearchString, int nBegin, int nEnd, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_SUBSCRIBERS_FOR_SENDING, plugin );
+        ArrayList<Subscriber> list = new ArrayList<>( );
 
-        daoUtil.setInt( 1, nNewsLetterId );
-        daoUtil.setString( 2, "%" + strSearchString + "%" );
-        daoUtil.setInt( 3, nEnd );
-        daoUtil.setInt( 4, nBegin );
-
-        daoUtil.executeQuery( );
-
-        ArrayList<Subscriber> list = new ArrayList<Subscriber>( );
-
-        while ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_SUBSCRIBERS_FOR_SENDING, plugin ) )
         {
-            Subscriber subscriber = new Subscriber( );
-            subscriber.setId( daoUtil.getInt( 1 ) );
-            subscriber.setEmail( daoUtil.getString( 2 ) );
-            subscriber.setConfirmed( daoUtil.getBoolean( 3 ) );
-            subscriber.setDateSubscription( daoUtil.getTimestamp( 4 ) );
+            daoUtil.setInt( 1, nNewsLetterId );
+            daoUtil.setString( 2, "%" + strSearchString + "%" );
+            daoUtil.setInt( 3, nEnd );
+            daoUtil.setInt( 4, nBegin );
+            daoUtil.executeQuery( );
 
-            list.add( subscriber );
+            while ( daoUtil.next( ) )
+            {
+                Subscriber subscriber = new Subscriber( );
+                subscriber.setId( daoUtil.getInt( 1 ) );
+                subscriber.setEmail( daoUtil.getString( 2 ) );
+                subscriber.setConfirmed( daoUtil.getBoolean( 3 ) );
+                subscriber.setDateSubscription( daoUtil.getTimestamp( 4 ) );
+                list.add( subscriber );
+            }
         }
-
-        daoUtil.free( );
 
         return list;
     }
@@ -370,25 +351,17 @@ public final class SubscriberDAO implements ISubscriberDAO
      */
     public int selectNewsLetters( int nSubscriberId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_COUNT_NEWSLETTERS_BY_SUBSCRIBER, plugin );
-
-        int nCount;
-
-        daoUtil.setInt( 1, nSubscriberId );
-
-        daoUtil.executeQuery( );
-
-        if ( !daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_COUNT_NEWSLETTERS_BY_SUBSCRIBER, plugin ) )
         {
-            // If the table is empty
-            nCount = 0;
+            daoUtil.setInt( 1, nSubscriberId );
+            daoUtil.executeQuery( );
+
+            if ( daoUtil.next( ) )
+            {
+                return daoUtil.getInt( 1 );
+            }
+            return 0;
         }
-
-        nCount = daoUtil.getInt( 1 );
-
-        daoUtil.free( );
-
-        return nCount;
     }
 
     /**
@@ -400,21 +373,20 @@ public final class SubscriberDAO implements ISubscriberDAO
      */
     public Collection<Subscriber> selectSubscribersList( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_SUBSCRIBERS_LIST, plugin );
+        ArrayList<Subscriber> list = new ArrayList<>( );
 
-        daoUtil.executeQuery( );
-
-        ArrayList<Subscriber> list = new ArrayList<Subscriber>( );
-
-        while ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_SUBSCRIBERS_LIST, plugin ) )
         {
-            Subscriber subscriber = new Subscriber( );
-            subscriber.setId( daoUtil.getInt( 1 ) );
-            subscriber.setEmail( daoUtil.getString( 2 ) );
-            list.add( subscriber );
-        }
+            daoUtil.executeQuery( );
 
-        daoUtil.free( );
+            while ( daoUtil.next( ) )
+            {
+                Subscriber subscriber = new Subscriber( );
+                subscriber.setId( daoUtil.getInt( 1 ) );
+                subscriber.setEmail( daoUtil.getString( 2 ) );
+                list.add( subscriber );
+            }
+        }
 
         return list;
     }

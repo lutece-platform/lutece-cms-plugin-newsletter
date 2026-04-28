@@ -33,10 +33,8 @@
  */
 package fr.paris.lutece.plugins.newsletter.business;
 
-import fr.paris.lutece.plugins.newsletter.service.NewsletterTemplateRemovalService;
 import fr.paris.lutece.portal.service.rbac.RBACResource;
 import fr.paris.lutece.portal.service.workgroup.AdminWorkgroupResource;
-import fr.paris.lutece.portal.service.workgroup.WorkgroupRemovalListenerService;
 
 import java.sql.Timestamp;
 
@@ -50,10 +48,7 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
      */
     public static final String RESOURCE_TYPE = "NEWSLETTER";
     private static final String EMPTY_STRING = "";
-    private static NewsletterWorkgroupRemovalListener _listenerWorkgroup;
 
-    /////////////////////////////////////////////////////////////////////////////////
-    // Constants
     private int _nId;
     private String _strName;
     private String _strDescription;
@@ -70,20 +65,6 @@ public class NewsLetter implements AdminWorkgroupResource, RBACResource
     private String _strTermOfService;
     private String _strSubject;
     private int _nNbSections;
-
-    /**
-     * Initialize the Newsletter
-     */
-    public static synchronized void init( )
-    {
-        // Create removal listeners and register them
-        if ( _listenerWorkgroup == null )
-        {
-            _listenerWorkgroup = new NewsletterWorkgroupRemovalListener( );
-            WorkgroupRemovalListenerService.getService( ).registerListener( _listenerWorkgroup );
-        }
-        NewsletterTemplateRemovalService.getService( ).registerListener( new NewsletterTemplateRemovalListener( ) );
-    }
 
     /**
      * Returns the identifier of the newsletter

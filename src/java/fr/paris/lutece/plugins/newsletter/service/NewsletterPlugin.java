@@ -33,8 +33,6 @@
  */
 package fr.paris.lutece.plugins.newsletter.service;
 
-import fr.paris.lutece.plugins.newsletter.business.NewsLetter;
-import fr.paris.lutece.plugins.newsletter.business.NewsLetterTemplate;
 import fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation;
 
 /**
@@ -46,14 +44,4 @@ public class NewsletterPlugin extends PluginDefaultImplementation
      * Name of the newsletter plugin
      */
     public static final String PLUGIN_NAME = "newsletter";
-
-    /**
-     * Initialize the plugin Newsletter
-     */
-    public void init( )
-    {
-        // Initialize the Newsletter service
-        NewsLetter.init( );
-        NewsLetterTemplate.init( );
-    }
 }

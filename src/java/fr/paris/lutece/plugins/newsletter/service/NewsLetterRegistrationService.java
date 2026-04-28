@@ -37,9 +37,14 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import  java.util.Collection;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 
 import static fr.paris.lutece.portal.service.admin.AdminUserService.getLocale;
@@ -53,8 +58,9 @@ import fr.paris.lutece.plugins.newsletter.business.Subscriber;
 import fr.paris.lutece.plugins.newsletter.business.SubscriberHome;
 import fr.paris.lutece.plugins.newsletter.util.NewsLetterConstants;
 import fr.paris.lutece.plugins.newsletter.util.NewsletterUtils;
-import fr.paris.lutece.portal.service.captcha.CaptchaSecurityService;
+import fr.paris.lutece.portal.service.captcha.ICaptchaService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
+import fr.paris.lutece.portal.service.util.BeanUtils;
 import fr.paris.lutece.portal.service.mail.MailService;
 import fr.paris.lutece.portal.service.message.SiteMessage;
 import fr.paris.lutece.portal.service.message.SiteMessageException;
@@ -72,7 +78,8 @@ import fr.paris.lutece.util.url.UrlItem;
 /**
  * The class responsible for the subscription and unsubscription process
  */
-public final class NewsLetterRegistrationService
+@ApplicationScoped
+public class NewsLetterRegistrationService
 {
     private static final String PARAMETER_TOS = "tos";
     private static final String TEMPLATE_CONFIRM_MAIL = "admin/plugins/newsletter/confirm_mail.html";
@@ -87,36 +94,14 @@ public final class NewsLetterRegistrationService
     // default values
     private static final int DEFAULT_LIMIT = 7;
 
-    /**
-     * The registration service
-     */
-    private static NewsLetterRegistrationService _singleton = new NewsLetterRegistrationService( );
+    @Inject
+    @Named( BeanUtils.BEAN_CAPTCHA_SERVICE )
+    private Instance<ICaptchaService> _captchaService;
 
-    // Captcha
-    private CaptchaSecurityService _captchaService;
+    @Inject
+    private NewsletterService _newsletterService;
 
-    private Plugin _plugin;
-
-    /**
-     * Constructor
-     */
-    private NewsLetterRegistrationService( )
-    {
-        if ( _singleton == null )
-        {
-            _singleton = this;
-        }
-    }
-
-    /**
-     * Fetches the singleton instance
-     * 
-     * @return The singleton instance
-     */
-    public static NewsLetterRegistrationService getInstance( )
-    {
-        return _singleton;
-    }
+    private static final Plugin _plugin = PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME );
 
     /**
      * Performs the subscription process Throw a SiteMessage
@@ -145,7 +130,7 @@ public final class NewsLetterRegistrationService
         }
         else
         {
-            NewsLetterProperties properties = NewsletterPropertiesHome.find( getPlugin( ) );
+            NewsLetterProperties properties = NewsletterPropertiesHome.find( _plugin );
 
             // test the requirement
             if ( properties.getTOS( ) != null )
@@ -158,32 +143,28 @@ public final class NewsLetterRegistrationService
             }
 
             // test the captcha
-            if ( PluginService.isPluginEnable( JCAPTCHA_PLUGIN ) && properties.isCaptchaActive( ) )
+            if ( PluginService.isPluginEnable( JCAPTCHA_PLUGIN ) && properties.isCaptchaActive( ) && _captchaService.isResolvable( )
+                    && !_captchaService.get( ).validate( request ) )
             {
-                _captchaService = new CaptchaSecurityService( );
-
-                if ( !_captchaService.validate( request ) )
-                {
-                    SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_NO_JCAPTCHA_MESSAGE,
-                            NewsLetterConstants.PROPERTY_NO_JCAPTCHA_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
-                }
+                SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_NO_JCAPTCHA_MESSAGE,
+                        NewsLetterConstants.PROPERTY_NO_JCAPTCHA_TITLE_MESSAGE, SiteMessage.TYPE_STOP );
             }
 
             // Checks if a subscriber with the same email address doesn't exist yet
-            Subscriber subscriber = SubscriberHome.findByEmail( strEmail, getPlugin( ) );
+            Subscriber subscriber = SubscriberHome.findByEmail( strEmail, _plugin );
 
             if ( subscriber == null )
             {
                 // The email doesn't exist, so create a new subcriber
                 subscriber = new Subscriber( );
                 subscriber.setEmail( strEmail );
-                subscriber = SubscriberHome.create( subscriber, getPlugin( ) );
+                subscriber = SubscriberHome.create( subscriber, _plugin );
             }
 
             for ( String strId : arrayNewsletters )
             {
                 NewsLetterHome.addSubscriber( Integer.parseInt( strId ), subscriber.getId( ), !properties.isValidationActive( ),
-                        new Timestamp( new Date( ).getTime( ) ), getPlugin( ) );
+                        new Timestamp( new Date( ).getTime( ) ), _plugin );
             }
 
             if ( properties.isValidationActive( ) )
@@ -192,7 +173,7 @@ public final class NewsLetterRegistrationService
                 Random random = new Random( );
                 int nAlea = random.nextInt( );
                 // add pair in db
-                AwaitingActivationHome.create( subscriber.getId( ), nAlea, getPlugin( ) );
+                AwaitingActivationHome.create( subscriber.getId( ), nAlea, _plugin );
 
                 StringBuilder sbUrl = new StringBuilder( AppPathService.getBaseUrl( request ) );
                 sbUrl.append( JSP_PORTAL );
@@ -290,7 +271,7 @@ public final class NewsLetterRegistrationService
         else
         {
             // Checks if a subscriber with the same email address doesn't exist yet
-            Subscriber subscriber = SubscriberHome.findByEmail( strEmail, getPlugin( ) );
+            Subscriber subscriber = SubscriberHome.findByEmail( strEmail, _plugin );
 
             if ( subscriber == null )
             {
@@ -299,7 +280,7 @@ public final class NewsLetterRegistrationService
                 return;
             }
 
-            boolean bValidKey = AwaitingActivationHome.checkKey( nIdUser, nKey, getPlugin( ) );
+            boolean bValidKey = AwaitingActivationHome.checkKey( nIdUser, nKey, _plugin );
 
             if ( !bValidKey )
             {
@@ -311,16 +292,16 @@ public final class NewsLetterRegistrationService
             {
                 try
                 {
-                    NewsLetterHome.validateSubscriber( Integer.parseInt( strIdNewsLetter ), subscriber.getId( ), getPlugin( ) );
+                    NewsLetterHome.validateSubscriber( Integer.parseInt( strIdNewsLetter ), subscriber.getId( ), _plugin );
                 }
                 catch( NumberFormatException nfe )
                 {
-                    AppLogService.error( "NewsLetterRegistrationService.doConfirmSubscribe() " + nfe );
+                    AppLogService.error( "NewsLetterRegistrationService.doConfirmSubscribe() {}", nfe.getMessage( ), nfe );
                 }
             }
 
             // remove validation key entry
-            AwaitingActivationHome.remove( nIdUser, nKey, getPlugin( ) );
+            AwaitingActivationHome.remove( nIdUser, nKey, _plugin );
         }
 
         SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_SUBSCRIPTION_CONFIRM_ALERT_MESSAGE, SiteMessage.TYPE_CONFIRMATION,
@@ -341,7 +322,7 @@ public final class NewsLetterRegistrationService
         String strKey = request.getParameter( NewsLetterConstants.MARK_UNSUBSCRIBE_KEY );
 
         if ( ( strEmail == null ) || !StringUtil.checkEmail( strEmail )
-                || !StringUtils.equals( strKey, NewsletterService.getService( ).getUnsubscriptionKey( strEmail ) ) )
+                || !Objects.equals( strKey, _newsletterService.getUnsubscriptionKey( strEmail ) ) )
         {
             SiteMessageService.setMessage( request, NewsLetterConstants.PROPERTY_INVALID_MAIL_ERROR_MESSAGE, SiteMessage.TYPE_ERROR );
         }
@@ -417,19 +398,5 @@ public final class NewsLetterRegistrationService
         sbLogs.append( "\r\n[End] Duration : " + ( System.currentTimeMillis( ) - lDuration ) + " milliseconds\r\n" );
 
         return sbLogs.toString( );
-    }
-
-    /**
-     * Get the newsletter plugin
-     * 
-     * @return the newsletter plugin
-     */
-    private Plugin getPlugin( )
-    {
-        if ( _plugin == null )
-        {
-            _plugin = PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME );
-        }
-        return _plugin;
     }
 }

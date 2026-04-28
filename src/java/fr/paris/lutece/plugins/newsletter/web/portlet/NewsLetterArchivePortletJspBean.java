@@ -56,7 +56,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 /**
  * This class provides the user interface to manage newsletter archive portlets.
  */
@@ -249,8 +249,6 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
         // Build the set of the sendings that were checked in the page
         Set<Integer> checkedSendings = new HashSet<Integer>( );
 
-        // Read all request parameters
-        @SuppressWarnings( "unchecked" )
         Enumeration<String> enumParameterNames = request.getParameterNames( );
 
         while ( enumParameterNames.hasMoreElements( ) )
@@ -264,7 +262,7 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
                 String strSendingId = strParameterName.substring( PREFIX_CHECKBOX_NAME.length( ) );
 
                 // Add the Integer object to the set
-                checkedSendings.add( new Integer( strSendingId ) );
+                checkedSendings.add( Integer.valueOf( strSendingId ) );
             }
         }
 

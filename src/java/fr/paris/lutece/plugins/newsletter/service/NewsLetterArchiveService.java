@@ -45,10 +45,10 @@ import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.util.html.HtmlTemplate;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -57,36 +57,15 @@ import static fr.paris.lutece.portal.service.admin.AdminUserService.getLocale;
 /**
  * The service that renders the archived newsletters
  */
-public final class NewsLetterArchiveService
+@ApplicationScoped
+public class NewsLetterArchiveService
 {
     private static final String REGEX_ID = "^[\\d]+$";
     private static final String TEMPLATE_VIEW_NEWSLETTER_ARCHIVE = "skin/plugins/newsletter/page_newsletter_archive.html";
-    private static NewsLetterArchiveService _singleton = new NewsLetterArchiveService( );
-
-    /**
-     * Constructor
-     */
-    private NewsLetterArchiveService( )
-    {
-        if ( _singleton == null )
-        {
-            _singleton = this;
-        }
-    }
-
-    /**
-     * Fetches the instance of the class
-     * 
-     * @return The singleton
-     */
-    public static NewsLetterArchiveService getInstance( )
-    {
-        return _singleton;
-    }
 
     /**
      * Returns the Newsletter archive XPage content depending on the request parameters and the current mode.
-     * 
+     *
      * @return The page content.
      * @param request
      *            The HTTP request.
@@ -114,8 +93,7 @@ public final class NewsLetterArchiveService
             return StringUtils.EMPTY;
         }
 
-        Map<String, Object> model = new HashMap<String, Object>( );
-        model.put( NewsLetterConstants.MARK_SENDING, sending );
+        Map<String, Object> model = Map.of( NewsLetterConstants.MARK_SENDING, sending );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_VIEW_NEWSLETTER_ARCHIVE, getLocale( request ), model );
         template.substitute( NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE, strBaseUrl );
