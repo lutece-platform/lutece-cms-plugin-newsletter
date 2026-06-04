@@ -14,26 +14,19 @@
 		<#if newsletters_list?has_content>
 			<@tform method='post' id='form_bulk_delete' action='jsp/admin/plugins/newsletter/RemoveMultiNewsLetter.jsp' boxed=true>
 				<@input type='hidden' name='newsletter_id' value='${newsletter_id}' id='newsletter_id' />
-				<@row class='justify-content-end align-items-center'>
-					<@columns md=3>
-						<@checkBox orientation='switch' id='select_all' name='select_all' labelKey='#i18n{portal.users.modify_user_rights.buttonLabelSelectAll}' />
-					</@columns>
-					<@columns md=2>
-						<@button id='delete-all' type='submit' color='danger' buttonIcon='trash' title='#i18n{portal.util.labelDelete}' hideTitle=['all'] disabled=true />
-					</@columns>
-				</@row>
-				<@manageFeature id='archive-list'>
+				<@div class='d-flex justify-content-end align-items-baseline'>
+					<@checkBox orientation='switch' id='select_all' name='select_all' labelKey='#i18n{portal.users.modify_user_rights.buttonLabelSelectAll}' />
+					<@button id='delete-all' type='submit' color='danger' size='sm' class='ms-2' buttonIcon='trash' title='#i18n{portal.util.labelDelete}' hideTitle=['xs', 'sm'] disabled=true />
+				</@div>
+				<@manageFeature id='archive-list' class='mt-1'>
 					<#list newsletters_list as newsletter>
 						<@manageFeatureItem>
 							<@manageFeatureItemColumn auto=true>
 								<@checkBox orientation='switch' id='newsletter_selection_${newsletter.id}' name='newsletter_selection' value='${newsletter.id}' />
 							</@manageFeatureItemColumn>
-							<@manageFeatureItemColumn auto=true flex=false>
-								<strong>${newsletter.emailSubject!}</strong>
-							</@manageFeatureItemColumn>
-							<@manageFeatureItemColumn auto=true flex=false valign='top'>
-								<@p class='fw-bold fs-3'>#i18n{newsletter.manage_archive.columnTitleDate}</@p>
-								<@p>${newsletter.date!}</@p>
+							<@manageFeatureItemColumn auto=true valign='center'>
+								<@p class='fw-bold me-2'>${newsletter.emailSubject!}</@p>
+								<@p>#i18n{newsletter.manage_archive.columnTitleDate} : ${newsletter.date!}</@p>
 							</@manageFeatureItemColumn>
 							<@manageFeatureItemColumn align='end'>
 								<@aButton href='jsp/site/plugins/newsletter/ViewNewsletterArchive.jsp?sending_id=${newsletter.id}' title='#i18n{newsletter.manage_archive.showArchive}' target='_blank' buttonIcon='external-link' hideTitle=['all'] />

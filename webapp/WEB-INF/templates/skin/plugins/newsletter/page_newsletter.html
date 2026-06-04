@@ -1,62 +1,49 @@
 <@cTpl>
-<div class="container mt-5 pt-5">
-<div class="row pt-5">
-	<div class="col">
-		<h2>#i18n{newsletter.page_newsletter.pageTitle}</h2>
+<@cContainer>
+	<@cRow>
+		<@cCol>
+			<@cBreadCrumb home='Home' type='fluid' items=[{ 'title': '#i18n{newsletter.page_newsletter.pageTitle}', 'url': 'jsp/site/Portal.jsp?page=newsletter' }] />
+		</@cCol>
+	</@cRow>
+	<@cRow>
+		<@cCol>
+		<@cTitle level=2>#i18n{newsletter.page_newsletter.pageTitle}</@cTitle>
 		<#if !(newsletters_list??) || newsletters_list?size == 0>
-			<div class="alert alert-danger">#i18n{newsletter.page_newsletter.page_newsletter.labelNoLetter}</div>
+			<@cAlert type='danger' title='#i18n{newsletter.page_newsletter.page_newsletter.labelNoLetter}' />
 		<#else>
-			<form name="newsletter" action="jsp/site/Portal.jsp" method="post">
-				<input type="hidden" name="plugin_name" value="${plugin.name}">
-				<input type="hidden" name="page" value="newsletter">
-				<input type="hidden" name="action" value="register">
-				<div class="mb-3">
-					<label class="form-label" for="email">#i18n{newsletter.page_newsletter.labelEmail}</label>
-					<input type="email" class="form-control" name="email" id="email" placeholder="nom@email.com" maxlength="100">
-				</div>
-				<div class="mb-3">
-					<h3>#i18n{newsletter.page_newsletter.labelChooseNewsletters}</h3>
+			<@cForm name='newsletter'>
+				<@cInput type="hidden" name="plugin_name" value="${plugin.name}" />
+				<@cInput type="hidden" name="page" value="newsletter" />
+				<@cInput type="hidden" name="action" value="register" />
+				<@cField label='#i18n{newsletter.page_newsletter.labelEmail}' for='email' required=true>
+					<@cInput type='email' name='email' placeholder='nom@email.com' maxlength=100 />
+				</@cField>
+				<@cField label='#i18n{newsletter.page_newsletter.labelChooseNewsletters}'>	
 					<#list (newsletters_list![]) as newsletter>
-					<div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" role="switch" id="newsletter_id_${newsletter.id}" name="newsletter_id" value="${newsletter.id}" checked>
-						<label class="form-check-label ps-3" for="newsletter_id_${newsletter.id}">${newsletter.name!}</label>
-					</div>
+						<@cCheckbox label=newsletter.name! name='newsletter_id' id='newsletter_id_${newsletter.id}' value=newsletter.id?string />
 					</#list>
-				</div>
+				</@cField>
 				<#if properties.TOS??>
-				<div class="mb-3 form-check">
-					<input type="checkbox" class="form-check-input" name="tos" id="tos" value="1">
-					<label class="form-check-label" for="tos">
-						#i18n{newsletter.page_newsletter.requirement}
-					</label>
-					<button class="btn btn-link p-0 align-baseline" type="button" data-bs-toggle="modal" data-bs-target="#modalRequirement">#i18n{newsletter.page_newsletter.tos.header}</button>
-				</div>
+				<@cField class='d-flex align-items-center gap-2'>
+					<@cCheckbox label='#i18n{newsletter.page_newsletter.requirement}' name='tos' value='1' for='tos' required=true />
+					<@cBtn class='primary btn-sm' type='button' label='#i18n{newsletter.page_newsletter.tos.header}' params='data-bs-toggle="modal" data-bs-target="#modalRequirementModal"' />
+				</@cField>
 				</#if>
-				<div class="mb-3">
+				<@cField>
 					<#if properties.captchaActive><#if is_active_captcha>${captcha!}</#if></#if>
-					<button class="btn btn-primary" type="submit">
-						#i18n{newsletter.page_newsletter.buttonSubscribe}
-					</button>
-				</div>
-			</form>
+					<@cBtn class='primary' label='#i18n{newsletter.page_newsletter.buttonSubscribe}' />
+				</@cField>
+			</@cForm>
 		</#if>
-	</div>
-</div>
-</div>
-<div class="modal fade" id="modalRequirement" tabindex="-1" aria-labelledby="requirementModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h1 class="modal-title h3" id="requirementModalLabel">#i18n{newsletter.page_newsletter.tos.header}</h1>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="#i18n{portal.util.labelBack}"></button>
-			</div>
-			<div class="modal-body p-4">
-				${properties.TOS!}
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">#i18n{portal.util.labelBack}</button>
-			</div>
-		</div>
-	</div>
-</div>
+	</@cCol>
+</@cRow>
+</@cContainer>
+<@cModal id='modalRequirement' title='#i18n{newsletter.page_newsletter.tos.header}'>
+${properties.TOS!}
+</@cModal>
+<style>
+.banner.credits.page-1{
+	display: none;
+}	
+</style>
 </@cTpl>
