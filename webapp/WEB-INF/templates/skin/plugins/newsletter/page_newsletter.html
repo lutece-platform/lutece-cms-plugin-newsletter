@@ -9,7 +9,7 @@
 		<@cCol>
 		<@cTitle level=2>#i18n{newsletter.page_newsletter.pageTitle}</@cTitle>
 		<#if !(newsletters_list??) || newsletters_list?size == 0>
-			<@cAlert type='danger' title='#i18n{newsletter.page_newsletter.page_newsletter.labelNoLetter}' />
+			<@cAlert type='danger' title='#i18n{newsletter.page_newsletter.labelNoLetter}' />
 		<#else>
 			<@cForm name='newsletter'>
 				<@cInput type="hidden" name="plugin_name" value="${plugin.name}" />
