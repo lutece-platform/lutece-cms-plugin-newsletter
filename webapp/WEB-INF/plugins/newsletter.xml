@@ -56,7 +56,7 @@
             <!-- optional entries -->
             <portlet-create-script-template>/admin/portlet/script_create_portlet.html</portlet-create-script-template>
             <portlet-modify-script-template>/admin/portlet/script_modify_portlet.html</portlet-modify-script-template>
-            <portlet-create-specific-template/>
+            <portlet-create-specific-template>/admin/plugins/newsletter/newsletter_sending_list.html</portlet-create-specific-template>
             <portlet-modify-specific-template>/admin/plugins/newsletter/newsletter_sending_list.html</portlet-modify-specific-template>
             <portlet-create-specific-form-template/>
             <portlet-modify-specific-form-template/>    
@@ -72,7 +72,7 @@
             <!-- optional entries -->
             <portlet-create-script-template>/admin/portlet/script_create_portlet.html</portlet-create-script-template>
             <portlet-modify-script-template>/admin/portlet/script_modify_portlet.html</portlet-modify-script-template>
-            <portlet-create-specific-template/>
+            <portlet-create-specific-template>/admin/plugins/newsletter/newsletter_subscription_list.html</portlet-create-specific-template>
             <portlet-modify-specific-template>/admin/plugins/newsletter/newsletter_subscription_list.html</portlet-modify-specific-template>
             <portlet-create-specific-form-template/>
             <portlet-modify-specific-form-template/>    

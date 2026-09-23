@@ -39,13 +39,8 @@ import fr.paris.lutece.plugins.newsletter.business.portlet.NewsLetterArchivePort
 import fr.paris.lutece.plugins.newsletter.business.portlet.NewsLetterArchivePortletHome;
 import fr.paris.lutece.plugins.newsletter.util.NewsLetterConstants;
 import fr.paris.lutece.portal.business.portlet.PortletHome;
-import fr.paris.lutece.portal.service.message.AdminMessage;
-import fr.paris.lutece.portal.service.message.AdminMessageService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
-import fr.paris.lutece.portal.service.template.AppTemplateService;
-import fr.paris.lutece.portal.web.constants.Messages;
-import fr.paris.lutece.portal.web.constants.Parameters;
 import fr.paris.lutece.portal.web.portlet.PortletJspBean;
 import fr.paris.lutece.util.html.HtmlTemplate;
 
@@ -54,11 +49,14 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 /**
- * This class provides the user interface to manage newsletter archive portlets.
+ * This class provides the user interface to manage the newsletter archive portlets. The common portlet data, the rendering template included, are
+ * handled by the core.
  */
 public class NewsLetterArchivePortletJspBean extends PortletJspBean
 {
@@ -67,21 +65,15 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
      */
     private static final long serialVersionUID = -5219786237834856528L;
 
-    // Prefix of the properties related to this checkbox
+    // Prefix of the properties related to this portlet
     private static final String PROPERTIES_PREFIX = "portlet.newsletter_archive";
 
     // Prefix used to generate checkbox names
     private static final String PREFIX_CHECKBOX_NAME = "cbx_snd_";
 
-    // Bookmarks
-    private static final String BOOKMARK_PAGE_ID = "@page_id@";
-    private static final String BOOKMARK_PORTLET_ID = "@portlet_id@";
-
-    // Templates
+    // Marks
     private static final String MARK_SENDING_NEWSLETTER_LIST = "sending_newsletter_list";
     private static final String MARK_SELECTED_SENDING_LIST = "selected_sendings_list";
-    private static final String MARK_NEWSLETTER_SUBCRIPTION_LIST = "newsletter_subscription_list";
-
 
     /**
      * Returns the creation form for the portlet
@@ -95,16 +87,14 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
         String strPageId = request.getParameter( PARAMETER_PAGE_ID );
         String strPortletTypeId = request.getParameter( PARAMETER_PORTLET_TYPE_ID );
         Plugin plugin = PluginService.getPlugin( NewsLetterConstants.PLUGIN_NAME );
-        ArrayList<Integer> selectedSendings = new ArrayList<>();
-        List<SendingNewsLetter> sendingNewsletterList = SendingNewsLetterHome.findAllSendings( plugin );
-            HashMap<String, Object> model = new HashMap<String, Object>( );
-            model.put( MARK_SENDING_NEWSLETTER_LIST, sendingNewsletterList );
-            model.put( MARK_SELECTED_SENDING_LIST, selectedSendings );
-        HtmlTemplate templateNewsletterList = AppTemplateService.getTemplate( NewsLetterConstants.TEMPLATE_NEWSLETTER_ARCHIVE_LIST, this.getLocale( ),
-                model );
-        model.put( MARK_NEWSLETTER_SUBCRIPTION_LIST, templateNewsletterList.getHtml( ) );
-        HtmlTemplate templateCreate = getCreateTemplate( strPageId, strPortletTypeId , model );
-        return  templateCreate.getHtml( );
+
+        Map<String, Object> model = new HashMap<>( );
+        model.put( MARK_SENDING_NEWSLETTER_LIST, SendingNewsLetterHome.findAllSendings( plugin ) );
+        model.put( MARK_SELECTED_SENDING_LIST, new ArrayList<Integer>( ) );
+
+        HtmlTemplate template = getCreateTemplate( strPageId, strPortletTypeId, model );
+
+        return template.getHtml( );
     }
 
     /**
@@ -118,35 +108,19 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
     {
         NewsLetterArchivePortlet portlet = new NewsLetterArchivePortlet( );
 
-        // Standard controls on the creation form
-        String strIdPage = request.getParameter( PARAMETER_PAGE_ID );
-        int nIdPage = Integer.parseInt( strIdPage );
+        // common portlet attributes, the rendering template included
+        String strErrorUrl = setPortletCommonData( request, portlet );
 
-        String strStyleId = request.getParameter( Parameters.STYLE );
-
-        if ( ( strStyleId == null ) || strStyleId.trim( ).equals( "" ) )
+        if ( strErrorUrl != null )
         {
-            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+            return strErrorUrl;
         }
 
-        setPortletCommonData( request, portlet );
-
-        // mandatory field
-        String strName = portlet.getName( );
-
-        if ( strName.trim( ).equals( "" ) )
-        {
-            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
-        }
-
-        portlet.setPageId( nIdPage );
-
-        // Creating portlet
         NewsLetterArchivePortletHome.getInstance( ).create( portlet );
-
         modifySendings( request, portlet );
+
         // Displays the page with the new Portlet
-        return getPageUrl( nIdPage );
+        return getPageUrl( portlet.getPageId( ) );
     }
 
     /**
@@ -158,27 +132,15 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
      */
     public String getModify( HttpServletRequest request )
     {
-        // Use the id in the request to load the portlet
         String strPortletId = request.getParameter( PARAMETER_PORTLET_ID );
         int nPortletId = Integer.parseInt( strPortletId );
         NewsLetterArchivePortlet portlet = (NewsLetterArchivePortlet) PortletHome.findByPrimaryKey( nPortletId );
-
-        String strIdPage = request.getParameter( PARAMETER_PAGE_ID );
-
-        // Load the modify template and fill in
-        HashMap<String, Object> model = new HashMap<String, Object>( );
-        model.put( BOOKMARK_PORTLET_ID, strPortletId );
-        model.put( BOOKMARK_PAGE_ID, strIdPage );
-
-        // Get the plugin for the portlet
         Plugin plugin = PluginService.getPlugin( portlet.getPluginName( ) );
 
-        ArrayList<Integer> selectedSendings = NewsLetterArchivePortletHome.findSendingsInPortlet( nPortletId, plugin );
-        List<SendingNewsLetter> sendingNewsletterList = SendingNewsLetterHome.findAllSendings( plugin );
-        model.put( MARK_SENDING_NEWSLETTER_LIST, sendingNewsletterList );
-        model.put( MARK_SELECTED_SENDING_LIST, selectedSendings );
+        Map<String, Object> model = new HashMap<>( );
+        model.put( MARK_SENDING_NEWSLETTER_LIST, SendingNewsLetterHome.findAllSendings( plugin ) );
+        model.put( MARK_SELECTED_SENDING_LIST, NewsLetterArchivePortletHome.findSendingsInPortlet( nPortletId, plugin ) );
 
-        // Fill the specific part of the modify form
         HtmlTemplate template = getModifyTemplate( portlet, model );
 
         return template.getHtml( );
@@ -193,36 +155,22 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
      */
     public String doModify( HttpServletRequest request )
     {
-        // Use the id in the request to load the portlet
         String strPortletId = request.getParameter( PARAMETER_PORTLET_ID );
         int nPortletId = Integer.parseInt( strPortletId );
         NewsLetterArchivePortlet portlet = (NewsLetterArchivePortlet) PortletHome.findByPrimaryKey( nPortletId );
 
-        // Standard controls on the creation form
-        String strStyleId = request.getParameter( Parameters.STYLE );
+        // common portlet attributes, the rendering template included
+        String strErrorUrl = setPortletCommonData( request, portlet );
 
-        if ( ( strStyleId == null ) || strStyleId.trim( ).equals( "" ) )
+        if ( strErrorUrl != null )
         {
-            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+            return strErrorUrl;
         }
 
-        setPortletCommonData( request, portlet );
-
-        // mandatory field
-        String strName = portlet.getName( );
-
-        if ( strName.trim( ).equals( "" ) )
-        {
-            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
-        }
-
-        // Update generic values
         portlet.update( );
-
-        // Update the selected sendings
         modifySendings( request, portlet );
 
-        // displays the page with the potlet updated
+        // displays the page with the portlet updated
         return getPageUrl( portlet.getPageId( ) );
     }
 
@@ -237,7 +185,7 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
     }
 
     /**
-     * Helper method to determine which sendings were checked in the portlet modification form, and update the database accordingly.
+     * Helper method to determine which sendings were checked in the portlet form, and update the database accordingly.
      * 
      * @param request
      *            the HTTP request
@@ -247,8 +195,7 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
     private static void modifySendings( HttpServletRequest request, NewsLetterArchivePortlet portlet )
     {
         // Build the set of the sendings that were checked in the page
-        Set<Integer> checkedSendings = new HashSet<Integer>( );
-
+        Set<Integer> checkedSendings = new HashSet<>( );
         Enumeration<String> enumParameterNames = request.getParameterNames( );
 
         while ( enumParameterNames.hasMoreElements( ) )
@@ -260,21 +207,19 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
             {
                 // Extract the int value concatenated to the prefix
                 String strSendingId = strParameterName.substring( PREFIX_CHECKBOX_NAME.length( ) );
-
-                // Add the Integer object to the set
                 checkedSendings.add( Integer.valueOf( strSendingId ) );
             }
         }
 
-        ArrayList<Integer> previousSendings = NewsLetterArchivePortletHome.findSendingsInPortlet( portlet.getId( ),
-                PluginService.getPlugin( portlet.getPluginName( ) ) );
+        Plugin plugin = PluginService.getPlugin( portlet.getPluginName( ) );
+        List<Integer> previousSendings = NewsLetterArchivePortletHome.findSendingsInPortlet( portlet.getId( ), plugin );
 
         // Add the sendings that are checked now but were not present before
         for ( Integer newSending : checkedSendings )
         {
             if ( !previousSendings.contains( newSending ) )
             {
-                NewsLetterArchivePortletHome.insertSending( portlet.getId( ), newSending.intValue( ), PluginService.getPlugin( portlet.getPluginName( ) ) );
+                NewsLetterArchivePortletHome.insertSending( portlet.getId( ), newSending.intValue( ), plugin );
             }
         }
 
@@ -283,7 +228,7 @@ public class NewsLetterArchivePortletJspBean extends PortletJspBean
         {
             if ( !checkedSendings.contains( oldSending ) )
             {
-                NewsLetterArchivePortletHome.removeSending( portlet.getId( ), oldSending.intValue( ), PluginService.getPlugin( portlet.getPluginName( ) ) );
+                NewsLetterArchivePortletHome.removeSending( portlet.getId( ), oldSending.intValue( ), plugin );
             }
         }
     }

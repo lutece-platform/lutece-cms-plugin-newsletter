@@ -1,0 +1,42 @@
+<@cTpl>
+<@cSection class='portlet portlet-newsletter portlet-newsletter-subscription ${device_class!}' id='portlet_${portlet_id?c}'>
+<#if portlet_name??>
+	<@cTitle level=2 class='portlet-header'>${portlet_name}</@cTitle>
+</#if>
+	<@cBlock class='portlet-content'>
+		<#if email_error??><@cAlert type='danger' title='#i18n{newsletter.message.error.newsletter.invalid.mail}' /></#if>
+		<#if nochoice_error??><@cAlert type='danger' title='#i18n{newsletter.message.error.newsletter.nochoice.error}' /></#if>
+		<@cForm name='newsletter_${portlet_id?c}' id='newsletter_${portlet_id?c}' action=site_path! method='post'>
+			<@cInput type='hidden' name='page' value='newsletter' />
+			<@cInput type='hidden' name='action' value='register' />
+			<@cInput type='hidden' name='plugin_name' value='newsletter' />
+			<@cInput type='hidden' name='portlet_id' value='${portlet_id?c}' />
+			<@cField label='#i18n{newsletter.portlet.mail.label}' for='email_${portlet_id?c}' required=true class='mb-3'>
+				<@cInput type='email' name='email' id='email_${portlet_id?c}' maxlength=100 autocomplete='email' />
+			</@cField>
+		<#if newsletters?has_content>
+			<@cBlock class='mb-3'>
+			<#list newsletters as newsletter>
+				<@cCheckbox name='newsletter_id' id='newsletter_id_${portlet_id?c}_${newsletter.id?c}' value=newsletter.id?c label=newsletter.name! checked=true />
+			</#list>
+			</@cBlock>
+		</#if>
+		<#if tos??>
+			<@cBlock class='d-flex align-items-center gap-2 mb-3'>
+				<@cCheckbox name='tos' id='tos_${portlet_id?c}' value='1' label='#i18n{newsletter.siteMessage.tos.title}' required=true />
+				<@cBtn type='button' class='link btn-sm' label='#i18n{newsletter.page_newsletter.tos.header}' params=' data-bs-toggle="modal" data-bs-target="#newsletterTos${portlet_id?c}Modal"' />
+			</@cBlock>
+		</#if>
+		<#if captcha??>
+			<@cBlock class='mb-3'>${captcha}</@cBlock>
+		</#if>
+			<@cBtn label='#i18n{newsletter.portlet.button.label}' class='primary'><@cIcon name='plus' class='me-1' /></@cBtn>
+		</@cForm>
+	</@cBlock>
+</@cSection>
+<#if tos??>
+<@cModal id='newsletterTos${portlet_id?c}' title='#i18n{newsletter.page_newsletter.tos.header}' dismissLabel='#i18n{portal.util.labelBack}'>
+${tos}
+</@cModal>
+</#if>
+</@cTpl>

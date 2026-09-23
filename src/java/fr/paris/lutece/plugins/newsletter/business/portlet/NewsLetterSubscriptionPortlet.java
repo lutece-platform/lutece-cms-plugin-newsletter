@@ -37,219 +37,141 @@ import fr.paris.lutece.plugins.newsletter.business.NewsLetter;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterHome;
 import fr.paris.lutece.plugins.newsletter.business.NewsLetterProperties;
 import fr.paris.lutece.plugins.newsletter.business.NewsletterPropertiesHome;
-import fr.paris.lutece.plugins.newsletter.util.NewsletterUtils;
-import fr.paris.lutece.portal.business.portlet.Portlet;
+import fr.paris.lutece.plugins.newsletter.service.NewsletterPlugin;
+import fr.paris.lutece.portal.business.portlet.PortletHtmlContent;
 import fr.paris.lutece.portal.service.captcha.ICaptchaService;
-import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
+import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.BeanUtils;
-import fr.paris.lutece.util.date.DateUtil;
-import fr.paris.lutece.util.xml.XmlUtil;
+
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.literal.NamedLiteral;
 import jakarta.enterprise.inject.spi.CDI;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.*;
 
 /**
- * This class represents the business object NewsLetterSubscriptionPortlet.
+ * This class represents the business object NewsLetterSubscriptionPortlet : a subscription form to the newsletters selected for the portlet. The content
+ * is rendered with the FreeMarker template chosen for the portlet among the templates registered for the portlet type in the core (Section Template
+ * Management feature).
  */
-public class NewsLetterSubscriptionPortlet extends Portlet
+public class NewsLetterSubscriptionPortlet extends PortletHtmlContent
 {
-    // The names of the XML tags
-    private static final String TAG_CDATA_BEGIN = "<![CDATA[";
-    private static final String TAG_CDATA_END = "]]>";
-    private static final String TAG_NEWSLETTER_SUBSCRIPTION_LIST = "newsletter-subscription-list";
-    private static final String TAG_NEWSLETTER_SUBSCRIPTION = "newsletter-subscription";
-    private static final String TAG_NEWSLETTER_SUBSCRIPTION_ID = "newsletter-subscription-id";
-    private static final String TAG_NEWSLETTER_SUBSCRIPTION_EMAIL = "newsletter-subscription-email";
-    private static final String TAG_NEWSLETTER_SUBSCRIPTION_DATE = "newsletter-subscription-date";
-    private static final String TAG_NEWSLETTER_SUBSCRIPTION_DESC = "newsletter-subscription-subject";
-    private static final String TAG_NEWSLETTER_SUBSCRIPTION_BUTTON = "newsletter-subscription-button";
-    private static final String TAG_NEWSLETTER_EMAIL_ERROR = "newsletter-email-error";
-    private static final String TAG_NEWSLETTER_NO_CHOICE_ERROR = "subscription-nochoice-error";
-    private static final String TAG_NEWSLETTER_CAPTCHA = "newsletter-subscription-captcha";
-    private static final String TAG_NEWSLETTER_TOS = "newsletter-subscription-tos";
-    private static final String TAG_NEWSLETTER_TOS_CONTENT = "newsletter-subscription-tos-content";
-    private static final String PROPERTY_LABEL_MAIL = "newsletter.portlet.mail.label";
-    private static final String PROPERTY_LABEL_BUTTON = "newsletter.portlet.button.label";
-    private static final String PROPERTY_ERROR_INVALID_MAIL = "newsletter.message.error.newsletter.invalid.mail";
-    private static final String PROPERTY_ERROR_NO_CHOICE_ERROR = "newsletter.message.error.newsletter.nochoice.error";
+    // Templates
+    private static final String TEMPLATE_PORTLET_DEFAULT = "skin/plugins/newsletter/portlet/newsletter_subscription_portlet.html";
+
+    // Marks
+    private static final String MARK_NEWSLETTERS = "newsletters";
+    private static final String MARK_SITE_PATH = "site_path";
+    private static final String MARK_CAPTCHA = "captcha";
+    private static final String MARK_TOS = "tos";
+    private static final String MARK_EMAIL_ERROR = "email_error";
+    private static final String MARK_NO_CHOICE_ERROR = "nochoice_error";
+
+    // Parameters
     private static final String PARAMETER_EMAIL_ERROR = "email-error";
     private static final String PARAMETER_NO_NEWSLETTER_CHOSEN = "nochoice-error";
+
     private static final String JCAPTCHA_PLUGIN = "jcaptcha";
 
     /**
-     * Comparator for sorting - date descendant order
+     * Comparator for sorting - last sending date descending order, newsletters never sent last
      */
-    private static final Comparator<NewsLetter> COMPARATOR_DATE_DESC = new Comparator<NewsLetter>( )
-    {
-        /**
-         * Compare the last sending dates of two newsletters.
-         *
-         * @param obj1
-         *            The first newsletter
-         * @param obj2
-         *            The second newsletter
-         * @return the value <code>0</code> if the two objects are equal; a value less than <code>0</code> if the first object is before the second; and a value
-         *         greater than <code>0</code> otherwise
-         */
-        public int compare( NewsLetter obj1, NewsLetter obj2 )
-        {
-            return obj2.getDateLastSending( ).compareTo( obj1.getDateLastSending( ) );
-        }
-    };
-
-    private Plugin _plugin;
+    private static final Comparator<NewsLetter> COMPARATOR_DATE_DESC = Comparator.comparing( NewsLetter::getDateLastSending,
+            Comparator.nullsLast( Comparator.reverseOrder( ) ) );
 
     /**
-     * Sets the name of the plugin associated with this portlet.
-     *
-     * @param strPluginName
-     *            The plugin name.
+     * Sets the identifier of the portlet type to the value specified in the plugin descriptor
      */
-    public void setPluginName( String strPluginName )
+    public NewsLetterSubscriptionPortlet( )
     {
-        super.setPluginName( strPluginName );
-
-        // We override this method in order to initialize the plugin instance :
-        this._plugin = PluginService.getPlugin( strPluginName );
+        setPortletTypeId( NewsLetterSubscriptionPortletHome.getInstance( ).getPortletTypeId( ) );
     }
 
     /**
-     * Returns the Xml code of the Subscriber portlet with XML heading
-     *
-     * @param request
-     *            The HTTP servlet request
-     * @return the Xml code of the Subscription portlet
+     * {@inheritDoc}
      */
-    public String getXmlDocument( HttpServletRequest request )
+    @Override
+    public String getHtmlContent( HttpServletRequest request )
     {
-        return XmlUtil.getXmlHeader( ) + getXml( request );
-    }
+        Plugin plugin = PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME );
 
-    /**
-     * Returns the Xml code of the Subscription portlet without XML heading
-     *
-     * @param request
-     *            The HTTP servlet request
-     * @return the Xml code of the Subscription portlet content
-     */
-    public String getXml( HttpServletRequest request )
-    {
-        String strMailError = null;
-        String strNoChoiceError = null;
+        Map<String, Object> model = createPortletModel( );
+        model.put( MARK_NEWSLETTERS, getNewsletters( plugin ) );
+        model.put( MARK_SITE_PATH, AppPathService.getPortalUrl( ) );
 
-        if ( request != null )
+        NewsLetterProperties properties = NewsletterPropertiesHome.find( plugin );
+
+        if ( properties != null )
         {
-            strMailError = request.getParameter( PARAMETER_EMAIL_ERROR );
-            strNoChoiceError = request.getParameter( PARAMETER_NO_NEWSLETTER_CHOSEN );
-        }
-
-        if ( StringUtils.isBlank( strMailError ) )
-        {
-            strMailError = StringUtils.EMPTY;
-        }
-
-        if ( StringUtils.isBlank( strNoChoiceError ) )
-        {
-            strNoChoiceError = StringUtils.EMPTY;
-        }
-
-        StringBuffer strXml = new StringBuffer( );
-
-        XmlUtil.beginElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_LIST );
-
-        // We need the data of the sendings associated with this portlet.
-        // However, the association table and the sendings table are on two
-        // different datasources (AppConnectionService and
-        // PluginConnectionService respectively). Therefore, we can't roll
-        // everything into a single SQL request.
-        // Hence the manual join and ordering below.
-        // Get the ids of the newsletter sendings to display in the portlet.
-        Set<Integer> sendingIds = NewsLetterSubscriptionPortletHome.findSelectedNewsletters( this.getId( ) );
-        Iterator<Integer> iterIds = sendingIds.iterator( );
-
-        // Read all the sendings from the plugin-specific datasource
-        List<NewsLetter> sendings = new ArrayList<NewsLetter>( );
-
-        while ( iterIds.hasNext( ) )
-        {
-            int sendingId = iterIds.next( ).intValue( );
-
-            // Read the content of the sending on the PluginConnectionService :
-            NewsLetter sending = NewsLetterHome.findByPrimaryKey( sendingId, _plugin );
-
-            sendings.add( sending );
-        }
-
-        // Then order the sendings by date
-        Collections.sort( sendings, COMPARATOR_DATE_DESC );
-
-        // Then generate the XML code
-        Iterator<NewsLetter> iterSendings = sendings.iterator( );
-
-        while ( iterSendings.hasNext( ) )
-        {
-            NewsLetter sending = iterSendings.next( );
-
-            // Generate the XML code for the sending :
-            XmlUtil.beginElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION );
-            XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_ID, sending.getId( ) );
-            XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_DESC, sending.getName( ) );
-            XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_DATE,
-                    DateUtil.getDateString( sending.getDateLastSending( ), NewsletterUtils.getLocale( request ) ) );
-            XmlUtil.endElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION );
-        }
-
-        XmlUtil.endElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_LIST );
-
-        boolean bIsCaptchaEnabled = PluginService.isPluginEnable( JCAPTCHA_PLUGIN );
-        NewsLetterProperties properties = NewsletterPropertiesHome.find( _plugin );
-
-        if ( bIsCaptchaEnabled && properties.isCaptchaActive( ) )
-        {
-            Instance<ICaptchaService> captchaInstance = CDI.current( ).select( ICaptchaService.class,
-                    NamedLiteral.of( BeanUtils.BEAN_CAPTCHA_SERVICE ) );
-            if ( captchaInstance.isResolvable( ) )
+            if ( properties.isCaptchaActive( ) && PluginService.isPluginEnable( JCAPTCHA_PLUGIN ) )
             {
-                XmlUtil.addElement( strXml, TAG_NEWSLETTER_CAPTCHA, TAG_CDATA_BEGIN + captchaInstance.get( ).getHtmlCode( ) + TAG_CDATA_END );
-            }
-        }
+                Instance<ICaptchaService> captchaInstance = CDI.current( ).select( ICaptchaService.class, NamedLiteral.of( BeanUtils.BEAN_CAPTCHA_SERVICE ) );
 
-        if ( StringUtils.isNotEmpty( properties.getTOS( ) ) )
-        {
-            XmlUtil.addElement( strXml, TAG_NEWSLETTER_TOS, "true" );
-            XmlUtil.addElementHtml( strXml, TAG_NEWSLETTER_TOS_CONTENT, properties.getTOS( ) );
+                if ( captchaInstance.isResolvable( ) )
+                {
+                    model.put( MARK_CAPTCHA, captchaInstance.get( ).getHtmlCode( ) );
+                }
+            }
+
+            if ( StringUtils.isNotEmpty( properties.getTOS( ) ) )
+            {
+                model.put( MARK_TOS, properties.getTOS( ) );
+            }
         }
 
         if ( request != null )
         {
-            if ( StringUtils.isNotEmpty( strMailError ) )
+            if ( StringUtils.isNotBlank( request.getParameter( PARAMETER_EMAIL_ERROR ) ) )
             {
-                XmlUtil.addElement( strXml, TAG_NEWSLETTER_EMAIL_ERROR, I18nService.getLocalizedString( PROPERTY_ERROR_INVALID_MAIL, getLocale( request ) ) );
+                model.put( MARK_EMAIL_ERROR, Boolean.TRUE );
             }
 
-            if ( StringUtils.isNotEmpty( strNoChoiceError ) )
+            if ( StringUtils.isNotBlank( request.getParameter( PARAMETER_NO_NEWSLETTER_CHOSEN ) ) )
             {
-                XmlUtil.addElement( strXml, TAG_NEWSLETTER_NO_CHOICE_ERROR,
-                        I18nService.getLocalizedString( PROPERTY_ERROR_NO_CHOICE_ERROR, getLocale( request ) ) );
+                model.put( MARK_NO_CHOICE_ERROR, Boolean.TRUE );
             }
-
-            XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_BUTTON, I18nService.getLocalizedString( PROPERTY_LABEL_BUTTON, getLocale( request ) ) );
-            XmlUtil.addElement( strXml, TAG_NEWSLETTER_SUBSCRIPTION_EMAIL, I18nService.getLocalizedString( PROPERTY_LABEL_MAIL, getLocale( request ) ) );
         }
 
-        String str = addPortletTags( strXml );
-
-        return str;
+        return renderTemplate( request, TEMPLATE_PORTLET_DEFAULT, model );
     }
 
     /**
-     * Updates the current instance of the HtmlPortlet object
+     * Returns the newsletters proposed by the portlet, the most recently sent first. The association table and the newsletters table live on two
+     * different datasources (core and plugin pools), hence the manual join and ordering.
+     * 
+     * @param plugin
+     *            the plugin
+     * @return the newsletters
+     */
+    private List<NewsLetter> getNewsletters( Plugin plugin )
+    {
+        List<NewsLetter> listNewsletters = new ArrayList<>( );
+
+        for ( Integer nIdNewsletter : NewsLetterSubscriptionPortletHome.findSelectedNewsletters( getId( ) ) )
+        {
+            NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nIdNewsletter, plugin );
+
+            if ( newsletter != null )
+            {
+                listNewsletters.add( newsletter );
+            }
+        }
+
+        listNewsletters.sort( COMPARATOR_DATE_DESC );
+
+        return listNewsletters;
+    }
+
+    /**
+     * Updates the current instance of the NewsLetterSubscriptionPortlet object
      */
     public void update( )
     {
@@ -257,8 +179,9 @@ public class NewsLetterSubscriptionPortlet extends Portlet
     }
 
     /**
-     * Removes the current instance of the HtmlPortlet object
+     * Removes the current instance of the NewsLetterSubscriptionPortlet object
      */
+    @Override
     public void remove( )
     {
         NewsLetterSubscriptionPortletHome.getInstance( ).remove( this );

@@ -36,72 +36,56 @@ package fr.paris.lutece.plugins.newsletter.business.portlet;
 import fr.paris.lutece.plugins.newsletter.business.SendingNewsLetter;
 import fr.paris.lutece.plugins.newsletter.business.SendingNewsLetterHome;
 import fr.paris.lutece.plugins.newsletter.service.NewsletterPlugin;
-import fr.paris.lutece.plugins.newsletter.util.NewsletterUtils;
-import fr.paris.lutece.portal.business.portlet.Portlet;
+import fr.paris.lutece.portal.business.portlet.PortletHtmlContent;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
-import fr.paris.lutece.util.date.DateUtil;
-import fr.paris.lutece.util.xml.XmlUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 
 /**
- * This class represents a NewsLetterArchivePortlet.
+ * This class represents the business object NewsLetterArchivePortlet : the list of the newsletter sendings archived in the portlet. The content is
+ * rendered with the FreeMarker template chosen for the portlet among the templates registered for the portlet type in the core (Section Template
+ * Management feature).
  */
-public class NewsLetterArchivePortlet extends Portlet
+public class NewsLetterArchivePortlet extends PortletHtmlContent
 {
-    // The names of the XML tags
-    private static final String TAG_NEWSLETTER_SENDING_LIST = "newsletter-sending-list";
-    private static final String TAG_NEWSLETTER_SENDING = "newsletter-sending";
-    private static final String TAG_NEWSLETTER_SENDING_ID = "newsletter-sending-id";
-    private static final String TAG_NEWSLETTER_SENDING_DATE = "newsletter-sending-date";
-    private static final String TAG_NEWSLETTER_SENDING_SUBJECT = "newsletter-sending-subject";
+    // Templates
+    private static final String TEMPLATE_PORTLET_DEFAULT = "skin/plugins/newsletter/portlet/newsletter_archive_portlet.html";
+
+    // Marks
+    private static final String MARK_SENDINGS = "sendings";
 
     /**
-     * Returns the Xml code of the Archive portlet with XML heading
-     * 
-     * @param request
-     *            The HTTP servlet request
-     * @return the Xml code of the Archive portlet
+     * Sets the identifier of the portlet type to the value specified in the plugin descriptor
      */
-    public String getXmlDocument( HttpServletRequest request )
+    public NewsLetterArchivePortlet( )
     {
-        return XmlUtil.getXmlHeader( ) + getXml( request );
+        setPortletTypeId( NewsLetterArchivePortletHome.getInstance( ).getPortletTypeId( ) );
     }
 
     /**
-     * Returns the Xml code of the Archive portlet
-     * 
-     * @param request
-     *            The HTTP servlet request
-     * @return the Xml code of the Archive portlet content
+     * {@inheritDoc}
      */
-    public String getXml( HttpServletRequest request )
+    @Override
+    public String getHtmlContent( HttpServletRequest request )
     {
-        StringBuffer sbXml = new StringBuffer( );
         Plugin plugin = PluginService.getPlugin( NewsletterPlugin.PLUGIN_NAME );
-        XmlUtil.beginElement( sbXml, TAG_NEWSLETTER_SENDING_LIST );
 
-        ArrayList<Integer> listSendingIds = NewsLetterArchivePortletHome.findSendingsInPortlet( this.getId( ), plugin );
-        ArrayList<SendingNewsLetter> listSendings = SendingNewsLetterHome.findSendingsByIds( listSendingIds, plugin );
+        ArrayList<Integer> listSendingIds = NewsLetterArchivePortletHome.findSendingsInPortlet( getId( ), plugin );
+        List<SendingNewsLetter> listSendings = SendingNewsLetterHome.findSendingsByIds( listSendingIds, plugin );
 
-        for ( SendingNewsLetter sending : listSendings )
-        {
-            XmlUtil.beginElement( sbXml, TAG_NEWSLETTER_SENDING );
-            XmlUtil.addElement( sbXml, TAG_NEWSLETTER_SENDING_ID, sending.getId( ) );
-            XmlUtil.addElement( sbXml, TAG_NEWSLETTER_SENDING_DATE, DateUtil.getDateString( sending.getDate( ), NewsletterUtils.getLocale( request ) ) );
-            XmlUtil.addElementHtml( sbXml, TAG_NEWSLETTER_SENDING_SUBJECT, sending.getEmailSubject( ) );
-            XmlUtil.endElement( sbXml, TAG_NEWSLETTER_SENDING );
-        }
+        Map<String, Object> model = createPortletModel( );
+        model.put( MARK_SENDINGS, listSendings );
 
-        XmlUtil.endElement( sbXml, TAG_NEWSLETTER_SENDING_LIST );
-
-        return addPortletTags( sbXml );
+        return renderTemplate( request, TEMPLATE_PORTLET_DEFAULT, model );
     }
 
     /**
-     * Updates the current instance of the HtmlPortlet object
+     * Updates the current instance of the NewsLetterArchivePortlet object
      */
     public void update( )
     {
@@ -109,8 +93,9 @@ public class NewsLetterArchivePortlet extends Portlet
     }
 
     /**
-     * Removes the current instance of the HtmlPortlet object
+     * Removes the current instance of the NewsLetterArchivePortlet object
      */
+    @Override
     public void remove( )
     {
         NewsLetterArchivePortletHome.getInstance( ).remove( this );
