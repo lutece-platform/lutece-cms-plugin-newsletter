@@ -1,0 +1,19 @@
+<@cTpl>
+<@cSection class='portlet portlet-newsletter portlet-newsletter-archive ${device_class!}' id='portlet_${portlet_id?c}'>
+<#if portlet_name??>
+	<@cTitle level=2 class='portlet-header'>${portlet_name}</@cTitle>
+</#if>
+	<@cBlock class='portlet-content'>
+	<#if sendings?has_content>
+		<ul class="list-unstyled mb-0">
+		<#list sendings as sending>
+			<li class="mb-2 d-flex align-items-center gap-2 flex-wrap">
+				<@cBadge label='${sending.date?date}' class='bg-info text-dark' hasp=false />
+				<@cLink href='jsp/site/plugins/newsletter/ViewNewsletterArchive.jsp?sending_id=${sending.id?c}' label=sending.emailSubject! title=sending.emailSubject! class='fw-bold' target='_blank' />
+			</li>
+		</#list>
+		</ul>
+	</#if>
+	</@cBlock>
+</@cSection>
+</@cTpl>
