@@ -1652,18 +1652,26 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
      * @param request
      *            the http request
      * @return the html code for the confirmation page
+     * @throws AccessDeniedException
+     *             if the newsletter is not found or the user is not allowed to send it
      */
-    public String getConfirmSendNewsLetter( HttpServletRequest request )
+    public String getConfirmSendNewsLetter( HttpServletRequest request ) throws AccessDeniedException
     {
         String strNewsletterId = request.getParameter( PARAMETER_NEWSLETTER_ID );
-        int nNewsletterId = Integer.parseInt( strNewsletterId );
-        NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
+        NewsLetter newsletter = null;
 
-        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
+        if ( StringUtils.isNumeric( strNewsletterId ) )
+        {
+            newsletter = NewsLetterHome.findByPrimaryKey( Integer.parseInt( strNewsletterId ), getPlugin( ) );
+        }
+
+        if ( newsletter == null || !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
                 || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_SEND, getUser( ) ) )
         {
-            return getManageNewsLetters( request );
+            throw new AccessDeniedException( Messages.USER_ACCESS_DENIED );
         }
+
+        int nNewsletterId = newsletter.getId( );
 
         // warn if the newletter html content is the same as the one of the last
         // sending for that newsletter
@@ -1683,7 +1691,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         model.put( MARK_TEXT, I18nService.getLocalizedString( strMessage, getLocale( ) ) );
         model.put( MARK_NEWSLETTER, newsletter );
         model.put( MARK_NEWSLETTER_OBJECT, StringUtils.defaultString( request.getParameter( PARAMETER_NEWSLETTER_OBJECT ) ) );
-        model.put( SecurityTokenService.MARK_TOKEN, SecurityTokenService.getInstance( ).getToken( request, ACTION_SEND_NEWSLETTER ) );
+        model.put( SecurityTokenService.MARK_TOKEN, getSecurityTokenService( ).getToken( request, ACTION_SEND_NEWSLETTER ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CONFIRM_SEND_NEWSLETTER, getLocale( ), model );
 
@@ -1783,7 +1791,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
      */
     public String doSendNewsLetter( HttpServletRequest request )
     {
-        if ( !SecurityTokenService.getInstance( ).validate( request, ACTION_SEND_NEWSLETTER ) )
+        if ( !getSecurityTokenService( ).validate( request, ACTION_SEND_NEWSLETTER ) )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_SENDING_ALREADY_DONE, getHomeUrl( request ), AdminMessage.TYPE_STOP );
         }
