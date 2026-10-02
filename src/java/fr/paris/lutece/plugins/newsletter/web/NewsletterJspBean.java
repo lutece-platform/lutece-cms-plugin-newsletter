@@ -40,6 +40,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -98,6 +100,7 @@ import fr.paris.lutece.portal.service.message.AdminMessageService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.rbac.RBACService;
+import fr.paris.lutece.portal.service.security.SecurityTokenService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.upload.MultipartItem;
 import fr.paris.lutece.portal.service.util.AppLogService;
@@ -165,6 +168,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String TEMPLATE_CREATE_NEWSLETTER = "admin/plugins/newsletter/create_newsletter.html";
     private static final String TEMPLATE_COMPOSE_NEWSLETTER = "admin/plugins/newsletter/compose_newsletter.html";
     private static final String TEMPLATE_PREPARE_NEWSLETTER = "admin/plugins/newsletter/prepare_newsletter.html";
+    private static final String TEMPLATE_CONFIRM_SEND_NEWSLETTER = "admin/plugins/newsletter/confirm_send_newsletter.html";
     private static final String TEMPLATE_SEND_NEWSLETTER = "admin/plugins/newsletter/send_newsletter.html";
     private static final String TEMPLATE_MANAGE_SUBSCRIBERS = "admin/plugins/newsletter/manage_subscribers.html";
     private static final String TEMPLATE_IMPORT_SUBSCRIBERS = "admin/plugins/newsletter/import_subscribers.html";
@@ -194,6 +198,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String MARK_NEWSLETTER_TEMPLATE_ID = "newsletter_template_id";
     private static final String MARK_PREVIEW = "newsletter_preview";
     private static final String MARK_NEWSLETTER_OBJECT = "newsletter_object";
+    private static final String MARK_MESSAGE = "message";
+    private static final String MARK_MESSAGE_TYPE = "type";
+    private static final String MARK_TEXT = "text";
     private static final String MARK_DATE_LAST_SEND = "newsletter_last_sent";
     private static final String MARK_IMG_PATH = "img_path";
     private static final String MARK_LOCALE = "locale";
@@ -271,7 +278,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String JSP_URL_MANAGE_SUBSCRIBERS = "ManageSubscribers.jsp";
     private static final String JSP_URL_MANAGE_ARCHIVE = "ManageArchive.jsp";
     private static final String JSP_URL_PREPARE_NEWSLETTER = "PrepareNewsLetter.jsp";
-    private static final String JSP_URL_SEND_NEWSLETTER = "jsp/admin/plugins/newsletter/DoSendNewsLetter.jsp";
+    private static final String JSP_URL_CONFIRM_SEND_NEWSLETTER = "GetConfirmSendNewsLetter.jsp";
     private static final String JSP_URL_TEST_NEWSLETTER = "jsp/admin/plugins/newsletter/DoTestNewsLetter.jsp";
     private static final String JSP_URL_MANAGE_NEWSLETTER_TOPIC = "jsp/admin/plugins/newsletter/GetManageNewsletterTopics.jsp";
     private static final String JSP_URL_MODIFY_TOPIC_CONFIG = "GetModifyTopicConfig.jsp";
@@ -305,6 +312,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String MESSAGE_PAGE_TITLE_MANAGE_TOPICS = "newsletter.manage_topics.pageTitle";
     private static final String MESSAGE_CONFIRM_REMOVE_TOPIC = "newsletter.manage_topics.confirmRemoveTopic";
     private static final String MESSAGE_FRAGMENT_NO_CHANGE = "newsletter.message.fragment_no_change";
+    private static final String MESSAGE_SENDING_ALREADY_DONE = "newsletter.message.sendingAlreadyDone";
+
+    private static final String ACTION_SEND_NEWSLETTER = "sendNewsLetter";
     private static final String MESSAGE_USER_NOT_ALLOWED_NEWSLETTER_PROPERTIES = "Newsletter properties : user not allowed to access this feature : ";
 
     private static final String PROPERTY_PAGE_TITLE_IMPORT = "newsletter.import_subscribers.pageTitle";
@@ -1629,10 +1639,31 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, strErrorMessage, AdminMessage.TYPE_STOP );
         }
 
-        UrlItem urlItem = new UrlItem( JSP_URL_SEND_NEWSLETTER );
-        HashMap<String, String> requestedParameters = new HashMap<String, String>( );
-        requestedParameters.put( PARAMETER_NEWSLETTER_OBJECT, strObject );
-        requestedParameters.put( PARAMETER_NEWSLETTER_ID, strNewsletterId );
+        UrlItem urlItem = new UrlItem( JSP_URL_CONFIRM_SEND_NEWSLETTER );
+        urlItem.addParameter( PARAMETER_NEWSLETTER_ID, nNewsletterId );
+        urlItem.addParameter( PARAMETER_NEWSLETTER_OBJECT, URLEncoder.encode( strObject, StandardCharsets.UTF_8 ) );
+
+        return urlItem.getUrl( );
+    }
+
+    /**
+     * Builds the confirmation page before sending the newsletter
+     *
+     * @param request
+     *            the http request
+     * @return the html code for the confirmation page
+     */
+    public String getConfirmSendNewsLetter( HttpServletRequest request )
+    {
+        String strNewsletterId = request.getParameter( PARAMETER_NEWSLETTER_ID );
+        int nNewsletterId = Integer.parseInt( strNewsletterId );
+        NewsLetter newsletter = NewsLetterHome.findByPrimaryKey( nNewsletterId, getPlugin( ) );
+
+        if ( !AdminWorkgroupService.isAuthorized( newsletter, getUser( ) )
+                || !RBACService.isAuthorized( NewsLetter.RESOURCE_TYPE, strNewsletterId, NewsletterResourceIdService.PERMISSION_SEND, getUser( ) ) )
+        {
+            return getManageNewsLetters( request );
+        }
 
         // warn if the newletter html content is the same as the one of the last
         // sending for that newsletter
@@ -1643,7 +1674,20 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         {
             strMessage = MESSAGE_FRAGMENT_NO_CHANGE;
         }
-        return AdminMessageService.getMessageUrl( request, strMessage, urlItem.getUrl( ), AdminMessage.TYPE_CONFIRMATION, requestedParameters );
+
+        Map<String, Object> message = new HashMap<>( );
+        message.put( MARK_MESSAGE_TYPE, AdminMessage.TYPE_CONFIRMATION );
+
+        Map<String, Object> model = new HashMap<>( );
+        model.put( MARK_MESSAGE, message );
+        model.put( MARK_TEXT, I18nService.getLocalizedString( strMessage, getLocale( ) ) );
+        model.put( MARK_NEWSLETTER, newsletter );
+        model.put( MARK_NEWSLETTER_OBJECT, StringUtils.defaultString( request.getParameter( PARAMETER_NEWSLETTER_OBJECT ) ) );
+        model.put( SecurityTokenService.MARK_TOKEN, SecurityTokenService.getInstance( ).getToken( request, ACTION_SEND_NEWSLETTER ) );
+
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CONFIRM_SEND_NEWSLETTER, getLocale( ), model );
+
+        return template.getHtml( );
     }
 
     /**
@@ -1739,6 +1783,11 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
      */
     public String doSendNewsLetter( HttpServletRequest request )
     {
+        if ( !SecurityTokenService.getInstance( ).validate( request, ACTION_SEND_NEWSLETTER ) )
+        {
+            return AdminMessageService.getMessageUrl( request, MESSAGE_SENDING_ALREADY_DONE, getHomeUrl( request ), AdminMessage.TYPE_STOP );
+        }
+
         String strNewsletterId = request.getParameter( PARAMETER_NEWSLETTER_ID );
         String strObject = request.getParameter( PARAMETER_NEWSLETTER_OBJECT );
         int nNewsletterId = Integer.parseInt( strNewsletterId );
