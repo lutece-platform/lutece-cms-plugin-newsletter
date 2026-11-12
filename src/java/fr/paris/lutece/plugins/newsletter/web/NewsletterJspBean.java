@@ -1281,6 +1281,12 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
             NewsLetterHome.removeSubscriber( newsletter.getId( ), subscriber.getId( ), getPlugin( ) );
         }
 
+        // removes the archived sendings: the next newsletter may reuse the identifier
+        for ( SendingNewsLetter sending : SendingNewsLetterHome.findAllLastSendingForNewsletterId( nNewsletterId, getPlugin( ) ) )
+        {
+            SendingNewsLetterHome.remove( sending.getId( ), getPlugin( ) );
+        }
+
         // removes the newsletter
         NewsletterTopicHome.removeAllByIdNewsletter( nNewsletterId, getPlugin( ) );
         NewsLetterHome.remove( nNewsletterId, getPlugin( ) );
