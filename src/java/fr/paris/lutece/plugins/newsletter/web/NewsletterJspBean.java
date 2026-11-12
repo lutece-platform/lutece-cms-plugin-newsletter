@@ -1684,7 +1684,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         SendingNewsLetter lastSending = SendingNewsLetterHome.findLastSendingForNewsletterId( nNewsletterId, getPlugin( ) );
 
         String strMessage = MESSAGE_CONFIRM_SEND_NEWSLETTER;
-        if ( ( lastSending != null ) && lastSending.getHtml( ).equals( newsletter.getHtml( ) ) )
+        // the sending stores the whole e-mail: compare it with the e-mail the newsletter would give now
+        if ( ( lastSending != null ) && ( lastSending.getHtml( ) != null )
+                && lastSending.getHtml( ).equals( setHtmlTemplateEmail( newsletter, AppPathService.getProdUrl( request ), newsletter.getUnsubscribe( ) ).getHtml( ) ) )
         {
             strMessage = MESSAGE_FRAGMENT_NO_CHANGE;
         }
