@@ -43,6 +43,9 @@ import java.io.Reader;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -229,6 +232,9 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
     private static final String MARK_CONTENT = "content";
     private static final String MARK_TOPIC = "topic";
     private static final String MARK_SEARCH_STRING = "search_string";
+    private static final String PARAMETER_SEARCH_NAME = "search_name";
+    private static final String PARAMETER_SEARCH_DATE = "search_date";
+    private static final String PARAMETER_SEARCH_RESET = "search_reset";
     private static final String MARK_RIGHT_MANAGE_NEWSLETTER_PROPERTIES = "right_manage_newsletter_properties";
 
     // PARAMETER
@@ -421,6 +427,13 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         Collection<NewsLetter> listNewsletter = NewsLetterHome.findAll( getPlugin( ) );
         listNewsletter = AdminWorkgroupService.getAuthorizedCollection( listNewsletter, (User) getUser( ) );
 
+        // SEARCH
+        String strSearchName = ( request.getParameter( PARAMETER_SEARCH_RESET ) == null ) ? request.getParameter( PARAMETER_SEARCH_NAME ) : null;
+        String strSearchDate = ( request.getParameter( PARAMETER_SEARCH_RESET ) == null ) ? request.getParameter( PARAMETER_SEARCH_DATE ) : null;
+        listNewsletter = filterNewsletters( listNewsletter, strSearchName, strSearchDate );
+        model.put( PARAMETER_SEARCH_NAME, StringUtils.defaultString( strSearchName ) );
+        model.put( PARAMETER_SEARCH_DATE, StringUtils.defaultString( strSearchDate ) );
+
         // SORT
         if ( _strSortedAttributeName == null )
         {
@@ -437,6 +450,14 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         UrlItem url = new UrlItem( request.getRequestURI( ) );
         url.addParameter( Parameters.SORTED_ATTRIBUTE_NAME, _strSortedAttributeName );
         url.addParameter( Parameters.SORTED_ASC, Boolean.toString(_bIsAscSort) );
+        if ( StringUtils.isNotBlank( strSearchName ) )
+        {
+            url.addParameter( PARAMETER_SEARCH_NAME, strSearchName );
+        }
+        if ( StringUtils.isNotBlank( strSearchDate ) )
+        {
+            url.addParameter( PARAMETER_SEARCH_DATE, strSearchDate );
+        }
         listNewsletter = listNewsletter.stream().sorted(new AttributeComparator( _strSortedAttributeName, _bIsAscSort )).collect(Collectors.toList());
 
         Collection<Map<String, Object>> listNewsletterDisplay = new ArrayList<Map<String, Object>>( );
@@ -492,6 +513,55 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_MANAGE_NEWSLETTERS, getLocale( ), model );
 
         return getAdminPage( templateList.getHtml( ) );
+    }
+
+    /**
+     * Keeps the newsletters whose name contains the searched text and whose last sending is on the searched day
+     *
+     * @param listNewsletter
+     *            the newsletters
+     * @param strSearchName
+     *            the searched text, blank for every name
+     * @param strSearchDate
+     *            the searched day (yyyy-MM-dd or dd/MM/yyyy), blank for every date
+     * @return the matching newsletters
+     */
+    static Collection<NewsLetter> filterNewsletters( Collection<NewsLetter> listNewsletter, String strSearchName, String strSearchDate )
+    {
+        LocalDate searchDate = parseSearchDate( strSearchDate );
+
+        return listNewsletter.stream( )
+                .filter( n -> StringUtils.isBlank( strSearchName ) || StringUtils.containsIgnoreCase( n.getName( ), strSearchName.trim( ) ) )
+                .filter( n -> searchDate == null
+                        || ( n.getDateLastSending( ) != null && searchDate.equals( n.getDateLastSending( ).toLocalDateTime( ).toLocalDate( ) ) ) )
+                .collect( Collectors.toList( ) );
+    }
+
+    /**
+     * Reads the searched day
+     *
+     * @param strSearchDate
+     *            the searched day (yyyy-MM-dd or dd/MM/yyyy)
+     * @return the day, or null when blank or not a date
+     */
+    private static LocalDate parseSearchDate( String strSearchDate )
+    {
+        if ( StringUtils.isBlank( strSearchDate ) )
+        {
+            return null;
+        }
+        for ( DateTimeFormatter formatter : new DateTimeFormatter [ ] { DateTimeFormatter.ISO_LOCAL_DATE, DateTimeFormatter.ofPattern( "dd/MM/yyyy" ) } )
+        {
+            try
+            {
+                return LocalDate.parse( strSearchDate.trim( ), formatter );
+            }
+            catch( DateTimeParseException e )
+            {
+                // tries the next format
+            }
+        }
+        return null;
     }
 
     /**

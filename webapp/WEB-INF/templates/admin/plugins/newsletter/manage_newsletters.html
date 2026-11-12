@@ -4,7 +4,7 @@
 			<#if right_manage_newsletter_properties?? && right_manage_newsletter_properties>
 				<@offcanvas id='newsletter-properties' targetUrl='jsp/admin/plugins/newsletter/ManageNewsLetterProperties.jsp' useIframe=true title='#i18n{newsletter.adminFeature.newsletter_properties_management.name}' btnTitle='#i18n{newsletter.adminFeature.newsletter_properties_management.name}' btnIcon='cog' btnClass='me-1' position='end' size='half' />
 			</#if>
-			<#if newsletters_list?has_content && newsletters_list?size gt 1>
+			<#if ( newsletters_list?has_content && newsletters_list?size gt 1 ) || search_name?has_content || search_date?has_content>
 				<@offcanvas id='newsletter-search' title='#i18n{portal.util.labelSearch}' btnTitle='#i18n{portal.util.labelSearch}' btnIcon='search' btnClass='me-1' position='end' size='sm'>
 					<@tform method='get' action='jsp/admin/plugins/newsletter/ManageNewsLetter.jsp'>
 						<@formGroup labelFor='search_name' labelKey='#i18n{newsletter.manage_newsletters.columnTitleLabel}'>
