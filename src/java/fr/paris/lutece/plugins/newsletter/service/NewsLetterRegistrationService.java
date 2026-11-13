@@ -68,6 +68,7 @@ import fr.paris.lutece.portal.service.message.SiteMessageService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.portal.service.template.HtmlMarkup;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
@@ -191,7 +192,7 @@ public class NewsLetterRegistrationService
                 String strCss = AppTemplateService.getTemplate( CONFIRM_MAIL_CSS, getLocale( request ), null ).getHtml( );
 
                 Map<String, Object> model = new HashMap<String, Object>( );
-                model.put( NewsLetterConstants.MARK_CONFIRM_CSS,  strCss);
+                model.put( NewsLetterConstants.MARK_CONFIRM_CSS, HtmlMarkup.of( strCss ) );
                 model.put( NewsLetterConstants.MARK_CONFIRM_URL, urlItem.getUrl( ) );
                 model.put( NewsLetterConstants.MARK_NEWSLETTER_LIST, listNewsLetter);
                 model.put(NewsLetterConstants.MARK_SITE_NAME , getSiteName( ));

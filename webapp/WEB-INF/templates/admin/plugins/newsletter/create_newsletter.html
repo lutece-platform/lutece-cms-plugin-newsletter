@@ -2,7 +2,7 @@
 	<@pageColumn>
 		<@pageHeader title='#i18n{newsletter.create_newsletter.boxTitle}' />
 		<@messages errors=errors />
-		<@tform method='post' name='create_newsletter' id='create_newsletter' action='jsp/admin/plugins/newsletter/DoCreateNewsLetter.jsp' params=' target="_top"'>
+		<@tform method='post' name='create_newsletter' id='create_newsletter' action='jsp/admin/plugins/newsletter/DoCreateNewsLetter.jsp' params={"target": "_top"}>
 			<@input type='hidden' value='TRUE' name='newsletter_unsubscribe' />
 			<@formGroup labelFor='newsletter_name' labelKey='#i18n{newsletter.create_newsletter.label}' mandatory=true>
 				<@input type='text' id='newsletter_name' name='newsletter_name' maxlength=50 />

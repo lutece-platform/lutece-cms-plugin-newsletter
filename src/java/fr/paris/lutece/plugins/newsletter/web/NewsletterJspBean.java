@@ -105,6 +105,7 @@ import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.rbac.RBACService;
 import fr.paris.lutece.portal.service.security.SecurityTokenService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.portal.service.template.HtmlMarkup;
 import fr.paris.lutece.portal.service.upload.MultipartItem;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
@@ -2333,8 +2334,8 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         model.put( MARK_NEWSLETTER_TABLE_MANAGER, tableManager );
         model.put( MARK_LIST_TOPIC_TYPES, refListTopicType );
         model.put( MARK_SECTION_SIZES, tblSectionSize );
-        model.put( MARK_HTML_CONTENT,
-                getNewsletterService().generateNewsletterHtmlCode( newsletter, newsletter.getNewsLetterTemplateId( ), strBaseUrl, user, locale ) );
+        String strPreview = getNewsletterService().generateNewsletterHtmlCode( newsletter, newsletter.getNewsLetterTemplateId( ), strBaseUrl, user, locale );
+        model.put( MARK_HTML_CONTENT, ( strPreview == null ) ? null : HtmlMarkup.of( strPreview ) );
         model.put( MARK_WEBAPP_URL, strBaseUrl );
         model.put( MARK_LOCALE, getLocale( ) );
         model.put( MARK_LIST_NEWSLETTER_TEMPLATES, newsletterTemplatesList );
@@ -2495,7 +2496,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
                 AdminUserService.getAdminUser( request ), locale );
 
         Map<String, Object> model = new HashMap<String, Object>( );
-        model.put( MARK_CONTENT, strContent );
+        model.put( MARK_CONTENT, HtmlMarkup.of( strContent ) );
         model.put( MARK_TOPIC, newsletterTopic );
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_TOPIC_CONFIG, locale, model );
         return getAdminPage( template.getHtml( ) );
@@ -2764,7 +2765,7 @@ public class NewsletterJspBean extends PluginAdminPageJspBean
         sendingModel.put( MARK_CSS, getCssContent( ) );
         sendingModel.put( MARK_UNSUBSCRIBE, Boolean.parseBoolean( strUnsubscribe));
         sendingModel.put( MARK_NEWSLETTER_ID, newsletter.getId( ) );
-        sendingModel.put( MARK_NEWSLETTER_CONTENT, newsletter.getHtml( ) );
+        sendingModel.put( MARK_NEWSLETTER_CONTENT, HtmlMarkup.of( newsletter.getHtml( ) ) );
         sendingModel.put( NewsLetterConstants.MARK_BASE_URL, strBaseUrl );
         sendingModel.put( NewsLetterConstants.MARK_SUBSCRIBER_EMAIL, NewsLetterConstants.MARK_SUBSCRIBER_EMAIL_EACH );
         sendingModel.put( NewsLetterConstants.MARK_UNSUBSCRIBE_KEY, NewsLetterConstants.MARK_UNSUBSCRIBE_KEY_EACH );

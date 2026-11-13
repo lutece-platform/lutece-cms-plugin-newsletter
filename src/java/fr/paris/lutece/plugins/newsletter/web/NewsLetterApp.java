@@ -46,6 +46,7 @@ import fr.paris.lutece.portal.service.message.SiteMessageException;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.portal.service.template.HtmlMarkup;
 import fr.paris.lutece.portal.service.util.BeanUtils;
 import fr.paris.lutece.portal.web.xpages.XPage;
 import fr.paris.lutece.portal.web.xpages.XPageApplication;
@@ -202,7 +203,7 @@ public class NewsLetterApp implements XPageApplication
 
             if ( bIsCaptchaEnabled && _captchaService.isResolvable( ) )
             {
-                model.put( MARK_CAPTCHA, _captchaService.get( ).getHtmlCode( ) );
+                model.put( MARK_CAPTCHA, HtmlMarkup.of( _captchaService.get( ).getHtmlCode( ) ) );
             }
             HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_XPAGE_NEWSLETTER, getLocale( request ), model );
             page.setContent( template.getHtml( ) );

@@ -1,12 +1,12 @@
 <!-- 1 Column Text + Button : BEGIN -->
 <tr>
 	<td style="background-color: #ffffff;" class="darkmode-bg">
-	   <#if content_1?? && content_1 != ''> ${content_1!}</#if>
+	   <#if content_1?has_content> ${content_1}</#if>
 	</td>
 </tr>
 <!-- 1 Column Text + Button : END -->
 <!-- 2 Even Columns : BEGIN -->
-<#if content_2?? && content_2 != ''>${content_2!}</#if>
+<#if content_2?has_content>${content_2}</#if>
 <!-- 2 Even Columns : END -->
 <!-- Clear Spacer : BEGIN -->
 <tr>
@@ -15,7 +15,7 @@
 	</td>
 </tr>
 <!-- Clear Spacer : END -->
-<#if content_3?? && content_3 != ''>
+<#if content_3?has_content>
 <!-- 1 Column Text : BEGIN -->
 <tr>
 	<td style="background-color: #ffffff;" class="darkmode-bg">
