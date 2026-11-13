@@ -15,11 +15,11 @@
 				<@cInput type='email' name='email' id='email_${portlet_id?c}' maxlength=100 autocomplete='email' />
 			</@cField>
 		<#if newsletters?has_content>
-			<@cBlock class='mb-3'>
+			<@cFieldset legend='#i18n{newsletter.page_newsletter.labelChooseNewsletters}' class='mb-3'>
 			<#list newsletters as newsletter>
 				<@cCheckbox name='newsletter_id' id='newsletter_id_${portlet_id?c}_${newsletter.id?c}' value=newsletter.id?c label=newsletter.name! checked=true />
 			</#list>
-			</@cBlock>
+			</@cFieldset>
 		</#if>
 		<#if tos??>
 			<@cBlock class='d-flex align-items-center gap-2 mb-3'>

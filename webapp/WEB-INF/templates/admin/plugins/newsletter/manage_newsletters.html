@@ -30,22 +30,22 @@
 				<#list newsletters_list as newsletterDisplay>
 					<@manageFeatureItem>
 						<@manageFeatureItemColumn auto=true flex=false valign='top'>
-							<@h level=3 class='mb-0'>${newsletterDisplay.newsletter.name}</@h>
+							<@h level=2 class='h3 mb-0'>${newsletterDisplay.newsletter.name}</@h>
 							<@p class='fs-4 mb-1'>${newsletterDisplay.newsletter.description}</@p>
 							<@p class='fs-5 mb-0'>#i18n{newsletter.manage_newsletters.columnTitleSubscribersCount} : <strong>${newsletterDisplay.newsletter_count_subscribers}</strong> / #i18n{newsletter.manage_newsletters.columnTitleLastSent} : <strong>${newsletterDisplay.newsletter.dateLastSending?string.short}</strong></@p>
 						</@manageFeatureItemColumn>
 						<@manageFeatureItemColumn align='end'>
 							<#if newsletterDisplay.newsletter_allow_modification>
-								<@aButton href='jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleModify}' buttonIcon='edit'/>
-								<@aButton href='jsp/admin/plugins/newsletter/DoComposeNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleCompose}' buttonIcon='template' />
+								<@aButton href='jsp/admin/plugins/newsletter/ModifyNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleModify}' buttonIcon='edit' params={'aria-label': '#i18n{newsletter.manage_newsletters.columnTitleModify} ' + newsletterDisplay.newsletter.name} />
+								<@aButton href='jsp/admin/plugins/newsletter/DoComposeNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleCompose}' buttonIcon='template' params={'aria-label': '#i18n{newsletter.manage_newsletters.columnTitleCompose} ' + newsletterDisplay.newsletter.name} />
 							</#if>
 							<#if newsletterDisplay.newsletter_allow_sending>
-								<@aButton href='jsp/admin/plugins/newsletter/DoPrepareNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitlePrepareSending}' buttonIcon='send' />
+								<@aButton href='jsp/admin/plugins/newsletter/DoPrepareNewsLetter.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitlePrepareSending}' buttonIcon='send' params={'aria-label': '#i18n{newsletter.manage_newsletters.columnTitlePrepareSending} ' + newsletterDisplay.newsletter.name} />
 							</#if>
 							<#if newsletterDisplay.newsletter_allow_manage_subscribers>
-								<@aButton href='jsp/admin/plugins/newsletter/ManageSubscribers.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleManageSubscribers}' buttonIcon='users'/>
+								<@aButton href='jsp/admin/plugins/newsletter/ManageSubscribers.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' title='#i18n{newsletter.manage_newsletters.columnTitleManageSubscribers}' buttonIcon='users' params={'aria-label': '#i18n{newsletter.manage_newsletters.columnTitleManageSubscribers} ' + newsletterDisplay.newsletter.name} />
 							</#if>
-							<@aButton class='dropdown-toggle' id='newsletter-actions-${newsletterDisplay.newsletter.id}' dropdownMenu=true href='#' title='#i18n{portal.util.labelActions}' color='' hideTitle=['all'] buttonIcon='dots-vertical'>
+							<@aButton class='dropdown-toggle' id='newsletter-actions-${newsletterDisplay.newsletter.id}' dropdownMenu=true href='#' title='#i18n{portal.util.labelActions}' color='' hideTitle=['all'] buttonIcon='dots-vertical' params={'aria-label': '#i18n{portal.util.labelActions} ' + newsletterDisplay.newsletter.name}>
 								<#if newsletterDisplay.newsletter_allow_modification>
 									<@link class='dropdown-item' href='jsp/admin/plugins/newsletter/GetManageNewsletterTopics.jsp?newsletter_id=${newsletterDisplay.newsletter.id}' label='#i18n{newsletter.manage_newsletters.columnTitleManageGeneration}' />
 								</#if>

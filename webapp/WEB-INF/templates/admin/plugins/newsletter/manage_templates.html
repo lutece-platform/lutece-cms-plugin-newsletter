@@ -18,7 +18,7 @@
 							</#if>
 						</@manageFeatureItemColumn>
 						<@manageFeatureItemColumn flex=false valign='top'>
-							<@h level=3 class='my-0'>${templateDisplay.template.description}</@h>
+							<@h level=2 class='h3 my-0'>${templateDisplay.template.description}</@h>
 						</@manageFeatureItemColumn>
 						<@manageFeatureItemColumn valign='top'>
 							<@p class='fs-4 my-0'>#i18n{newsletter.manage_templates.columnTitleType}</@p>
@@ -33,7 +33,7 @@
 								<@offcanvas id='template-modify-${templateDisplay.template.id}' targetUrl='jsp/admin/plugins/newsletter/ModifyNewsLetterTemplate.jsp?newsletter_template_id=${templateDisplay.template.id}' useIframe=true title='#i18n{newsletter.manage_templates.buttonModifyTemplate}' btnTitle='#i18n{newsletter.manage_templates.buttonModifyTemplate}' btnIcon='edit' btnClass='me-1' hideTitle=['xs','sm'] position='end' size='half' />
 							</#if>
 							<#if templateDisplay.newsletter_template_allow_deletion>
-								<@aButton href='jsp/admin/plugins/newsletter/RemoveNewsLetterTemplate.jsp?newsletter_template_id=${templateDisplay.template.id}' title='#i18n{portal.util.labelDelete}' buttonIcon='trash' color='danger' hideTitle=['xs','sm'] />
+								<@aButton href='jsp/admin/plugins/newsletter/RemoveNewsLetterTemplate.jsp?newsletter_template_id=${templateDisplay.template.id}' title='#i18n{portal.util.labelDelete}' buttonIcon='trash' color='danger' hideTitle=['xs','sm'] params={'aria-label': '#i18n{portal.util.labelDelete} ' + templateDisplay.template.description} />
 							</#if>
 						</@manageFeatureItemColumn>
 					</@manageFeatureItem>

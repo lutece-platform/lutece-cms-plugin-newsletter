@@ -112,14 +112,14 @@
 }	
 </style>
 <#macro getActionColumn item>
-<@aButton title='#i18n{portal.util.labelModify}' href='jsp/admin/plugins/newsletter/GetModifyTopicConfig.jsp?newsletter_id=${item.idNewsletter}&topic_id=${item.id}' buttonIcon='pencil' size='' hideTitle=['all'] />
+<@aButton title='#i18n{portal.util.labelModify}' href='jsp/admin/plugins/newsletter/GetModifyTopicConfig.jsp?newsletter_id=${item.idNewsletter}&topic_id=${item.id}' buttonIcon='pencil' size='' hideTitle=['all'] params={'aria-label': '#i18n{portal.util.labelModify} ' + item.title!} />
 <#if 1< item.order >
-	<@aButton title='#i18n{newsletter.manage_topics.labelUp}' href='jsp/admin/plugins/newsletter/DoMoveNewsletterTopic.jsp?newsletter_id=${item.idNewsletter}&topic_id=${item.id}&move_up=true' buttonIcon='chevron-up' size='' hideTitle=['all'] />
+	<@aButton title='#i18n{newsletter.manage_topics.labelUp}' href='jsp/admin/plugins/newsletter/DoMoveNewsletterTopic.jsp?newsletter_id=${item.idNewsletter}&topic_id=${item.id}&move_up=true' buttonIcon='chevron-up' size='' hideTitle=['all'] params={'aria-label': '#i18n{newsletter.manage_topics.labelUp} ' + item.title!} />
 </#if>
 <#if item.order < section_size[item.section - 1]>
-	<@aButton title='#i18n{newsletter.manage_topics.labelDown}' href='jsp/admin/plugins/newsletter/DoMoveNewsletterTopic.jsp?newsletter_id=${item.idNewsletter}&topic_id=${item.id}&move_up=false' buttonIcon='chevron-down' hideTitle=['all'] size='' />
+	<@aButton title='#i18n{newsletter.manage_topics.labelDown}' href='jsp/admin/plugins/newsletter/DoMoveNewsletterTopic.jsp?newsletter_id=${item.idNewsletter}&topic_id=${item.id}&move_up=false' buttonIcon='chevron-down' hideTitle=['all'] size='' params={'aria-label': '#i18n{newsletter.manage_topics.labelDown} ' + item.title!} />
 </#if>
-<@aButton title='#i18n{portal.util.labelDelete}' href='jsp/admin/plugins/newsletter/ConfirmRemoveNewsletterTopic.jsp?newsletter_id=${item.idNewsletter}&topic_id=${item.id}' color='danger' buttonIcon='trash' hideTitle=['all'] size='' />
+<@aButton title='#i18n{portal.util.labelDelete}' href='jsp/admin/plugins/newsletter/ConfirmRemoveNewsletterTopic.jsp?newsletter_id=${item.idNewsletter}&topic_id=${item.id}' color='danger' buttonIcon='trash' hideTitle=['all'] size='' params={'aria-label': '#i18n{portal.util.labelDelete} ' + item.title!} />
 </#macro>
 <#macro getSectionColumn item>
 <#if 1 < newsletter.nbSections>
