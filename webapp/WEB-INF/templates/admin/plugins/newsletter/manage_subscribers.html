@@ -84,7 +84,7 @@
 								</@manageFeatureItemColumn>
 							</#if>
 							<@manageFeatureItemColumn align='end'>
-								<@aButton href='jsp/admin/plugins/newsletter/UnsubscribeNewsLetter.jsp?subscriber_id=${subscriber.id}&newsletter_id=${newsletter.id}' title='#i18n{newsletter.manage_subscribers.columnTitleDelete}' buttonIcon='trash' color='danger' hideTitle=['xs','sm'] />
+								<@aButton href='jsp/admin/plugins/newsletter/UnsubscribeNewsLetter.jsp?subscriber_id=${subscriber.id}&newsletter_id=${newsletter.id}' title='#i18n{newsletter.manage_subscribers.columnTitleDelete}' buttonIcon='trash' color='danger' hideTitle=['xs','sm'] params={'aria-label': '#i18n{newsletter.manage_subscribers.columnTitleDelete} ' + subscriber.email} />
 							</@manageFeatureItemColumn>
 						</@manageFeatureItem>
 					</#list>

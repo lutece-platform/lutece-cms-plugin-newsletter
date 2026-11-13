@@ -22,15 +22,15 @@
 					<#list newsletters_list as newsletter>
 						<@manageFeatureItem>
 							<@manageFeatureItemColumn auto=true>
-								<@checkBox orientation='switch' id='newsletter_selection_${newsletter.id}' name='newsletter_selection' value='${newsletter.id}' />
+								<@checkBox orientation='switch' id='newsletter_selection_${newsletter.id}' name='newsletter_selection' value='${newsletter.id}' labelKey=newsletter.emailSubject!'${newsletter.id}' labelClass='visually-hidden' />
 							</@manageFeatureItemColumn>
 							<@manageFeatureItemColumn auto=true valign='center'>
 								<@p class='fw-bold me-2'>${newsletter.emailSubject!}</@p>
 								<@p>#i18n{newsletter.manage_archive.columnTitleDate} : ${newsletter.date!}</@p>
 							</@manageFeatureItemColumn>
 							<@manageFeatureItemColumn align='end'>
-								<@aButton href='jsp/site/plugins/newsletter/ViewNewsletterArchive.jsp?sending_id=${newsletter.id}' title='#i18n{newsletter.manage_archive.showArchive}' target='_blank' buttonIcon='external-link' hideTitle=['all'] />
-								<@aButton href='jsp/admin/plugins/newsletter/RemoveSendingNewsLetter.jsp?newsletter_id=${newsletter_id}&sending_newsletter_id=${newsletter.id}' title='#i18n{portal.util.labelDelete}' buttonIcon='trash' color='danger' hideTitle=['all'] />
+								<@aButton href='jsp/site/plugins/newsletter/ViewNewsletterArchive.jsp?sending_id=${newsletter.id}' title='#i18n{newsletter.manage_archive.showArchive}' target='_blank' buttonIcon='external-link' hideTitle=['all'] params={'aria-label': '#i18n{newsletter.manage_archive.showArchive} ' + newsletter.emailSubject! + ' #i18n{portal.theme.newWindowLink}'} />
+								<@aButton href='jsp/admin/plugins/newsletter/RemoveSendingNewsLetter.jsp?newsletter_id=${newsletter_id}&sending_newsletter_id=${newsletter.id}' title='#i18n{portal.util.labelDelete}' buttonIcon='trash' color='danger' hideTitle=['all'] params={'aria-label': '#i18n{portal.util.labelDelete} ' + newsletter.emailSubject!} />
 							</@manageFeatureItemColumn>
 						</@manageFeatureItem>
 					</#list>

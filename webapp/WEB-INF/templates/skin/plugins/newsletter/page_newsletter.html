@@ -16,13 +16,13 @@
 				<@cInput type="hidden" name="page" value="newsletter" />
 				<@cInput type="hidden" name="action" value="register" />
 				<@cField label='#i18n{newsletter.page_newsletter.labelEmail}' for='email' required=true>
-					<@cInput type='email' name='email' placeholder='nom@email.com' maxlength=100 />
+					<@cInput type='email' name='email' placeholder='nom@email.com' maxlength=100 autocomplete='email' />
 				</@cField>
-				<@cField label='#i18n{newsletter.page_newsletter.labelChooseNewsletters}'>	
+				<@cFieldset legend='#i18n{newsletter.page_newsletter.labelChooseNewsletters}'>	
 					<#list (newsletters_list![]) as newsletter>
 						<@cCheckbox label=newsletter.name! name='newsletter_id' id='newsletter_id_${newsletter.id}' value=newsletter.id?string />
 					</#list>
-				</@cField>
+				</@cFieldset>
 				<#if properties.TOS??>
 				<@cField class='d-flex align-items-center gap-2'>
 					<@cCheckbox label='#i18n{newsletter.page_newsletter.requirement}' name='tos' value='1' for='tos' required=true />

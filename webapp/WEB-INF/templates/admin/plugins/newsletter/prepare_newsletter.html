@@ -16,8 +16,8 @@
 					</@inputGroupItem>
 				</@inputGroup>
 			</@formGroup>
-			<@formGroup labelFor='newsletter_body' labelKey='#i18n{newsletter.prepare_newsletter.newsletterBody}'>
-				<iframe name="preview" id="newsletter_body" src="jsp/admin/plugins/newsletter/PreviewNewsLetter.jsp?newsletter_id=${newsletter.id}&plugin_name=newsletter" style="min-height:600px; width:100%; border:0;" scrolling="auto"></iframe>
+			<@formGroup labelKey='#i18n{newsletter.prepare_newsletter.newsletterBody}'>
+				<iframe name="preview" id="newsletter_body" title="#i18n{newsletter.prepare_newsletter.newsletterBody}" src="jsp/admin/plugins/newsletter/PreviewNewsLetter.jsp?newsletter_id=${newsletter.id}&plugin_name=newsletter" style="min-height:600px; width:100%; border:0;" scrolling="auto"></iframe>
 			</@formGroup>
 		</@tform>
 	</@pageColumn>
