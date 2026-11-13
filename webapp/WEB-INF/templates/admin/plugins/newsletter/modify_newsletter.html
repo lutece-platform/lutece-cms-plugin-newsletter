@@ -11,7 +11,7 @@
 			<@tabContent>
 				<@tabPanel id='compose_newsletter' active=true>
 				<@messages errors=errors />
-				<@tform method='post' name='modify_newsletter' action='jsp/admin/plugins/newsletter/DoModifyNewsLetter.jsp' params=' target="_top"'>
+				<@tform method='post' name='modify_newsletter' action='jsp/admin/plugins/newsletter/DoModifyNewsLetter.jsp' params={"target": "_top"}>
 					<@input type='hidden' name='newsletter_id' value='${newsletter.id}' />
 					<@input type='hidden' value='TRUE' name='newsletter_unsubscribe' />
 					<@row>

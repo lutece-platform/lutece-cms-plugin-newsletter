@@ -49,6 +49,7 @@ import fr.paris.lutece.portal.service.mail.MailService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.portal.service.template.HtmlMarkup;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
@@ -348,10 +349,11 @@ public class NewsletterService implements Serializable
             }
         }
 
-        model.put( NewsLetterConstants.MARK_CONTENT, strContentBySection [0] );
+        // the topics give HTML: a section is markup, an empty section stays undefined
+        model.put( NewsLetterConstants.MARK_CONTENT, toMarkup( strContentBySection [0] ) );
         for ( int i = 0; i < strContentBySection.length; i++ )
         {
-            model.put( NewsLetterConstants.MARK_CONTENT_SECTION + Integer.toString( i + 1 ), strContentBySection [i] );
+            model.put( NewsLetterConstants.MARK_CONTENT_SECTION + Integer.toString( i + 1 ), toMarkup( strContentBySection [i] ) );
         }
         model.put( NewsLetterConstants.MARK_BASE_URL, strBaseUrl );
 
@@ -376,6 +378,18 @@ public class NewsletterService implements Serializable
 
         return templateNewsLetter.getHtml( );
     }
+    /**
+     * Marks the HTML of a section as markup for the template
+     * 
+     * @param strHtml
+     *            The HTML of the section, may be null
+     * @return The markup, or null if the section has no content
+     */
+    private static Object toMarkup( String strHtml )
+    {
+        return ( strHtml == null ) ? null : HtmlMarkup.of( strHtml );
+    }
+
     /**
      * Get the url of the image folder used by templates
      * 

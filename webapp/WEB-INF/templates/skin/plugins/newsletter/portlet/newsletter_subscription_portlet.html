@@ -24,7 +24,7 @@
 		<#if tos??>
 			<@cBlock class='d-flex align-items-center gap-2 mb-3'>
 				<@cCheckbox name='tos' id='tos_${portlet_id?c}' value='1' label='#i18n{newsletter.siteMessage.tos.title}' required=true />
-				<@cBtn type='button' class='link btn-sm' label='#i18n{newsletter.page_newsletter.tos.header}' params=' data-bs-toggle="modal" data-bs-target="#newsletterTos${portlet_id?c}Modal"' />
+				<@cBtn type='button' class='link btn-sm' label='#i18n{newsletter.page_newsletter.tos.header}' params={"data-bs-toggle": "modal", "data-bs-target": "#newsletterTos${portlet_id?c}Modal"} />
 			</@cBlock>
 		</#if>
 		<#if captcha??>
@@ -36,7 +36,7 @@
 </@cSection>
 <#if tos??>
 <@cModal id='newsletterTos${portlet_id?c}' title='#i18n{newsletter.page_newsletter.tos.header}' dismissLabel='#i18n{portal.util.labelBack}'>
-${tos}
+${richText(tos)}
 </@cModal>
 </#if>
 </@cTpl>

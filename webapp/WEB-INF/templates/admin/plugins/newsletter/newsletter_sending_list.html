@@ -1,6 +1,6 @@
 <@listGroup>
 <#list sending_newsletter_list as sending>
-<@listGroupItem><@checkBox orientation='switch' name='cbx_snd_${sending.id}' labelClass='fs-3 ms-3' labelKey='<strong>${sending.emailSubject}</strong><br><small>#i18n{newsletter.newsletter_sending_list.labelDateSent} : ${sending.date}</small>' checked=selected_sendings_list?seq_contains(sending.id) /></@listGroupItem>
+<@listGroupItem><@checkBox orientation='switch' name='cbx_snd_${sending.id}' labelClass='fs-3 ms-3' checked=selected_sendings_list?seq_contains(sending.id)><strong>${sending.emailSubject}</strong><br><small>#i18n{newsletter.newsletter_sending_list.labelDateSent} : ${sending.date}</small></@checkBox></@listGroupItem>
 </#list>
 </@listGroup>
 

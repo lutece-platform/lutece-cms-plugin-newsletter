@@ -1,13 +1,10 @@
 <@adminMessagePage title='#i18n{portal.util.message.titleConfirmation}'>
-<#assign sendFormParams>target="_top" style="margin-bottom: 0"</#assign>
-<#assign sendButtonParams>data-sending-label="#i18n{newsletter.prepare_newsletter.sendingInProgress}"</#assign>
-<#assign newsletterObject><#outputformat "HTML">${newsletter_object}</#outputformat></#assign>
 <@div class='d-flex justify-content-center align-items-center'>
-	<@tform method='post' action='jsp/admin/plugins/newsletter/DoSendNewsLetter.jsp' id='send_newsletter_form' params=sendFormParams>
+	<@tform method='post' action='jsp/admin/plugins/newsletter/DoSendNewsLetter.jsp' id='send_newsletter_form' class='mb-0' params={"target": "_top"}>
 		<@input type='hidden' name='token' value='${token}' />
 		<@input type='hidden' name='newsletter_id' value='${newsletter.id}' />
-		<@input type='hidden' name='newsletter_object' value=newsletterObject />
-		<@button type='submit' id='send_newsletter_button' class='mt-3' title='#i18n{portal.admin.message.buttonValidate}' buttonIcon='check' params=sendButtonParams />
+		<@input type='hidden' name='newsletter_object' value=newsletter_object />
+		<@button type='submit' id='send_newsletter_button' class='mt-3' title='#i18n{portal.admin.message.buttonValidate}' buttonIcon='check' params={"data-sending-label": "#i18n{newsletter.prepare_newsletter.sendingInProgress}"} />
 	</@tform>
 	<@tform action='jsp/admin/plugins/newsletter/PrepareNewsLetter.jsp'>
 		<@input type='hidden' name='newsletter_id' value='${newsletter.id}' />
@@ -26,7 +23,11 @@
 		sendNewsletterButton.classList.add( 'btn-secondary' );
 		sendNewsletterButton.disabled = true;
 		document.getElementById( 'cancel_send_newsletter_button' ).disabled = true;
-		sendNewsletterButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>';
+		var sendingSpinner = document.createElement( 'span' );
+		sendingSpinner.className = 'spinner-border spinner-border-sm me-2';
+		sendingSpinner.setAttribute( 'role', 'status' );
+		sendingSpinner.setAttribute( 'aria-hidden', 'true' );
+		sendNewsletterButton.replaceChildren( sendingSpinner );
 		sendNewsletterButton.appendChild( document.createTextNode( sendNewsletterButton.dataset.sendingLabel ) );
 	});
 </script>

@@ -42,6 +42,7 @@ import fr.paris.lutece.portal.business.portlet.PortletHtmlContent;
 import fr.paris.lutece.portal.service.captcha.ICaptchaService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
+import fr.paris.lutece.portal.service.template.HtmlMarkup;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.BeanUtils;
 
@@ -117,7 +118,7 @@ public class NewsLetterSubscriptionPortlet extends PortletHtmlContent
 
                 if ( captchaInstance.isResolvable( ) )
                 {
-                    model.put( MARK_CAPTCHA, captchaInstance.get( ).getHtmlCode( ) );
+                    model.put( MARK_CAPTCHA, HtmlMarkup.of( captchaInstance.get( ).getHtmlCode( ) ) );
                 }
             }
 

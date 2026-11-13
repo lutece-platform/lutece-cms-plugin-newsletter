@@ -42,6 +42,7 @@ import fr.paris.lutece.portal.service.message.SiteMessageService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.portal.service.template.HtmlMarkup;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.util.html.HtmlTemplate;
 
@@ -62,6 +63,7 @@ public class NewsLetterArchiveService
 {
     private static final String REGEX_ID = "^[\\d]+$";
     private static final String TEMPLATE_VIEW_NEWSLETTER_ARCHIVE = "skin/plugins/newsletter/page_newsletter_archive.html";
+    private static final String MARK_SENDING_HTML = "sending_html";
 
     /**
      * Returns the Newsletter archive XPage content depending on the request parameters and the current mode.
@@ -93,7 +95,8 @@ public class NewsLetterArchiveService
             return StringUtils.EMPTY;
         }
 
-        Map<String, Object> model = Map.of( NewsLetterConstants.MARK_SENDING, sending );
+        // the archived e-mail is the HTML the application built at sending time
+        Map<String, Object> model = Map.of( NewsLetterConstants.MARK_SENDING, sending, MARK_SENDING_HTML, HtmlMarkup.of( sending.getHtml( ) ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_VIEW_NEWSLETTER_ARCHIVE, getLocale( request ), model );
         template.substitute( NewsLetterConstants.WEBAPP_PATH_FOR_LINKSERVICE, strBaseUrl );

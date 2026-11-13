@@ -26,7 +26,7 @@
 				<#if properties.TOS??>
 				<@cField class='d-flex align-items-center gap-2'>
 					<@cCheckbox label='#i18n{newsletter.page_newsletter.requirement}' name='tos' value='1' for='tos' required=true />
-					<@cBtn class='primary btn-sm' type='button' label='#i18n{newsletter.page_newsletter.tos.header}' params='data-bs-toggle="modal" data-bs-target="#modalRequirementModal"' />
+					<@cBtn class='primary btn-sm' type='button' label='#i18n{newsletter.page_newsletter.tos.header}' params={"data-bs-toggle": "modal", "data-bs-target": "#modalRequirementModal"} />
 				</@cField>
 				</#if>
 				<@cField>
@@ -39,7 +39,7 @@
 </@cRow>
 </@cContainer>
 <@cModal id='modalRequirement' title='#i18n{newsletter.page_newsletter.tos.header}'>
-${properties.TOS!}
+${richText(properties.TOS!)}
 </@cModal>
 <style>
 .banner.credits.page-1{

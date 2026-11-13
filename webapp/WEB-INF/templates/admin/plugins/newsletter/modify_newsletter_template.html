@@ -1,7 +1,7 @@
 <@pageContainer>
     <@pageColumn>
         <@pageHeader title='#i18n{newsletter.modify_newsletter_template.boxTitle}' />
-		<@tform method='post' enctype='multipart/form-data' action='jsp/admin/plugins/newsletter/DoModifyNewsLetterTemplate.jsp'  params=' target="_top"'>
+		<@tform method='post' enctype='multipart/form-data' action='jsp/admin/plugins/newsletter/DoModifyNewsLetterTemplate.jsp'  params={"target": "_top"}>
 			<@input type='hidden' name='newsletter_template_id' value='${template.id}' />
 			<@formGroup labelFor='newsletter_template_name' labelKey='#i18n{newsletter.add_newsletter_template.name}' mandatory=true>
 				<@input type='text' id='newsletter_template_name' name='newsletter_template_name' maxlength=50 value='${template.description}' />
