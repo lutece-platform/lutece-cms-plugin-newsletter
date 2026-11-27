@@ -106,6 +106,7 @@ import fr.paris.lutece.portal.service.message.AdminMessageService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.rbac.RBACService;
+import fr.paris.lutece.portal.service.security.SecurityTokenHandler;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.template.HtmlMarkup;
 import fr.paris.lutece.portal.service.upload.MultipartItem;
@@ -385,6 +386,7 @@ public class NewsletterJspBean extends MVCAdminJspBean
     private static final String MESSAGE_PAGE_TITLE_MANAGE_TOPICS = "newsletter.manage_topics.pageTitle";
     private static final String MESSAGE_CONFIRM_REMOVE_TOPIC = "newsletter.manage_topics.confirmRemoveTopic";
     private static final String MESSAGE_FRAGMENT_NO_CHANGE = "newsletter.message.fragment_no_change";
+    private static final String MESSAGE_SENDING_ALREADY_DONE = "newsletter.message.sendingAlreadyDone";
 
     private static final String MESSAGE_USER_NOT_ALLOWED_NEWSLETTER_PROPERTIES = "Newsletter properties : user not allowed to access this feature : ";
 
@@ -426,6 +428,8 @@ public class NewsletterJspBean extends MVCAdminJspBean
     private Boolean _bIsAscSort;
     @Inject
     private NewsletterService _newsletterService;
+    @Inject
+    private SecurityTokenHandler _securityTokenHandler;
     @Inject
     private NewsletterTopicService _newsletterTopicService;
     @Inject
@@ -1625,15 +1629,22 @@ public class NewsletterJspBean extends MVCAdminJspBean
 
     /**
      * Processes the sending of a newsletter. The security token of the confirmation page is used once: a second submission of the same page is
-     * refused, so a newsletter is not sent twice.
+     * refused, so a newsletter is not sent twice. The token is checked here rather than by the security token filter, which would answer a bare
+     * 403: the user is told that the newsletter is already being sent or has already been sent.
      *
      * @param request
      *            the http request
      * @return the redirection to the newsletters list, or the url of the error message
      */
-    @Action( ACTION_SEND_NEWSLETTER )
+    @Action( value = ACTION_SEND_NEWSLETTER, securityTokenDisabled = true )
     public String doSendNewsLetter( HttpServletRequest request )
     {
+        if ( !_securityTokenHandler.validate( request, ACTION_SEND_NEWSLETTER ) )
+        {
+            return redirect( request, AdminMessageService.getMessageUrl( request, MESSAGE_SENDING_ALREADY_DONE, getViewFullUrl( VIEW_MANAGE_NEWSLETTERS ),
+                    AdminMessage.TYPE_STOP ) );
+        }
+
         NewsLetter newsletter = findNewsletter( request );
 
         if ( !isAuthorized( newsletter, NewsletterResourceIdService.PERMISSION_SEND ) )
